@@ -9,6 +9,7 @@ import csv
 
 """
 @author: TobiDo
+@test: Rene
 
 Not anything that I would expect to be in the project in the end,
 just to play around with the data a bit and to let those who don't 
