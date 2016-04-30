@@ -1,7 +1,0 @@
-.project
-.classpath
-.settings/
-build/
-.gradle/
-/bin/
-docker/assets/*.war
