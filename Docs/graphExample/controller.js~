@@ -1,0 +1,21 @@
+'use strict';
+// definieren eines Moduls
+var meModule = angular.module("meModule", []);
+
+// hinzufügen eines Controllers zum Modul
+meModule.controller("meController", function ($scope) {
+   $scope.name = "Example";
+});
+
+
+var app = angular.module('visuModule', []);
+app.controller('visuController', function($scope) {
+    $scope.graphs = [
+        {name : "Acceleration", file : "dummy.csv"},
+        {name : "Power", file : "dummy2.csv"},
+	];
+    $scope.paintGraph = function(file) {
+	g2 = new Dygraph(
+	    document.getElementById("graphdiv2"), file, {});
+    }
+});

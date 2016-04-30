@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Minimal Graph Example</title>
+      <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
+      <script src="controller.js"></script>
+      <script type="text/javascript" src="dygraph-combined-dev.js"></script>
+   </head>
+   <body>
+      <div ng-app="visuModule">
+         <div ng-controller="visuController">
+	   <select ng-model="selectedGraph" ng-change = "paintGraph(selectedGraph)">
+	     <option ng-repeat="x in graphs" value="{{x.file}}">{{x.name}}</option>
+	   </select>
+	   <div id="graphdiv2" style="width:500px; height:300px;"></div>
+         </div>
+      </div>
+   </body>
+</html>
