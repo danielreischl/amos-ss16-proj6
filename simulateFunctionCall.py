@@ -1,5 +1,5 @@
-# @author AMOSus
-# @author inkibus
+# @author AMOSus (Daniel)
+# @author inkibus (Rene)
 
 # This script is a simple simulator of RealTimedata to enable the Algorythm to compress the Data in a proper way
 # Input: CSV file with the following structure (ms, energy1, ..., energyX, pos1,...,posX) (x = Amount of Drives)
