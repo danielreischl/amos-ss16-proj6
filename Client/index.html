@@ -1,0 +1,48 @@
+<!--
+This inxdex file is the main page. This should later be a Dashboard, where
+the user can see different graphs -->
+
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Siemens Data Analytics App</title>
+
+       <!-- Scripts -->
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+      <script src="app.js"></script>
+      <script src="main.ctrl.js"></script>
+      <script src="sections/dashboard/dashboard.ctrl.js"></script>
+       <!-- End of Scripts -->
+
+       <!-- Stylesheets-->
+      <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
+      <link rel="stylesheet" href="assets/css/main.css">
+
+       <!-- End of Stylesheets-->
+
+   </head>
+   <body ng-app="app">
+    <div ng-controller="MainController as main">
+
+          <h1>{{main.title}}</h1>
+
+            <nav>
+                 <ul>
+                   <li><a href="#Dashboard">Dashboard</a></li>
+                   <li><a href="#Graph">Graph</a></li>
+                   <li><a href="#Documentation">Documentation</a></li>
+                 </ul>
+            </nav>
+
+    </div>
+
+    <!-- ng-view should show the html snippet, if a user clicks on a navigation button -->
+
+
+    <div ng-view></div>
+
+
+   </body>
+</html>
