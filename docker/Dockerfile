@@ -11,7 +11,7 @@ MAINTAINER AMOS-TEAM-6
 
 # Set env variables used in this Dockerfile
 # Local directory with project source
-ENV DOCKYARD_SRC=django
+ENV DOCKYARD_SRC=../django
 # Directory in container for all project files
 ENV DOCKYARD_SRVHOME=/srv
 # Directory in container for project source files
