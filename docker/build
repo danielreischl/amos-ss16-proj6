@@ -1,0 +1,3 @@
+set -ue
+
+docker build --pull -t tobido/amos-ss16-proj6 docker/

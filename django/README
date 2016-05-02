@@ -1,0 +1,6 @@
+Basic django app. Steps to follow:
+
+ - install django 
+ - execute:
+   # python manage.py runserver
+ - visit localhost:8000/visu in browser
