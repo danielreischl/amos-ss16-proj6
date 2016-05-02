@@ -31,4 +31,4 @@ InitialData = pd.read_csv(PathOfInitialData, DataSeperator)
 for index,row in InitialData.iterrows():
     for i in range(0,amountOfDrives):
         compressData(pd.Series([row['ms'], i+1, row['energy' + str(i+1)], row['pos' + str(i+1)]]))
-    sleep (waittime)
+    sleep (waitTime)
