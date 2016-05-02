@@ -4,8 +4,6 @@ message = """<html>
 <head></head>
 <body>
 <p>Hello World!</p>
-<button type="button">Chart-1</button>
-
 </body>
 </html>"""
 
