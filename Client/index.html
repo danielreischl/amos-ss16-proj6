@@ -3,8 +3,8 @@ This inxdex file is the main page. This should later be a Dashboard, where
 the user can see different graphs -->
 
 
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html >
+<html ng-app="app">
    <head>
       <title>Siemens Data Analytics App</title>
 
@@ -12,6 +12,7 @@ the user can see different graphs -->
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
       <script src="app.js"></script>
+      <script src="app.routes.js"></script>
       <script src="main.ctrl.js"></script>
       <script src="sections/dashboard/dashboard.ctrl.js"></script>
        <!-- End of Scripts -->
@@ -23,7 +24,7 @@ the user can see different graphs -->
        <!-- End of Stylesheets-->
 
    </head>
-   <body ng-app="app">
+   <body >
     <div ng-controller="MainController as main">
 
           <h1>{{main.title}}</h1>
@@ -38,10 +39,14 @@ the user can see different graphs -->
 
     </div>
 
-    <!-- ng-view should show the html snippet, if a user clicks on a navigation button -->
+    <!-- ng-view should show the html snippet, if a user clicks on a navigation button
+         also I defined this part as "mainFrame". For now it should indicate the position of the main
+         objects as well as give a link to the potential styles.
+     -->
 
-
-    <div ng-view></div>
+    <div class="mainFrame">
+         <div ng-view> </div>
+    </div>
 
 
    </body>

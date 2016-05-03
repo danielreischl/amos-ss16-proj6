@@ -1,7 +1,7 @@
 ul {
     list-style-type: none;
     padding: 0;
-    width: 10%;
+    width: 15%;
     background-color: #f1f1f1;
     height: 100%; /* Full height */
     position: fixed; /* Make it stick, even on scroll */
@@ -29,6 +29,11 @@ li a:hover:not(.active) {
 
 body {
     background-color: #009688;
+}
+
+.mainFrame {
+    margin-left: 500px;
+
 }
 
 

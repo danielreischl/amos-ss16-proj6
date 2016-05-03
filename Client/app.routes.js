@@ -9,16 +9,19 @@ only a snippet will be loaded and sent to the index.html file.
 angular
     .module('app.routes', ['ngRoute'])
 
-    .config(['$routeProvider',
-  function($routeProvider) {
+    .config(['$routeProvider', function($routeProvider) {
     $routeProvider
 
       .when('/Graph', {
         templateUrl: 'sections/graphExample/GraphExample.html',
-        controller: 'visuController'
       })
 
       .when('/Dashboard', {
         templateUrl: 'sections/dashboard/dashboard.html'
-        controller: 'DashboardController'
       })
+
+      .otherwise({
+        redirectTo: '/index.html',
+
+       });
+    }]);
