@@ -37,7 +37,7 @@ driveXHasCarrier = np.zeros(AMOUNT_OF_DRIVES)
 carrierData = np.zeros((AMOUNT_OF_CARRIERS, 3, 100))
 currentPositionAtCarrier = np.zeros(AMOUNT_OF_CARRIERS)
 # carrierAtPos = np.zeros(AMOUNT_OF_CARRIERS)
-runNumber = 1
+runNumber = 0
 #The amount of carriers who passed drive 1
 carriersThroughTheSystem = 0
 
@@ -61,7 +61,7 @@ def compressData(INPUT):
     global carrierData
     # If the line has just started, then the first carrier enters the first drive
     # if driveXHasCarrier == np.zeros(AMOUNT_OF_CARRIERS): old version
-    if runNumber == 1:
+    if runNumber == 0:
         print "line has just started: Carrier 1 at Drive 1"
         print " "
 
@@ -88,6 +88,8 @@ def compressData(INPUT):
         print "reset its position"
         print " "
 
+        print carrierData
+
         # the Value where the average is built
         valueAverage = 0
         # iterates through all the carrier data entries that have been made up to this point
@@ -113,7 +115,7 @@ def compressData(INPUT):
                 # averaging can begin
                 assert saveTo != int(i + 1 / KEEP_EVERY_X_ROW)
 
-                carrierData[carrier - 1][0][saveTo] = saveTo * KEEP_EVERY_X_ROW + KEEP_EVERY_X_ROW / 2
+                carrierData[carrier - 1][0][saveTo] = (saveTo * KEEP_EVERY_X_ROW) + (KEEP_EVERY_X_ROW / 2)
                 carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][saveTo] / KEEP_EVERY_X_ROW
                 carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo] / KEEP_EVERY_X_ROW
                 continue
@@ -128,12 +130,10 @@ def compressData(INPUT):
                 carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo] / numberOfRowsLeft
                 continue
 
-        # TODO export CSV file here with the current carrierData of the carrier
+        print carrierData
+
         filename = "Carrier_" + str(carrier) + "_Run_" + str(runNumber) + ".csv"
-        #np.savetxt(filename, carrierData[carrier - 1], format=DATA_SEPARATOR)
-        #carrierData[carrier - 1].tofile(filename, sep=DATA_SEPARATOR, format='%1.5f')
-        # TODO INVERT
-        np.savetxt(filename, carrierData[carrier - 1], fmt='%.0f', delimiter=';', newline='\n', header='ms;energy;pos', footer='', comments='# ')
+        np.savetxt(filename, np.transpose(carrierData[carrier - 1]), fmt='%0.5f', delimiter=';', newline='\n', header='ms;energy;pos', footer='', comments='# ')
 
         # Clear the data array
         for i in range(0, int(carrierData.shape[2]) - 1):
