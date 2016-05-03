@@ -1,8 +1,7 @@
 # @author AMOSus (Daniel)
 # @author inkibus (Rene)
-# TODO refactoring
-# TODO clean the code (didnt have time for that)
-# TODO test with working dummy data and fix bugs
+# TODO Refactoring and clean the code (didnt have time for that)
+# TODO Test with working dummy data and fix bugs
 
 # This script is a simple simulator of RealTimedata to enable the Algorythm to compress the Data in a proper way
 # Input: CSV file with the following structure (ms, energy1, ..., energyX, pos1,...,posX) (x = Amount of Drives)
@@ -24,11 +23,11 @@ AMOUNT_OF_DRIVES = 3
 AMOUNT_OF_CARRIERS = 3
 # DATA_PATH = Path of the CSV - File that should be simulated
 # #UPDATE:(creates now an OS independent file path to the daten_cleaning.csv)
-DATA_PATH = os.path.abspath(os.path.join("data", "daten_cleaning.csv"))
+DATA_PATH = os.path.abspath(os.path.join("data", "testData_Rene.csv"))
 # DATA_SEPARATOR: Separator of the CSV-File
 DATA_SEPARATOR = ';'
 # Every X th row of the data is kept and averagedx
-KEEP_EVERY_X_ROW = 10
+KEEP_EVERY_X_ROW = 2
 
 # Variables
 # linearDrivesData = np.zeros((AMOUNT_OF_DRIVES,3,100))
@@ -37,10 +36,13 @@ driveXHasCarrier = np.zeros(AMOUNT_OF_DRIVES)
 carrierData = np.zeros((AMOUNT_OF_CARRIERS, 3, 100))
 currentPositionAtCarrier = np.zeros(AMOUNT_OF_CARRIERS)
 # carrierAtPos = np.zeros(AMOUNT_OF_CARRIERS)
-newRun = 1
+runNumber = 0
+#The amount of carriers who passed drive 1
+carriersThroughTheSystem = 0
 
 
 def compressData(INPUT):
+    #TODO alle variablen am anfang anlegen dass es evtl auch geaendert werden kann (also nochmal lokal speichern),
     print "Input"
     print INPUT
     print " "
@@ -52,17 +54,17 @@ def compressData(INPUT):
     print " "
 
     # Ensures that new Run is initialized before referencing
-    global newRun
+    global runNumber
 
     # Ensures that carrier Data is called from global variables
     global carrierData
     # If the line has just started, then the first carrier enters the first drive
     # if driveXHasCarrier == np.zeros(AMOUNT_OF_CARRIERS): old version
-    if newRun == 1:
+    if runNumber == 0:
         print "line has just started: Carrier 1 at Drive 1"
         print " "
 
-        newRun = 0
+        runNumber += 1
         driveXHasCarrier[0] = 1
 
     carrier = int(driveXHasCarrier[drive - 1])
@@ -79,11 +81,13 @@ def compressData(INPUT):
     # If the current Drive position has is 0 and was not 0 before, then the drive reset itself.
     # This means that now the data can be compressed, then the CSV file can be saved.
     # Also the current linearDrivesData should be cleared for that drive.
-    if INPUT[3] == 0 & (INPUT[3] < carrierData[carrier - 1][1][currentPositionAtCarrier[carrier - 1] - 1]):
+    if INPUT[3] == 0 and (INPUT[3] < carrierData[carrier - 1][1][currentPositionAtCarrier[carrier - 1] - 1]):
         print "The drive "
         print drive
         print "reset its position"
         print " "
+
+        print carrierData
 
         # the Value where the average is built
         valueAverage = 0
@@ -97,17 +101,20 @@ def compressData(INPUT):
             # Adding the values to the current sport
             # for example add the values of carrierData points 1,2,3,4,5,6,7,8,9 to the value of carrierData point 0
             # Except the ti,e. The time will directly be overwritten so that it
-            carrierData[carrier - 1][0][saveTo] += carrierData[carrier - 1][0][i]
-            carrierData[carrier - 1][1][saveTo] += carrierData[carrier - 1][1][i]
-            carrierData[carrier - 1][2][saveTo] += carrierData[carrier - 1][2][i]
+            # For the time and the position only the last value needs to be saved thats why it needs to be overwritten
+            carrierData[carrier - 1][0][saveTo] = carrierData[carrier - 1][0][i]
+            carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][i]
+            # Test, so that the value at saveTo is not added to itself
+            if saveTo != i:
+                carrierData[carrier - 1][2][saveTo] += carrierData[carrier - 1][2][i]
 
             # If all the X amount lines are added up they then can be averaged
-            if i != 0 & i + 1 % KEEP_EVERY_X_ROW == 0:
+            if i != 0 and (i + 1) % KEEP_EVERY_X_ROW == 0:
                 # Make sure that the nex one wouldn't be saved to the same one, so the adding up is complete and the
                 # averaging can begin
                 assert saveTo != int(i + 1 / KEEP_EVERY_X_ROW)
 
-                carrierData[carrier - 1][0][saveTo] = saveTo * KEEP_EVERY_X_ROW + KEEP_EVERY_X_ROW / 2
+                carrierData[carrier - 1][0][saveTo] = (saveTo * KEEP_EVERY_X_ROW) + (KEEP_EVERY_X_ROW / 2)
                 carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][saveTo] / KEEP_EVERY_X_ROW
                 carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo] / KEEP_EVERY_X_ROW
                 continue
@@ -122,7 +129,10 @@ def compressData(INPUT):
                 carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo] / numberOfRowsLeft
                 continue
 
-        # TODO export CSV file here with the current carrierData of the carrier
+        print carrierData
+
+        filename = "Carrier_" + str(carrier) + "_Run_" + str(runNumber) + ".csv"
+        np.savetxt(filename, np.transpose(carrierData[carrier - 1]), fmt='%0.5f', delimiter=';', newline='\n', header='ms;energy;pos', footer='', comments='# ')
 
         # Clear the data array
         for i in range(0, int(carrierData.shape[2]) - 1):
@@ -137,19 +147,25 @@ def compressData(INPUT):
         driveXHasCarrier[drive - 1] = 0
         # Check if there is a next drive and if its empty
         # TODO IMPORTANT what if the next drive is not yet empty? then the algorithm needs to take care of that first before putting the carrier there
-        if drive < AMOUNT_OF_DRIVES & int(driveXHasCarrier[drive - 1]) == 0:
+        if drive < AMOUNT_OF_DRIVES and int(driveXHasCarrier[drive - 1]) == 0:
             # - 1 because of the array bounds from 0 to AMOUNT_OF_DRIVES and +1 because the next drive is selected
             driveXHasCarrier[drive - 1 + 1] = carrier
 
         # If the drive is drive 1, then a new carrier is pulled onto the drive 1
         if drive == 1:
-            # get Highes Carrier which is on the drive
-            highestCarrier = 0
-            for i in range(0, AMOUNT_OF_CARRIERS - 1):
-                if driveXHasCarrier[i] > highestCarrier:
-                    highestCarrier = driveXHasCarrier[i]
+            global carriersThroughTheSystem
+            #One more carrier passed through the entrance of the system
+            carriersThroughTheSystem += 1
             # The new carrier enters the drive and is 1 number bigger than the highest one in the production line
-            driveXHasCarrier[drive - 1] = highestCarrier + 1
+            # But if all the carriers already were on the system
+            # The run number is increased
+            # And carrier 1 is on drive 1 again
+            if carriersThroughTheSystem > AMOUNT_OF_CARRIERS:
+                carriersThroughTheSystem = 1
+                driveXHasCarrier[drive - 1] = carriersThroughTheSystem
+                runNumber += 1
+            else:
+                driveXHasCarrier[drive - 1] = carriersThroughTheSystem
 
             # Ensures enough space in the array
 
