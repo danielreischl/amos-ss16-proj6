@@ -1,7 +1,7 @@
 # @author AMOSus (Daniel)
 # @author inkibus (Rene)
-# TODO refactoring and clean the code (didnt have time for that)
-# TODO test with working dummy data and fix bugs
+# TODO Refactoring and clean the code (didnt have time for that)
+# TODO Test with working dummy data and fix bugs
 
 # This script is a simple simulator of RealTimedata to enable the Algorythm to compress the Data in a proper way
 # Input: CSV file with the following structure (ms, energy1, ..., energyX, pos1,...,posX) (x = Amount of Drives)
