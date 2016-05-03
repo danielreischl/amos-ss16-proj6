@@ -1,7 +1,7 @@
 # @author AMOSus (Daniel)
 # @author inkibus (Rene)
 # TODO refactoring
-# TODO clean the code (sorry didnt have time for that)
+# TODO clean the code (didnt have time for that)
 # TODO test with working dummy data and fix bugs
 
 # This script is a simple simulator of RealTimedata to enable the Algorythm to compress the Data in a proper way
