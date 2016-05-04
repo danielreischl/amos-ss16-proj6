@@ -1,0 +1,15 @@
+services:
+  - mysql
+  
+  test:
+  adapter: mysql2
+  database: myapp_test
+  username: travis
+  encoding: utf8
+  
+  # .travis.yml
+before_script:
+  - mysql -e 'create database myapp_test;'
+  
+  before_install:
+  - mysql -e "create database IF NOT EXISTS test;" -uroot
