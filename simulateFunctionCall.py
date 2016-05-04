@@ -1,6 +1,5 @@
 # @author AMOSus (Daniel)
 # @author inkibus (Rene)
-# TODO Test with working dummy data and fix bug
 
 # This script is a simple simulator of RealTimedata to enable the Algorythm to compress the Data in a proper way
 # Input: CSV file with the following structure (ms, energy1, ..., energyX, pos1,...,posX) (x = Amount of Drives)
@@ -43,7 +42,7 @@ currentPositionAtCarrierData = np.zeros(AMOUNT_OF_CARRIERS)
 lastPositionOfCarrier = np.zeros(AMOUNT_OF_CARRIERS)
 # Number of complete runs through the system
 runNumber = 0
-# The amount of carriers who passed drive 1 (Therefore starting with carrier 1)
+# The amount of carriers who entered drive 1 (Therefore starting with carrier 1) in the current run
 carriersThroughTheSystem = 1
 
 # Main data processing script. Gets input data of drives and maps it to the carries and saves them as CSV files
@@ -53,7 +52,7 @@ def processData(INPUT):
     global runNumber
     # Ensures that carrier Data is called from global variables
     global carrierData
-    #TODO Save all INPUT values here to a local variable and use those throughout the algorithm
+    #TODO maybe Save all INPUT values here to a local variable and use those throughout the algorithm
 
     print " "
     time = INPUT[0]
@@ -79,6 +78,12 @@ def processData(INPUT):
     if driveXHasCarrier[drive - 1] == 0:
         print "Drive " + str(drive) + " doesn't have a carrier, the data is deleted"
         # TODO maybe save the amount of data that is being deleted
+        return
+
+    # If the timestamp is the same as in the previous run, the data is not recorded
+    # This only happens when pushing carries which should not happen in the first place
+    if time == carrierData[carrier - 1][0][currentPositionAtCarrierData[carrier - 1] - 1]:
+        print "Timestamp is the same as before, the data is deleted"
         return
 
     # If position is zero and if position is lower than it was in the previous run
@@ -173,7 +178,8 @@ def compressData(drive, carrier):
     # iterates through all the carrier data entries that have been made up to this point
     # the if else is just there to catch an out of bounds exception where the currentPosition is bigger than the array size of carrierData[2]
     # statement: do a if x < y else b ----> does a if x < y .. otherwise it does b
-    for i in range(0, int(currentPositionAtCarrierData[carrier - 1] - 1 if (
+    print "range: " + str(int(currentPositionAtCarrierData[carrier - 1] if (currentPositionAtCarrierData[carrier - 1] - 1 < int(carrierData.shape[2])) else int(carrierData.shape[2]) - 1))
+    for i in range(0, int(currentPositionAtCarrierData[carrier - 1] if (
             currentPositionAtCarrierData[carrier - 1] - 1 < int(carrierData.shape[2])) else int(carrierData.shape[2]) - 1)):
 
         print "i: " + str(i)
@@ -198,7 +204,7 @@ def compressData(drive, carrier):
 
         #WORKS
         # if my current row is bigger than what the largest row to keep would be then empty that row
-        if i > 1+int((currentPositionAtCarrierData[carrier - 1] - 1) / float(KEEP_EVERY_X_ROW)):
+        if i >= 1+int((currentPositionAtCarrierData[carrier - 1] - 1) / float(KEEP_EVERY_X_ROW)):
             print "deleting row " + str(i)
             carrierData[carrier - 1][0][i] = 0
             carrierData[carrier - 1][1][i] = 0
@@ -210,30 +216,24 @@ def compressData(drive, carrier):
             # averaging can begin
             assert saveTo != int(i + 1 / KEEP_EVERY_X_ROW)
 
-            # carrierData[carrier - 1][0][saveTo] = (saveTo * KEEP_EVERY_X_ROW) + (KEEP_EVERY_X_ROW / 2)
-            #carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][saveTo] / KEEP_EVERY_X_ROW
             print "carrierData[carrier - 1][2][saveTo] " + str(carrierData[carrier - 1][2][saveTo])
             print "carrierData[carrier - 1][2][saveTo] / KEEP_EVERY_X_ROW " + str(carrierData[carrier - 1][2][saveTo] / KEEP_EVERY_X_ROW)
+
             carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo] / KEEP_EVERY_X_ROW
-            continue
 
         # If its the last row that is being iterated, but the average is not yet calculated
         # So if 199 are done and ever 10th row is kept, then 9 more rows need averaging in the end
-        if i == (currentPositionAtCarrierData[carrier - 1] - 1 if currentPositionAtCarrierData[carrier - 1] - 1 < int(
+        else:
+            if i == (currentPositionAtCarrierData[carrier - 1] - 1 if currentPositionAtCarrierData[carrier - 1] - 1 < int(
                 carrierData.shape[2]) else int(carrierData.shape[2]) - 1):
-            numberOfRowsLeft = int(i % KEEP_EVERY_X_ROW)
-            # carrierData[carrier - 1][0][saveTo] = saveTo * KEEP_EVERY_X_ROW + numberOfRowsLeft / 2
-            carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][saveTo] / numberOfRowsLeft
-            carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo] / numberOfRowsLeft
-            continue
-
-        continue
+                numberOfRowsLeft = int(i % KEEP_EVERY_X_ROW) if int(i % KEEP_EVERY_X_ROW) != 0 else 1
+                carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo] / numberOfRowsLeft
 
 # Exports the table of the carrier to a CSV file
 def exportCSV(carrier):
-    filename = "Carrier_" + str(carrier) + "_Run_" + str(runNumber) + ".csv"
+    filename = "Carrier_" + str(int(carrier)) + "_Run_" + str(runNumber) + ".csv"
     np.savetxt(filename, np.transpose(carrierData[carrier - 1]), fmt='%0.5f', delimiter=';', newline='\n',
-               header='ms;energy;pos', footer='', comments='# ')
+               header='ms;pos;energy', footer='', comments='# ')
 
 # Clear the data array
 def clearCarrierData(carrier):
