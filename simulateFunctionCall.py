@@ -175,21 +175,31 @@ def compressData(drive, carrier):
     # statement: do a if x < y else b ----> does a if x < y .. otherwise it does b
     for i in range(0, int(currentPositionAtCarrierData[carrier - 1] - 1 if (
             currentPositionAtCarrierData[carrier - 1] - 1 < int(carrierData.shape[2])) else int(carrierData.shape[2]) - 1)):
+
+        print "i: " + str(i)
         # Saves the first x numbers to row 0, then the second x numbers to row 1 and so on
         saveTo = int(i / KEEP_EVERY_X_ROW)
+        print "saveTo " + str(saveTo)
 
-        # Time will just be overwritten so that it has 1,X,2X,3X,4X from KEEP_EVERY_X_ROW
-        carrierData[carrier - 1][0][saveTo] = carrierData[carrier - 1][0][i]
-        # Test, so that the value at saveTo is not added to itself
-        if saveTo != i:
-            # Add the pos to calculate average
-            carrierData[carrier - 1][1][saveTo] += carrierData[carrier - 1][1][i]
-            # Add the energy to calculate average
-            carrierData[carrier - 1][2][saveTo] += carrierData[carrier - 1][2][i]
+        # Time and position will just be overwritten so that it has 1,X,2X,3X,4X from KEEP_EVERY_X_ROW
+        if int(i % KEEP_EVERY_X_ROW) == 0:
+            carrierData[carrier - 1][0][saveTo] = carrierData[carrier - 1][0][i]
+            carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][i]
+            carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][i]
+        else:
+            # Test, so that the value at saveTo is not added to itself
+            if saveTo != i:
+                # Add the energy to calculate average
+                carrierData[carrier - 1][2][saveTo] += carrierData[carrier - 1][2][i]
 
-        # TODO delete rows that will not be needed anymore
+        print str(carrierData[carrier - 1][0][saveTo]) + "    " \
+            + str(carrierData[carrier - 1][1][saveTo]) + "    " \
+            + str(carrierData[carrier - 1][2][saveTo])
+
+        #WORKS
         # if my current row is bigger than what the largest row to keep would be then empty that row
-        if i > int(int(currentPositionAtCarrierData[carrier - 1] - 1 / KEEP_EVERY_X_ROW)):
+        if i > 1+int((currentPositionAtCarrierData[carrier - 1] - 1) / float(KEEP_EVERY_X_ROW)):
+            print "deleting row " + str(i)
             carrierData[carrier - 1][0][i] = 0
             carrierData[carrier - 1][1][i] = 0
             carrierData[carrier - 1][2][i] = 0
@@ -201,7 +211,9 @@ def compressData(drive, carrier):
             assert saveTo != int(i + 1 / KEEP_EVERY_X_ROW)
 
             # carrierData[carrier - 1][0][saveTo] = (saveTo * KEEP_EVERY_X_ROW) + (KEEP_EVERY_X_ROW / 2)
-            carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][saveTo] / KEEP_EVERY_X_ROW
+            #carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][saveTo] / KEEP_EVERY_X_ROW
+            print "carrierData[carrier - 1][2][saveTo] " + str(carrierData[carrier - 1][2][saveTo])
+            print "carrierData[carrier - 1][2][saveTo] / KEEP_EVERY_X_ROW " + str(carrierData[carrier - 1][2][saveTo] / KEEP_EVERY_X_ROW)
             carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo] / KEEP_EVERY_X_ROW
             continue
 
