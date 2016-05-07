@@ -5,8 +5,6 @@
 # Input: CSV file with the following structure (ms, energy1, ..., energyX, pos1,...,posX) (x = Amount of Drives)
 # The script calls depending on the amount of drives and waittime the CompressingAlgorythm all x seconds
 
-#TODO: add up the energy cosumptio instead of averaging it
-
 # Imports Pandas for Data handling
 import pandas as pd
 # Imports OS for Operating System independent absolute filepaths
@@ -223,6 +221,8 @@ def compressData(drive, carrier):
             carrierData[carrier - 1][2][i] = 0
 
         # If all the X amount lines are added up they then can be averaged
+        # UPDATE: Instead of averaging, the sum is now kept
+        '''
         if i != 0 and (i + 1) % KEEP_EVERY_X_ROW == 0:
             # Make sure that the nex one wouldn't be saved to the same one, so the adding up is complete and the
             # averaging can begin
@@ -243,6 +243,7 @@ def compressData(drive, carrier):
                     carrierData.shape[2]) else int(carrierData.shape[2]) - 1):
                 numberOfRowsLeft = int(i % KEEP_EVERY_X_ROW) if int(i % KEEP_EVERY_X_ROW) != 0 else 1
                 carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo] / numberOfRowsLeft
+        '''
 
 # Exports the table of the carrier to a CSV file
 def exportCSV(carrier):
@@ -258,9 +259,8 @@ def exportCSV(carrier):
     print "export"
     print export
 
-    np.savetxt(filename, export,  fmt='%0.5f', delimiter=';', newline='\n', header='ms;pos;energy', footer='', comments='# ')
-    #np.savetxt(filename, np.transpose(carrierData[carrier - 1]), fmt='%0.5f', delimiter=';', newline='\n',
-     #          header='ms;pos;energy', footer='', comments='# ')
+    np.savetxt(filename, export,  fmt='%0.5f', delimiter=';', newline='\n',
+               header='time (ms);position (mm);energy (W)', footer='', comments='# ')
 
 # Finds the first row of the array that will be exported as CSV, where pos and energy consumption != 0
 def findFirstRowInCarrierData(carrier):
@@ -272,14 +272,14 @@ def findFirstRowInCarrierData(carrier):
             return firstRow
     return firstRow
 
-# Clear the data array
+# Clear the data array for a certain carrier
 def clearCarrierData(carrier):
     for i in range(0, int(carrierData.shape[2]) - 1):
         carrierData[carrier - 1][0][i] = 0
         carrierData[carrier - 1][1][i] = 0
         carrierData[carrier - 1][2][i] = 0
 
-# Ensures enough space in the carrier data array
+# Ensures enough space in the carrier data array for a certain carrier
 def ensureEnoughSpaceInCarrierData(carrier):
     global carrierData
     if currentPositionAtCarrierData[carrier - 1] >= carrierData.shape[2]:
