@@ -5,7 +5,6 @@
 # Input: CSV file with the following structure (ms, energy1, ..., energyX, pos1,...,posX) (x = Amount of Drives)
 # The script calls depending on the amount of drives and waittime the CompressingAlgorythm all x seconds
 
-#TODO: fixe the runNumber for carrier 2 and 3
 #TODO: add up the energy cosumptio instead of averaging it
 
 # Imports Pandas for Data handling
