@@ -20,6 +20,14 @@ angular
         templateUrl: 'sections/dashboard/dashboard.html'
       })
 
+      .when('/', {
+        templateUrl: 'sections/barCirclePage/HomePageIconsShefali-Vicky.html'
+      })
+
+      .when('/CircleCarrier', {
+        templateUrl: 'sections/circlePage/circleCarrier.html'
+      })
+
       .otherwise({
         redirectTo: '/index.html',
 
