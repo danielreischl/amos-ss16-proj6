@@ -1,39 +1,35 @@
-ul {
-    list-style-type: none;
-    padding: 0;
+md-sidenav  {
     width: 15%;
-    background-color: #f1f1f1;
-    height: 100%; /* Full height */
-    position: fixed; /* Make it stick, even on scroll */
-    overflow: auto; /* Enable scrolling if the sidenav has too much content */
-     box-shadow: 2px 10px 30px 5px black;
+    height:100%;
+    background-color: #009688;
+}
+md-content {
+
+    background-color : #ECEFF1;
 }
 
-li a {
-    display: block;
-    color: #000;
-    padding: 12px 0 10px 26px;
+.md-button a {
+    color: #E0F2F1;
     text-decoration: none;
 
 }
 
-li a.active {
-    background-color: #4CAF50;
-    color: white;
+.md-button a:hover:not(.active) {
+    color: #E0F2F1;
 }
 
-li a:hover:not(.active) {
-    background-color: #555;
-    color: white;
+.md-button.md-cornered {
+    border-radius: 0;
 }
 
-body {
+.md-button:not([disabled]):hover {
+  background-color : #4DB6AC;
+}
+
+#sidenavTOP {
+    padding-top: 120px;
+}
+
+.topNav {
     background-color: #009688;
 }
-
-.mainFrame {
-    margin-left: 500px;
-
-}
-
-
