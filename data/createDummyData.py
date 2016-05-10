@@ -72,7 +72,7 @@ class Drive:
         self.endTime = endTime
         self.data = np.zeros((endTime + 1, 3))
         self.driveNumber = driveNumber
-        for time in range(endTime):
+        for time in range(endTime+1):
             self.data[time, 0] = time
 
     def addPositionPoint(self, time, position, energy):
