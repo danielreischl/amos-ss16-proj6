@@ -30,6 +30,10 @@ angular.module('app')
     }
 })
 
+.controller('circlePopUpController', function($scope) {
+    $scope.title = "Carrier X, placeholder for the carrier ID";
+})
+
 /* Refresh the circle Page. The purporse of this controller is listen to the Button
  and upon receiving an event, it should trigger the update circle button*/
 
@@ -37,10 +41,11 @@ angular.module('app')
 .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia) {
 
 /* open up a dialogue window upon triggering it via button click */
-    $scope.openDialog = function(carrier) {
+    $scope.openDialog = function(event) {
      $mdDialog.show({
-      templateUrl: 'sections/circlePage/circlePopUp.html',
-      clickOutsideToClose:true
+         controller: "circlePopUpController",
+         templateUrl: 'sections/circlePage/circlePopUp.html',
+         clickOutsideToClose:true
     })
 
     }
@@ -65,7 +70,7 @@ angular.module('app')
 
 
         var circleId = "carrier " + idCounter;
-        var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="openDialog(this.id)"></canvas>';
+        var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="openDialog($event)"></canvas>';
         var temp = $compile(fragmenthtml)($scope);
         angular.element(document.getElementById('circleGraphs')).append(temp);
 
