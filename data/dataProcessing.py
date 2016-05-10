@@ -7,7 +7,7 @@
 
 # Imports Pandas for Data handling
 import pandas as pd
-# Imports OS for Operating System independent absolute filepaths
+# Imports OS for Operating System independent absolute file paths
 import os
 # Imports Pandas for Data handling
 import numpy as np
@@ -17,26 +17,25 @@ from time import sleep
 # Constants
 # WAIT_TIME_IN_SECONDS: Time the script should wait until it calls the function again (in seconds)
 WAIT_TIME_IN_SECONDS = 0.001
+# Input file names of data here
+DATA_FILE_NAMES = ("Session_0_Drive_0.csv", "Session_0_Drive_1.csv")
 # AMOUNT_OF_DRIVES: How many Drives are producing data
-AMOUNT_OF_DRIVES = 3
+AMOUNT_OF_DRIVES = 2
 # AMOUNT_OF_CARRIERS: How many Carriers are in the system
-AMOUNT_OF_CARRIERS = 3
-# DATA_PATH = Path of the CSV - File that should be simulated
-# #UPDATE:(creates now an OS independent file path to the daten_cleaning.csv)
-DATA_PATH = os.path.abspath(os.path.join("data", "testData_Rene.csv"))
+AMOUNT_OF_CARRIERS = 2
 # DATA_SEPARATOR: Separator of the CSV-File
 DATA_SEPARATOR = ';'
 # Every X th row of the data is kept and averagedx
 KEEP_EVERY_X_ROW = 2
 
 # Variables
-# linearDrivesData = np.zeros((AMOUNT_OF_DRIVES,3,100))
-# currentPositionAtDrive = np.zeros(AMOUNT_OF_DRIVES)
+# Array that saves for every drive which carrier is on it
 driveXHasCarrier = np.zeros(AMOUNT_OF_DRIVES)
 # This is where all the data goes before exporting to CSV
 # carrierData[carrier number][time = 0, pos = 1, energy consumption = 2][position of array]
 carrierData = np.zeros((AMOUNT_OF_CARRIERS, 3, 100))
 # Here is stored in which row the last entry of carrier data was made for every carrier
+# (This could also be calculated by why not store it, since its used frequently)
 currentPositionAtCarrierData = np.zeros(AMOUNT_OF_CARRIERS)
 # Saves the last position on the drive of every carrier
 lastPositionOfCarrier = np.zeros(AMOUNT_OF_CARRIERS)
@@ -159,7 +158,6 @@ def evaluateDriveReset(drive, carrier):
     # If the last carrier completed the run, run number +1
 
 
-
 # If a carrier leaves the last drive, the data has to be compressed and the CSV file has to be saved
 def completeRun(drive, carrier):
     print carrierData
@@ -172,6 +170,7 @@ def completeRun(drive, carrier):
 
     # Set the current position that is being filled to 0 so that the array can be filled again
     currentPositionAtCarrierData[carrier - 1] = 0
+
 
 # Compresses the data, so that only every X-th (KEEP_EVERY_X_ROW) is kept in the data
 # Example: rows: 1,2,3,4,5,6 --> compressData with KEEP_EVERY_X_ROW == 2 --> rows: 1,3,5
@@ -187,7 +186,7 @@ def compressData(drive, carrier):
     # the if else is just there to catch an out of bounds exception where the currentPosition is bigger than the array size of carrierData[2]
     # statement: do a if x < y else b ----> does a if x < y .. otherwise it does b
     print "range: " + str(int(currentPositionAtCarrierData[carrier - 1] if (
-    currentPositionAtCarrierData[carrier - 1] - 1 < int(carrierData.shape[2])) else int(carrierData.shape[2]) - 1))
+        currentPositionAtCarrierData[carrier - 1] - 1 < int(carrierData.shape[2])) else int(carrierData.shape[2]) - 1))
     for i in range(0, int(currentPositionAtCarrierData[carrier - 1] if (
                     currentPositionAtCarrierData[carrier - 1] - 1 < int(carrierData.shape[2])) else int(
         carrierData.shape[2]) - 1)):
@@ -245,6 +244,7 @@ def compressData(drive, carrier):
                 carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo] / numberOfRowsLeft
         '''
 
+
 # Exports the table of the carrier to a CSV file
 def exportCSV(carrier):
     print "Exporting: "
@@ -255,12 +255,13 @@ def exportCSV(carrier):
     print "first Row " + str(firstRow)
     lastRow = int((currentPositionAtCarrierData[carrier - 1] - 1) / KEEP_EVERY_X_ROW)
     print "last Row " + str(lastRow)
-    export = np.transpose(carrierData[carrier - 1][:,firstRow:lastRow])
+    export = np.transpose(carrierData[carrier - 1][:, firstRow:lastRow])
     print "export"
     print export
 
-    np.savetxt(filename, export,  fmt='%0.5f', delimiter=';', newline='\n',
+    np.savetxt(filename, export, fmt='%0.5f', delimiter=DATA_SEPARATOR, newline='\n',
                header='time (ms);position (mm);energy (W)', footer='', comments='# ')
+
 
 # Finds the first row of the array that will be exported as CSV, where pos and energy consumption != 0
 def findFirstRowInCarrierData(carrier):
@@ -272,12 +273,14 @@ def findFirstRowInCarrierData(carrier):
             return firstRow
     return firstRow
 
+
 # Clear the data array for a certain carrier
 def clearCarrierData(carrier):
     for i in range(0, int(carrierData.shape[2]) - 1):
         carrierData[carrier - 1][0][i] = 0
         carrierData[carrier - 1][1][i] = 0
         carrierData[carrier - 1][2][i] = 0
+
 
 # Ensures enough space in the carrier data array for a certain carrier
 def ensureEnoughSpaceInCarrierData(carrier):
@@ -290,17 +293,37 @@ def ensureEnoughSpaceInCarrierData(carrier):
 # Start of the Script
 #
 
-# Loads Csv into a pandas DataFrame
-InitialData = pd.read_csv(DATA_PATH, DATA_SEPARATOR)
+# DATA_PATH creates an OS independent file path to the data files that were input as string names
+# Initialize empty DATA_PATH array
+DATA_PATH = ["" for x in range(DATA_FILE_NAMES.__sizeof__())]
 
-a = InitialData.iterrows()
+# Set first data path
+# This is needed when the data is in a subfolder
+# DATA_PATH[0] = os.path.abspath(os.path.join("data", DATA_FILE_NAMES[0]))
+DATA_PATH[0] = os.path.abspath(DATA_FILE_NAMES[0])
+
+# First row of data frames
+initialData = pd.read_csv(DATA_PATH[0], DATA_SEPARATOR, index_col=0)
+
+# If there is more than 1 array, add the other ones to the side
+if len(DATA_FILE_NAMES) > 1:
+    for index in range(1, len(DATA_FILE_NAMES)):
+        # Create a file path to every file
+        # Again, if the data would be in a sub folder, this would be needed
+        # DATA_PATH[index] = os.path.abspath(os.path.join("data", DATA_FILE_NAMES[index]))
+        DATA_PATH[index] = os.path.abspath(DATA_FILE_NAMES[index])
+        # Loads the next CSV file
+        tempFile = pd.read_csv(DATA_PATH[index], DATA_SEPARATOR, index_col=0)
+        # Merges the temp file with the initialData file
+        initialData = pd.concat([initialData, tempFile], axis=1)
+
+#print "Initial Data: "
+#print initialData
 
 # Iterates each row and afterwards each drive
 # Calls compressData with a pd.Series. The values are:
 # ms, No. of Drive, Energy Consumption, Position
-for index, row in InitialData.iterrows():
-    for i in range(0, AMOUNT_OF_DRIVES):
-        # TODO For me (RENE) just an array makes more sense than a Series here
-        processData(pd.Series([row['ms'], i + 1, row['energy' + str(i + 1)], row['pos' + str(i + 1)]]))
-    sleep(WAIT_TIME_IN_SECONDS)
-# print carrierData
+for index, row in initialData.iterrows():
+    for drive in range(0, AMOUNT_OF_DRIVES-1):
+        processData([index, drive + 1, row['energy'][drive], row['position'][drive]])
+    #sleep(WAIT_TIME_IN_SECONDS)
