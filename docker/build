@@ -1,3 +1,4 @@
 set -ue
 
+cp -r ../Client ./Client
 docker build --pull -t tobido/amos-ss16-proj6 docker/

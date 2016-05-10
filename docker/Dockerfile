@@ -32,7 +32,8 @@ VOLUME ["$DOCKYARD_SRVHOME/media/", "$DOCKYARD_SRVHOME/logs/"]
 COPY $DOCKYARD_SRC $DOCKYARD_SRVPROJ
 
 COPY ./nginx.conf /etc/nginx/
-COPY ./index.html /srv/static/index.html
+COPY ./Client/* /srv/static
+# COPY ./index.html /srv/static/index.html
 
 # turn daemon mode off, otherwise nginx quits and docker container also
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
