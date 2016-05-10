@@ -38,13 +38,10 @@ angular.module('app')
 
 /* open up a dialogue window upon triggering it via button click */
     $scope.openDialog = function(carrier) {
-    $mdDialog.show(
-      $mdDialog.alert()
-        .clickOutsideToClose(true)
-        .title(carrier)
-        .textContent('You can add this for comparison or take a closer look')
-        .ok('Exit')
-    );
+     $mdDialog.show({
+      templateUrl: 'sections/circlePage/circlePopUp.html',
+      clickOutsideToClose:true
+    })
 
     }
 
@@ -88,6 +85,9 @@ angular.module('app')
 
       context.beginPath();
       context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+      context.lineWidth = 2;
+      context.strokeStyle = '#003300';
+      context.stroke();
 
       if( energy  > averageEnergy) {
          context.fillStyle = '#FF1744';
