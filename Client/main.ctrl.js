@@ -30,19 +30,34 @@ angular.module('app')
     }
 })
 
+.controller('circlePopUpController', function($scope) {
+    $scope.title = "Carrier X, placeholder for the carrier ID";
+})
+
 /* Refresh the circle Page. The purporse of this controller is listen to the Button
  and upon receiving an event, it should trigger the update circle button*/
 
 
-.controller('circleGraphController', function($scope) {
+.controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia) {
+
+/* open up a dialogue window upon triggering it via button click */
+    $scope.openDialog = function(event) {
+     $mdDialog.show({
+         controller: "circlePopUpController",
+         templateUrl: 'sections/circlePage/circlePopUp.html',
+         clickOutsideToClose:true
+    })
+
+    }
+
+/* create the circle page upon button click. */
+
     $scope.circleGraph = function() {
-
-
     /*  first look if there are more carriers in the database than displayed right now.
     the functions looks for all divs with the class circle on it*/
 
 
-    var x = document.querySelectorAll("div.circleDashboard");
+  //TODO:  var x = document.querySelectorAll("div.circleDashboard");
 
     // create circle graphs and give them a unique ID
 
@@ -53,16 +68,15 @@ angular.module('app')
 
     for (x in arrayCarrier) {
 
-        var div = document.createElement("canvas");
-        var circleId = div.id = "carrier " + idCounter;
-        div.className = "circleDashboard";
-        document.getElementById("circleGraphs").appendChild(div);
-        createCircle(circleId,arrayEnergy[idCounter], arrayAverageEnergy[idCounter]);
 
+        var circleId = "carrier " + idCounter;
+        var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="openDialog($event)"></canvas>';
+        var temp = $compile(fragmenthtml)($scope);
+        angular.element(document.getElementById('circleGraphs')).append(temp);
+
+        createCircle(circleId, arrayEnergy[idCounter], arrayAverageEnergy[idCounter]);
         idCounter = idCounter+1;
     }
-
-
 
     /*  This function will create the circle graph, depending on the input parameters from the databse (right now it is hard coded*/
 
@@ -76,6 +90,9 @@ angular.module('app')
 
       context.beginPath();
       context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+      context.lineWidth = 2;
+      context.strokeStyle = '#003300';
+      context.stroke();
 
       if( energy  > averageEnergy) {
          context.fillStyle = '#FF1744';

@@ -133,12 +133,13 @@ class Data:
                 if drive is not None:
                     drive.addPositionPoint(time, position, carrier.getEnergy(time))
 
+    def exportToCsv(self):
+        for drive in drives:
+            drive.export2Csv()
+
 
 d = Data([1, 60, ], 2, 5000, 100)
 
 d.createDummy()
-drive1 = d.drives[0]
-drive2 = d.drives[1]
-drive1.export2Csv()
-drive2.export2Csv()
-# drive*.data contains position and energy information
+d.export2Csv()
+
