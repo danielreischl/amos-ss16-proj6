@@ -10,7 +10,6 @@ driveLength = 5000
 T1 = 50
 T2 = 50
 
-
 # the function describe position/velocity/acceleration of
 # carriers RELATIVE to their entry point
 
@@ -68,10 +67,11 @@ class Drive:
     endTime = 0  # TODO: make global
     drivePosition = 0  # position where the drive 'begins'
 
-    def __init__(self, drivePosition, endTime):
+    def __init__(self, drivePosition, endTime, driveNumber):
         self.drivePosition = drivePosition
         self.endTime = endTime
         self.data = np.zeros((endTime + 1, 3))
+        self.driveNumber = driveNumber
         for time in range(endTime):
             self.data[time, 0] = time
 
@@ -79,20 +79,19 @@ class Drive:
         self.data[time, 1] = position - self.drivePosition
         self.data[time, 2] = energy
 
-    def export2Csv():
+    def export2Csv(self):
 
-        exportArray = np.zeros(10,10)
         session = 0
-        driveNumber = 0
 
-        fileName = "Session_" + str(session) + "_Drive_" + str(driveNumber) + ".csv"
+        fileName = "Session_" + str(session) + "_Drive_" + str(self.driveNumber) + ".csv"
 
         print "Exporting ..."
         print fileName
 
-        export = np.transpose(exportArray[:,:])
+        #If its neccessary to export
+        #export = np.transpose(exportArray[:,:])
 
-        np.savetxt(fileName, export, fmt='%0.5f', delimiter=';', newline='\n',
+        np.savetxt(fileName, self.data, fmt='%0.5f', delimiter=';', newline='\n',
                    header='time;position;energy', footer='', comments='# ')
         return
 
@@ -115,7 +114,7 @@ class Data:
             self.carriers.append(Carrier(entryTime, endTime))
 
         for driveNumber in range(numberOfDrives):
-            self.drives.append(Drive(driveNumber * driveLength, endTime))
+            self.drives.append(Drive(driveNumber * driveLength, endTime, driveNumber))
 
     def getDrive(self, position):
         # returns the drive to which the position belongs
@@ -140,4 +139,6 @@ d = Data([1, 60, ], 2, 5000, 100)
 d.createDummy()
 drive1 = d.drives[0]
 drive2 = d.drives[1]
+drive1.export2Csv()
+drive2.export2Csv()
 # drive*.data contains position and energy information
