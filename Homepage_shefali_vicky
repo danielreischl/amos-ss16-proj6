@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+ <html lang="en">
+ <head>
+<center><BR><BR>
+ <H1>DEMONSTATOR OF FLEXIBLE TRANSPORT SYSTEM</H1>
+ <body bgcolor="#E6E6FA">
+
+  <br><br><br><br>
+     <meta charset="UTF-8">
+     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+     <title>Title</title>
+
+
+     <style>
+
+body {
+    background: url(g.png) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
+}
+ #button {
+        height: 200px;
+      width: 200px;
+      border-radius : 100%;
+      background-color: #C91826;
+      color: #fff;
+      font-weight: bold;
+      font-size: 40px;
+      text-decoration: none;
+     text-align: center;
+      text-shadow: 0px -1px 0px rgba(0,0,0,0.5);
+       margin-left : auto;
+       margin-top : 30px;
+       margin-bottom : 40px;
+       margin-right : auto;
+       border: 1px solid;
+       border-color: #B21522;
+       border-radius: 100%;
+       -moz-border-radius: 100%;
+       -webkit-border-radius: 100%;
+     box-shadow: 0 9px #999;
+      }
+ #button:hover{
+    color: #ffffff;
+   background-color: #73AD21;
+}
+ }
+ #rcorners1 {
+    border-radius: 25px;
+    background: #73AD21;
+    padding: 20px;
+    width: 200px;
+    height: 150px;
+     box-shadow: 0 9px #999;
+}
+
+#rcorners2 {
+    border-radius: 25px;
+    border: 2px solid #73AD21;
+    padding: 20px;
+    width: 200px;
+    height: 150px;
+}
+
+#rcorners3 {
+    border-radius: 25px;
+    background: url(paper.gif);
+    background-position: left top;
+    background-repeat: repeat;
+    padding: 20px;
+    width: 200px;
+    height: 150px;
+    box-shadow: 0 9px #999;
+}
+ </style>
+
+ </head>
+ <body>
+
+
+
+
+ <button type="submit" style= "cursor:pointer" id="button" align="center" value="submit" Onclick="window.location.href='helloworld2.html'">Circle <i class="fa fa-circle"></i> &nbsp;&nbsp;</button>
+ <button align="center" style= "cursor:pointer" type="submit" id="button" value="submit"  Onclick="window.location.href='samm.html'">Barchart <i class="fa fa-bar-chart"></i></button>
+
+ </body>
+</center>
+ </html>
