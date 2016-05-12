@@ -23,6 +23,7 @@ ENV SOCKFILE=/srv/run/gunicorn.sock
 RUN apt-get update && apt-get -y upgrade
 RUN apt-get install -y python python-pip nginx gettext
 
+
 # Create application subdirectories
 WORKDIR $DOCKYARD_SRVHOME
 RUN mkdir media static logs run
@@ -34,6 +35,7 @@ COPY $DOCKYARD_SRC $DOCKYARD_SRVPROJ
 COPY ./nginx.conf /etc/nginx/
 COPY ./Client /srv/static/
 # COPY ./index.html /srv/static/index.html
+
 
 # turn daemon mode off, otherwise nginx quits and docker container also
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
@@ -48,6 +50,11 @@ RUN pip install -r $DOCKYARD_SRVPROJ/requirements.txt
 
 # Port to expose
 EXPOSE 80
+
+# Install MYSQL
+
+RUN apt-get install postgresql postgresql-contrib
+
 
 
 # Copy entrypoint script into the image
