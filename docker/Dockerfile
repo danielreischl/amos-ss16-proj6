@@ -53,7 +53,7 @@ EXPOSE 80
 
 # Install MYSQL
 
-RUN apt-get install postgresql postgresql-contrib
+RUN apt-get -y install postgresql postgresql-contrib
 
 
 
