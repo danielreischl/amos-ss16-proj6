@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class VisuConfig(AppConfig):
+class HelloWorldConfig(AppConfig):
     name = 'helloWorld'
