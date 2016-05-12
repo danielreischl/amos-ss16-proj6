@@ -28,8 +28,12 @@ angular
         templateUrl: 'sections/circlePage/circleCarrier.html'
       })
 
+      .when('/BarCarrier', {
+        templateUrl: 'sections/barPage/Barchart_shefali_vicky.html'
+      })
+
       .otherwise({
-        redirectTo: '/index.html',
+        redirectTo: '/',
 
        });
     }]);
