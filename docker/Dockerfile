@@ -21,7 +21,9 @@ ENV SOCKFILE=/srv/run/gunicorn.sock
 
 # Update the default application repository sources list
 RUN apt-get update && apt-get -y upgrade
-RUN apt-get install -y python python-pip nginx gettext
+
+# install needed software
+RUN apt-get install -y python python-pip nginx postgresql postgresql-contrib gettext
 
 
 # Create application subdirectories
@@ -51,9 +53,7 @@ RUN pip install -r $DOCKYARD_SRVPROJ/requirements.txt
 # Port to expose
 EXPOSE 80
 
-# Install Postgres
-
-RUN apt-get -y install postgresql postgresql-contrib
+# setup postgres
 
 USER postgres
 RUN    /etc/init.d/postgresql start &&\
