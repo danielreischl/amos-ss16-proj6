@@ -54,10 +54,11 @@ RUN pip install -r $DOCKYARD_SRVPROJ/requirements.txt
 EXPOSE 80
 
 # setup postgres
+# TODO: CREATE DB-PASSWORD IN TRAVIS-CI AND USE THIS ONE BELOW INSTEAD OF DOCKER PWD
 
 USER postgres
 RUN    /etc/init.d/postgresql start &&\
-    psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
+    psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'DOCKER_PASSWORD';" &&\
     createdb -O docker docker
 
 RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.3/main/pg_hba.conf
