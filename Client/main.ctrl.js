@@ -30,7 +30,7 @@ angular.module('app')
     }
 })
 
-.controller('circlePopUpController', function($scope) {
+.controller('circlePopUpController', function($scope, id) {
     $scope.title = "Carrier X, placeholder for the carrier ID";
 })
 
@@ -42,10 +42,12 @@ angular.module('app')
 
 /* open up a dialogue window upon triggering it via button click */
     $scope.openDialog = function(event) {
+    alert(event.target.id)
      $mdDialog.show({
          controller: "circlePopUpController",
          templateUrl: 'sections/circlePage/circlePopUp.html',
          clickOutsideToClose:true
+
     })
 
     }
@@ -53,11 +55,6 @@ angular.module('app')
 /* create the circle page upon button click. */
 
     $scope.circleGraph = function() {
-    /*  first look if there are more carriers in the database than displayed right now.
-    the functions looks for all divs with the class circle on it*/
-
-
-  //TODO:  var x = document.querySelectorAll("div.circleDashboard");
 
     // create circle graphs and give them a unique ID
 
@@ -67,7 +64,6 @@ angular.module('app')
     var idCounter = 0;
 
     for (x in arrayCarrier) {
-
 
         var circleId = "carrier " + idCounter;
         var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="openDialog($event)"></canvas>';
@@ -87,6 +83,7 @@ angular.module('app')
       var centerX = canvas.width / 2;
       var centerY = canvas.height / 2;
       var radius = 60;
+      var percentageEnergy =  Math.round((energy/averageEnergy) * 100);
 
       context.beginPath();
       context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -109,6 +106,7 @@ angular.module('app')
       context.lineStyle="#212121";
       context.font="15px sans-serif";
       context.fillText(carrier, centerX - 15, centerY);
+      context.fillText(percentageEnergy + "%", centerX - 15, centerY + 20);
     }
 
 

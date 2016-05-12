@@ -1,11 +1,11 @@
 <!--
-This page displays the carrier dashbaord view fragment -->
+This page displays the circle carrier dashbaord view fragment. The function circleGraph will be called to create circles,
+ depending on the amount of carriers avaiable in the database-->
 
 
 <div ng-controller="circleGraphController">
 
-    <section layout="column">
-        <md-button class="md-raised md-cornered" ng-click="circleGraph()"> Refresh Circle Page</md-button>
+    <section layout="column" ng-init="circleGraph()">
     </section>
 
     <section layout ="column" layout-align="center center">
