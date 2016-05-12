@@ -326,4 +326,4 @@ if len(DATA_FILE_NAMES) > 1:
 for index, row in initialData.iterrows():
     for drive in range(0, AMOUNT_OF_DRIVES-1):
         processData([index, drive + 1, row['energy'][drive], row['position'][drive]])
-    #sleep(WAIT_TIME_IN_SECONDS)
+    sleep(WAIT_TIME_IN_SECONDS)
