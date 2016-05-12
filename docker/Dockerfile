@@ -23,7 +23,7 @@ ENV SOCKFILE=/srv/run/gunicorn.sock
 RUN apt-get update && apt-get -y upgrade
 
 # install needed software
-RUN apt-get install -y python python-pip nginx postgresql postgresql-contrib gettext
+RUN apt-get install -y python python-pip python-dev nginx postgresql postgresql-contrib libpq-dev gettext
 
 
 # Create application subdirectories
