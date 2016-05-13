@@ -15,12 +15,14 @@ import numpy as np
 from time import sleep
 #import setConstants to maintain all constants on one place
 import setConstants
+#import glob to enable the search in a folder
+import glob
 
 # Constants
 # WAIT_TIME_IN_SECONDS: Time the script should wait until it calls the function again (in seconds)
 WAIT_TIME_IN_SECONDS = setConstants.WAIT_TIME_IN_SECONDS
 # Input file names of data here
-DATA_FILE_NAMES = ("Session_0_Drive_0.csv", "Session_0_Drive_1.csv")
+DATA_FILE_NAMES = []
 # AMOUNT_OF_DRIVES: How many Drives are producing data
 AMOUNT_OF_DRIVES = setConstants.AMOUNT_OF_DRIVES
 # AMOUNT_OF_CARRIERS: How many Carriers are in the system
@@ -29,6 +31,12 @@ AMOUNT_OF_CARRIERS = setConstants.AMOUNT_OF_CARRIERS
 DATA_SEPARATOR = ';'
 # Every X th row of the data is kept and averagedx
 KEEP_EVERY_X_ROW = 2
+
+#Write all DATA_FILE_NAMES in an Array
+for files in glob.glob("InitialDataFiles/*.csv"):
+    DATA_FILE_NAMES.append(files)
+
+
 
 # Variables
 # Array that saves for every drive which carrier is on it
@@ -57,11 +65,11 @@ def processData(INPUT):
 
     print " "
     time = INPUT[0]
-    print "Time      " + str(time)
+    #print "Time      " + str(time)
     position = INPUT[3]
-    print "Position  " + str(position)
+    #print "Position  " + str(position)
     energy = INPUT[2]
-    print "Energy    " + str(energy)
+    #print "Energy    " + str(energy)
 
     # If the line has just started, then the first carrier enters the first drive
     if runNumber == 0:
@@ -70,10 +78,10 @@ def processData(INPUT):
         driveXHasCarrier[0] = 1
 
     drive = int(INPUT[1])
-    print " "
-    print "Drive     " + str(drive)
+    #print " "
+    #print "Drive     " + str(drive)
     carrier = int(driveXHasCarrier[drive - 1])
-    print "Carrier   " + str(carrier)
+    #print "Carrier   " + str(carrier)
 
     # If the current drive doesnt have a carrier, it cannot be mapped
     if driveXHasCarrier[drive - 1] == 0:
@@ -318,6 +326,7 @@ if len(DATA_FILE_NAMES) > 1:
         tempFile = pd.read_csv(DATA_PATH[index], DATA_SEPARATOR, index_col=0)
         # Merges the temp file with the initialData file
         initialData = pd.concat([initialData, tempFile], axis=1)
+        print initialData
 
 #print "Initial Data: "
 #print initialData
