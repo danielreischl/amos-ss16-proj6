@@ -76,10 +76,12 @@ WSGI_APPLICATION = 'amos.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
+# until postgresql is running, we use sqlite
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'docker',
+        'ENGINE': 'django.db.backends.sqlite3', #django.db.backends.postgresql_psycopg2',
+        'NAME':  os.path.join(BASE_DIR, 'db.sqlite3'), #'docker',
         'USER': 'docker',
         'PASSWORD': 'docker',
         'HOST': 'localhost'

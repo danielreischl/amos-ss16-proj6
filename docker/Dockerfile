@@ -1,4 +1,4 @@
-############################################################
+###########################################################
 # Dockerfile to run a Django-based web application
 # Based on an Amos Web Service Base Image
 ############################################################
@@ -23,7 +23,10 @@ ENV SOCKFILE=/srv/run/gunicorn.sock
 RUN apt-get update && apt-get -y upgrade
 
 # install needed software
-RUN apt-get install -y python python-pip python-dev nginx postgresql postgresql-contrib libpq-dev gettext
+RUN apt-get install -y python python-pip python-dev nginx sqlite3 gettext
+
+# the following packages will be needed for postgresql
+# postgresql-9.3 postgresql-contrib-9.3 postgres-xc libpq-dev  
 
 
 # Create application subdirectories
@@ -54,25 +57,31 @@ RUN pip install -r $DOCKYARD_SRVPROJ/requirements.txt
 EXPOSE 80
 
 # setup postgres
+# removed until problems are solved, uncomment later
 # TODO: CREATE DB-PASSWORD IN TRAVIS-CI AND USE THIS ONE BELOW INSTEAD OF DOCKER PWD
 
-USER postgres
-RUN    /etc/init.d/postgresql start &&\
-    psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
-    createdb -O docker docker
+# USER postgres
+# RUN    /etc/init.d/postgresql start &&\
+#    psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
+#    createdb -O docker docker
 
-RUN echo "host all  all    127.0.0.1  md5" >> /etc/postgresql/9.3/main/pg_hba.conf
+# RUN echo "host all  all    127.0.0.1/0  md5" >> /etc/postgresql/9.3/main/pg_hba.conf
+# COPY ./pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
 
 # And add ``listen_addresses`` to ``/etc/postgresql/9.3/main/postgresql.conf``
-RUN echo "listen_addresses= 'localhost'" >> /etc/postgresql/9.3/main/postgresql.conf
+# RUN echo "listen_addresses= 'localhost'" >> /etc/postgresql/9.3/main/postgresql.conf
+
+# COPY ./postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
 
 # Expose the PostgreSQL port
-EXPOSE 5432
+# EXPOSE 5432
 
 # Set the default command to run when starting the container
-CMD ["/usr/lib/postgresql/9.3/bin/postgres", "-D", "/var/lib/postgresql/9.3/main", "-c", "config_file=/etc/postgresql/9.3/main/postgresql.conf"]
+# CMD ["/usr/lib/postgresql/9.3/bin/postgres", "-D", "/var/lib/postgresql/9.3/main", "-c", "config_file=/etc/postgresql/9.3/main/postgresql.conf"]
 
 # Copy entrypoint script into the image
 WORKDIR $DOCKYARD_SRVPROJ
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
+
+USER root

@@ -5,6 +5,15 @@ set -ue
 SOCKFILE=/srv/run/gunicorn.sock
 
 
+# Postgresql startup: temporarily removed
+# echo Starting postgresq
+
+# touch /srv/logs/postgresql.log
+# exec su postgres -c 'pg_ctl start -D /var/lib/postgresql/9.3/main -l /srv/logs/postgresql.log'
+# exec sudo su - postgres && /usr/lib/postgresql/9.3/bin/postgres -D /var/lib/postgresql/9.3/main -c config_file=/etc/postgresql/9.3/main/postgresql.conf  
+
+echo apply django migrations
+
 python manage.py migrate                  # Apply database migrations
 #python manage.py collectstatic --noinput  # Collect static files
 
@@ -13,10 +22,11 @@ touch /srv/logs/gunicorn.log
 touch /srv/logs/access.log
 touch /srv/logs/nginx-access.log
 touch /srv/logs/nginx-error.log
+
 touch $SOCKFILE
 tail -n 0 -f /srv/logs/*.log &
 
-#Start Nginx
+
 
 #echo Starting nginx.
 
@@ -26,10 +36,14 @@ tail -n 0 -f /srv/logs/*.log &
 # for some reason piping output to the original nginx.conf file does not work
 envsubst '$CONTEXT_PATH' </etc/nginx/nginx.conf> /etc/nginx/nginx2.conf
 cp /etc/nginx/nginx2.conf /etc/nginx/nginx.conf
-cp /etc/nginx/nginx.conf /srv/logs/
-cp /etc/nginx/nginx2.conf /srv/logs/
+#cp /etc/nginx/nginx.conf /srv/logs/
+#cp /etc/nginx/nginx2.conf /srv/logs/
+
+#Start Nginx
 
 exec nginx &
+
+
 
 # Start Gunicorn processes
 echo Starting Gunicorn.
