@@ -3,11 +3,14 @@ import numpy as np
 #from matplotlib import pyplot as plt
 from scipy import interpolate
 
+#import setConstants to maintain all constants on one place
+import setConstants
+
 # a script to create dummy data -- preliminary version
 # TODO: documentation, restructuring, bugfixes   
 
-lineLength = 200
-driveLength = 50
+lineLength = setConstants.LINE_LENGTH
+driveLength = setConstants.DRIVE_LENGTH
 T1 = 100
 T2 = T1 + 100
 T3 = T2 + 100

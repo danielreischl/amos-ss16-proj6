@@ -13,16 +13,18 @@ import os
 import numpy as np
 # Imports sleep for sleeping
 from time import sleep
+#import setConstants to maintain all constants on one place
+import setConstants
 
 # Constants
 # WAIT_TIME_IN_SECONDS: Time the script should wait until it calls the function again (in seconds)
-WAIT_TIME_IN_SECONDS = 0.001
+WAIT_TIME_IN_SECONDS = setConstants.WAIT_TIME_IN_SECONDS
 # Input file names of data here
 DATA_FILE_NAMES = ("Session_0_Drive_0.csv", "Session_0_Drive_1.csv")
 # AMOUNT_OF_DRIVES: How many Drives are producing data
-AMOUNT_OF_DRIVES = 2
+AMOUNT_OF_DRIVES = setConstants.AMOUNT_OF_DRIVES
 # AMOUNT_OF_CARRIERS: How many Carriers are in the system
-AMOUNT_OF_CARRIERS = 2
+AMOUNT_OF_CARRIERS = setConstants.AMOUNT_OF_CARRIERS
 # DATA_SEPARATOR: Separator of the CSV-File
 DATA_SEPARATOR = ';'
 # Every X th row of the data is kept and averagedx
