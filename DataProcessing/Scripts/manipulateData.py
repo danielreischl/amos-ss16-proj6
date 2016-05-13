@@ -6,9 +6,9 @@ import os
 import numpy as np
 # Imports sleep for sleeping
 from time import sleep
-
+# Imports setConstants to import the Constants
 import setConstants
-
-print setConstants.DRIVELENGTH
+# Imports glob to enable the script to search for all csv files in a particular folder
+import glob
 
 print "running"
