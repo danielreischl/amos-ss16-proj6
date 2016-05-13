@@ -1,6 +1,6 @@
 import numpy as np
-import math
-from matplotlib import pyplot as plt
+#import math
+#from matplotlib import pyplot as plt
 from scipy import interpolate
 
 # a script to create dummy data -- preliminary version
@@ -88,7 +88,7 @@ class Drive:
         print "Exporting ..."
         print fileName
 
-        #If its neccessary to export
+        #If its neccessary to transpose before exporting
         #export = np.transpose(exportArray[:,:])
 
         np.savetxt(fileName, self.data, fmt='%0.5f', delimiter=';', newline='\n',
