@@ -2,22 +2,25 @@
 This page displays the pop up window fragment, which will be shown when a circle is clicked-->
 
 
-<md-dialog ng-controller = "circlePopUpController">
+<md-dialog>
   <form>
     <md-dialog-content>
       <div class="md-dialog-content">
-
-          <h1> {{title}} </h1>
-       <p>
-          In this window, you can choose if you want to add the carrier to the side navigation bar or
-           only take a closer look on the carrier itself.
-       </p>
+          <h1> This is Carrier:{{carrierNumber}} </h1>
       </div>
     </md-dialog-content>
+
     <md-dialog-actions layout="row">
-      <md-button>Put carrier into Side Navigation</md-button>
-        <span flex> </span>
-      <md-button >Take a closer look on the carrier</md-button>
+        <section layout="column">
+             <label>Place into comparison sidebar</label>
+             <md-button ng-click="addToComparison()"> <md-icon md-svg-src="assets/images/ic_add_circle_black_24px.svg"></md-icon> </md-button>
+        </section>
+        <span flex = "20"> </span>
+        <section layout="column">
+             <label>Drill down this carrier</label>
+             <md-button ng-click="drillDown()"> <md-icon md-svg-src="assets/images/ic_zoom_in_black_24px.svg"></md-icon> </md-button>
+        </section>
     </md-dialog-actions>
   </form>
 </md-dialog>
+
