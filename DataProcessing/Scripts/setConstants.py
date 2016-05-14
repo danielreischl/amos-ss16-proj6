@@ -1,7 +1,8 @@
-#File to maintain all constants which will be used in all DataProcessing Scripts
-
 #!/usr/bin/env python
 # encoding: utf-8
+
+#File to maintain all constants which will be used in all DataProcessing Scripts
+
 
 #Length of all drives
 DRIVE_LENGTH = 200
@@ -11,8 +12,10 @@ LINE_LENGTH = 50
 AMOUNT_OF_DRIVES = 5
 #Amount of Carriers
 AMOUNT_OF_CARRIERS = 2
-#Wait time of the Simulator in Seconds
-WAIT_TIME_IN_SECONDS = 0.001
+#Wait time of the Simulator in Seconds used in dataProcessing.py
+WAIT_TIME_IN_SECONDS_DPPY = 0.001
 #Session of the demonstrator setting
 SESSION = 1
+#WaitTime of manipulateData.py
+WAIT_TIME_IN_SECONDS_MPY = 30
 

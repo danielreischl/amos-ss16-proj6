@@ -20,7 +20,7 @@ import glob
 
 # Constants
 # WAIT_TIME_IN_SECONDS: Time the script should wait until it calls the function again (in seconds)
-WAIT_TIME_IN_SECONDS = setConstants.WAIT_TIME_IN_SECONDS
+WAIT_TIME_IN_SECONDS = setConstants.WAIT_TIME_IN_SECONDS_DPPY
 # Input file names of data here
 DATA_FILE_NAMES = []
 # AMOUNT_OF_DRIVES: How many Drives are producing data
