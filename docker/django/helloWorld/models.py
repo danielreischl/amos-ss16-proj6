@@ -11,7 +11,7 @@ class Time(models.Model):
 # Database model
 # Author: Inkibus (Rene R.)
 
-class tbl_Session:
+class tbl_Session(models.Model):
     # It is not necessary to explicitly declare an ID
 
     # Every time something in the production system is changed, a new Session is stored, to have coherent data
@@ -19,14 +19,14 @@ class tbl_Session:
     # This cannot be the primary key because the sessionNumber is dependent on the read CSV file
     sessionNumber = models.IntegerField()
 
-class tbl_Carrier:
+class tbl_Carrier(models.Model):
     # It is not necessary to explicitly declare an ID
 
     # Integer that identifies the carrier
     # This cannot be the primary key because the carrierNumber is dependent on the read CSV file
     carrierNumber = models.IntegerField()
 
-class tbl_Iteration:
+class tbl_Iteration(models.Model):
     # It is not necessary to explicitly declare an ID
 
     # Integer of the current Iteration in which a carrier is in the system
@@ -34,7 +34,7 @@ class tbl_Iteration:
     # This cannot be the primary key because the iterationNumber is dependent on the read CSV file
     iterationNumber = models.BigIntegerField()
 
-class tbl_TimeStampData:
+class tbl_TimeStampData(models.Model):
     # It is not necessary to explicitly declare an ID
     # Maybe necessary, because the implicit ID will not be a "BigInteger", which is required
 
@@ -58,7 +58,7 @@ class tbl_TimeStampData:
     # The total amount of energy consumed by the carrier since the last timeStamp (in W)
     energyConsumption = models.FloatField()
 
-class tbl_IterationData:
+class tbl_IterationData(models.Model):
     # It is not necessary to explicitly declare an ID
     #  Maybe necessary, because the implicit ID will not be a "BigInteger", which is required
 
