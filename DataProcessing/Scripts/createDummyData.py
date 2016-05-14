@@ -1,9 +1,7 @@
 import numpy as np
-#import math
-#from matplotlib import pyplot as plt
 from scipy import interpolate
 
-#import setConstants to maintain all constants on one place
+# import setConstants to maintain all constants on one place
 import setConstants
 
 # a script to create dummy data -- preliminary version
@@ -14,10 +12,11 @@ driveLength = setConstants.DRIVE_LENGTH
 T1 = 100
 T2 = T1 + 100
 T3 = T2 + 100
-endTime = T3 
-x = np.array([-20, 0,T1,T2,T3, T3+50])
-y = np.array([0, 0,driveLength,3*driveLength,4*driveLength + 5, 4*driveLength + 5])
+endTime = T3
+x = np.array([-20, 0, T1, T2, T3, T3 + 50])
+y = np.array([0, 0, driveLength, 3 * driveLength, 4 * driveLength + 5, 4 * driveLength + 5])
 spline = interpolate.UnivariateSpline(x, y, k=3, s=0)
+
 
 # the function describe position/velocity/acceleration of
 # carriers RELATIVE to their entry point
@@ -30,14 +29,16 @@ def velocityFunction(time):
     velocity = spline.derivative()
     return velocity(time)
 
+
 def accelerationFunction(time):
     acceleration = spline.derivative(n=2)
     return acceleration(time)
-   
+
 
 def energyFunction(time, driveId):
     mass = 1
     return mass * velocityFunction(time) * accelerationFunction(time) + contaminationFunction(driveId)
+
 
 def contaminationFunction(driveId):
     # add contamination here that depends on the drive
@@ -47,8 +48,8 @@ def contaminationFunction(driveId):
 class Carrier:
     entryTime = -1  # time when carriers enters line
 
-    def __init__(self, entryTime,carrierId):
-        self.entryTime = entryTime  
+    def __init__(self, entryTime, carrierId):
+        self.entryTime = entryTime
         self.carrierId = carrierId
 
     def getPosition(self, time):
@@ -75,7 +76,7 @@ class Drive:
         self.drivePosition = drivePosition
         self.data = np.zeros((endTime + 1, 3))
         self.driveNumber = driveNumber
-        for time in range(endTime+1):
+        for time in range(endTime + 1):
             self.data[time, 0] = time
 
     def addPositionPoint(self, time, position, energy):
@@ -83,7 +84,6 @@ class Drive:
         self.data[time, 2] = energy
 
     def export2Csv(self):
-
         session = 0
 
         fileName = "Session_" + str(session) + "_Drive_" + str(self.driveNumber) + ".csv"
@@ -91,8 +91,8 @@ class Drive:
         print "Exporting ..."
         print fileName
 
-        #If its neccessary to transpose before exporting
-        #export = np.transpose(exportArray[:,:])
+        # If its neccessary to transpose before exporting
+        # export = np.transpose(exportArray[:,:])
 
         np.savetxt(fileName, self.data, fmt='%0.5f', delimiter=';', newline='\n',
                    header='time;position;energy', footer='', comments='# ')
@@ -111,7 +111,7 @@ class Data:
         self.numberOfDrives = numberOfDrives
         self.numberOfCarriers = len(entryTimes)
 
-        carrierId = 0        
+        carrierId = 0
         for entryTime in entryTimes:
             self.carriers.append(Carrier(entryTime, carrierId))
             carrierId = carrierId + 1
@@ -145,4 +145,3 @@ d = Data([5, 150, 300, 500, 700], 5, 200)
 
 d.createDummy()
 d.export2Csv()
-
