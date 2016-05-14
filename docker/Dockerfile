@@ -23,7 +23,7 @@ ENV SOCKFILE=/srv/run/gunicorn.sock
 RUN apt-get update && apt-get -y upgrade
 
 # install needed software
-RUN apt-get install -y python python-pip python-dev nginx sqlite3 gettext
+RUN apt-get install -y python python-pip python-dev python-pandas nginx sqlite3 gettext
 # install libblas-dev
 RUN apt-get install -y libatlas-base-dev
 
