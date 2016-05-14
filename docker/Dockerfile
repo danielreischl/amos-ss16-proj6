@@ -40,8 +40,12 @@ VOLUME ["$DOCKYARD_SRVHOME/media/", "$DOCKYARD_SRVHOME/logs/"]
 # Copy application source code to SRCDIR
 COPY $DOCKYARD_SRC $DOCKYARD_SRVPROJ
 
+# Copy nginx configuration
 COPY ./nginx.conf /etc/nginx/
+#Copy Client to src/static
 COPY ./Client /srv/static/
+#Copy DataProcessing Scripts to srv/DataProcessing
+COPY ./DataProcessing/Scripts /srv/DataProcessing
 # COPY ./index.html /srv/static/index.html
 
 
