@@ -13,7 +13,7 @@ import os
 import numpy as np
 # Imports sleep for sleeping
 from time import sleep
-#import setConstants to maintain all constants on one place
+# Imports setConstants to maintain all constants on one place
 import setConstants
 # Import glob to enable the search in a folder
 import glob
@@ -34,11 +34,11 @@ DATA_SEPARATOR = setConstants.CSV_SEPARATOR
 # Every X th row of the data is kept and averagedx
 KEEP_EVERY_X_ROW = 2
 
-#Creates a TextFile "Running.txt" on Start to let manipulateData.py know that the script is still running
+# Creates a TextFile "Running.txt" on Start to let manipulateData.py know that the script is still running
 with open("Running.txt", "w") as text_file:
     text_file.write("Running")
 
-#Write all DATA_FILE_NAMES in an Array
+# Write all DATA_FILE_NAMES in an Array
 for files in glob.glob("InitialDataFiles/*.csv"):
     DATA_FILE_NAMES.append(files)
 
@@ -47,7 +47,7 @@ if not DATA_FILE_NAMES:
     print "No Files in Folder"
     # Removes Running.txt, so the simulator can also terminate
     os.remove("Running.txt")
-    #Terminates the script
+    # Terminates the script
     sys.exit()
 
 # Reading out Session from FileName
@@ -80,11 +80,11 @@ def processData(INPUT):
 
     print " "
     time = INPUT[0]
-    #print "Time      " + str(time)
+    # print "Time      " + str(time)
     position = INPUT[3]
-    #print "Position  " + str(position)
+    # print "Position  " + str(position)
     energy = INPUT[2]
-    #print "Energy    " + str(energy)
+    # print "Energy    " + str(energy)
 
     # If the line has just started, then the first carrier enters the first drive
     if runNumber == 0:
@@ -93,15 +93,14 @@ def processData(INPUT):
         driveXHasCarrier[0] = 1
 
     drive = int(INPUT[1])
-    #print " "
-    #print "Drive     " + str(drive)
+    # print " "
+    # print "Drive     " + str(drive)
     carrier = int(driveXHasCarrier[drive - 1])
-    #print "Carrier   " + str(carrier)
+    # print "Carrier   " + str(carrier)
 
     # If the current drive doesnt have a carrier, it cannot be mapped
     if driveXHasCarrier[drive - 1] == 0:
         print "Drive " + str(drive) + " doesn't have a carrier, the data is deleted"
-        # TODO maybe save the amount of data that is being deleted
         return
 
     # If the timestamp is the same as in the previous run, the data is not recorded
@@ -314,6 +313,7 @@ def ensureEnoughSpaceInCarrierData(carrier):
         carrierData = np.resize(carrierData,
                                 (int(carrierData.shape[0]), int(carrierData.shape[1]), int(carrierData.shape[2] * 2)))
 
+
 #
 # Start of the Script
 #
@@ -329,12 +329,10 @@ DATA_PATH[0] = os.path.abspath(DATA_FILE_NAMES[0])
 
 # First row of data frames
 initialData = pd.read_csv(DATA_PATH[0], DATA_SEPARATOR, index_col=0)
-#Extracting the DriveNo of the first loaded File in DATA_PATH
-dirveOfFirstFile = DATA_PATH[0].split("_")[3].replace('.csv','')
-#Changing the Column names to energy+DriveNo & Position+DriveNo
-initialData.columns = {'energy' + dirveOfFirstFile, 'position' + dirveOfFirstFile}
-
-
+# Extracting the DriveNo of the first loaded File in DATA_PATH
+driveOfFirstFile = DATA_PATH[0].split("_")[3].replace('.csv', '')
+# Changing the Column names to energy+DriveNo & Position+DriveNo
+initialData.columns = {'energy' + driveOfFirstFile, 'position' + driveOfFirstFile}
 
 # If there is more than 1 array, add the other ones to the side
 if len(DATA_FILE_NAMES) > 1:
@@ -357,7 +355,7 @@ if len(DATA_FILE_NAMES) > 1:
 # ms, No. of Drive, Energy Consumption, Position
 for index, row in initialData.iterrows():
     for drive in range(0, AMOUNT_OF_DRIVES):
-        processData ([index, drive + 1, row['energy'+str(drive)], row['position'+str(drive)]])
+        processData([index, drive + 1, row['energy' + str(drive)], row['position' + str(drive)]])
     sleep(WAIT_TIME_IN_SECONDS)
 
 # Removes the status.txt file after the end of the simulation
