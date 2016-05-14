@@ -17,5 +17,5 @@ WAIT_TIME_IN_SECONDS_DPPY = 0.001
 #Session of the demonstrator setting
 SESSION = 1
 #WaitTime of manipulateData.py
-WAIT_TIME_IN_SECONDS_MPY = 30
+WAIT_TIME_IN_SECONDS_MPY = 5
 

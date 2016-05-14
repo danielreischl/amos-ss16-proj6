@@ -10,5 +10,17 @@ from time import sleep
 import setConstants
 # Imports glob to enable the script to search for all csv files in a particular folder
 import glob
+import sys
 
-print "running"
+sleep(0.5)
+
+while os.path.isfile("Running.txt"):
+    print "Simulator running"
+    sleep(setConstants.WAIT_TIME_IN_SECONDS_MPY)
+
+else:
+    print "Simulator no longer running"
+    sys.exit()
+
+
+

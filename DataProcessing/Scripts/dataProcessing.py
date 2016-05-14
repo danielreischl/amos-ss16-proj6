@@ -32,6 +32,10 @@ DATA_SEPARATOR = ';'
 # Every X th row of the data is kept and averagedx
 KEEP_EVERY_X_ROW = 2
 
+#Creates a TextFile "Running.txt" on Start to let manipulateData.py know that the script is still running
+with open("Running.txt", "w") as text_file:
+    text_file.write("Running")
+
 #Write all DATA_FILE_NAMES in an Array
 for files in glob.glob("InitialDataFiles/*.csv"):
     DATA_FILE_NAMES.append(files)
