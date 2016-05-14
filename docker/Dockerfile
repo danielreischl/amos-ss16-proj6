@@ -25,7 +25,8 @@ RUN apt-get update && apt-get -y upgrade
 # install needed software
 RUN apt-get install -y python python-pip python-dev nginx sqlite3 gettext
 # install libblas-dev
-RUN apt-get install -y libblas-dev liblapack-dev
+RUN apt-get install -y libatlas-base-dev
+
 
 # the following packages will be needed for postgresql
 # postgresql-9.3 postgresql-contrib-9.3 postgres-xc libpq-dev  
