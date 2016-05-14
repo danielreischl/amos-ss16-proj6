@@ -28,9 +28,10 @@ def check_folder():
         return True
 
 # Function to process each file
-def process_file(filename):
-    print filename
-
+def process_file(fileName):
+    #Loading Path of the file
+    filePath = os.path.abspath(fileName)
+    Data = pd.read_csv(filePath, setConstants.CSV_SEPARATOR, index_col=0)
 
 while os.path.isfile("Running.txt"):
 

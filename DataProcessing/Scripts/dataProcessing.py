@@ -30,7 +30,7 @@ AMOUNT_OF_DRIVES = setConstants.AMOUNT_OF_DRIVES
 # AMOUNT_OF_CARRIERS: How many Carriers are in the system
 AMOUNT_OF_CARRIERS = setConstants.AMOUNT_OF_CARRIERS
 # DATA_SEPARATOR: Separator of the CSV-File
-DATA_SEPARATOR = ';'
+DATA_SEPARATOR = setConstants.CSV_SEPARATOR
 # Every X th row of the data is kept and averagedx
 KEEP_EVERY_X_ROW = 2
 
