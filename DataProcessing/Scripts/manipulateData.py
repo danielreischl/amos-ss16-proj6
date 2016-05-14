@@ -10,16 +10,53 @@ from time import sleep
 import setConstants
 # Imports glob to enable the script to search for all csv files in a particular folder
 import glob
+# Imports sys to let the script die
 import sys
 
+# Putting Script a sleep for 0.5 sec to ensure that Running.txt is already created
 sleep(0.5)
 
+#Function that checks if new csv files are in the folder
+def check_folder():
+    for files in glob.glob("CleanedDataFiles/*.csv"):
+        DATA_FILE_NAMES.append(files)
+
+    # Returns False or True depending on where file names are stored in the list or not
+    if not DATA_FILE_NAMES:
+        return False
+    else:
+        return True
+
+# Function to process each file
+def process_file(filename):
+    print filename
+
+
 while os.path.isfile("Running.txt"):
-    print "Simulator running"
+
+    # Initalize List for Data file names
+    DATA_FILE_NAMES = []
+    if check_folder():
+        for filename in DATA_FILE_NAMES:
+            #calls the function process_file with each filename stored in DATA_FILE_NAMES
+            process_file(filename)
+
+    # Sleep Time before the script checks again if the file exists.
     sleep(setConstants.WAIT_TIME_IN_SECONDS_MPY)
 
+    sys.exit()
+
 else:
+    # Needed to check if there are files in the folder which are not processed even after the simulator is no longer running
     print "Simulator no longer running"
+
+    # Initalize List for Data file names
+    DATA_FILE_NAMES = []
+    if check_folder():
+        for filename in DATA_FILE_NAMES:
+            # calls the function process_file with each filename stored in DATA_FILE_NAMES
+            process_file(filename)
+
     sys.exit()
 
 
