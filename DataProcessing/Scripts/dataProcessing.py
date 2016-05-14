@@ -40,7 +40,8 @@ with open("Running.txt", "w") as text_file:
 for files in glob.glob("InitialDataFiles/*.csv"):
     DATA_FILE_NAMES.append(files)
 
-
+# Reading out Session from FileName
+SESSION = DATA_FILE_NAMES[0].split("_")[1]
 
 # Variables
 # Array that saves for every drive which carrier is on it
@@ -348,3 +349,6 @@ for index, row in initialData.iterrows():
     for drive in range(0, AMOUNT_OF_DRIVES):
         processData ([index, drive + 1, row['energy'+str(drive)], row['position'+str(drive)]])
     sleep(WAIT_TIME_IN_SECONDS)
+
+# Removes the status.txt file after the end of the simulation
+os.remove("Running.txt")
