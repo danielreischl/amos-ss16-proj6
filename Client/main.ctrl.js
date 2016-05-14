@@ -30,7 +30,9 @@ angular.module('app')
     }
 })
 
-.controller('circlePopUpController', function($scope, id) {
+/* controller for the popupGraphs. Displays the carrier number*/
+
+.controller('circlePopUpController', function($scope) {
     $scope.title = "Carrier X, placeholder for the carrier ID";
 })
 
@@ -38,19 +40,27 @@ angular.module('app')
  and upon receiving an event, it should trigger the update circle button*/
 
 
-.controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia) {
+.controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout) {
 
-/* open up a dialogue window upon triggering it via button click */
+
+/* open up a dialogue window upon triggering it via button click or via the hover function. The event is delayed by a timer
+ if the the user is not leaving the hover area by the time the timer runs out, it will open up the popup. Else it will be canceled */
+    var timer;
+
     $scope.openDialog = function(event) {
-    alert(event.target.id)
-     $mdDialog.show({
-         controller: "circlePopUpController",
-         templateUrl: 'sections/circlePage/circlePopUp.html',
-         clickOutsideToClose:true
-
-    })
-
+        timer = $timeout(function () {
+            $mdDialog.show({
+            controller: "circlePopUpController",
+            templateUrl: 'sections/circlePage/circlePopUp.html',
+            clickOutsideToClose:true
+            })
+        }, 1000)
     }
+
+    $scope.closeDialog = function() {
+        $timeout.cancel(timer);
+    }
+
 
 /* create the circle page upon button click. */
 
@@ -66,7 +76,7 @@ angular.module('app')
     for (x in arrayCarrier) {
 
         var circleId = "carrier " + idCounter;
-        var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="openDialog($event)"></canvas>';
+        var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="openDialog($event)" ng-mouseenter="openDialog($event)" ng-mouseleave="closeDialog()"></canvas>';
         var temp = $compile(fragmenthtml)($scope);
         angular.element(document.getElementById('circleGraphs')).append(temp);
 
