@@ -20,6 +20,10 @@ import glob
 # Imports sys to terminate the function
 import sys
 
+# Creates a TextFile "Running.txt" on Start to let manipulateData.py know that the script is still running
+with open("Running.txt", "w") as text_file:
+    text_file.write("Running")
+
 # Constants
 # WAIT_TIME_IN_SECONDS: Time the script should wait until it calls the function again (in seconds)
 WAIT_TIME_IN_SECONDS = setConstants.WAIT_TIME_IN_SECONDS_DPPY
@@ -33,25 +37,12 @@ AMOUNT_OF_CARRIERS = setConstants.AMOUNT_OF_CARRIERS
 DATA_SEPARATOR = setConstants.CSV_SEPARATOR
 # Every X th row of the data is kept and averagedx
 KEEP_EVERY_X_ROW = 2
-
-# Creates a TextFile "Running.txt" on Start to let manipulateData.py know that the script is still running
-with open("Running.txt", "w") as text_file:
-    text_file.write("Running")
-
 # Write all DATA_FILE_NAMES in an Array
 for files in glob.glob("InitialDataFiles/*.csv"):
     DATA_FILE_NAMES.append(files)
-
-# Checks if a File is added to DATA_FILE_NAMES. If not it is terminating the script
-if not DATA_FILE_NAMES:
-    print "No Files in Folder"
-    # Removes Running.txt, so the simulator can also terminate
-    os.remove("Running.txt")
-    # Terminates the script
-    sys.exit()
-
 # Reading out Session from FileName
 SESSION = DATA_FILE_NAMES[0].split("_")[1]
+
 
 # Variables
 # Array that saves for every drive which carrier is on it
@@ -76,15 +67,14 @@ def processData(INPUT):
     global runNumber
     # Ensures that carrier Data is called from global variables
     global carrierData
-    # TODO maybe Save all INPUT values here to a local variable and use those throughout the algorithm
 
     print " "
     time = INPUT[0]
-    # print "Time      " + str(time)
-    position = INPUT[3]
-    # print "Position  " + str(position)
-    energy = INPUT[2]
-    # print "Energy    " + str(energy)
+    print "Time      " + str(time)
+    position = INPUT[2]
+    print "Position  " + str(position)
+    energy = INPUT[3]
+    print "Energy    " + str(energy)
 
     # If the line has just started, then the first carrier enters the first drive
     if runNumber == 0:
@@ -318,6 +308,14 @@ def ensureEnoughSpaceInCarrierData(carrier):
 # Start of the Script
 #
 
+# Checks if a File is added to DATA_FILE_NAMES. If not it is terminating the script
+if not DATA_FILE_NAMES:
+    print "No Files in Folder"
+    # Removes Running.txt, so the simulator can also terminate
+    os.remove("Running.txt")
+    # Terminates the script
+    sys.exit()
+
 # DATA_PATH creates an OS independent file path to the data files that were input as string names
 # Initialize empty DATA_PATH array
 DATA_PATH = ["" for x in range(DATA_FILE_NAMES.__sizeof__())]
@@ -331,8 +329,8 @@ DATA_PATH[0] = os.path.abspath(DATA_FILE_NAMES[0])
 initialData = pd.read_csv(DATA_PATH[0], DATA_SEPARATOR, index_col=0)
 # Extracting the DriveNo of the first loaded File in DATA_PATH
 driveOfFirstFile = DATA_PATH[0].split("_")[3].replace('.csv', '')
-# Changing the Column names to energy+DriveNo & Position+DriveNo
-initialData.columns = {'energy' + driveOfFirstFile, 'position' + driveOfFirstFile}
+# Changing the Column names to position & energy
+initialData.columns = {'position', 'energy'}
 
 # If there is more than 1 array, add the other ones to the side
 if len(DATA_FILE_NAMES) > 1:
@@ -346,16 +344,18 @@ if len(DATA_FILE_NAMES) > 1:
         # Extracting the DriveNo of the first loaded File in DATA_PATH
         driveOfCurrentFile = DATA_PATH[index].split("_")[3].replace('.csv', '')
         # Changing the Column names to energy+DriveNo & Position+DriveNo
-        tempFile.columns = {'energy' + driveOfCurrentFile, 'position' + driveOfCurrentFile}
+        tempFile.columns = {'position', 'energy'}
         # Merges the temp file with the initialData file
         initialData = pd.concat([initialData, tempFile], axis=1)
+
+print initialData
 
 # Iterates each row and afterwards each drive
 # Calls compressData with a pd.Series. The values are:
 # ms, No. of Drive, Energy Consumption, Position
 for index, row in initialData.iterrows():
     for drive in range(0, AMOUNT_OF_DRIVES):
-        processData([index, drive + 1, row['energy' + str(drive)], row['position' + str(drive)]])
+        processData([index, drive + 1, row['position'][drive], row['energy'][drive]])
     sleep(WAIT_TIME_IN_SECONDS)
 
 # Removes the status.txt file after the end of the simulation
