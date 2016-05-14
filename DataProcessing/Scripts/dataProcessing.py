@@ -15,8 +15,10 @@ import numpy as np
 from time import sleep
 #import setConstants to maintain all constants on one place
 import setConstants
-#import glob to enable the search in a folder
+# Import glob to enable the search in a folder
 import glob
+# Imports sys to terminate the function
+import sys
 
 # Constants
 # WAIT_TIME_IN_SECONDS: Time the script should wait until it calls the function again (in seconds)
@@ -39,6 +41,14 @@ with open("Running.txt", "w") as text_file:
 #Write all DATA_FILE_NAMES in an Array
 for files in glob.glob("InitialDataFiles/*.csv"):
     DATA_FILE_NAMES.append(files)
+
+# Checks if a File is added to DATA_FILE_NAMES. If not it is terminating the script
+if not DATA_FILE_NAMES:
+    print "No Files in Folder"
+    # Removes Running.txt, so the simulator can also terminate
+    os.remove("Running.txt")
+    #Terminates the script
+    sys.exit()
 
 # Reading out Session from FileName
 SESSION = DATA_FILE_NAMES[0].split("_")[1]
