@@ -2,8 +2,6 @@
 import pandas as pd
 # Imports OS for Operating System independent absolute file paths
 import os
-# Imports Pandas for Data handling
-import numpy as np
 # Imports sleep for sleeping
 from time import sleep
 # Imports setConstants to import the Constants
@@ -80,7 +78,7 @@ def load_to_database_comulated(data):
     #Inizialize DataFrame comulatedData
     comulatedData = pd.DataFrame(columns=['averageSpeed', 'averageEnergy', 'comEnergy', 'averageAcceleration'], index=['1'])
     #Adding Values to DataFrame
-    comulatedData.loc['1'] = pd.Series ({'averageSpeed':1, 'averageEnergy':averageEnergyConsumption, 'comEnergy':comulatedEnergyConsumption, 'averageAcceleration':averageAcceleration})
+    comulatedData.loc['1'] = pd.Series ({'averageSpeed':averageSpeed, 'averageEnergy':averageEnergyConsumption, 'comEnergy':comulatedEnergyConsumption, 'averageAcceleration':averageAcceleration})
 
     # TODO: Load data to database
     #comulatedData.to_sql()
