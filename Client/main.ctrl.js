@@ -30,7 +30,8 @@ angular.module('app')
     }
 })
 
-/* controller for the popupGraphs. Displays the carrier number*/
+/* controller for the popupGraphs. Displays the carrier number and 2 Buttons. Depending on which button is pressed,
+the carrier Id will be put into the comparison sidebar or the drill down chart*/
 
 .controller('circlePopUpController', function($scope,$mdDialog, circleId) {
     var id = circleId;
@@ -77,7 +78,7 @@ angular.module('app')
     }
 
 
-/* create the circle page upon button click. */
+/* create the circle page upon page load. */
 
     $scope.circleGraph = function() {
 
