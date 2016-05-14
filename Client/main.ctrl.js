@@ -32,8 +32,20 @@ angular.module('app')
 
 /* controller for the popupGraphs. Displays the carrier number*/
 
-.controller('circlePopUpController', function($scope) {
-    $scope.title = "Carrier X, placeholder for the carrier ID";
+.controller('circlePopUpController', function($scope,$mdDialog, circleId) {
+    var id = circleId;
+    var carrierId = id.substr(7, 8); // This method is necessary, because the string is "carrier_x" To extract x, I need to get the subsstring
+    $scope.carrierNumber =  carrierId;
+
+    $scope.addToComparison = function() {   //This function will add the carrier to the Side Panel "Compare"
+        alert("add Carrier to Comaprison")
+        $mdDialog.hide();
+    }
+
+    $scope.drillDown = function() {         //This function will take the carrier to the drilldown pane.
+        alert("Moving to Drill Down Window");
+        $mdDialog.hide();
+    }
 })
 
 /* Refresh the circle Page. The purporse of this controller is listen to the Button
@@ -48,12 +60,15 @@ angular.module('app')
     var timer;
 
     $scope.openDialog = function(event) {
+        var id = event.target.id;
         timer = $timeout(function () {
             $mdDialog.show({
-            controller: "circlePopUpController",
-            templateUrl: 'sections/circlePage/circlePopUp.html',
-            clickOutsideToClose:true
-            })
+                controller: "circlePopUpController",
+                templateUrl: 'sections/circlePage/circlePopUp.html',
+                clickOutsideToClose:true,
+                locals: {circleId: id
+                }
+            });
         }, 1000)
     }
 
