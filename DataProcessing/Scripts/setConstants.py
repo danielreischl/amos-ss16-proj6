@@ -8,7 +8,7 @@ DRIVE_LENGTH = 200
 #Length of one Drive
 LINE_LENGTH = 50
 #Amount of Drives
-AMOUNT_OF_DRIVES = 2
+AMOUNT_OF_DRIVES = 5
 #Amount of Carriers
 AMOUNT_OF_CARRIERS = 2
 #Wait time of the Simulator in Seconds

@@ -314,6 +314,12 @@ DATA_PATH[0] = os.path.abspath(DATA_FILE_NAMES[0])
 
 # First row of data frames
 initialData = pd.read_csv(DATA_PATH[0], DATA_SEPARATOR, index_col=0)
+#Extracting the DriveNo of the first loaded File in DATA_PATH
+dirveOfFirstFile = DATA_PATH[0].split("_")[3].replace('.csv','')
+#Changing the Column names to energy+DriveNo & Position+DriveNo
+initialData.columns = {'energy' + dirveOfFirstFile, 'position' + dirveOfFirstFile}
+
+
 
 # If there is more than 1 array, add the other ones to the side
 if len(DATA_FILE_NAMES) > 1:
@@ -324,17 +330,17 @@ if len(DATA_FILE_NAMES) > 1:
         DATA_PATH[index] = os.path.abspath(DATA_FILE_NAMES[index])
         # Loads the next CSV file
         tempFile = pd.read_csv(DATA_PATH[index], DATA_SEPARATOR, index_col=0)
+        # Extracting the DriveNo of the first loaded File in DATA_PATH
+        driveOfCurrentFile = DATA_PATH[index].split("_")[3].replace('.csv', '')
+        # Changing the Column names to energy+DriveNo & Position+DriveNo
+        tempFile.columns = {'energy' + driveOfCurrentFile, 'position' + driveOfCurrentFile}
         # Merges the temp file with the initialData file
         initialData = pd.concat([initialData, tempFile], axis=1)
-        print initialData
-
-#print "Initial Data: "
-#print initialData
 
 # Iterates each row and afterwards each drive
 # Calls compressData with a pd.Series. The values are:
 # ms, No. of Drive, Energy Consumption, Position
 for index, row in initialData.iterrows():
-    for drive in range(0, AMOUNT_OF_DRIVES-1):
-        processData([index, drive + 1, row['energy'][drive], row['position'][drive]])
+    for drive in range(0, AMOUNT_OF_DRIVES):
+        processData ([index, drive + 1, row['energy'+str(drive)], row['position'+str(drive)]])
     sleep(WAIT_TIME_IN_SECONDS)
