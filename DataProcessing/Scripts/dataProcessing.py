@@ -262,19 +262,28 @@ def compressData(drive, carrier):
 
 # Exports the table of the carrier to a CSV file
 def exportCSV(carrier):
+
     print "Exporting: "
     print carrierData[carrier - 1]
-    filename = "Carrier_" + str(int(carrier)) + "_Iteration_" + str(int(runNumber)) + ".csv"
-    print "filename " + str(filename)
+
+    # Creates the filename
+    fileName = "Session_" + str(setConstants.SESSION) + "_Carrier_" + str(int(carrier)) + "_Iteration_" + str(int(runNumber)) + ".csv"
+
+    # Adds the relative file path to the name that the files are saved to /InitialData/
+    fileName = os.path.abspath(os.path.join("CarrierData", fileName))
+    print "filename " + str(fileName)
+
     firstRow = findFirstRowInCarrierData(carrier)
     print "first Row " + str(firstRow)
     lastRow = int((currentPositionAtCarrierData[carrier - 1] - 1) / KEEP_EVERY_X_ROW)
     print "last Row " + str(lastRow)
+
     export = np.transpose(carrierData[carrier - 1][:, firstRow:lastRow])
+
     print "export"
     print export
 
-    np.savetxt(filename, export, fmt='%0.5f', delimiter=DATA_SEPARATOR, newline='\n',
+    np.savetxt(fileName, export, fmt='%0.5f', delimiter=DATA_SEPARATOR, newline='\n',
                header='time (ms);position (mm);energy (W)', footer='', comments='# ')
 
 
@@ -357,6 +366,7 @@ print initialData
 for index, row in initialData.iterrows():
     for drive in range(0, AMOUNT_OF_DRIVES):
         processData([index, drive + 1, row['position'][drive], row['energy'][drive]])
+        # TODO move processed file to initialDataArchive
     sleep(WAIT_TIME_IN_SECONDS)
 
 # Removes the status.txt file after the end of the simulation
