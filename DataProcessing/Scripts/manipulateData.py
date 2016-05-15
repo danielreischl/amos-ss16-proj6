@@ -47,6 +47,14 @@ def process_file(fileName):
     #Calculates acceleration (SpeedEnd * SpeedEnd - SpeedBeginn * SpeedBeginn))/distance * 2
     data['acceleration']= data['speed'].multiply(data['speed']).diff().divide(data['positionAbsolute'].diff().multiply(2))
 
+    # Rearange the columns to fit them to the new database model
+    # Reading out Columns to a list
+    cols = data.columns.tolist()
+    # Rearange the colums
+    cols = cols[4:7] + cols[0:1] + cols[2:3] + cols [1:2] + cols[7:9] + cols[3:4]
+    # Rearange the data frame
+    data = data[cols]
+
     #calls function to load the data into the database
     load_to_database(data)
 
