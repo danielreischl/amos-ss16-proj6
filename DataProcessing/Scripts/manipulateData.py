@@ -35,17 +35,17 @@ def process_file(fileName):
 
     #TODO: positionDrive will be added as soon as the data is in the input
     #TODO: Rename all Columns to the final names
-    data.columns = ['ms','positionABS','energy']
-    # Reads out session of file name and add Column to DataFrame
-    data['session'] = fileName.split('_')[1]
-    # Reads out carrier of file name and add Column to DataFrame
-    data['carrier'] = fileName.split('_')[3]
-    # Reads out iteration of file name and add Column to DataFrame
-    data['iteration'] = fileName.split('_')[5].replace('.csv','')
+    data.columns = ['timeStamp','positionAbsolute','energyConsumption']
+    # Reads out session of file name and add Column to DataFrame after Casting from str to int
+    data['fidSession'] = int(fileName.split('_')[1])
+    # Reads out carrier of file name and add Column to DataFrame after Casting from str to int
+    data['fidCarrier'] = int(fileName.split('_')[3])
+    # Reads out iteration of file name and add Column to DataFrame after Casting from str to int
+    data['fidIteration'] = int(fileName.split('_')[5].replace('.csv',''))
     #calculates the speed between two datapoints (Way/Time)
-    data['speed'] = data['positionABS'].diff().divide(data['ms'].diff())
+    data['speed'] = data['positionAbsolute'].diff().divide(data['timeStamp'].diff())
     #Calculates acceleration (SpeedEnd * SpeedEnd - SpeedBeginn * SpeedBeginn))/distance * 2
-    data['acceleration']= data['speed'].multiply(data['speed']).diff().divide(data['positionABS'].diff().multiply(2))
+    data['acceleration']= data['speed'].multiply(data['speed']).diff().divide(data['positionAbsolute'].diff().multiply(2))
 
     #calls function to load the data into the database
     load_to_database(data)
@@ -62,23 +62,27 @@ def load_to_database(data):
     print "Loading DataFrame into Database"
 
     #TODO: Load data to database
-    #data.to_sql()
+
 
 # Comaulates and loads the data into the database. Input =DataFrame
 def load_to_database_comulated(data):
     # Calculates Average Energy Consumption
-    averageEnergyConsumption = data['energy'].mean()
+    averageEnergyConsumption = data['energyConsumption'].abs().mean()
     # Calculates Comulated Energy Consumption
-    comulatedEnergyConsumption = data['energy'].sum()
+    totalEnergyConsumption = data['energyConsumption'].sum()
     # Calculates Average Speed
     averageSpeed = data['speed'].mean()
     # Calculates Average Acceleration
     averageAcceleration = data['acceleration'].mean()
+    # Reads out Session, Carrier and Iteration
+    iteration = data['fidIteration'].mean()
+    session = data ['fidSession'].mean()
+    carrier = data ['fidCarrier'].mean()
 
     #Inizialize DataFrame comulatedData
-    comulatedData = pd.DataFrame(columns=['averageSpeed', 'averageEnergy', 'comEnergy', 'averageAcceleration'], index=['1'])
+    comulatedData = pd.DataFrame(columns=['fidSession','fidCarrier','fidIteration','averageSpeed', 'averageAcceleration', 'totalEnergyConsumption', 'averageEnergyConsumptionAbsolute'], index=['1'])
     #Adding Values to DataFrame
-    comulatedData.loc['1'] = pd.Series ({'averageSpeed':averageSpeed, 'averageEnergy':averageEnergyConsumption, 'comEnergy':comulatedEnergyConsumption, 'averageAcceleration':averageAcceleration})
+    comulatedData.loc['1'] = pd.Series ({'fidSession':session, 'fidCarrier': carrier, 'fidIteration':iteration, 'averageSpeed':averageSpeed, 'averageAcceleration':averageAcceleration, 'totalEnergyConsumption':totalEnergyConsumption, 'averageEnergyConsumptionAbsolute':averageEnergyConsumption})
 
     # TODO: Load data to database
     #comulatedData.to_sql()
