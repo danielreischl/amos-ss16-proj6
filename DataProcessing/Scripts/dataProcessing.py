@@ -366,8 +366,14 @@ print initialData
 for index, row in initialData.iterrows():
     for drive in range(0, AMOUNT_OF_DRIVES):
         processData([index, drive + 1, row['position'][drive], row['energy'][drive]])
-        # TODO move processed file to initialDataArchive
     sleep(WAIT_TIME_IN_SECONDS)
+
+# Move the processed data files to InitialDataArchive
+print "Moving processed files"
+for fileName in DATA_FILE_NAMES:
+    #fileName = os.path.abspath(os.path.join("CarrierData", fileName))
+    os.rename(fileName, os.path.abspath(os.path.join("InitialDataArchive", os.path.basename(fileName))))
+    print os.path.abspath(os.path.join("CarrierData", os.path.basename(fileName)))
 
 # Removes the status.txt file after the end of the simulation
 os.remove("Running.txt")
