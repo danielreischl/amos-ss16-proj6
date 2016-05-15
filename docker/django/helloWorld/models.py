@@ -52,7 +52,7 @@ class tbl_TimeStampData(models.Model):
 
 class tbl_IterationData(models.Model):
     # It is not necessary to explicitly declare an ID
-    #  Maybe necessary, because the implicit ID will not be a "BigInteger", which is required
+    # Maybe necessary, because the implicit ID will not be a "BigInteger", which is required
 
     # The Session that the data is recorded for
     fid_Session = models.ForeignKey(tbl_Session, on_delete=models.CASCADE)
@@ -69,4 +69,3 @@ class tbl_IterationData(models.Model):
     energyConsumptionTotal = models.FloatField()
     # The average energy Consumption of a carrier in one iteration
     energyConsumptionAverage = models.FloatField()
-
