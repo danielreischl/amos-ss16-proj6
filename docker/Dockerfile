@@ -90,7 +90,7 @@ EXPOSE 5432
 RUN mkdir -p /var/run/postgresql && chown -R postgres /var/run/postgresql
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
-#Switching back to postgres and Define the Start 
+#Switching back to postgres and Define the Start
 USER postgres
 CMD ["/usr/lib/postgresql/9.3/bin/postgres", "-D", "/var/lib/postgresql/9.3/main", "-c", "config_file=/etc/postgresql/9.3/main/postgresql.conf"]
 
