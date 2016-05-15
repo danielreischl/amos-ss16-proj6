@@ -1,5 +1,6 @@
 import numpy as np
 from scipy import interpolate
+import os
 
 # import setConstants to maintain all constants on one place
 import setConstants
@@ -84,15 +85,15 @@ class Drive:
         self.data[time, 2] = energy
 
     def export2Csv(self):
-        session = 0
 
-        fileName = "Session_" + str(session) + "_Drive_" + str(self.driveNumber) + ".csv"
+        # Creates the name of the file
+        fileName = "Session_" + str(setConstants.SESSION) + "_Drive_" + str(self.driveNumber) + ".csv"
+
+        # Adds the relative file path to the name that the files are saved to /InitialData/
+        fileName = os.path.abspath(os.path.join("InitialData", fileName))
 
         print "Exporting ..."
         print fileName
-
-        # If its neccessary to transpose before exporting
-        # export = np.transpose(exportArray[:,:])
 
         np.savetxt(fileName, self.data, fmt='%0.5f', delimiter=';', newline='\n',
                    header='time;position;energy', footer='', comments='# ')

@@ -4,27 +4,21 @@ from django.db import models
 # Author: Inkibus (Rene R.)
 
 class tbl_Session(models.Model):
-    # It is not necessary to explicitly declare an ID
-
     # Every time something in the production system is changed, a new Session is stored, to have coherent data
     # Integer of the current session in which a carrier is in the system
     # This cannot be the primary key because the sessionNumber is dependent on the read CSV file
-    sessionNumber = models.IntegerField()
+    sessionNumber = models.IntegerField(primary_key=True, unique=True)
 
 class tbl_Carrier(models.Model):
-    # It is not necessary to explicitly declare an ID
-
     # Integer that identifies the carrier
     # This cannot be the primary key because the carrierNumber is dependent on the read CSV file
-    carrierNumber = models.IntegerField()
+    carrierNumber = models.IntegerField(primary_key=True, unique=True)
 
 class tbl_Iteration(models.Model):
-    # It is not necessary to explicitly declare an ID
-
     # Integer of the current Iteration in which a carrier is in the system
     # This number can get big so it is initialized as BigIntegerField
     # This cannot be the primary key because the iterationNumber is dependent on the read CSV file
-    iterationNumber = models.BigIntegerField()
+    iterationNumber = models.BigIntegerField(primary_key=True, unique=True)
 
 class tbl_TimeStampData(models.Model):
     # It is not necessary to explicitly declare an ID
@@ -52,7 +46,7 @@ class tbl_TimeStampData(models.Model):
 
 class tbl_IterationData(models.Model):
     # It is not necessary to explicitly declare an ID
-    #  Maybe necessary, because the implicit ID will not be a "BigInteger", which is required
+    # Maybe necessary, because the implicit ID will not be a "BigInteger", which is required
 
     # The Session that the data is recorded for
     fid_Session = models.ForeignKey(tbl_Session, on_delete=models.CASCADE)
@@ -69,4 +63,3 @@ class tbl_IterationData(models.Model):
     energyConsumptionTotal = models.FloatField()
     # The average energy Consumption of a carrier in one iteration
     energyConsumptionAverage = models.FloatField()
-

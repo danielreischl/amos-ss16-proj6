@@ -38,9 +38,10 @@ DATA_SEPARATOR = setConstants.CSV_SEPARATOR
 # Every X th row of the data is kept and averagedx
 KEEP_EVERY_X_ROW = 2
 # Write all DATA_FILE_NAMES in an Array
-for files in glob.glob("InitialDataFiles/*.csv"):
+for files in glob.glob("InitialData/*.csv"):
     DATA_FILE_NAMES.append(files)
 # Reading out Session from FileName
+# TODO Session is also saved in setConstants -> Change to either
 SESSION = DATA_FILE_NAMES[0].split("_")[1]
 
 
@@ -261,19 +262,28 @@ def compressData(drive, carrier):
 
 # Exports the table of the carrier to a CSV file
 def exportCSV(carrier):
+
     print "Exporting: "
     print carrierData[carrier - 1]
-    filename = "Carrier_" + str(int(carrier)) + "_Run_" + str(int(runNumber)) + ".csv"
-    print "filename " + str(filename)
+
+    # Creates the filename
+    fileName = "Session_" + str(setConstants.SESSION) + "_Carrier_" + str(int(carrier)) + "_Iteration_" + str(int(runNumber)) + ".csv"
+
+    # Adds the relative file path to the name that the files are saved to /InitialData/
+    fileName = os.path.abspath(os.path.join("CarrierData", fileName))
+    print "filename " + str(fileName)
+
     firstRow = findFirstRowInCarrierData(carrier)
     print "first Row " + str(firstRow)
     lastRow = int((currentPositionAtCarrierData[carrier - 1] - 1) / KEEP_EVERY_X_ROW)
     print "last Row " + str(lastRow)
+
     export = np.transpose(carrierData[carrier - 1][:, firstRow:lastRow])
+
     print "export"
     print export
 
-    np.savetxt(filename, export, fmt='%0.5f', delimiter=DATA_SEPARATOR, newline='\n',
+    np.savetxt(fileName, export, fmt='%0.5f', delimiter=DATA_SEPARATOR, newline='\n',
                header='time (ms);position (mm);energy (W)', footer='', comments='# ')
 
 
@@ -357,6 +367,13 @@ for index, row in initialData.iterrows():
     for drive in range(0, AMOUNT_OF_DRIVES):
         processData([index, drive + 1, row['position'][drive], row['energy'][drive]])
     sleep(WAIT_TIME_IN_SECONDS)
+
+# Move the processed data files to InitialDataArchive
+print "Moving processed files"
+for fileName in DATA_FILE_NAMES:
+    #fileName = os.path.abspath(os.path.join("CarrierData", fileName))
+    os.rename(fileName, os.path.abspath(os.path.join("InitialDataArchive", os.path.basename(fileName))))
+    print os.path.abspath(os.path.join("CarrierData", os.path.basename(fileName)))
 
 # Removes the status.txt file after the end of the simulation
 os.remove("Running.txt")

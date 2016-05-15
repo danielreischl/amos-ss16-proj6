@@ -6,8 +6,8 @@
 # Set the base image to use to Ubuntu
 FROM osrgroup/amos-web-service-base-image:1.0 
 
+#Define the Maintainer of the Image
 MAINTAINER AMOS-TEAM-6
-
 
 # Set env variables used in this Dockerfile
 # Local directory with project source
@@ -27,14 +27,18 @@ RUN apt-get install -y python python-pip python-dev python-pandas nginx sqlite3 
 # install libblas-dev
 RUN apt-get install -y libatlas-base-dev
 
+#Getting key for Postgres
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 
-# the following packages will be needed for postgresql
-# postgresql-9.3 postgresql-contrib-9.3 postgres-xc libpq-dev  
 
+#Install or Update PostgresSQL 9.3
+RUN apt-get update && apt-get -y -q install python-software-properties software-properties-common \
+    && apt-get -y -q install postgresql-9.3 postgresql-client-9.3 postgresql-contrib-9.3
 
 # Create application subdirectories
 WORKDIR $DOCKYARD_SRVHOME
-RUN mkdir media static logs run
+RUN mkdir media static logs run DataProcessig
 VOLUME ["$DOCKYARD_SRVHOME/media/", "$DOCKYARD_SRVHOME/logs/"]
 
 # Copy application source code to SRCDIR
@@ -44,8 +48,8 @@ COPY $DOCKYARD_SRC $DOCKYARD_SRVPROJ
 COPY ./nginx.conf /etc/nginx/
 #Copy Client to src/static
 COPY ./Client /srv/static/
-#Copy DataProcessing Scripts to srv/DataProcessing
-COPY ./DataProcessing/Scripts /srv/DataProcessing
+#Copy DataProcessing to srv/DataProcessing
+COPY ./DataProcessing /srv/DataProcessing
 # COPY ./index.html /srv/static/index.html
 
 
@@ -62,6 +66,34 @@ RUN pip install -r $DOCKYARD_SRVPROJ/requirements.txt
 
 # Port to expose
 EXPOSE 80
+
+# TODO: CREATE DB-PASSWORD IN TRAVIS-CI AND USE THIS ONE BELOW INSTEAD OF pguser PWD
+
+# Setup Postgres
+# Switching to User Postgres
+USER postgres
+# Start Postgres
+RUN /etc/init.d/postgresql start \
+    && psql --command "CREATE USER pguser WITH SUPERUSER PASSWORD 'pguser';" \
+    && createdb -O pguser pgdb
+
+# Switching to root and finish configuration of Postgres
+# TODO: Change Configuration: Not every application should be able to access the db
+USER root
+RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.3/main/pg_hba.conf
+RUN echo "listen_addresses='*'" >> /etc/postgresql/9.3/main/postgresql.conf
+
+# Port Postgres is listening
+EXPOSE 5432
+
+# Creating folders for
+RUN mkdir -p /var/run/postgresql && chown -R postgres /var/run/postgresql
+VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
+
+#Switching back to postgres and Define the Start 
+USER postgres
+CMD ["/usr/lib/postgresql/9.3/bin/postgres", "-D", "/var/lib/postgresql/9.3/main", "-c", "config_file=/etc/postgresql/9.3/main/postgresql.conf"]
+
 
 # setup postgres
 # removed until problems are solved, uncomment later
