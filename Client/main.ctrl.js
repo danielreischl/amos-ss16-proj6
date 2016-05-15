@@ -33,18 +33,19 @@ angular.module('app')
 /* controller for the popupGraphs. Displays the carrier number and 2 Buttons. Depending on which button is pressed,
 the carrier Id will be put into the comparison sidebar or the drill down chart*/
 
-.controller('circlePopUpController', function($scope,$mdDialog, circleId) {
+.controller('circlePopUpController', function($scope, $mdDialog, $mdSidenav, circleId, carrierService) {
     var id = circleId;
     var carrierId = id.substr(7, 8); // This method is necessary, because the string is "carrier_x" To extract x, I need to get the subsstring
     $scope.carrierNumber =  carrierId;
 
     $scope.addToComparison = function() {   //This function will add the carrier to the Side Panel "Compare"
-        alert("add Carrier to Comaprison")
+        carrierService.addCarrier(carrierId);
         $mdDialog.hide();
+        $mdSidenav('comparisonSidebar').toggle();
     }
 
     $scope.drillDown = function() {         //This function will take the carrier to the drilldown pane.
-        alert("Moving to Drill Down Window");
+        alert("Moving to Drill Down Window, yet to be implemented");
         $mdDialog.hide();
     }
 })
@@ -53,8 +54,7 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
  and upon receiving an event, it should trigger the update circle button*/
 
 
-.controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout) {
-
+.controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
 
 /* open up a dialogue window upon triggering it via button click or via the hover function. The event is delayed by a timer
  if the the user is not leaving the hover area by the time the timer runs out, it will open up the popup. Else it will be canceled */
@@ -134,9 +134,22 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
       context.fillText(carrier, centerX - 15, centerY);
       context.fillText(percentageEnergy + "%", centerX - 15, centerY + 20);
     }
+}
+
+/* This function is for the side comparison navigation*/
 
 
-}})
+    $scope.carriersForComparison = carrierService.getCarrier;
+
+    $scope.removeCarrier = function(carrier) {
+        carrierService.deleteCarrier(carrier);
+    }
+
+    $scope.openComparisonSideBar = function() {
+        $mdSidenav('comparisonSidebar').toggle();
+    }
+
+})
 
 
 
