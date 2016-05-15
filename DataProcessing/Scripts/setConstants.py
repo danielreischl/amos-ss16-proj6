@@ -4,10 +4,10 @@
 # File to maintain all constants which will be used in all DataProcessing Scripts
 
 
-# Length of all drives
-DRIVE_LENGTH = 200
 # Length of one Drive
-LINE_LENGTH = 50
+DRIVE_LENGTH = 4
+# Length of all drives
+LINE_LENGTH = 12
 # Amount of Drives
 AMOUNT_OF_DRIVES = 3
 # Amount of Carriers
