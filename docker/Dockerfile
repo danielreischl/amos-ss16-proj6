@@ -45,7 +45,7 @@ COPY ./nginx.conf /etc/nginx/
 #Copy Client to src/static
 COPY ./Client /srv/static/
 #Copy DataProcessing Scripts to srv/DataProcessing
-COPY ./DataProcessing/Scripts /srv/DataProcessing
+RUN cp -r ./DataProcessing/Scripts /srv/DataProcessing
 # COPY ./index.html /srv/static/index.html
 
 
