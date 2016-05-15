@@ -35,7 +35,7 @@ def process_file(fileName):
 
     #TODO: positionDrive will be added as soon as the data is in the input
     #TODO: Rename all Columns to the final names
-    data.columns = ['timeStamp','positionAbsolute','energyConsumption']
+    data.columns = ['timeStamp','positionAbsolute','positonOnDrive','energyConsumption']
     # Reads out session of file name and add Column to DataFrame after Casting from str to int
     data['fidSession'] = int(fileName.split('_')[1])
     # Reads out carrier of file name and add Column to DataFrame after Casting from str to int
