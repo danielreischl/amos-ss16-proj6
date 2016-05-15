@@ -41,6 +41,15 @@ KEEP_EVERY_X_ROW = 2
 for files in glob.glob("InitialData/*.csv"):
     DATA_FILE_NAMES.append(files)
 # Reading out Session from FileName
+
+# Checks if a File is added to DATA_FILE_NAMES. If not it is terminating the script
+if not DATA_FILE_NAMES:
+    print "No Files in Folder"
+    # Removes Running.txt, so the simulator can also terminate
+    os.remove("Running.txt")
+    # Terminates the script
+    sys.exit()
+
 # TODO Session is also saved in setConstants -> Change to either
 SESSION = DATA_FILE_NAMES[0].split("_")[1]
 
@@ -50,7 +59,7 @@ SESSION = DATA_FILE_NAMES[0].split("_")[1]
 driveXHasCarrier = np.zeros(AMOUNT_OF_DRIVES)
 # This is where all the data goes before exporting to CSV
 # carrierData[carrier number][time = 0, pos = 1, energy consumption = 2][position of array]
-carrierData = np.zeros((AMOUNT_OF_CARRIERS, 3, 100))
+carrierData = np.zeros((AMOUNT_OF_CARRIERS, 4, 100))
 # Here is stored in which row the last entry of carrier data was made for every carrier
 # (This could also be calculated by why not store it, since its used frequently)
 currentPositionAtCarrierData = np.zeros(AMOUNT_OF_CARRIERS)
@@ -76,6 +85,7 @@ def processData(INPUT):
     print "Position  " + str(position)
     energy = INPUT[3]
     print "Energy    " + str(energy)
+
 
     # If the line has just started, then the first carrier enters the first drive
     if runNumber == 0:
@@ -103,17 +113,26 @@ def processData(INPUT):
     # If position is zero and if position is lower than it was in the previous run
     if position == 0 and (position < lastPositionOfCarrier[carrier - 1]):
         evaluateDriveReset(drive, carrier)
+        processData([time, drive, position, energy])
+        return
 
     # Ensures enough space in the array
     ensureEnoughSpaceInCarrierData(carrier)
 
+    positionAbsolute = (drive - 1) * setConstants.DRIVE_LENGTH + position
+    print "Position Absolute:    " + str(positionAbsolute)
+
     # Transfer time in ms
     carrierData[carrier - 1][0][currentPositionAtCarrierData[carrier - 1]] = time
     # Transfer position
-    carrierData[carrier - 1][1][currentPositionAtCarrierData[carrier - 1]] = position
+    carrierData[carrier - 1][1][currentPositionAtCarrierData[carrier - 1]] = positionAbsolute
+
+    carrierData[carrier - 1][2][currentPositionAtCarrierData[carrier - 1]] = position
     lastPositionOfCarrier[carrier - 1] = position
+
     # Transfer energy consumption
-    carrierData[carrier - 1][2][currentPositionAtCarrierData[carrier - 1]] = energy
+    carrierData[carrier - 1][3][currentPositionAtCarrierData[carrier - 1]] = energy
+
     # So that next time the next row will be filled with data
     currentPositionAtCarrierData[carrier - 1] += 1
 
@@ -200,11 +219,9 @@ def compressData(drive, carrier):
     # iterates through all the carrier data entries that have been made up to this point
     # the if else is just there to catch an out of bounds exception where the currentPosition is bigger than the array size of carrierData[2]
     # statement: do a if x < y else b ----> does a if x < y .. otherwise it does b
-    print "range: " + str(int(currentPositionAtCarrierData[carrier - 1] if (
-        currentPositionAtCarrierData[carrier - 1] - 1 < int(carrierData.shape[2])) else int(carrierData.shape[2]) - 1))
-    for i in range(0, int(currentPositionAtCarrierData[carrier - 1] if (
-                    currentPositionAtCarrierData[carrier - 1] - 1 < int(carrierData.shape[2])) else int(
-        carrierData.shape[2]) - 1)):
+    print "range: " + str(int(currentPositionAtCarrierData[carrier - 1]))
+
+    for i in range(0, int(currentPositionAtCarrierData[carrier - 1])):
 
         print "i: " + str(i)
         # Saves the first x numbers to row 0, then the second x numbers to row 1 and so on
@@ -216,15 +233,17 @@ def compressData(drive, carrier):
             carrierData[carrier - 1][0][saveTo] = carrierData[carrier - 1][0][i]
             carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][i]
             carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][i]
+            carrierData[carrier - 1][3][saveTo] = carrierData[carrier - 1][2][i]
         else:
             # Test, so that the value at saveTo is not added to itself
             if saveTo != i:
                 # Add the energy to calculate average
-                carrierData[carrier - 1][2][saveTo] += carrierData[carrier - 1][2][i]
+                carrierData[carrier - 1][3][saveTo] += carrierData[carrier - 1][2][i]
 
         print str(carrierData[carrier - 1][0][saveTo]) + "    " \
               + str(carrierData[carrier - 1][1][saveTo]) + "    " \
-              + str(carrierData[carrier - 1][2][saveTo])
+              + str(carrierData[carrier - 1][2][saveTo]) + "    " \
+              + str(carrierData[carrier - 1][3][saveTo])
 
         # WORKS
         # if my current row is bigger than what the largest row to keep would be then empty that row
@@ -233,7 +252,7 @@ def compressData(drive, carrier):
             carrierData[carrier - 1][0][i] = 0
             carrierData[carrier - 1][1][i] = 0
             carrierData[carrier - 1][2][i] = 0
-
+            carrierData[carrier - 1][3][i] = 0
         # If all the X amount lines are added up they then can be averaged
         # UPDATE: Instead of averaging, the sum is now kept
         '''
@@ -260,7 +279,7 @@ def compressData(drive, carrier):
         '''
 
 
-# Exports the table of the carrier to a CSV file
+# Exports the table of the carrier to a CSV file in the form time; posAbsolute; posOnDrive; energy
 def exportCSV(carrier):
 
     print "Exporting: "
@@ -284,8 +303,7 @@ def exportCSV(carrier):
     print export
 
     np.savetxt(fileName, export, fmt='%0.5f', delimiter=DATA_SEPARATOR, newline='\n',
-               header='time (ms);position (mm);energy (W)', footer='', comments='# ')
-
+               header='time;posAbsolute;posOnDrive;energy', footer='', comments='# ')
 
 # Finds the first row of the array that will be exported as CSV, where pos and energy consumption != 0
 def findFirstRowInCarrierData(carrier):
@@ -304,6 +322,7 @@ def clearCarrierData(carrier):
         carrierData[carrier - 1][0][i] = 0
         carrierData[carrier - 1][1][i] = 0
         carrierData[carrier - 1][2][i] = 0
+        carrierData[carrier - 1][3][i] = 0
 
 
 # Ensures enough space in the carrier data array for a certain carrier
@@ -318,13 +337,7 @@ def ensureEnoughSpaceInCarrierData(carrier):
 # Start of the Script
 #
 
-# Checks if a File is added to DATA_FILE_NAMES. If not it is terminating the script
-if not DATA_FILE_NAMES:
-    print "No Files in Folder"
-    # Removes Running.txt, so the simulator can also terminate
-    os.remove("Running.txt")
-    # Terminates the script
-    sys.exit()
+
 
 # DATA_PATH creates an OS independent file path to the data files that were input as string names
 # Initialize empty DATA_PATH array
@@ -362,18 +375,18 @@ print initialData
 
 # Iterates each row and afterwards each drive
 # Calls compressData with a pd.Series. The values are:
-# ms, No. of Drive, Energy Consumption, Position
+# ms, No. of Drive, Energy Consmption, Position
 for index, row in initialData.iterrows():
     for drive in range(0, AMOUNT_OF_DRIVES):
         processData([index, drive + 1, row['position'][drive], row['energy'][drive]])
     sleep(WAIT_TIME_IN_SECONDS)
 
+''' Commented out for testing
 # Move the processed data files to InitialDataArchive
 print "Moving processed files"
 for fileName in DATA_FILE_NAMES:
-    #fileName = os.path.abspath(os.path.join("CarrierData", fileName))
     os.rename(fileName, os.path.abspath(os.path.join("InitialDataArchive", os.path.basename(fileName))))
     print os.path.abspath(os.path.join("CarrierData", os.path.basename(fileName)))
-
+'''
 # Removes the status.txt file after the end of the simulation
 os.remove("Running.txt")
