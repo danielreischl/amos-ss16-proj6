@@ -10,7 +10,8 @@ SOCKFILE=/srv/run/gunicorn.sock
 
 # touch /srv/logs/postgresql.log
 # exec su postgres -c 'pg_ctl start -D /var/lib/postgresql/9.3/main -l /srv/logs/postgresql.log'
-# exec sudo su - postgres && /usr/lib/postgresql/9.3/bin/postgres -D /var/lib/postgresql/9.3/main -c config_file=/etc/postgresql/9.3/main/postgresql.conf  
+# exec sudo su - postgres && /usr/lib/postgresql/9.3/bin/postgres -D /var/lib/postgresql/9.3/main -c config_file=/etc/postgresql/9.3/main/postgresql.conf
+
 
 echo apply django migrations
 

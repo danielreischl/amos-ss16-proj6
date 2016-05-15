@@ -86,13 +86,13 @@ RUN echo "listen_addresses='*'" >> /etc/postgresql/9.3/main/postgresql.conf
 # Port Postgres is listening
 EXPOSE 5432
 
-# Creating folders for
+# Creating folders for postgres
 RUN mkdir -p /var/run/postgresql && chown -R postgres /var/run/postgresql
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
 #Switching back to postgres and Define the Start
-USER postgres
-CMD ["/usr/lib/postgresql/9.3/bin/postgres", "-D", "/var/lib/postgresql/9.3/main", "-c", "config_file=/etc/postgresql/9.3/main/postgresql.conf"]
+#USER postgres
+#CMD ["/usr/lib/postgresql/9.3/bin/postgres", "-D", "/var/lib/postgresql/9.3/main", "-c", "config_file=/etc/postgresql/9.3/main/postgresql.conf"]
 
 
 # setup postgres
