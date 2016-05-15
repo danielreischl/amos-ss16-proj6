@@ -3,22 +3,24 @@ from django.db import models
 # Database model
 # Author: Inkibus (Rene R.)
 
+#TODO Only creates the table "tbl_TimeStampData" ... Needs testing
+
 class tbl_Session(models.Model):
     # Every time something in the production system is changed, a new Session is stored, to have coherent data
     # Integer of the current session in which a carrier is in the system
     # This cannot be the primary key because the sessionNumber is dependent on the read CSV file
-    sessionNumber = models.IntegerField(primary_key=True, unique=True)
+    sessionNumber = models.IntegerField(primary_key=True, unique=True, default=0)
 
 class tbl_Carrier(models.Model):
     # Integer that identifies the carrier
     # This cannot be the primary key because the carrierNumber is dependent on the read CSV file
-    carrierNumber = models.IntegerField(primary_key=True, unique=True)
+    carrierNumber = models.IntegerField(primary_key=True, unique=True, default=0)
 
 class tbl_Iteration(models.Model):
     # Integer of the current Iteration in which a carrier is in the system
     # This number can get big so it is initialized as BigIntegerField
     # This cannot be the primary key because the iterationNumber is dependent on the read CSV file
-    iterationNumber = models.BigIntegerField(primary_key=True, unique=True)
+    iterationNumber = models.BigIntegerField(primary_key=True, unique=True, default=0)
 
 class tbl_TimeStampData(models.Model):
     # It is not necessary to explicitly declare an ID
