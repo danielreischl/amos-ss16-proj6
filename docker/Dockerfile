@@ -34,7 +34,7 @@ RUN apt-get install -y libatlas-base-dev
 
 # Create application subdirectories
 WORKDIR $DOCKYARD_SRVHOME
-RUN mkdir media static logs run
+RUN mkdir media static logs run DataProcessig
 VOLUME ["$DOCKYARD_SRVHOME/media/", "$DOCKYARD_SRVHOME/logs/"]
 
 # Copy application source code to SRCDIR
@@ -44,8 +44,8 @@ COPY $DOCKYARD_SRC $DOCKYARD_SRVPROJ
 COPY ./nginx.conf /etc/nginx/
 #Copy Client to src/static
 COPY ./Client /srv/static/
-#Copy DataProcessing Scripts to srv/DataProcessing
-COPY ./DataProcessing/Scripts /srv/DataProcessing
+#Copy DataProcessing to srv/DataProcessing
+COPY ./DataProcessing /srv/DataProcessing
 # COPY ./index.html /srv/static/index.html
 
 
