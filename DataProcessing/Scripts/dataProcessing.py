@@ -38,9 +38,10 @@ DATA_SEPARATOR = setConstants.CSV_SEPARATOR
 # Every X th row of the data is kept and averagedx
 KEEP_EVERY_X_ROW = 2
 # Write all DATA_FILE_NAMES in an Array
-for files in glob.glob("InitialDataFiles/*.csv"):
+for files in glob.glob("InitialData/*.csv"):
     DATA_FILE_NAMES.append(files)
 # Reading out Session from FileName
+# TODO Session is also saved in setConstants -> Change to either
 SESSION = DATA_FILE_NAMES[0].split("_")[1]
 
 
@@ -263,7 +264,7 @@ def compressData(drive, carrier):
 def exportCSV(carrier):
     print "Exporting: "
     print carrierData[carrier - 1]
-    filename = "Carrier_" + str(int(carrier)) + "_Run_" + str(int(runNumber)) + ".csv"
+    filename = "Carrier_" + str(int(carrier)) + "_Iteration_" + str(int(runNumber)) + ".csv"
     print "filename " + str(filename)
     firstRow = findFirstRowInCarrierData(carrier)
     print "first Row " + str(firstRow)
