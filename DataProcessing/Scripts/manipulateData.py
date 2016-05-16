@@ -147,9 +147,6 @@ while os.path.isfile("Running.txt"):
     print "manipulateData.py goes asleep for " + str(setConstants.WAIT_TIME_IN_SECONDS_MPY) + "Sec"
     sleep(setConstants.WAIT_TIME_IN_SECONDS_MPY)
 
-    # Terminates script for test purposes
-    sys.exit()
-
 else:
 
     # Running.txt does not exist. -> Check if the folder has files which hasn't been processed yet.
