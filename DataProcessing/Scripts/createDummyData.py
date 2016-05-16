@@ -1,9 +1,9 @@
 import numpy as np
 from scipy import interpolate
 import os
-
 # import setConstants to maintain all constants on one place
 import setConstants
+import logging
 
 # a script to create dummy data -- preliminary version
 # TODO: documentation, restructuring, bugfixes   
@@ -97,6 +97,7 @@ class Drive:
 
         np.savetxt(fileName, self.data, fmt='%0.5f', delimiter=';', newline='\n',
                    header='time;position;energy', footer='', comments='# ')
+        logging.info("Exported to file " + fileName)
         return
 
 
@@ -141,8 +142,21 @@ class Data:
         for drive in self.drives:
             drive.export2Csv()
 
+# Start of script
+
+
+# Initialize Log-File
+# Creates or loads Log DataProcessing.log
+# Format of LogFile: mm/dd/yyyy hh:mm:ss PM LogMessage
+logging.basicConfig(filename='dataProcessing.log',level=logging.INFO,format='%(asctime)s %(message)s',
+                    datefmt='%m/%d/%Y %I:%M:%S %p')
+
+logging.info("createDummyData.py starting to create dummy data.")
 
 d = Data([5, 150, 300, 500, 700], 5, 200)
 
 d.createDummy()
 d.export2Csv()
+
+logging.info("createDummyData.py terminating.")
+
