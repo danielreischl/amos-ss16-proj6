@@ -6,6 +6,7 @@ FAU AMOS Group 6: Siemens AG
 ### Bill of Material
 
 Name	    Version	        License
+
 Python related (Middleware)
 Python	                2.7.9	        PSF License
 Numpy	                1.11	        BSD License
