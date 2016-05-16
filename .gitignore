@@ -3,3 +3,11 @@ DataProcessing/Scripts/dataProcessing.log
 .idea/misc.xml
 .idea/workspace.xml
 .idea/misc.xml
+
+*~
+
+__pycache__/
+*.py[cod]
+
+docker/pg_hba.conf
+docker/postgresql.conf
