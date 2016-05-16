@@ -3,5 +3,4 @@ set -ue
 #Copies files from github to the docker folder which is need to build the docker container
 cp -r ./Client ./docker/Client
 cp -r ./DataProcessing/Scripts ./docker/DataProcessing
-#docker build --pull -t tobido/amos-ss16-proj6 docker/
-docker build -t=tobido/amos-ss16-proj6 -rm=true docker/
+docker build --pull -t tobido/amos-ss16-proj6 docker/
