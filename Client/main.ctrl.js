@@ -38,8 +38,10 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
     var carrierId = id.substr(7, 8); // This method is necessary, because the string is "carrier_x" To extract x, I need to get the subsstring
     $scope.carrierNumber =  carrierId;
 
-    $scope.addToComparison = function() {   //This function will add the carrier to the Side Panel "Compare"
-        carrierService.addCarrier(carrierId);
+    $scope.addToComparison = function() {  //This function will add the carrier to the Side Panel "Compare". It will also check, if the item is already inside the comaprison pane.
+        if(!carrierService.addCarrier(carrierId)) {         //check if carrier is already in list. If it already exists, then show a message.
+            alert('Carrier: ' +carrierId+ ' is already in the comparison sidebar')
+       }
         $mdDialog.hide();
         $mdSidenav('comparisonSidebar').toggle();
     }
