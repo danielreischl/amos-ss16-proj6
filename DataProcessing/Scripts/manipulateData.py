@@ -100,7 +100,11 @@ def process_file(fileName):
     # calls function to load the processed data into the database
     load_to_database_comulated(comaulatedData)
 
-    # TODO: moves the file to the Archive
+    # Move the processed data files to InitialDataArchive
+    print "Moving processed files"
+    os.rename(fileName, os.path.abspath(os.path.join("CarrierDataArchive", os.path.basename(fileName))))
+    print "Moving file to archive: " + fileName
+    logging.info("Moving file to archive: " + fileName)
 
 
 # Loads data into the Database. Input = DataFrame
