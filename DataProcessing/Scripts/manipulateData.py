@@ -120,7 +120,13 @@ def load_to_database_comulated(data):
 ############# START OF SCRIPT ###########################
 #########################################################
 
+# Initialize Log-File
+# Creates or loads Log DataProcessing.log
+# Format of LogFile: mm/dd/yyyy hh:mm:ss PM LogMessage
+logging.basicConfig(filename='dataProcessing.log',level=logging.INFO,format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+
 # Putting Script a sleep for 0.5 sec to ensure that Running.txt is already created
+logging.info("dataProcessing.py goes a sleep for 0.5 sec")
 sleep(0.5)
 
 # Initialize dataFileNames as list. (List has to be available for all functions thats why it's declared global
@@ -129,6 +135,7 @@ dataFileNames = []
 # Check if Running.txt exist.
 while os.path.isfile("Running.txt"):
     # Running.txt exists -> Check if there are already files distributed by dataProcessing.py
+    logging.info("dataProcessing.py is still running")
     print "dataProcessing.py is still running"
     if check_folder():
         # If there are files which are not processed yet, call for each file process_file
@@ -136,6 +143,7 @@ while os.path.isfile("Running.txt"):
             process_file(str(filename))
 
     # put the script a sleep for setConstants.WAIT_TIME_IN_SECONDS_MPY before it checks the folder again for new files
+    logging.info("manipulateData.py goes asleep for " + str(setConstants.WAIT_TIME_IN_SECONDS_MPY) + "Sec")
     print "manipulateData.py goes asleep for " + str(setConstants.WAIT_TIME_IN_SECONDS_MPY) + "Sec"
     sleep(setConstants.WAIT_TIME_IN_SECONDS_MPY)
 
@@ -145,9 +153,11 @@ while os.path.isfile("Running.txt"):
 else:
 
     # Running.txt does not exist. -> Check if the folder has files which hasn't been processed yet.
+    logging.info("dataProcessing.py is not running")
     print "dataProcessing.py is not running"
     if check_folder():
         # If there are files which are not processed yet, call for each file process_file
         for filename in dataFileNames:
             process_file(filename)
+    logging.info("manipulateData.py: Shut down")
     print "manipulateData.py: Shut down"
