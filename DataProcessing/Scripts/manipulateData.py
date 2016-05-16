@@ -13,6 +13,8 @@ import os
 import sys
 # Imports glob to enable the script to search for all csv files in a particular folder
 import glob
+# Imports logging for logs
+import logging
 # Imports sleep for sleeping
 from time import sleep
 # Imports Pandas for Data handling
@@ -29,15 +31,18 @@ def check_folder():
 
     # Returns False or True depending on whether or not files are stored in dataFileNames
     if not dataFileNames:
+        logging.info("No new files found")
         print "No new files found"
         return False
     else:
+        logging.info(str(len(dataFileNames)) + " Files found")
         print str(len(dataFileNames)) + " Files found"
         return True
 
 
 # Function to process each file
 def process_file(fileName):
+    logging.info("Processing " + fileName)
     print "Processing " + fileName
     # Loading Path of the file
     filePath = os.path.abspath(fileName)
@@ -101,14 +106,15 @@ def process_file(fileName):
 # Loads data into the Database. Input = DataFrame
 def load_to_database(data):
     # TODO: Load data to database
+    logging.info("Loading DataFrame into Database...")
     print "Loading DataFrame into Database..."
 
 
 # Loads comaulatesData into the database.
 def load_to_database_comulated(data):
     # TODO: Load data to database
+    logging.info("Loading DataFrame into Database...")
     print "Loading DataFrame into Database..."
-
 
 #########################################################
 ############# START OF SCRIPT ###########################
