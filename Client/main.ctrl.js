@@ -26,7 +26,11 @@ angular.module('app')
     $scope.graphs = [
         {name : "Acceleration", file : "sections/graphExample/dummy.csv"},
         {name : "Power", file : "sections/graphExample/dummy2.csv"},
-	];
+    ];
+    $scope.carriers = [
+	{id : "1", name : "Carrier 1"},
+	{id : "2", name : "Carrier 2"},
+    ];
     $scope.paintGraph = function(file) {
 	    g2 = new Dygraph(
 	    document.getElementById("graphdiv2"), file, {});
@@ -36,6 +40,10 @@ angular.module('app')
                  document.getElementById("graphdiv3"), file, {});
          }*/
         
+    }
+    $scope.paintGraphDynamic = function(carrier) {
+	    g2 = new Dygraph(
+	    document.getElementById("graphdiv2"), "django/helloWorld/position.csv?carrier="+carrier, {});
     }
 })
 
@@ -117,8 +125,10 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
     var carrierId = id.substr(7, 8); // This method is necessary, because the string is "carrier_x" To extract x, I need to get the subsstring
     $scope.carrierNumber =  carrierId;
 
-    $scope.addToComparison = function() {   //This function will add the carrier to the Side Panel "Compare"
-        carrierService.addCarrier(carrierId);
+    $scope.addToComparison = function() {  //This function will add the carrier to the Side Panel "Compare". It will also check, if the item is already inside the comaprison pane.
+        if(!carrierService.addCarrier(carrierId)) {         //check if carrier is already in list. If it already exists, then show a message.
+            alert('Carrier: ' +carrierId+ ' is already in the comparison sidebar')
+       }
         $mdDialog.hide();
         $mdSidenav('comparisonSidebar').toggle();
     }

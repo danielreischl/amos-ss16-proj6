@@ -1,13 +1,13 @@
 from django.contrib import admin
-from .models import tbl_Session
-from .models import tbl_Carrier
-from .models import tbl_Iteration
-from .models import tbl_TimeStampData
-from .models import tbl_IterationData
+from .models import session
+from .models import carrier
+from .models import iteration
+from .models import timestampdata
+from .models import iterationdata
 
 # Register your models here.
-admin.site.register(tbl_Session)
-admin.site.register(tbl_Carrier)
-admin.site.register(tbl_Iteration)
-admin.site.register(tbl_TimeStampData)
-admin.site.register(tbl_IterationData)
+admin.site.register(session)
+admin.site.register(carrier)
+admin.site.register(iteration)
+admin.site.register(timestampdata)
+admin.site.register(iterationdata)

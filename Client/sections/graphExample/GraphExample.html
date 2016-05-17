@@ -2,5 +2,8 @@
 	   <select ng-model="selectedGraph" ng-change = "paintGraph(selectedGraph)">
 	     <option ng-repeat="x in graphs" value="{{x.file}}">{{x.name}}</option>
 	   </select>
+	   <select ng-model="selectedCarrier" ng-change = "paintGraphDynamic(selectedCarrier)">
+	     <option ng-repeat="x in carriers" value="{{x.id}}">{{x.name}}</option>
+	   </select>
 	   <div id="graphdiv2" style="width:500px; height:300px;"></div>
  </div>

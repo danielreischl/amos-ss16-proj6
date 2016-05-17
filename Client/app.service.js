@@ -11,7 +11,13 @@ who need the data.
     var carriersForComparison = [];
 
     this.addCarrier = function(newCarrier) {
-         carriersForComparison.push({carrierNumber: newCarrier});
+        for(var i = 0; i < carriersForComparison.length; i++) {
+            if (carriersForComparison[i].carrierNumber == newCarrier) {
+                return false;
+             }
+        }
+        carriersForComparison.push({carrierNumber: newCarrier});
+        return true;
     };
 
     this.getCarrier = function(){

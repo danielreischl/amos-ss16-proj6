@@ -20,9 +20,19 @@ import glob
 # Imports sys to terminate the function
 import sys
 
+import logging
+
+# Initialize Log-File
+# Creates or loads Log DataProcessing.log
+# Format of LogFile: mm/dd/yyyy hh:mm:ss PM LogMessage
+logging.basicConfig(filename='dataProcessing.log',level=logging.INFO,format='%(asctime)s %(message)s',
+                    datefmt='%m/%d/%Y %I:%M:%S %p')
+
+
 # Creates a TextFile "Running.txt" on Start to let manipulateData.py know that the script is still running
 with open("Running.txt", "w") as text_file:
     text_file.write("Running")
+    logging.info("dataProcessing.py now running. 'Running.txt' created.")
 
 # Constants
 # WAIT_TIME_IN_SECONDS: Time the script should wait until it calls the function again (in seconds)
@@ -40,19 +50,21 @@ KEEP_EVERY_X_ROW = 2
 # Write all DATA_FILE_NAMES in an Array
 for files in glob.glob("InitialData/*.csv"):
     DATA_FILE_NAMES.append(files)
-# Reading out Session from FileName
+
+logging.info("Found " + str(len(DATA_FILE_NAMES)) + " new files.")
 
 # Checks if a File is added to DATA_FILE_NAMES. If not it is terminating the script
 if not DATA_FILE_NAMES:
     print "No Files in Folder"
     # Removes Running.txt, so the simulator can also terminate
     os.remove("Running.txt")
+    logging.info("Terminating dataProcessing.py. 'Running.txt' removed.")
     # Terminates the script
     sys.exit()
 
 # TODO Session is also saved in setConstants -> Change to either
+# Reading out Session from FileName
 SESSION = DATA_FILE_NAMES[0].split("_")[1]
-
 
 # Variables
 # Array that saves for every drive which carrier is on it
@@ -213,6 +225,7 @@ def compressData(drive, carrier):
     print drive
     print "reset its position"
     print " "
+    logging.info("Compressing data of carrier: " + str(carrier))
 
     # the Value where the average is built
     valueAverage = 0
@@ -304,6 +317,7 @@ def exportCSV(carrier):
 
     np.savetxt(fileName, export, fmt='%0.5f', delimiter=DATA_SEPARATOR, newline='\n',
                header='time;posAbsolute;posOnDrive;energy', footer='', comments='# ')
+    logging.info("Exported to file " + fileName)
 
 # Finds the first row of the array that will be exported as CSV, where pos and energy consumption != 0
 def findFirstRowInCarrierData(carrier):
@@ -381,12 +395,14 @@ for index, row in initialData.iterrows():
         processData([index, drive + 1, row['position'][drive], row['energy'][drive]])
     sleep(WAIT_TIME_IN_SECONDS)
 
-''' Commented out for testing
+# Comment out for testing
 # Move the processed data files to InitialDataArchive
 print "Moving processed files"
 for fileName in DATA_FILE_NAMES:
     os.rename(fileName, os.path.abspath(os.path.join("InitialDataArchive", os.path.basename(fileName))))
     print os.path.abspath(os.path.join("CarrierData", os.path.basename(fileName)))
-'''
+    logging.info("Moving " + fileName + " to: " + os.path.abspath(os.path.join("InitialDataArchive", os.path.basename(fileName))))
+
 # Removes the status.txt file after the end of the simulation
 os.remove("Running.txt")
+logging.info("Terminating dataProcessing.py. 'Running.txt removed.")
