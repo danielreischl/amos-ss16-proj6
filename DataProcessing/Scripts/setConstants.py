@@ -22,7 +22,7 @@ WAIT_TIME_IN_SECONDS_MPY = 5
 CSV_SEPARATOR = ";"
 
 # Path of SQLITEDB
-PATH_OF_SQLLITE_DB = '../django/db.sqlite3'
+PATH_OF_SQLLITE_DB = '/srv/django/db.sqlite3'
 
 NAME_TABLE_PROCESSED_DATA = 'helloWorld_timestampdata'
 NAME_TABLE_COM_DATA = 'helloWorld_iterationdata'
