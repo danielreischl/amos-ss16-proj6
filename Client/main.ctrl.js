@@ -56,9 +56,16 @@ angular.module('app')
     }
 })
 
-/* controller for the compareGraph. Should display the comparison chart with all the buttons*/
+/* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/
 
 .controller('compareCircleGraph', function($scope, carrierService) {
+    var carrierCompareList = carrierService.getCarrier();
+    var carrierMax = 8; //this needs to be dynamic later if we have connection to the database
+    var cool;
+    var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database
+
+    /* this functions created the dygraph  from a data source and applies options to them*/
+
     $scope.createCompareGraph = function() {
         graph = new Dygraph(
 	       document.getElementById("compareGraph"), 'sections/compareCarrier/dummy.csv', {title: "Carrier's energy consumption of the latest iteration",
@@ -66,8 +73,24 @@ angular.module('app')
 	                                                                                      xlabel: 'Time in (ms)',
 	                                                                                      labelsSeparateLines: true,
 	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
-	                                                                                    //  visibility: [true, true, true, true, true, true,true],
+	                                                                                      visibility: visibilityArray,             // here are 10 x booleans because the dummy data has 3 extra commas
 	                                                                                      });
+
+        /* these loops have the purpose to see what carriers the user wants to compare
+        and change the visibilty of the carriers in the dygraph to true */
+
+        if(carrierCompareList.length != 0) {
+            for (var i = 0; i < carrierCompareList.length; i++) {
+                for (var carrier = 0; carrier < carrierMax; carrier++) {
+                    if (carrierCompareList[i].carrierNumber == carrier) {
+                        visibilityArray[carrier] = true;
+                        break;
+                    }
+                }
+            }
+        } else {
+            alert("You did not chose any Carriers to compare")
+        }
     }
 })
 
@@ -149,35 +172,36 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
 
     function createCircle(carrier, energy, averageEnergy) {
 
-      var canvas = document.getElementById(carrier);
-      var context = canvas.getContext('2d');
-      var centerX = canvas.width / 2;
-      var centerY = canvas.height / 2;
-      var radius = 60;
-      var percentageEnergy =  Math.round((energy/averageEnergy) * 100);
 
-      context.beginPath();
-      context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-      context.lineWidth = 2;
-      context.strokeStyle = '#003300';
-      context.stroke();
+        var canvas = document.getElementById(carrier);
+        var context = canvas.getContext('2d');
+        var centerX = canvas.width / 2;
+        var centerY = canvas.height / 2;
+        var radius = 60;
+        var percentageEnergy =  Math.round((energy/averageEnergy) * 100);
 
-      if( energy  > averageEnergy) {
-         context.fillStyle = '#FF1744';
-      } else if(energy  < averageEnergy ) {
-             context.fillStyle = '#00BFA5';
-      } else {
+        context.beginPath();
+        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+        context.lineWidth = 2;
+        context.strokeStyle = '#003300';
+        context.stroke();
+
+        if( energy  > averageEnergy) {
+            context.fillStyle = '#FF1744';
+        } else if(energy  < averageEnergy ) {
+            context.fillStyle = '#00BFA5';
+        } else {
             context.fillStyle = "#FFFF8D";
-      }
+        }
 
-      context.fill();
-      context.lineWidth = 5;
-      context.lineWidth=1;
-      context.fillStyle="#212121";
-      context.lineStyle="#212121";
-      context.font="15px sans-serif";
-      context.fillText(carrier, centerX - 15, centerY);
-      context.fillText(percentageEnergy + "%", centerX - 15, centerY + 20);
+        context.fill();
+        context.lineWidth = 5;
+        context.lineWidth=1;
+        context.fillStyle="#212121";
+        context.lineStyle="#212121";
+        context.font="15px sans-serif";
+        context.fillText(carrier, centerX - 15, centerY); //carrier+1 to ensure right id for array and the right dosplay of carrier for the user
+        context.fillText(percentageEnergy + "%", centerX - 15, centerY + 20);
     }
 }
 
