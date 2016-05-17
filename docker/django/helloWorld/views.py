@@ -1,6 +1,7 @@
 import csv
 from django.shortcuts import render
 from django.http import HttpResponse
+from helloWorld.models import timestampdata
 
 
 def db2csv(request):
@@ -14,30 +15,30 @@ def db2csv(request):
 
     # extract parameters
     # e.g. for first carrier request position.csv?carrier=1
-    carrier = request.GET['carrier']
+    requestedCarrier = request.GET['carrier']
+    requestedIteration = request.GET['iteration']
+    requestedDimension = request.GET['dimension']
     
 
-    # very simplistic test data
-    # later this data is fetched from the DB according to parameters
-    
-    csv_test_data = (
-        ('1', '0', '0', '5'),
-        ('1', '1', '50', '5'),
-        ('1', '2', '100', '5'),
-        ('1', '3', '200', '5'),
-        ('1', '4', '250', '5'),
-        ('2', '3', '0', '5'),
-        ('2', '4', '50', '10'),
-        ('2', '5', '100', '10'),
-        ('2', '6', '200', '5'),
-        ('2', '7', '200', '5'),
-    )
+    result = timestampdata.objects.filter(carrier=requestedCarrier,iteration=requestedIteration)
+
     
     writer = csv.writer(response)
-    for row in csv_test_data:
-        if (row[0] == carrier):
-            writer.writerow([row[1],row[3]])
 
+    # case analysis by the selected dimension: there must be a nicer way to do this
+    
+    if requestedDimension == "POSITION":
+        for row in result:
+            writer.writerow([row.timeStamp, row.positionAbsolute])
+    elif requestedDimension == "ACCELERATION":
+        for row in result:
+            writer.writerow([row.timeStamp, row.acceleration])
+    elif requestedDimension == "SPEED":
+        for row in result:
+            writer.writerow([row.timeStamp, row.speed])
+    elif requestedDimension == "ENERGY":
+        for row in result:
+            writer.writerow([row.timeStamp, row.energyConsumption])
 
     return response
 
