@@ -22,11 +22,20 @@ WAIT_TIME_IN_SECONDS_MPY = 5
 CSV_SEPARATOR = ";"
 # Path of SQLITEDB
 PATH_OF_SQLLITE_DB = './django/db.sqlite3'
-NAME_TABLE_SESSION = 'tbl_Session'
-NAME_TABLE_CARRIER = 'tbl_Carrier'
-NAME_TABLE_ITERATION = 'tbl_Iteration'
+
+NAME_TABLE_PROCESSED_DATA = 'helloWorld_timestampdata'
+NAME_TABLE_COM_DATA = 'helloWorld_iterationdata'
+
+NAME_TABLE_CARRIER = 'helloWorld_carrier'
+NAME_TABLE_ITERATION = 'helloWorld_iteration'
+NAME_TABLE_ITERATION = 'helloWorld_session'
+
+
+
+
+
 # Name of Table for processed data
-NAME_TABLE_PROCESSED_DATA = 'helloWorld_tbl_TimeStampData'
+#NAME_TABLE_PROCESSED_DATA = 'helloWorld_tbl_TimeStampData'
 # Name of Table for commulated data
-NAME_TABLE_COM_DATA = 'helloWorld_tbl_IterationData'
+#NAME_TABLE_COM_DATA = 'helloWorld_tbl_IterationData'
 

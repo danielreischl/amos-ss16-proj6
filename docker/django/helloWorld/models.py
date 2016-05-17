@@ -3,7 +3,7 @@ from django.db import models
 # Database model
 # Author: inkibus (Rene R.)
 
-class tbl_Session(models.Model):
+class session(models.Model):
     # Every time something in the production system is changed, a new Session is stored, to have coherent data
     # Integer of the current session in which a carrier is in the system
     # This cannot be the primary key because the sessionNumber is dependent on the read CSV file
@@ -14,7 +14,7 @@ class tbl_Session(models.Model):
         return "Session " + str(self.sessionNumber)
 
 
-class tbl_Carrier(models.Model):
+class carrier(models.Model):
     # Integer that identifies the carrier
     # This cannot be the primary key because the carrierNumber is dependent on the read CSV file
     carrierNumber = models.IntegerField(primary_key=True, unique=True, default=0)
@@ -23,7 +23,7 @@ class tbl_Carrier(models.Model):
     def __unicode__(self):  # in python 3.3 this is __str__(self):
         return "Carrier " + str(self.carrierNumber)
 
-class tbl_Iteration(models.Model):
+class iteration(models.Model):
     # Integer of the current Iteration in which a carrier is in the system
     # This number can get big so it is initialized as BigIntegerField
     # This cannot be the primary key because the iterationNumber is dependent on the read CSV file
@@ -33,16 +33,21 @@ class tbl_Iteration(models.Model):
     def __unicode__(self):  # in python 3.3 this is __str__(self):
         return "Iteration " + str(self.iterationNumber)
 
-class tbl_TimeStampData(models.Model):
+class timestampdata(models.Model):
     # It is not necessary to explicitly declare an ID
     # Maybe necessary, because the implicit ID will not be a "BigInteger", which is required
 
     # The Session that the data is recorded for
-    fid_Session = models.ForeignKey(tbl_Session, on_delete=models.CASCADE)
+    #fid_Session = models.ForeignKey(session, on_delete=models.CASCADE)
     # The Carrier that the data is recorded for
-    fid_Carrier = models.ForeignKey(tbl_Carrier, on_delete=models.CASCADE)
+    #fid_Carrier = models.ForeignKey(carrier, on_delete=models.CASCADE)
     # The Iteration that the data is recorded for
-    fid_Iteration = models.ForeignKey(tbl_Iteration, on_delete=models.CASCADE)
+    #fid_Iteration = models.ForeignKey(iteration, on_delete=models.CASCADE)
+
+    session = models.IntegerField()
+    carrier = models.IntegerField()
+    iteration = models.IntegerField()
+
 
     # The time (in ms) from the beginning of the Iteration that the data is recorded
     timeStamp = models.BigIntegerField()
@@ -63,16 +68,20 @@ class tbl_TimeStampData(models.Model):
                + "_T_" + str(self.timeStamp)
 
 
-class tbl_IterationData(models.Model):
+class iterationdata(models.Model):
     # It is not necessary to explicitly declare an ID
     # Maybe necessary, because the implicit ID will not be a "BigInteger", which is required
 
     # The Session that the data is recorded for
-    fid_Session = models.ForeignKey(tbl_Session, on_delete=models.CASCADE)
+    #fid_Session = models.ForeignKey(session, on_delete=models.CASCADE)
     # The Carrier that the data is recorded for
-    fid_Carrier = models.ForeignKey(tbl_Carrier, on_delete=models.CASCADE)
+    #fid_Carrier = models.ForeignKey(carrier, on_delete=models.CASCADE)
     # The Iteration that the data is recorded for
-    fid_Iteration = models.ForeignKey(tbl_Iteration, on_delete=models.CASCADE)
+    #fid_Iteration = models.ForeignKey(iteration, on_delete=models.CASCADE)
+
+    session = models.IntegerField()
+    carrier = models.IntegerField()
+    iteration = models.IntegerField()
 
     # The average speed of a carrier in one iteration
     speedAverage = models.FloatField()
