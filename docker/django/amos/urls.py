@@ -3,8 +3,8 @@ from helloWorld import views
 from django.contrib import admin
 
 urlpatterns = [
-    url('django/helloWorld/', include('helloWorld.urls')),
+    url(r'^django/helloWorld/', include('helloWorld.urls')),
     # the following is a hack; try to improve
-    url('django/index.html', include('helloWorld.urls')),
-    url('django/admin/', include(admin.site.urls)),
+    url(r'^django/index.html', include('helloWorld.urls')),
+    url(r'^django/admin/', admin.site.urls),
 ]
