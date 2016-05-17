@@ -23,6 +23,7 @@ from time import sleep
 import pandas as pd
 # Imports setConstants to import the Constants
 import setConstants
+import sqlite3
 
 
 # Function that checks if new csv files are in the folder
@@ -48,16 +49,16 @@ def process_file(fileName):
     # Loading data into a dataFrame
     data = pd.read_csv(filePath, setConstants.CSV_SEPARATOR)
     # Change name of Columns to fit DataBaseModel
-    data.columns = ['timeStamp', 'positionAbsolute', 'positonOnDrive', 'energyConsumption']
+    data.columns = ['timeStamp', 'positionAbsolute', 'positionOnDrive', 'energyConsumption']
     # Reads out session of file name and adds column to DataFrame after Casting from str to int
     session = int(fileName.split('_')[1])
-    data['fidSession'] = session
+    data['session'] = session
     # Reads out carrier of file name and adds column to DataFrame after Casting from str to int
     carrier = int(fileName.split('_')[3])
-    data['fidCarrier'] = carrier
+    data['carrier'] = carrier
     # Reads out iteration of file name and aadds column to DataFrame after Casting from str to int
     iteration = int(fileName.split('_')[5].replace('.csv', ''))
-    data['fidIteration'] = iteration
+    data['iteration'] = iteration
     # Calculates the speed between two datapoints (Way/Time)
     data['speed'] = data['positionAbsolute'].diff().divide(data['timeStamp'].diff())
     # Calculates acceleration (SpeedEnd * SpeedEnd - SpeedBeginn * SpeedBeginn))/distance * 2
@@ -88,13 +89,13 @@ def process_file(fileName):
 
     # Inizialize DataFrame comulatedData with columns based on new DataBaseModel
     comaulatedData = pd.DataFrame(
-        columns=['fidSession', 'fidCarrier', 'fidIteration', 'averageSpeed', 'averageAcceleration',
-                 'totalEnergyConsumption', 'averageEnergyConsumptionAbsolute'], index=['1'])
+        columns=['session', 'carrier', 'iteration', 'speedAverage', 'accelerationAverage',
+                 'energyConsumptionTotal', 'energyConsumptionAverage'], index=['1'])
     # Adding previous extracted and calculated values to DataFrame
     comaulatedData.loc['1'] = pd.Series(
-        {'fidSession': session, 'fidCarrier': carrier, 'fidIteration': iteration, 'averageSpeed': averageSpeed,
-         'averageAcceleration': averageAcceleration, 'totalEnergyConsumption': totalEnergyConsumption,
-         'averageEnergyConsumptionAbsolute': averageEnergyConsumption})
+        {'session': session, 'carrier': carrier, 'iteration': iteration, 'speedAverage': averageSpeed,
+         'accelerationAverage': averageAcceleration, 'energyConsumptionTotal': totalEnergyConsumption,
+         'energyConsumptionAverage': averageEnergyConsumption})
 
     # calls function to load the processed data into the database
     load_to_database(comaulatedData, setConstants.NAME_TABLE_COM_DATA)
@@ -108,10 +109,30 @@ def process_file(fileName):
 # Loads data into the Database. Input = DataFrame
 def load_to_database(data, tableName):
     logging.info("Loading DataFrame into Database...")
+
+    data = data.fillna(0)
+
+    logging.info("table name: " + tableName)
+
     # Creates SQL Alchemy Engine. Path to sqliteFile is enought. sqlite://// prefix is necessary
-    engine = create_engine('sqlite:////' + setConstants.PATH_OF_SQLLITE_DB)
+    # engine = create_engine('sqlite:////' + setConstants.PATH_OF_SQLLITE_DB)
+
+
+    # Database connection
+    con = sqlite3.connect(setConstants.PATH_OF_SQLLITE_DB)
+    logging.info("Connection: " + con)
+
+    # Query before
+    df = pd.read_sql_query("SELECT * FROM " + tableName, con)
+    print(df.head())
+
     # Loads dataframe to database. Appends data or creates table and is not adding the index of the dataFrame.
-    data.to_sql(name = tableName, con = engine, if_exists = 'append' ,index = False)
+    data.to_sql(name = tableName, con = con, if_exists = 'append' ,index = False)
+    print "pushed!"
+
+    df = pd.read_sql_query("SELECT * FROM " + tableName, con)
+    print(df.head())
+
     logging.info("Data loaded into Database")
 
 
