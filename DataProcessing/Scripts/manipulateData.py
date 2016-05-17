@@ -73,7 +73,7 @@ def process_file(fileName):
     data = data[cols]
 
     # calls function to load the data into the database
-    load_to_database(data, setConstants.NAME_TABLE_COM_DATA)
+    load_to_database(data, setConstants.NAME_TABLE_PROCESSED_DATA)
 
     # Creating DataFrame for the commulated Data
     # Calculating Measures
