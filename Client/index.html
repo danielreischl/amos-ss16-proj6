@@ -39,13 +39,12 @@ the user can see different graphs -->
    <body layout = "row" ng-cloak>
        <!-- Side Navigation-->
         <md-sidenav md-component-id="menue" layout="column" class="md-sidenav-left" >
-            <md-list-item layout = "column">
-                <div id="sidenavTOP"></div>
-                    <md-button ><a href="#/">Introduction Page</a></md-button>
-                    <md-button ><a href="#Dashboard">Dashboard</a></md-button>
-                    <md-button ><a href="#Graph">Graph</a></md-button>
-                    <md-button ><a href="#Documentation">Documentation</a></md-button>
-            </md-list-item>
+            <div id="sidenavTOP"></div>
+            <md-button class ="navButton" Onclick="location.href='#/'">Introduction Page</md-button>
+            <md-button class ="navButton" Onclick="location.href='#Dashboard'">Dashboard</md-button>
+            <md-button class ="navButton" Onclick="location.href='#Graph'">Graph</md-button>
+            <md-button class ="navButton" Onclick="location.href='#Documentation'">Documentation</md-button>
+
          </md-sidenav>
 
             <!-- Main layout Section. At the top are Quicklinks-->
