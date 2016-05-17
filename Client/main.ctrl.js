@@ -23,14 +23,23 @@ angular.module('app')
 
 
 .controller('visuController', function($scope) {
-    $scope.graphs = [
-        {name : "Acceleration", file : "sections/graphExample/dummy.csv"},
-        {name : "Power", file : "sections/graphExample/dummy2.csv"},
+    $scope.dimensions = [
+        {name : "Acceleration", id : "ACCELERATION", default: false},
+        {name : "Energy", id : "ENERGY", default: false},
+	{name : "Speed", id: "SPEED", default: false},
+	{name : "Position", id: "POSITION", default: true},
     ];
     $scope.carriers = [
 	{id : "1", name : "Carrier 1"},
 	{id : "2", name : "Carrier 2"},
+	{id : "3", name : "Carrier 3"},
     ];
+    $scope.iterations = [
+	{id : "1"},
+	{id : "2"},
+    ];
+    $scope.selected =
+	{ carrier: "1", iteration: "1" };
     $scope.paintGraph = function(file) {
 	    g2 = new Dygraph(
 	    document.getElementById("graphdiv2"), file, {});
@@ -43,7 +52,7 @@ angular.module('app')
     }
     $scope.paintGraphDynamic = function(carrier) {
 	    g2 = new Dygraph(
-	    document.getElementById("graphdiv2"), "django/helloWorld/position.csv?carrier="+carrier, {});
+	    document.getElementById("graphdiv2"), "django/helloWorld/position.csv?carrier="+$scope.selectedCarrier+"&iteration="+$scope.selectedIteration+"&dimension="+$scope.selectedDimension, {});
     }
 })
 

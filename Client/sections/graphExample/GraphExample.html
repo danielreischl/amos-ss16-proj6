@@ -1,9 +1,12 @@
  <div ng-controller="visuController">
-	   <select ng-model="selectedGraph" ng-change = "paintGraph(selectedGraph)">
-	     <option ng-repeat="x in graphs" value="{{x.file}}">{{x.name}}</option>
+	   <select ng-model="selectedDimension" ng-change = "paintGraphDynamic()">
+	     <option ng-repeat="x in dimensions" value="{{x.id}}">{{x.name}}</option>
 	   </select>
-	   <select ng-model="selectedCarrier" ng-change = "paintGraphDynamic(selectedCarrier)">
+	   <select ng-model="selectedCarrier" ng-change = "paintGraphDynamic()">
 	     <option ng-repeat="x in carriers" value="{{x.id}}">{{x.name}}</option>
+	   </select>
+	   <select ng-model="selectedIteration" ng-change = "paintGraphDynamic()">
+	     <option ng-repeat="x in iterations" value="{{x.id}}">{{x.id}}</option>
 	   </select>
 	   <div id="graphdiv2" style="width:500px; height:300px;"></div>
  </div>
