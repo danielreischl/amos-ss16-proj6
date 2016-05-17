@@ -38,11 +38,16 @@ class timestampdata(models.Model):
     # Maybe necessary, because the implicit ID will not be a "BigInteger", which is required
 
     # The Session that the data is recorded for
-    fid_Session = models.ForeignKey(session, on_delete=models.CASCADE)
+    #fid_Session = models.ForeignKey(session, on_delete=models.CASCADE)
     # The Carrier that the data is recorded for
-    fid_Carrier = models.ForeignKey(carrier, on_delete=models.CASCADE)
+    #fid_Carrier = models.ForeignKey(carrier, on_delete=models.CASCADE)
     # The Iteration that the data is recorded for
-    fid_Iteration = models.ForeignKey(iteration, on_delete=models.CASCADE)
+    #fid_Iteration = models.ForeignKey(iteration, on_delete=models.CASCADE)
+
+    session = models.IntegerField()
+    carrier = models.IntegerField()
+    iteration = models.IntegerField()
+
 
     # The time (in ms) from the beginning of the Iteration that the data is recorded
     timeStamp = models.BigIntegerField()
@@ -68,11 +73,15 @@ class iterationdata(models.Model):
     # Maybe necessary, because the implicit ID will not be a "BigInteger", which is required
 
     # The Session that the data is recorded for
-    fid_Session = models.ForeignKey(session, on_delete=models.CASCADE)
+    #fid_Session = models.ForeignKey(session, on_delete=models.CASCADE)
     # The Carrier that the data is recorded for
-    fid_Carrier = models.ForeignKey(carrier, on_delete=models.CASCADE)
+    #fid_Carrier = models.ForeignKey(carrier, on_delete=models.CASCADE)
     # The Iteration that the data is recorded for
-    fid_Iteration = models.ForeignKey(iteration, on_delete=models.CASCADE)
+    #fid_Iteration = models.ForeignKey(iteration, on_delete=models.CASCADE)
+
+    session = models.IntegerField()
+    carrier = models.IntegerField()
+    iteration = models.IntegerField()
 
     # The average speed of a carrier in one iteration
     speedAverage = models.FloatField()
