@@ -13,6 +13,8 @@ import os
 import sys
 # Imports glob to enable the script to search for all csv files in a particular folder
 import glob
+# Imports SQLAlchemy to Load pandas DataFrame to SQLITEDB
+from sqlalchemy import create_engine
 # Imports logging for logs
 import logging
 # Imports sleep for sleeping
@@ -32,18 +34,15 @@ def check_folder():
     # Returns False or True depending on whether or not files are stored in dataFileNames
     if not dataFileNames:
         logging.info("No new files found")
-        print "No new files found"
         return False
     else:
         logging.info(str(len(dataFileNames)) + " Files found")
-        print str(len(dataFileNames)) + " Files found"
         return True
 
 
 # Function to process each file
 def process_file(fileName):
     logging.info("Processing " + fileName)
-    print "Processing " + fileName
     # Loading Path of the file
     filePath = os.path.abspath(fileName)
     # Loading data into a dataFrame
@@ -74,7 +73,7 @@ def process_file(fileName):
     data = data[cols]
 
     # calls function to load the data into the database
-    load_to_database(data)
+    load_to_database(data, setConstants.NAME_TABLE_COM_DATA)
 
     # Creating DataFrame for the commulated Data
     # Calculating Measures
@@ -98,27 +97,23 @@ def process_file(fileName):
          'averageEnergyConsumptionAbsolute': averageEnergyConsumption})
 
     # calls function to load the processed data into the database
-    load_to_database_comulated(comaulatedData)
+    load_to_database(comaulatedData, setConstants.NAME_TABLE_COM_DATA)
 
     # Move the processed data files to InitialDataArchive
-    print "Moving processed files"
-    os.rename(fileName, os.path.abspath(os.path.join("CarrierDataArchive", os.path.basename(fileName))))
-    print "Moving file to archive: " + fileName
+    logging.info ("Moving processed files")
+    #os.rename(fileName, os.path.abspath(os.path.join("CarrierDataArchive", os.path.basename(fileName))))
     logging.info("Moving file to archive: " + fileName)
 
 
 # Loads data into the Database. Input = DataFrame
-def load_to_database(data):
-    # TODO: Load data to database
+def load_to_database(data, tableName):
     logging.info("Loading DataFrame into Database...")
-    print "Loading DataFrame into Database..."
+    # Creates SQL Alchemy Engine. Path to sqliteFile is enought. sqlite://// prefix is necessary
+    engine = create_engine('sqlite:////' + setConstants.PATH_OF_SQLLITE_DB)
+    # Loads dataframe to database. Appends data or creates table and is not adding the index of the dataFrame.
+    data.to_sql(name = tableName, con = engine, if_exists = 'append' ,index = False)
+    logging.info("Data loaded into Database")
 
-
-# Loads comaulatesData into the database.
-def load_to_database_comulated(data):
-    # TODO: Load data to database
-    logging.info("Loading DataFrame into Database...")
-    print "Loading DataFrame into Database..."
 
 #########################################################
 ############# START OF SCRIPT ###########################
@@ -140,7 +135,6 @@ dataFileNames = []
 while os.path.isfile("Running.txt"):
     # Running.txt exists -> Check if there are already files distributed by dataProcessing.py
     logging.info("dataProcessing.py is still running")
-    print "dataProcessing.py is still running"
     if check_folder():
         # If there are files which are not processed yet, call for each file process_file
         for filename in dataFileNames:
@@ -148,17 +142,14 @@ while os.path.isfile("Running.txt"):
 
     # put the script a sleep for setConstants.WAIT_TIME_IN_SECONDS_MPY before it checks the folder again for new files
     logging.info("manipulateData.py goes asleep for " + str(setConstants.WAIT_TIME_IN_SECONDS_MPY) + "Sec")
-    print "manipulateData.py goes asleep for " + str(setConstants.WAIT_TIME_IN_SECONDS_MPY) + "Sec"
     sleep(setConstants.WAIT_TIME_IN_SECONDS_MPY)
 
 else:
 
     # Running.txt does not exist. -> Check if the folder has files which hasn't been processed yet.
     logging.info("dataProcessing.py is not running")
-    print "dataProcessing.py is not running"
     if check_folder():
         # If there are files which are not processed yet, call for each file process_file
         for filename in dataFileNames:
             process_file(filename)
     logging.info("manipulateData.py: Shut down")
-    print "manipulateData.py: Shut down"

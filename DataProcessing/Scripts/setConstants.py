@@ -20,4 +20,10 @@ SESSION = 1
 WAIT_TIME_IN_SECONDS_MPY = 5
 # Separator of the CSV-Files
 CSV_SEPARATOR = ";"
+# Path of SQLITEDB
+PATH_OF_SQLLITE_DB = 'db.sqlite3'
+# Name of Table for processed data
+NAME_TABLE_PROCESSED_DATA = 'tablename1'
+# Name of Table for commulated data
+NAME_TABLE_COM_DATA = 'tablename2'
 
