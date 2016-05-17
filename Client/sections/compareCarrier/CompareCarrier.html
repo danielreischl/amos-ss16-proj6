@@ -1,8 +1,5 @@
- <div ng-controller="visuController">
-	   <select ng-model="selectedGraph" ng-change = "paintGraph(selectedGraph)">
-	     <option ng-repeat="x in graphs" value="{{x.file}}">{{x.name}}</option>
-	   </select>
-	   <div id="graphdiv2" style="width:500px; height:300px;"></div>
+ <div ng-controller="compareCircleGraph">
+	   <div ng-init ="createCompareGraph()" id="compareGraph" style="width:1600px; height:600px;"></div>
  </div>
 
 

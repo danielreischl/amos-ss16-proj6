@@ -47,10 +47,21 @@ angular.module('app')
     }
 })
 
-   
-    
-    
-    
+/* controller for the compareGraph. Should display the comparison chart with all the buttons*/
+
+.controller('compareCircleGraph', function($scope, carrierService) {
+    $scope.createCompareGraph = function() {
+        graph = new Dygraph(
+	       document.getElementById("compareGraph"), 'sections/compareCarrier/dummy.csv', {title: "Carrier's energy consumption of the latest iteration",
+	                                                                                      ylabel: 'Energy Consumption in (mA)',
+	                                                                                      xlabel: 'Time in (ms)',
+	                                                                                      labelsSeparateLines: true,
+	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
+	                                                                                    //  visibility: [true, true, true, true, true, true,true],
+	                                                                                      });
+    }
+})
+
    
 
 /* controller for the popupGraphs. Displays the carrier number and 2 Buttons. Depending on which button is pressed,
