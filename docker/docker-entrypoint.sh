@@ -19,6 +19,11 @@ python manage.py makemigrations helloWorld
 python manage.py migrate --noinput                 # Apply database migrations
 python manage.py collectstatic --noinput  # Collect static files
 
+# run init script
+chmod u+x ../DataProcessing/Scripts/initSimulation.sh
+# open sub-shell, change the directory, and execute - needed since the called python scripts use relative paths
+( cd /srv/DataProcessing/Scripts; sh ./initSimulation.sh )
+
 # Prepare log files and start outputting logs to stdout
 touch /srv/logs/gunicorn.log
 touch /srv/logs/access.log
@@ -55,7 +60,7 @@ echo Starting Gunicorn.
 exec gunicorn amos.wsgi:application \
     --name amos-6 \
     --bind=0.0.0.0:8000  \
-    --workers 3
+    --workers 3 
 
 
 #     authbind --deep \
