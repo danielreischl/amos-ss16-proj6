@@ -27,6 +27,7 @@ FAU AMOS Group 6: Siemens AG
 |angular_material	|	1.1.0	|	MIT License	|
 |Material	|| Icons	-	CC-BY License
 |nginx	|	1.10.0	|	BSD License	|
+|Dygraphs	|	1.1.1	|	MIT License	|
 
 #### Backend related
 
