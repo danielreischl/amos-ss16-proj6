@@ -23,10 +23,18 @@ angular.module('app')
     $scope.graphs = [
         {name : "Acceleration", file : "sections/graphExample/dummy.csv"},
         {name : "Power", file : "sections/graphExample/dummy2.csv"},
-	];
+    ];
+    $scope.carriers = [
+	{id : "1", name : "Carrier 1"},
+	{id : "2", name : "Carrier 2"},
+    ];
     $scope.paintGraph = function(file) {
 	    g2 = new Dygraph(
 	    document.getElementById("graphdiv2"), file, {});
+    }
+    $scope.paintGraphDynamic = function(carrier) {
+	    g2 = new Dygraph(
+	    document.getElementById("graphdiv2"), "django/helloWorld/position.csv?carrier="+carrier, {});
     }
 })
 
