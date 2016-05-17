@@ -117,7 +117,6 @@ def load_to_database(data, tableName):
     # Creates SQL Alchemy Engine. Path to sqliteFile is enought. sqlite://// prefix is necessary
     # engine = create_engine('sqlite:////' + setConstants.PATH_OF_SQLLITE_DB)
 
-
     # Database connection
     con = sqlite3.connect(setConstants.PATH_OF_SQLLITE_DB)
     logging.info("Connection: " + con)
