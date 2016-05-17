@@ -20,7 +20,7 @@ python manage.py migrate --noinput                 # Apply database migrations
 python manage.py collectstatic --noinput  # Collect static files
 
 # run init script
-chmod u+x ../DataProcessing/Scripts/initSimulation.sh
+chmod u+x /srv/DataProcessing/Scripts/initSimulation.sh
 # open sub-shell, change the directory, and execute - needed since the called python scripts use relative paths
 ( cd /srv/DataProcessing/Scripts; sh ./initSimulation.sh )
 
