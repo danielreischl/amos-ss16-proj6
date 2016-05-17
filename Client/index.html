@@ -8,18 +8,15 @@ the user can see different graphs -->
    <head>
       <title>Siemens Data Analytics App</title>
 
-       <!-- Scripts -->
+      <!-- Scripts -->
+      <!-- Angular Material requires Angular.js Libraries -->
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
-
-        <!-- Angular Material requires Angular.js Libraries -->
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
-
-
-
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
+      <!-- local Scripts -->
       <script src="sections/graphExample/dygraph-combined-dev.js"></script>
       <script src="app.js"></script>
       <script src="app.routes.js"></script>
@@ -27,16 +24,14 @@ the user can see different graphs -->
       <script src="app.service.js"></script>
       <script src="sections/dashboard/dashboard.ctrl.js"></script>
       <script src="sections/circlePage/circleCarrier.js"></script>
-       <!-- End of Scripts -->
+      <!-- End of Scripts -->
 
-       <!-- Stylesheets-->
+      <!-- Stylesheets-->
       <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
       <link rel="stylesheet" href="assets/css/main.css">
       <link rel="stylesheet" href="assets/css/graphs.css">
-
-       <!-- End of Stylesheets-->
-
+      <!-- End of Stylesheets-->
    </head>
    <body layout = "row" ng-cloak>
        <!-- Side Navigation-->
@@ -47,7 +42,7 @@ the user can see different graphs -->
             <md-button class ="navButton" Onclick="location.href='#Graph'">Graph</md-button>
             <md-button class ="navButton" Onclick="location.href='#Documentation'">Documentation</md-button>
 
-         </md-sidenav>
+        </md-sidenav>
 
             <!-- Main layout Section. At the top are Quicklinks-->
 
@@ -68,6 +63,6 @@ the user can see different graphs -->
             <section layout = "column" layout-align="center center">
                  <div ng-view> </div>
             </section>
-         </md-content>
+        </md-content>
    </body>
 </html>

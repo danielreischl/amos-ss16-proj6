@@ -61,8 +61,7 @@ angular.module('app')
 .controller('compareCircleGraph', function($scope, carrierService) {
     var carrierCompareList = carrierService.getCarrier();
     var carrierMax = 8; //this needs to be dynamic later if we have connection to the database
-    var cool;
-    var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database
+    var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
 
     /* this functions created the dygraph  from a data source and applies options to them*/
 
@@ -73,7 +72,7 @@ angular.module('app')
 	                                                                                      xlabel: 'Time in (ms)',
 	                                                                                      labelsSeparateLines: true,
 	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
-	                                                                                      visibility: visibilityArray,             // here are 10 x booleans because the dummy data has 3 extra commas
+	                                                                                      visibility: visibilityArray,
 	                                                                                      });
 
         /* these loops have the purpose to see what carriers the user wants to compare
@@ -157,6 +156,8 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
     var arrayAverageEnergy =[2, 30, 25, 11, 2, 7, 23, 87]
     var idCounter = 0;
 
+    /* for each carrier in the array, create a new code fragment to be injected into the hdtml file. Each fragment is the base for a circle */
+
     for (x in arrayCarrier) {
 
         var circleId = "carrier " + idCounter;
@@ -186,6 +187,8 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
         context.strokeStyle = '#003300';
         context.stroke();
 
+        /* depending on the ratio energy to average Energy, the color changes */
+
         if( energy  > averageEnergy) {
             context.fillStyle = '#FF1744';
         } else if(energy  < averageEnergy ) {
@@ -200,7 +203,7 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
         context.fillStyle="#212121";
         context.lineStyle="#212121";
         context.font="15px sans-serif";
-        context.fillText(carrier, centerX - 15, centerY); //carrier+1 to ensure right id for array and the right dosplay of carrier for the user
+        context.fillText(carrier, centerX - 15, centerY);
         context.fillText(percentageEnergy + "%", centerX - 15, centerY + 20);
     }
 }

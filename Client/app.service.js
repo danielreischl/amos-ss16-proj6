@@ -10,6 +10,7 @@ who need the data.
 .service('carrierService', function() {
     var carriersForComparison = [];
 
+    // function adds a carrier with a given ID
     this.addCarrier = function(newCarrier) {
         for(var i = 0; i < carriersForComparison.length; i++) {
             if (carriersForComparison[i].carrierNumber == newCarrier) {
@@ -20,15 +21,17 @@ who need the data.
         return true;
     };
 
+    // returns the array with CarrierIDs to be compared
     this.getCarrier = function(){
         return carriersForComparison;
     }
 
+    // deletes a carrier with a given ID
     this.deleteCarrier = function(removeCarrier) {
          var toDelete =  carriersForComparison.indexOf(removeCarrier);
          carriersForComparison.splice(toDelete,1);
     }
-
+     // this service returns 3 functions to the caller, which he can use.
     return {
         addCarrier: this.addCarrier,
         getCarrier: this.getCarrier,
