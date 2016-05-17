@@ -31,6 +31,10 @@ angular
       .when('/BarCarrier', {
         templateUrl: 'sections/barPage/Barchart_shefali_vicky.html'
       })
+        
+        .when('/CompareCarrier', {
+        templateUrl: 'sections/compareCarrier/CompareCarrier.html'
+      })
 
       .otherwise({
         redirectTo: '/',
