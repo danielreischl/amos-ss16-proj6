@@ -13,6 +13,7 @@ FAU AMOS Group 6: Siemens AG
 |Numpy |	1.11 |	BSD License |
 |Pandas |	0.18 |	numpydoc License |
 |SciPy |	0.17.1 |	BSD License |
+|SQLAlchemy | 1.0.0 | MIT License |
 |gettext |	0.19.7 |	GNU GPL, GNU LGPL, GNU FDL |
 |libatlas-base-dev |	3.10.2-9 |	BSD License |
 
