@@ -4,7 +4,7 @@ angular.module('app')
 
 .controller("MainController", function(){
     var vm = this;
-    vm.title = 'Welcome to the Main Page';
+    vm.title = 'Siemens Data Analytics App';
 })
 
 /* The side navigation should appear on button click */

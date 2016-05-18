@@ -33,34 +33,44 @@ the user can see different graphs -->
       <link rel="stylesheet" href="assets/css/graphs.css">
       <!-- End of Stylesheets-->
    </head>
-   <body layout = "row" ng-cloak>
-       <!-- Side Navigation-->
-        <md-sidenav md-component-id="menue" layout="column" class="md-sidenav-left" >
-            <div id="sidenavTOP"></div>
-            <md-button class ="navButton" Onclick="location.href='#/'">Introduction Page</md-button>
-            <md-button class ="navButton" Onclick="location.href='#Dashboard'">Dashboard</md-button>
-            <md-button class ="navButton" Onclick="location.href='#Graph'">Graph</md-button>
-            <md-button class ="navButton" Onclick="location.href='#Documentation'">Documentation</md-button>
+   <body layout = "column" layout-align ="space around" ng-controller="MainController as main" ng-cloak >
 
-        </md-sidenav>
 
-            <!-- Main layout Section. At the top are Quicklinks-->
+         <!-- Header of the website template. This will be displayed on every site-->
+         <header>
+             <section layout = "row" layout-align ="start start" layout-margin>
+               <img src="assets/images/FAU-Logo.png" style="width:auto; height:60px;">
+               <p>AMOS</p>
+                <section flex></section>
+                <h2>{{main.title}}</h2>
+             </section>
+         </header>
+
+
+        <!-- Content Layout, including header, main part for html snippets and sidenavigation -->
 
         <md-content flex layout="column" ng-controller="sideNavController as ctrl">
-            <section layout="column" layout-align="center center">
-                 <div ng-controller="MainController as main">
-                     <h1>{{main.title}}</h1>
-                 </div>
-                 <md-button class="md-raised md-cornered"  ng-click="openLeftMenu()">Open Navigation</md-button>
+
+             <!-- Button that opens up Side Navigation -->
+            <section layout ="column" layout-align = "center center">
+                <md-button class="md-raised md-cornered"  ng-click="openLeftMenu()">Open Navigation</md-button>
             </section>
+
+             <!-- Side Navigation-->
+            <md-sidenav md-component-id="menue" layout="column" class="md-sidenav-left" >
+                <div id="sidenavTOP"></div>
+                <md-button class ="navButton" Onclick="location.href='#/'">Introduction Page</md-button>
+                <md-button class ="navButton" Onclick="location.href='#Dashboard'">Dashboard</md-button>
+                <md-button class ="navButton" Onclick="location.href='#Graph'">Graph</md-button>
+                <md-button class ="navButton" Onclick="location.href='#Documentation'">Documentation</md-button>
+            </md-sidenav>
 
 
              <!-- ng-view should show the html snippet, if a user clicks on a navigation button
          also I defined this part as "mainFrame". For now it should indicate the position of the main
-         objects as well as give a link to the potential styles.
-     -->
+         objects as well as give a link to the potential styles.     -->
 
-            <section layout = "column" layout-align="center center">
+            <section  layout = "column" layout-align="none center">
                  <div ng-view> </div>
             </section>
         </md-content>
