@@ -74,6 +74,7 @@ md-content {
  #button:hover{
     color: #ffffff;
    background-color: #73AD21;
+   border-color: #73AD21;
 }
  }
  #rcorners1 {
