@@ -20,9 +20,9 @@ python manage.py migrate --noinput                 # Apply database migrations
 python manage.py collectstatic --noinput  # Collect static files
 
 # run init script
-chmod u+x /srv/DataProcessing/initSimulation.sh
+chmod u+x /srv/DataProcessing/initDataProcessingSimulation.sh
 # open sub-shell, change the directory, and execute - needed since the called python scripts use relative paths
-( cd /srv/DataProcessing/; sh ./initSimulation.sh )
+( cd /srv/DataProcessing/; sh ./initDataProcessingSimulation.sh )
 
 # Prepare log files and start outputting logs to stdout
 touch /srv/logs/gunicorn.log
