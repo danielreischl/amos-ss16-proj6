@@ -224,6 +224,122 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
 })
 
 
+.controller('barchartController',function () {
+
+
+    function barChartPlotter(e) {
+  var ctx = e.drawingContext;
+  var points = e.points;
+  var y_bottom = e.dygraph.toDomYCoord(0);  // see <a href="http://dygraphs.com/jsdoc/symbols/Dygraph.html#toDomYCoord">jsdoc</a>
+
+  // This should really be based on the minimum gap
+  var bar_width = 2/3 * (points[1].canvasx - points[0].canvasx);
+  ctx.fillStyle = e.color;  // a lighter shade might be more aesthetically pleasing
+
+  // Do the actual plotting.
+  for (var i = 0; i < points.length; i++) {
+    var p = points[i];
+    var center_x = p.canvasx;  // center of the bar
+
+    ctx.fillRect(center_x - bar_width / 2, p.canvasy, bar_width, y_bottom - p.canvasy);
+    ctx.strokeRect(center_x - bar_width / 2, p.canvasy, bar_width, y_bottom - p.canvasy);
+  }
+}
+ var data = "Carrier,Percentage%\n" +
+     "1,50\n" +
+     "2,70\n" +
+     "3,90\n" +
+     "4,100\n" +
+         "5,180\n" +
+    "6,200\n" +
+    "7,250\n" +
+     "8,150\n";
+g = new Dygraph(document.getElementById("graph"),data,
+
+
+                 {
+
+
+                     // options go here. See http://dygraphs.com/options.html
+                     legend: 'always',
+                     animatedZooms: true,
+                     plotter: barChartPlotter,
+                        colors: ["#FF1744", "#00BFA5", "#FFFF8D", ],
+
+                     
+                     axes: {
+                            x: {
+                                valueFormatter: function(x) {
+                                    var ret;
+                                    switch (x){
+                                        case 1:
+                                           ret = 'carrier1';                
+                                           break;
+                                        case 2:
+                                           ret = 'carrier2';                
+                                           break;
+                                        case 3:
+                                           ret = 'carrier3';                
+                                           break;
+                                        case 4:
+                                           ret = 'carrier4';                
+                                           break;
+                                        case 5:
+                                           ret = 'carrier5';                
+                                           break;
+                                        case 6:
+                                           ret = 'carrier6';                
+                                           break;
+                                        case 7:
+                                           ret = 'carrier7';                
+                                           break;
+                                        case 8:
+                                           ret = 'carrier8';                
+                                           break;                                            
+                                    }
+                                    return ret;
+                                },
+                                axisLabelFormatter: function(x) {
+                                    var ret;
+                                    switch (x){
+                                        case 1:
+                                           ret = 'carrier1';                
+                                           break;
+                                        case 2:
+                                           ret = 'carrier2';                
+                                           break;
+                                        case 3:
+                                           ret = 'carrier3';                
+                                           break;
+                                        case 4:
+                                           ret = 'carrier4';                
+                                           break;
+                                        case 5:
+                                           ret = 'carrier5';                
+                                           break;
+                                        case 6:
+                                           ret = 'carrier6';                
+                                           break;
+                                        case 7:
+                                           ret = 'carrier7';                
+                                           break;
+                                        case 8:
+                                           ret = 'carrier8';                
+                                           break;                                            
+                                    }
+                                    return ret;
+                                }         
+                            }                
+                    },
+                 });
+                 
+
+
+
+})
+
+
+
 
 
 
