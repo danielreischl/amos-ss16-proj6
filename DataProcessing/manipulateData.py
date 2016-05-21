@@ -102,7 +102,7 @@ def process_file(fileName):
 
     # Move the processed data files to InitialDataArchive
     logging.info ("Moving processed files")
-    #os.rename(fileName, os.path.abspath(os.path.join("CarrierDataArchive", os.path.basename(fileName))))
+    os.rename(fileName, os.path.abspath(os.path.join("CarrierDataArchive", os.path.basename(fileName))))
     logging.info("Moving file to archive: " + fileName)
 
 
@@ -114,16 +114,9 @@ def load_to_database(data, tableName):
 
     logging.info("table name: " + tableName)
 
-    # Creates SQL Alchemy Engine. Path to sqliteFile is enought. sqlite://// prefix is necessary
-    # engine = create_engine('sqlite:////' + setConstants.PATH_OF_SQLLITE_DB)
-
     # Database connection
     con = sqlite3.connect(setConstants.PATH_OF_SQLLITE_DB)
-    #logging.info("Connection: " + str(con))
-
-    # Query before
-    #df = pd.read_sql_query("SELECT * FROM " + tableName, con)
-    #print(df.head())
+    logging.info("Connection: " + str(con))
 
     # Loads dataframe to database. Appends data or creates table and is not adding the index of the dataFrame.
     data.to_sql(name=tableName, con=con, if_exists='append', index=False)
