@@ -1,6 +1,11 @@
 # @author AMOSus (Daniel)
 # @author inkibus (Rene)
 
+# TODO: Remove the position on Drive everywhere (all variables, CSV output), since it cannot be calculated anymore.
+# TODO: Fix the bug with having some odd timestamps in the exported csv files (The point above may resolve this issue)
+# TODO: Heavy refactoring and rework comments for readability and maintainability
+# TODO: Now some kind of measure for flexibility can be implemented and calculated here!
+
 # This script is a simple simulator of RealTimedata to enable the Algorythm to compress the Data in a proper way
 # Input: CSV file with the following structure (ms, energy1, ..., energyX, pos1,...,posX) (x = Amount of Drives)
 # The script calls depending on the amount of drives and waittime the CompressingAlgorythm all x seconds
