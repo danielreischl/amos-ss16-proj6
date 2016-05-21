@@ -6,6 +6,7 @@
 # The script calls depending on the amount of drives and waittime the CompressingAlgorythm all x seconds
 
 # Imports Pandas for Data handling
+from __future__ import print_function
 import pandas as pd
 # Imports OS for Operating System independent absolute file paths
 import os
@@ -19,68 +20,25 @@ import setConstants
 import glob
 # Imports sys to terminate the function
 import sys
-
+# Imports Csv to Manipulate Initial CSV-File
+import csv
+# Imports Logging to Log File
 import logging
-
-# Initialize Log-File
-# Creates or loads Log DataProcessing.log
-# Format of LogFile: mm/dd/yyyy hh:mm:ss PM LogMessage
-logging.basicConfig(filename='dataProcessing.log',level=logging.INFO,format='%(asctime)s %(message)s',
-                    datefmt='%m/%d/%Y %I:%M:%S %p')
-
-
-# Creates a TextFile "Running.txt" on Start to let manipulateData.py know that the script is still running
-with open("Running.txt", "w") as text_file:
-    text_file.write("Running")
-    logging.info("dataProcessing.py now running. 'Running.txt' created.")
 
 # Constants
 # WAIT_TIME_IN_SECONDS: Time the script should wait until it calls the function again (in seconds)
 WAIT_TIME_IN_SECONDS = setConstants.WAIT_TIME_IN_SECONDS_DPPY
 # Input file names of data here
 DATA_FILE_NAMES = []
-# AMOUNT_OF_DRIVES: How many Drives are producing data
-AMOUNT_OF_DRIVES = setConstants.AMOUNT_OF_DRIVES
 # AMOUNT_OF_CARRIERS: How many Carriers are in the system
 AMOUNT_OF_CARRIERS = setConstants.AMOUNT_OF_CARRIERS
 # DATA_SEPARATOR: Separator of the CSV-File
 DATA_SEPARATOR = setConstants.CSV_SEPARATOR
 # Every X th row of the data is kept and averagedx
 KEEP_EVERY_X_ROW = 2
-# Write all DATA_FILE_NAMES in an Array
-for files in glob.glob("InitialData/*.csv"):
-    DATA_FILE_NAMES.append(files)
+# Current Session
+SESSION = setConstants.SESSION
 
-logging.info("Found " + str(len(DATA_FILE_NAMES)) + " new files.")
-
-# Checks if a File is added to DATA_FILE_NAMES. If not it is terminating the script
-if not DATA_FILE_NAMES:
-    print "No Files in Folder"
-    # Removes Running.txt, so the simulator can also terminate
-    os.remove("Running.txt")
-    logging.info("Terminating dataProcessing.py. 'Running.txt' removed.")
-    # Terminates the script
-    sys.exit()
-
-# TODO Session is also saved in setConstants -> Change to either
-# Reading out Session from FileName
-SESSION = DATA_FILE_NAMES[0].split("_")[1]
-
-# Variables
-# Array that saves for every drive which carrier is on it
-driveXHasCarrier = np.zeros(AMOUNT_OF_DRIVES)
-# This is where all the data goes before exporting to CSV
-# carrierData[carrier number][time = 0, pos = 1, energy consumption = 2][position of array]
-carrierData = np.zeros((AMOUNT_OF_CARRIERS, 4, 100))
-# Here is stored in which row the last entry of carrier data was made for every carrier
-# (This could also be calculated by why not store it, since its used frequently)
-currentPositionAtCarrierData = np.zeros(AMOUNT_OF_CARRIERS)
-# Saves the last position on the drive of every carrier
-lastPositionOfCarrier = np.zeros(AMOUNT_OF_CARRIERS)
-# Number of complete runs through the system
-runNumber = 0
-# The amount of carriers who entered drive 1 (Therefore starting with carrier 1) in the current run
-carriersThroughTheSystem = 1
 
 
 # Main data processing script. Gets input data of drives and maps it to the carries and saves them as CSV files
@@ -90,18 +48,18 @@ def processData(INPUT):
     # Ensures that carrier Data is called from global variables
     global carrierData
 
-    print " "
+    print (" ")
     time = INPUT[0]
-    print "Time      " + str(time)
+    print ("Time      " + str(time))
     position = INPUT[2]
-    print "Position  " + str(position)
+    print ("Position  " + str(position))
     energy = INPUT[3]
-    print "Energy    " + str(energy)
+    print ("Energy    " + str(energy))
 
 
     # If the line has just started, then the first carrier enters the first drive
     if runNumber == 0:
-        print "line has just started: Carrier 1 at Drive 1"
+        print ("line has just started: Carrier 1 at Drive 1")
         runNumber = 1
         driveXHasCarrier[0] = 1
 
@@ -113,13 +71,13 @@ def processData(INPUT):
 
     # If the current drive doesnt have a carrier, it cannot be mapped
     if driveXHasCarrier[drive - 1] == 0:
-        print "Drive " + str(drive) + " doesn't have a carrier, the data is deleted"
+        print ("Drive " + str(drive) + " doesn't have a carrier, the data is deleted")
         return
 
     # If the timestamp is the same as in the previous run, the data is not recorded
     # This only happens when pushing carries which should not happen in the first place
     if time == carrierData[carrier - 1][0][currentPositionAtCarrierData[carrier - 1] - 1]:
-        print "Timestamp is the same as before, the data is deleted"
+        print ("Timestamp is the same as before, the data is deleted")
         return
 
     # If position is zero and if position is lower than it was in the previous run
@@ -132,7 +90,7 @@ def processData(INPUT):
     ensureEnoughSpaceInCarrierData(carrier)
 
     positionAbsolute = (drive - 1) * setConstants.DRIVE_LENGTH + position
-    print "Position Absolute:    " + str(positionAbsolute)
+    print ("Position Absolute:    " + str(positionAbsolute))
 
     # Transfer time in ms
     carrierData[carrier - 1][0][currentPositionAtCarrierData[carrier - 1]] = time
@@ -153,38 +111,38 @@ def processData(INPUT):
 
 # If a drive reset its position to 0, it takes a new carrier
 def evaluateDriveReset(drive, carrier):
-    print "Drive " + str(drive) + " restarted"
+    print ("Drive " + str(drive) + " restarted")
 
     # If the carrier is at the last drive, the run can be completed
-    if drive == AMOUNT_OF_DRIVES:
+    if drive == amountOfDrives:
         completeRun(drive, carrier)
         # If all carriers went through the drives, the run is complete and run number 2 can start
         if carrier == AMOUNT_OF_CARRIERS:
             global runNumber
             runNumber += 1
 
-    print "currently Drive X has Carrier"
-    print driveXHasCarrier
+    print ("currently Drive X has Carrier")
+    print (driveXHasCarrier)
     # the Carrier leaves the current drive
     driveXHasCarrier[drive - 1] = 0
     lastPositionOfCarrier[carrier - 1] = 0
 
     # The carrier moves to the next drive
     # Check if there is a next drive
-    if drive < AMOUNT_OF_DRIVES:
+    if drive < amountOfDrives:
         # Check if next drive is empty
         if driveXHasCarrier[drive - 1 + 1] == 0:
             # Give the next drive the current carrier
             driveXHasCarrier[drive - 1 + 1] = carrier
         else:
-            print "Carrier " + str(carrier) + " wants to go to drive " + str(drive + 1) + " ,but there is carrier " \
-                  + str(driveXHasCarrier[drive - 1 + 1]) + " on there"
+            print ("Carrier " + str(carrier) + " wants to go to drive " + str(drive + 1) + " ,but there is carrier " \
+                  + str(driveXHasCarrier[drive - 1 + 1]) + " on there")
             evaluateDriveReset(drive + 1, driveXHasCarrier[drive - 1 + 1])
             driveXHasCarrier[drive - 1 + 1] = carrier
 
     # If the current drive is drive 1, then a new carrier is pulled onto the drive 1
     if drive == 1:
-        print "new carrier gets pulled"
+        print ("new carrier gets pulled")
         # Ensures that the global variable is used
         global carriersThroughTheSystem
         # One more carrier passed through the entrance of the system
@@ -199,16 +157,16 @@ def evaluateDriveReset(drive, carrier):
         else:
             driveXHasCarrier[drive - 1] = carriersThroughTheSystem
 
-    print "After the carriers have moved "
-    print driveXHasCarrier
+    print ("After the carriers have moved ")
+    print (driveXHasCarrier)
     # If the last carrier completed the run, run number +1
 
 
 # If a carrier leaves the last drive, the data has to be compressed and the CSV file has to be saved
 def completeRun(drive, carrier):
-    print carrierData
+    print (carrierData)
     compressData(drive, carrier)
-    print carrierData
+    print (carrierData)
 
     exportCSV(carrier)
 
@@ -221,10 +179,10 @@ def completeRun(drive, carrier):
 # Compresses the data, so that only every X-th (KEEP_EVERY_X_ROW) is kept in the data
 # Example: rows: 1,2,3,4,5,6 --> compressData with KEEP_EVERY_X_ROW == 2 --> rows: 1,3,5
 def compressData(drive, carrier):
-    print "The drive "
-    print drive
-    print "reset its position"
-    print " "
+    print ("The drive ")
+    print (drive)
+    print ("reset its position")
+    print (" ")
     logging.info("Compressing data of carrier: " + str(carrier))
 
     # the Value where the average is built
@@ -232,14 +190,14 @@ def compressData(drive, carrier):
     # iterates through all the carrier data entries that have been made up to this point
     # the if else is just there to catch an out of bounds exception where the currentPosition is bigger than the array size of carrierData[2]
     # statement: do a if x < y else b ----> does a if x < y .. otherwise it does b
-    print "range: " + str(int(currentPositionAtCarrierData[carrier - 1]))
+    print ("range: " + str(int(currentPositionAtCarrierData[carrier - 1])))
 
     for i in range(0, int(currentPositionAtCarrierData[carrier - 1])):
 
-        print "i: " + str(i)
+        print ("i: " + str(i))
         # Saves the first x numbers to row 0, then the second x numbers to row 1 and so on
         saveTo = int(i / KEEP_EVERY_X_ROW)
-        print "saveTo " + str(saveTo)
+        print ("saveTo " + str(saveTo))
 
         # Time and position will just be overwritten so that it has 1,X,2X,3X,4X from KEEP_EVERY_X_ROW
         if int(i % KEEP_EVERY_X_ROW) == 0:
@@ -253,15 +211,15 @@ def compressData(drive, carrier):
                 # Add the energy to calculate average
                 carrierData[carrier - 1][3][saveTo] += carrierData[carrier - 1][2][i]
 
-        print str(carrierData[carrier - 1][0][saveTo]) + "    " \
+        print (str(carrierData[carrier - 1][0][saveTo]) + "    " \
               + str(carrierData[carrier - 1][1][saveTo]) + "    " \
               + str(carrierData[carrier - 1][2][saveTo]) + "    " \
-              + str(carrierData[carrier - 1][3][saveTo])
+              + str(carrierData[carrier - 1][3][saveTo]))
 
         # WORKS
         # if my current row is bigger than what the largest row to keep would be then empty that row
         if i >= 1 + int((currentPositionAtCarrierData[carrier - 1] - 1) / float(KEEP_EVERY_X_ROW)):
-            print "deleting row " + str(i)
+            print ("deleting row " + str(i))
             carrierData[carrier - 1][0][i] = 0
             carrierData[carrier - 1][1][i] = 0
             carrierData[carrier - 1][2][i] = 0
@@ -295,25 +253,25 @@ def compressData(drive, carrier):
 # Exports the table of the carrier to a CSV file in the form time; posAbsolute; posOnDrive; energy
 def exportCSV(carrier):
 
-    print "Exporting: "
-    print carrierData[carrier - 1]
+#    print "Exporting: "
+ #   print carrierData[carrier - 1]
 
     # Creates the filename
     fileName = "Session_" + str(setConstants.SESSION) + "_Carrier_" + str(int(carrier)) + "_Iteration_" + str(int(runNumber)) + ".csv"
 
     # Adds the relative file path to the name that the files are saved to /InitialData/
     fileName = os.path.abspath(os.path.join("CarrierData", fileName))
-    print "filename " + str(fileName)
+    print ("filename " + str(fileName))
 
     firstRow = findFirstRowInCarrierData(carrier)
-    print "first Row " + str(firstRow)
+    print ("first Row " + str(firstRow))
     lastRow = int((currentPositionAtCarrierData[carrier - 1] - 1) / KEEP_EVERY_X_ROW)
-    print "last Row " + str(lastRow)
+    print ("last Row " + str(lastRow))
 
     export = np.transpose(carrierData[carrier - 1][:, firstRow:lastRow])
 
-    print "export"
-    print export
+    #print "export"
+    #print export
 
     np.savetxt(fileName, export, fmt='%0.5f', delimiter=DATA_SEPARATOR, newline='\n',
                header='time;posAbsolute;posOnDrive;energy', footer='', comments='# ')
@@ -347,61 +305,140 @@ def ensureEnoughSpaceInCarrierData(carrier):
                                 (int(carrierData.shape[0]), int(carrierData.shape[1]), int(carrierData.shape[2] * 2)))
 
 
-#
-# Start of the Script
-#
+def modifyCSVFile(filename):
 
+    # InputFileName und OutputFileName of CSV
+    inputFileName = filename
+    outputFileName = os.path.splitext(inputFileName)[0] + "_modified.csv"
 
+    # Opens File
+    with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
+        # defines reading file and writing file
+        r = csv.reader(inFile, delimiter=setConstants.CSV_SEPARATOR)
+        w = csv.writer(outfile, delimiter=setConstants.CSV_SEPARATOR)
 
-# DATA_PATH creates an OS independent file path to the data files that were input as string names
-# Initialize empty DATA_PATH array
-DATA_PATH = ["" for x in range(DATA_FILE_NAMES.__sizeof__())]
+        # Copys first row
+        first_row = next(r)
+        num_cols = len(first_row)
 
-# Set first data path
-# This is needed when the data is in a subfolder
-# DATA_PATH[0] = os.path.abspath(os.path.join("data", DATA_FILE_NAMES[0]))
-DATA_PATH[0] = os.path.abspath(DATA_FILE_NAMES[0])
+        # Initialize Array for new ColumnNames
+        newColNames = []
 
-# First row of data frames
-initialData = pd.read_csv(DATA_PATH[0], DATA_SEPARATOR, index_col=0)
-# Extracting the DriveNo of the first loaded File in DATA_PATH
-driveOfFirstFile = DATA_PATH[0].split("_")[3].replace('.csv', '')
-# Changing the Column names to position & energy
-initialData.columns = {'position', 'energy'}
+        # Counter of Columns
+        j = 0
 
-# If there is more than 1 array, add the other ones to the side
-if len(DATA_FILE_NAMES) > 1:
-    for index in range(1, len(DATA_FILE_NAMES)):
-        # Create a file path to every file
-        # Again, if the data would be in a sub folder, this would be needed
-        # DATA_PATH[index] = os.path.abspath(os.path.join("data", DATA_FILE_NAMES[index]))
-        DATA_PATH[index] = os.path.abspath(DATA_FILE_NAMES[index])
-        # Loads the next CSV file
-        tempFile = pd.read_csv(DATA_PATH[index], DATA_SEPARATOR, index_col=0)
-        # Extracting the DriveNo of the first loaded File in DATA_PATH
-        driveOfCurrentFile = DATA_PATH[index].split("_")[3].replace('.csv', '')
-        # Changing the Column names to energy+DriveNo & Position+DriveNo
-        tempFile.columns = {'position', 'energy'}
-        # Merges the temp file with the initialData file
-        initialData = pd.concat([initialData, tempFile], axis=1)
+        # Startposition of Positon Columns
+        startPositonOfColumns = 0
 
-print initialData
+        # Iterates the first row of the initial file and depending on the value writes columns into the file
+        for i in first_row:
+            # if j is zero
+            if j == 0:
+                newColNames.append("ms")
+            # if column includes "iw4PowerCU" it's an energy sensor
+            if "iw4PowerCU" in i:
+                newColNames.append("energy" + str(j - 1))
+            # if column includes "ExternalEncoderPosition" it's an position sensor
+            if "ExternalEncoderPosition" in i:
+                if startPositonOfColumns == 0:
+                    startPositonOfColumns = j
+                newColNames.append("position" + str(j - startPositonOfColumns))
+                # counts the amount of drives.
+                amountOfDrives = j - startPositonOfColumns
 
-# Iterates each row and afterwards each drive
-# Calls compressData with a pd.Series. The values are:
-# ms, No. of Drive, Energy Consmption, Position
-for index, row in initialData.iterrows():
-    for drive in range(0, AMOUNT_OF_DRIVES):
-        processData([index, drive + 1, row['position'][drive], row['energy'][drive]])
-    sleep(WAIT_TIME_IN_SECONDS)
+            j = j + 1
 
-# Comment out for testing
-# Move the processed data files to InitialDataArchive
-print "Moving processed files"
+        # Skips the first row from the reader, the old header
+        next(r, None)
+        # Writes new header
+        w.writerow(newColNames)
+
+        # Copies the rest of reader
+        for row in r:
+            w.writerow(row)
+
+        # Returns amountOfDrives
+        return amountOfDrives
+
+#########################################################
+############# START OF SCRIPT ###########################
+#########################################################
+
+# Initialize Log-File
+# Creates or loads Log DataProcessing.log
+# Format of LogFile: mm/dd/yyyy hh:mm:ss PM LogMessage
+logging.basicConfig(filename='dataProcessing.log',level=logging.INFO,format='%(asctime)s %(message)s',
+                    datefmt='%m/%d/%Y %I:%M:%S %p')
+
+# Creates a TextFile "Running.txt" on Start to let manipulateData.py know that the script is still running
+with open("Running.txt", "w") as text_file:
+    text_file.write("Running")
+    logging.info("dataProcessing.py now running. 'Running.txt' created.")
+
+# Write all DATA_FILE_NAMES in an Array
+for files in glob.glob("InitialData/*.csv"):
+    DATA_FILE_NAMES.append(files)
+logging.info("Found " + str(len(DATA_FILE_NAMES)) + " new files.")
+
+# Checks if a File is added to DATA_FILE_NAMES. If not it is terminating the script
+if not DATA_FILE_NAMES:
+    print ('No Files in Folder')
+    # Removes Running.txt, so the simulator can also terminate
+    os.remove("Running.txt")
+    logging.info("Terminating dataProcessing.py. 'Running.txt' removed.")
+    # Terminates the script
+    sys.exit()
+
 for fileName in DATA_FILE_NAMES:
-    os.rename(fileName, os.path.abspath(os.path.join("InitialDataArchive", os.path.basename(fileName))))
-    print os.path.abspath(os.path.join("CarrierData", os.path.basename(fileName)))
-    logging.info("Moving " + fileName + " to: " + os.path.abspath(os.path.join("InitialDataArchive", os.path.basename(fileName))))
+
+    # Calls modifyCSVFile function
+    amountOfDrives = modifyCSVFile (fileName)
+
+    # Variables
+    # Array that saves for every drive which carrier is on it
+    driveXHasCarrier = np.zeros(amountOfDrives)
+    # This is where all the data goes before exporting to CSV
+    # carrierData[carrier number][time = 0, pos = 1, energy consumption = 2][position of array]
+    carrierData = np.zeros((AMOUNT_OF_CARRIERS, 4, 100))
+    # Here is stored in which row the last entry of carrier data was made for every carrier
+    # (This could also be calculated by why not store it, since its used frequently)
+    currentPositionAtCarrierData = np.zeros(AMOUNT_OF_CARRIERS)
+    # Saves the last position on the drive of every carrier
+    lastPositionOfCarrier = np.zeros(AMOUNT_OF_CARRIERS)
+    # Number of complete runs through the system
+    runNumber = 0
+    # The amount of carriers who entered drive 1 (Therefore starting with carrier 1) in the current run
+    carriersThroughTheSystem = 1
+
+    # DATA_PATH creates an OS independent file path to the data files that were input as string names
+    # Initialize empty DATA_PATH array
+    DATA_PATH = ["" for x in range(DATA_FILE_NAMES.__sizeof__())]
+
+    # Set first data path
+    # This is needed when the data is in a subfolder
+    # DATA_PATH[0] = os.path.abspath(os.path.join("data", DATA_FILE_NAMES[0]))
+    DATA_PATH[0] = os.path.abspath(DATA_FILE_NAMES[0])
+
+    # First row of data frames
+    initialData = pd.read_csv(os.path.splitext(fileName)[0] + "_modified.csv", DATA_SEPARATOR, index_col=0, low_memory=False, header=0)
+#    Extracting the DriveNo of the first loaded File in DATA_PATH
+
+    # Iterates each row and afterwards each drive
+    #  Calls compressData with a pd.Series. The values are:
+    # ms, No. of Drive, Energy Consmption, Position
+    for index, row in initialData.iterrows():
+        for drive in range(0, amountOfDrives):
+            position = float(str(row['position'+str(drive)]).replace(',','.'))
+            energy = float(str(row['energy' + str(drive)]).replace(',', '.'))
+            processData([index, drive, position, energy])
+        sleep(WAIT_TIME_IN_SECONDS)
+
+    # Moving data to
+    # Moves the processed data files to InitialDataArchive
+    # print "Moving processed files"
+    # os.rename(fileName, os.path.abspath(os.path.join("InitialDataArchive", os.path.basename(fileName))))
+    # print os.path.abspath(os.path.join("CarrierData", os.path.basename(fileName)))
+    # logging.info("Moving " + fileName + " to: " + os.path.abspath(os.path.join("InitialDataArchive", os.path.basename(fileName))))
 
 # Removes the status.txt file after the end of the simulation
 os.remove("Running.txt")
