@@ -8,7 +8,7 @@ DRIVE_LENGTH = 4
 # Length of all drives
 LINE_LENGTH = 12
 # Amount of Carriers
-AMOUNT_OF_CARRIERS = 3
+AMOUNT_OF_CARRIERS = 15
 # Wait time of the Simulator in Seconds used in compressInitialData.py
 WAIT_TIME_IN_SECONDS_DPPY = 0.001
 #Session of the demonstrator setting
