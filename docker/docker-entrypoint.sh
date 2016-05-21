@@ -37,14 +37,14 @@ tail -n 0 -f /srv/logs/*.log &
 
 #echo Starting nginx.
 
-# inject the CONTEXT_PATH variable
+# inject the $CONTEXT_PATH variable into nginx - configfile
+# $CONTEXT_PATH is injected by the OSR-servers and is either /ss16/proj6-test or /ss16/proj6
 
+sed -i s:\$CONTEXT_PATH:$CONTEXT_PATH: /etc/nginx/nginx.conf
 
-# for some reason piping output to the original nginx.conf file does not work
-envsubst '$CONTEXT_PATH' </etc/nginx/nginx.conf> /etc/nginx/nginx2.conf
-cp /etc/nginx/nginx2.conf /etc/nginx/nginx.conf
+# for debugging
 #cp /etc/nginx/nginx.conf /srv/logs/
-#cp /etc/nginx/nginx2.conf /srv/logs/
+
 
 #Start Nginx
 

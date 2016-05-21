@@ -23,7 +23,7 @@ ENV SOCKFILE=/srv/run/gunicorn.sock
 RUN apt-get update && apt-get -y upgrade
 
 # install needed software
-RUN apt-get install -y python python-pip python-dev python-pandas nginx sqlite3 gettext
+RUN apt-get install -y python python-pip python-dev python-pandas nginx sqlite3
 # install libblas-dev
 RUN apt-get install -y libatlas-base-dev
 
@@ -38,7 +38,7 @@ RUN apt-get install -y libatlas-base-dev
 
 # Create application subdirectories
 WORKDIR $DOCKYARD_SRVHOME
-RUN mkdir media static logs run DataProcessig
+RUN mkdir media static logs run DataProcessing
 VOLUME ["$DOCKYARD_SRVHOME/media/", "$DOCKYARD_SRVHOME/logs/"]
 
 # Copy application source code to SRCDIR
