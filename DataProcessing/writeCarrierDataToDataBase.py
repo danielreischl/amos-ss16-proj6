@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# This script processes all csv-files that are produced by dataProcessing.py on the fly.
+# This script processes all csv-files that are produced by compressInitialData.py on the fly.
 # Therefor it reads out all csv-files and calculates all necessary measures before loading the data into the database.
 # The input files have to follow the following convention:
 # Naming: Session_X_Carrier_Y_Iteration_Z.csv (X, Y, Z = int of Session, Carrier & Iteration)
@@ -138,7 +138,7 @@ def load_to_database(data, tableName):
 logging.basicConfig(filename='dataProcessing.log',level=logging.INFO,format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 # Putting Script a sleep for 0.5 sec to ensure that Running.txt is already created
-logging.info("dataProcessing.py goes a sleep for 0.5 sec")
+logging.info("compressInitialData.py goes a sleep for 0.5 sec")
 sleep(0.5)
 
 # Initialize dataFileNames as list. (List has to be available for all functions thats why it's declared global
@@ -146,23 +146,23 @@ dataFileNames = []
 
 # Check if Running.txt exist.
 while os.path.isfile("Running.txt"):
-    # Running.txt exists -> Check if there are already files distributed by dataProcessing.py
-    logging.info("dataProcessing.py is still running")
+    # Running.txt exists -> Check if there are already files distributed by compressInitialData.py
+    logging.info("compressInitialData.py is still running")
     if check_folder():
         # If there are files which are not processed yet, call for each file process_file
         for filename in dataFileNames:
             process_file(str(filename))
 
     # put the script a sleep for setConstants.WAIT_TIME_IN_SECONDS_MPY before it checks the folder again for new files
-    logging.info("manipulateData.py goes asleep for " + str(setConstants.WAIT_TIME_IN_SECONDS_MPY) + "Sec")
+    logging.info("writeCarrierDataToDataBase.py goes asleep for " + str(setConstants.WAIT_TIME_IN_SECONDS_MPY) + "Sec")
     sleep(setConstants.WAIT_TIME_IN_SECONDS_MPY)
 
 else:
 
     # Running.txt does not exist. -> Check if the folder has files which hasn't been processed yet.
-    logging.info("dataProcessing.py is not running")
+    logging.info("compressInitialData.py is not running")
     if check_folder():
         # If there are files which are not processed yet, call for each file process_file
         for filename in dataFileNames:
             process_file(filename)
-    logging.info("manipulateData.py: Shut down")
+    logging.info("writeCarrierDataToDataBase.py: Shut down")

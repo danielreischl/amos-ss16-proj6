@@ -9,11 +9,11 @@ DRIVE_LENGTH = 4
 LINE_LENGTH = 12
 # Amount of Carriers
 AMOUNT_OF_CARRIERS = 3
-# Wait time of the Simulator in Seconds used in dataProcessing.py
+# Wait time of the Simulator in Seconds used in compressInitialData.py
 WAIT_TIME_IN_SECONDS_DPPY = 0.001
 #Session of the demonstrator setting
 SESSION = 1
-# WaitTime of manipulateData.py
+# WaitTime of writeCarrierDataToDataBase.py
 WAIT_TIME_IN_SECONDS_MPY = 5
 # Separator of the CSV-Files
 CSV_SEPARATOR = ";"

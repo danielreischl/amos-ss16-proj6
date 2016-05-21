@@ -370,10 +370,10 @@ def modifyCSVFile(filename):
 logging.basicConfig(filename='dataProcessing.log',level=logging.INFO,format='%(asctime)s %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p')
 
-# Creates a TextFile "Running.txt" on Start to let manipulateData.py know that the script is still running
+# Creates a TextFile "Running.txt" on Start to let writeCarrierDataToDataBase.py know that the script is still running
 with open("Running.txt", "w") as text_file:
     text_file.write("Running")
-    logging.info("dataProcessing.py now running. 'Running.txt' created.")
+    logging.info("compressInitialData.py now running. 'Running.txt' created.")
 
 # Write all DATA_FILE_NAMES in an Array
 for files in glob.glob("InitialData/*.csv"):
@@ -385,7 +385,7 @@ if not DATA_FILE_NAMES:
     print ('No Files in Folder')
     # Removes Running.txt, so the simulator can also terminate
     os.remove("Running.txt")
-    logging.info("Terminating dataProcessing.py. 'Running.txt' removed.")
+    logging.info("Terminating compressInitialData.py. 'Running.txt' removed.")
     # Terminates the script
     sys.exit()
 
@@ -442,4 +442,4 @@ for fileName in DATA_FILE_NAMES:
 
 # Removes the status.txt file after the end of the simulation
 os.remove("Running.txt")
-logging.info("Terminating dataProcessing.py. 'Running.txt removed.")
+logging.info("Terminating compressInitialData.py. 'Running.txt removed.")
