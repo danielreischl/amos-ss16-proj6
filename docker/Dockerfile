@@ -38,7 +38,7 @@ RUN apt-get install -y libatlas-base-dev
 
 # Create application subdirectories
 WORKDIR $DOCKYARD_SRVHOME
-RUN mkdir media static logs run DataProcessing
+RUN mkdir media static logs run DataProcessing DataProcessing/InitialData DataProcessing/CarrierData DataProcessing/CarrierDataArchive
 VOLUME ["$DOCKYARD_SRVHOME/media/", "$DOCKYARD_SRVHOME/logs/"]
 
 # Copy application source code to SRCDIR
@@ -52,11 +52,10 @@ COPY ./Client /srv/static/
 COPY ./DataProcessing /srv/DataProcessing
 # COPY ./index.html /srv/static/index.html
 
-
 # turn daemon mode off, otherwise nginx quits and docker container also
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
-
+# TODO: Comment what it does
 RUN touch /srv/logs/nginx-access.log
 RUN touch /srv/logs/nginx-error.log
 RUN touch $SOCKFILE
