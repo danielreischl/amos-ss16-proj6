@@ -1,4 +1,14 @@
  <div ng-controller="compareCircleGraph">
+
+     <ul>
+         <li ng-repeat="carrier in arrayCarrier" style=" color: black;  list-style-type: none; font-size: 20px;">
+             <input type="checkbox" id = "{{carrier}}" ng-click="change($event)" ngModel ="visibilityArray"> Carrier {{carrier}}
+         </li>
+
+          <md-button class="md-raised md-cornered"  ng-click="createCompareGraph()">Refresh</md-button>
+
+     </ul>
+
 	   <div ng-init ="createCompareGraph()" id="compareGraph" style="width:1600px; height:600px;"></div>
  </div>
 

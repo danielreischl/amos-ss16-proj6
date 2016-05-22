@@ -23,6 +23,9 @@ angular.module('app')
 
 
 .controller('visuController', function($scope) {
+    /* Illustration of how to request data from django. Reads out AmountOfCarriers */
+    $scope.test = "django/helloWorld/values?session=1&carrier=1&value=AmountOfCarriers";
+
     $scope.dimensions = [
         {name : "Acceleration", id : "ACCELERATION", default: false},
         {name : "Energy", id : "ENERGY", default: false},
@@ -54,6 +57,7 @@ angular.module('app')
 	    g2 = new Dygraph(
 	    document.getElementById("graphdiv2"), "django/helloWorld/position.csv?carrier="+$scope.selectedCarrier+"&iteration="+$scope.selectedIteration+"&dimension="+$scope.selectedDimension, {});
     }
+
 })
 
 /* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/
@@ -62,12 +66,68 @@ angular.module('app')
     var carrierCompareList = carrierService.getCarrier();
     var carrierMax = 8; //this needs to be dynamic later if we have connection to the database
     var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
+    var arrayCarrier = [0,1,2,3,4,5,6,7];
 
     /* this functions created the dygraph  from a data source and applies options to them*/
+
+    $scope.arrayCarrier = arrayCarrier;
+
+    //changes the visibility from true to false and vice versa, depending on the checkboxes.
+
+    $scope.change = function(event) {
+
+        if(visibilityArray[event.target.id]) {
+            visibilityArray[event.target.id] = false;
+        } else {
+            visibilityArray[event.target.id] = true;
+        }
+    }
+
+    //creates the graph.
 
     $scope.createCompareGraph = function() {
         graph = new Dygraph(
 	       document.getElementById("compareGraph"), 'sections/compareCarrier/dummy.csv', {title: "Carrier's energy consumption of the latest iteration",
+	                                                                                      ylabel: 'Energy Consumption in (mA)',
+	                                                                                      xlabel: 'Time in (ms)',
+	                                                                                      labelsSeparateLines: true,
+	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
+	                                                                                      visibility: visibilityArray,
+	                                                                                      });
+
+        /* these loops have the purpose to see what carriers the user wants to compare
+        and change the visibilty of the carriers in the dygraph to true */
+
+        if(carrierCompareList.length != 0) {
+            for (var i = 0; i < carrierCompareList.length; i++) {
+                for (var carrier = 0; carrier < carrierMax; carrier++) {
+                    if (carrierCompareList[i].carrierNumber == carrier) {
+                        visibilityArray[carrier] = true;
+                        break;
+                    }
+                }
+            }
+        } else {
+            alert("You did not chose any Carriers to compare")
+        }
+    }
+
+})
+
+/* controller for the drillDown graph. This will show only the carrier selected by drilling Down. Furtheremore it will enable the user to
+add more lines and get different details.*/
+
+.controller('drillDownGraph', function($scope, carrierService) {
+
+    var carrierCompareList = carrierService.getCarrier();
+    var carrierMax = 8; //this needs to be dynamic later if we have connection to the database
+    var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
+
+    /* this functions created the dygraph  from a data source and applies options to them*/
+
+    $scope.createDrillDownGraph = function() {
+        graph = new Dygraph(
+	       document.getElementById("drillDownGraph"), 'sections/compareCarrier/dummy.csv', {title: "Carrier Drilldown ",
 	                                                                                      ylabel: 'Energy Consumption in (mA)',
 	                                                                                      xlabel: 'Time in (ms)',
 	                                                                                      labelsSeparateLines: true,
