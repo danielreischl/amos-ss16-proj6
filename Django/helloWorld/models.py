@@ -58,8 +58,8 @@ class timestampdata(models.Model):
 
     # The time (in ms) from the beginning of the Iteration that the data is recorded
     timeStamp = models.BigIntegerField()
-    # The position (relative to the beginning of the current drive, in mm) that the carrier is on
-    positionOnDrive = models.FloatField()
+    # The drive that the carrier was on when this timeStamp was recorded
+    drive = models.IntegerField()
     # The absolute position (relative to the beginning of the first drive, in mm) that the carrier is at
     positionAbsolute = models.FloatField()
     # The speed that the carrier has at that timeStamp (derived from the positionAbsolute and the timeStamps)
