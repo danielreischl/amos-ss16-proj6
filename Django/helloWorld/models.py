@@ -3,6 +3,7 @@ from django.db import models
 # Database model
 # Author: inkibus (Rene R.)
 
+''' Commented out as this tables doesn't serve any purpose other than storing its primary key
 class session(models.Model):
     # Every time something in the production system is changed, a new Session is stored, to have coherent data
     # Integer of the current session in which a carrier is in the system
@@ -32,27 +33,33 @@ class iteration(models.Model):
     # Display the session number of this database entry
     def __unicode__(self):  # in python 3.3 this is __str__(self):
         return "Iteration " + str(self.iterationNumber)
+'''
 
+# This table stores all the relevant data for every data point recorded by the sensors
 class timestampdata(models.Model):
-    # It is not necessary to explicitly declare an ID
-    # Maybe necessary, because the implicit ID will not be a "BigInteger", which is required
+    # It is not necessary to explicitly declare a primary key when using django models
 
+    ''' Commented out as these tables don't serve any purpose other than storing their keys
     # The Session that the data is recorded for
     #fid_Session = models.ForeignKey(session, on_delete=models.CASCADE)
     # The Carrier that the data is recorded for
     #fid_Carrier = models.ForeignKey(carrier, on_delete=models.CASCADE)
     # The Iteration that the data is recorded for
     #fid_Iteration = models.ForeignKey(iteration, on_delete=models.CASCADE)
+    '''
 
+    # Integer of the current session in which a carrier is in the system
     session = models.IntegerField()
+    # Integer that identifies the carrier
     carrier = models.IntegerField()
+    # Integer of the current Iteration in which a carrier is in the system
     iteration = models.IntegerField()
 
 
     # The time (in ms) from the beginning of the Iteration that the data is recorded
     timeStamp = models.BigIntegerField()
-    # The position (relative to the beginning of the current drive, in mm) that the carrier is on
-    positionOnDrive = models.FloatField()
+    # The drive that the carrier was on when this timeStamp was recorded
+    drive = models.IntegerField()
     # The absolute position (relative to the beginning of the first drive, in mm) that the carrier is at
     positionAbsolute = models.FloatField()
     # The speed that the carrier has at that timeStamp (derived from the positionAbsolute and the timeStamps)
@@ -62,26 +69,31 @@ class timestampdata(models.Model):
     # The total amount of energy consumed by the carrier since the last timeStamp (in W)
     energyConsumption = models.FloatField()
 
-    # Display the session number of this database entry
+    # Display the session, carrier and iteration and time stamp number of this database entry
     def __unicode__(self):  # in python 3.3 this is __str__(self):
         return "S_" + str(self.fid_Session) + "_C_" + str(self.fid_Carrier) + "_I_" + str(self.fid_Iteration) \
                + "_T_" + str(self.timeStamp)
 
-
+# This table stores all the data that is calculated over the course of one iteration (sums and averages)
 class iterationdata(models.Model):
-    # It is not necessary to explicitly declare an ID
-    # Maybe necessary, because the implicit ID will not be a "BigInteger", which is required
+    # It is not necessary to explicitly declare a primary key when using django models
 
+    ''' Commented out as these tables don't serve any purpose other than storing their keys
     # The Session that the data is recorded for
     #fid_Session = models.ForeignKey(session, on_delete=models.CASCADE)
     # The Carrier that the data is recorded for
     #fid_Carrier = models.ForeignKey(carrier, on_delete=models.CASCADE)
     # The Iteration that the data is recorded for
     #fid_Iteration = models.ForeignKey(iteration, on_delete=models.CASCADE)
+    '''
 
+    # Integer of the current session in which a carrier is in the system
     session = models.IntegerField()
+    # Integer that identifies the carrier
     carrier = models.IntegerField()
+    # Integer of the current Iteration in which a carrier is in the system
     iteration = models.IntegerField()
+
 
     # The average speed of a carrier in one iteration
     speedAverage = models.FloatField()
@@ -92,6 +104,6 @@ class iterationdata(models.Model):
     # The average energy Consumption of a carrier in one iteration
     energyConsumptionAverage = models.FloatField()
 
-    # Display the session number of this database entry
+    # Display the session, carrier and iteration number of this database entry
     def __unicode__(self):  # in python 3.3 this is __str__(self):
         return "S_" + str(self.fid_Session) + "_C_" + str(self.fid_Carrier) + "_I_" + str(self.fid_Iteration)
