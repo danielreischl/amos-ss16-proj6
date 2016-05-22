@@ -71,7 +71,6 @@ angular.module('app')
 
     $scope.arrayCarrier = arrayCarrier;
 
-
     //changes the visibility from true to false and vice versa, depending on the checkboxes.
 
     $scope.change = function(event) {
@@ -124,11 +123,19 @@ add more lines and get different details.*/
     var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
     var arrayCarrier = [0,1,2,3,4,5,6,7];
 
+ /* Filling the Dropdown menues with options*/
+    $scope.arrayCarrier = arrayCarrier;
 
- /*chooses one carrier depending on the chosen option. this is done by emptying the comparison Array,
+    $scope.dimensions = [
+        {name : "Average Energy Consumption", id : "ENERGY"},
+        {name : "Average Acceleration", id : "ACCELERATION"},
+	    {name : "Average Speed", id: "SPEED"},
+	    ]
+
+
+/*chooses one carrier depending on the chosen option. this is done by emptying the comparison Array,
  changing the visibillity array and adding a single carrier to the comparison array in the end.. */
 
-    $scope.arrayCarrier = arrayCarrier;
 
     $scope.changeVisibility = function() {
         carrierService.emptyCarrierArray();
@@ -141,9 +148,9 @@ add more lines and get different details.*/
 
     $scope.createDrillDownGraph = function() {
         graph = new Dygraph(
-	       document.getElementById("drillDownGraph"), 'sections/compareCarrier/dummy.csv', {title: "Carrier Drilldown ",
+	       document.getElementById("drillDownGraph"), 'sections/drillDownChart/dummy3.csv', {title: "Carrier Drilldown ",
 	                                                                                      ylabel: 'Energy Consumption in (mA)',
-	                                                                                      xlabel: 'Time in (ms)',
+	                                                                                      xlabel: 'Iteration',
 	                                                                                      labelsSeparateLines: true,
 	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
 	                                                                                      visibility: visibilityArray,
