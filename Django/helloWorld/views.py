@@ -2,6 +2,7 @@ import csv
 from django.shortcuts import render
 from django.http import HttpResponse
 from helloWorld.models import timestampdata
+from helloWorld.models import iterationdata
 from django.db.models import Max
 
 # Funtion to return values instead of csv - Files
@@ -11,16 +12,29 @@ def db2values (request):
     # session, carrier, value (Which value should be returned)
     requestedSession = request.GET['session']
     requestedCarrier = request.GET['carrier']
+    requestedCarrier = request.GET['iteration']
     requestedValue = request.GET['value']
 
     # If requested Value is LastItteration of a carrier:
-    if requestedValue=='LastItteration':
+    if requestedValue=='lastIteration':
         # Returns the LastIterration of the called Carrier and Session, returns the max Value in the db (Iterations are counted in the db)
         return HttpResponse(timestampdata.objects.filter(session=requestedSession,carrier=requestedCarrier).aggregate(Max('iteration')))
     # Returns 15 as AmountOfCarriers
     # TODO: Read it out from setConstants.py
-    if requestedValue=='AmountOfCarriers':
+    elif requestedValue=='amountOfCarriers':
         return HttpResponse('15')
+    # returns Average Energy Consumption of a specific carrier in a specific iteration and session
+    elif requestedValue=='energyConsumptionAverage':
+        return HttpResponse(iterationdata.objects.filter(session=requestedSession,carrier=requestedCarrier,iteration=iterationdata).energyConsumptionAverage)
+    # returns Average Speed of a specific carrier in a specific iteration and session
+    elif requestedValue == 'speedAverage':
+        return HttpResponse(iterationdata.objects.filter(session=requestedSession, carrier=requestedCarrier,iteration=iterationdata).speedAverage)
+    # returns Total Energy Consumption of a specific carrier in a specific iteration and session
+    elif requestedValue == 'energyConsumptionTotal':
+        return HttpResponse(iterationdata.objects.filter(session=requestedSession, carrier=requestedCarrier,iteration=iterationdata).energyConsumptionTotal)
+    # return Average Acceleration of a specific carrier in a specific iteration and session
+    elif requestedValue == 'accelerationAverage':
+        return HttpResponse(iterationdata.objects.filter(session=requestedSession, carrier=requestedCarrier, iteration=iterationdata).accelerationAverage)
 
 
 
