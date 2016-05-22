@@ -68,9 +68,9 @@ angular.module('app')
     var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
     var arrayCarrier = [0,1,2,3,4,5,6,7];
 
-    /* this functions created the dygraph  from a data source and applies options to them*/
 
     $scope.arrayCarrier = arrayCarrier;
+
 
     //changes the visibility from true to false and vice versa, depending on the checkboxes.
 
@@ -83,7 +83,7 @@ angular.module('app')
         }
     }
 
-    //creates the graph.
+    /* this functions created the dygraph  from a data source and applies options to them*/
 
     $scope.createCompareGraph = function() {
         graph = new Dygraph(
@@ -122,7 +122,21 @@ add more lines and get different details.*/
     var carrierCompareList = carrierService.getCarrier();
     var carrierMax = 8; //this needs to be dynamic later if we have connection to the database
     var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
+    var arrayCarrier = [0,1,2,3,4,5,6,7];
 
+
+ /*chooses one carrier depending on the chosen option. this is done by emptying the comparison Array,
+ changing the visibillity array and adding a single carrier to the comparison array in the end.. */
+
+    $scope.arrayCarrier = arrayCarrier;
+
+    $scope.changeVisibility = function() {
+        carrierService.emptyCarrierArray();
+        for(var i = 0; i < visibilityArray.length; i++) {
+            visibilityArray[i] = false;
+        }
+        carrierService.addCarrier($scope.selectedCarrier);
+    }
     /* this functions created the dygraph  from a data source and applies options to them*/
 
     $scope.createDrillDownGraph = function() {

@@ -1,6 +1,13 @@
 <!-- This html fragment displays the drilldown Graph -->
 
 <div ng-controller="drillDownGraph">
+
+     <select ng-model = "selectedCarrier" ng-change = "changeVisibility()">
+         <option selected="true">Chose Carrier</option>
+	     <option ng-repeat="carrier in arrayCarrier" value="{{carrier}}">Carrier {{carrier}}</option>
+     </select>
+
+      <md-button class="md-raised md-cornered"  ng-click="createDrillDownGraph()">Refresh</md-button>
 	   <div ng-init ="createDrillDownGraph()" id="drillDownGraph" style="width:1600px; height:600px;"></div>
  </div>
 
