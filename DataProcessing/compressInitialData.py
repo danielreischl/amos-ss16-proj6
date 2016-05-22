@@ -1,14 +1,14 @@
 # @author AMOSus (Daniel)
-# @author inkibus (Rene)
+# @author Inkibus (Rene)
 
-# TODO: Remove the position on Drive everywhere (all variables, CSV output), since it cannot be calculated anymore.
+# TODO: FIX a bug where sometines the drive
 # TODO: Fix the bug with having some odd timestamps in the exported csv files (The point above may resolve this issue)
 # TODO: Heavy refactoring and rework comments for readability and maintainability
 # TODO: Now some kind of measure for flexibility can be implemented and calculated here!
 
-# This script is a simple simulator of RealTimedata to enable the Algorythm to compress the Data in a proper way
+# This script is a simple simulator of RealTimedata to enable the Algorithm to compress the Data in a proper way
 # Input: CSV file with the following structure (ms, energy1, ..., energyX, pos1,...,posX) (x = Amount of Drives)
-# The script calls depending on the amount of drives and waittime the CompressingAlgorythm all x seconds
+# The script calls depending on the amount of drives and waitTime the CompressingAlgorithm all x seconds
 
 # Imports Pandas for Data handling
 from __future__ import print_function
@@ -54,8 +54,9 @@ def processData(INPUT):
 
     time = int(INPUT[0])
     drive = int(INPUT[1])
-    position = INPUT[2]
-    energy = INPUT[3]
+    position = float(INPUT[2])
+    energy = float(INPUT[3])
+    #print("Position  " + str(position))
 
     # If the line has just started, then the first carrier enters the first drive
     if runNumber == 0:
@@ -76,7 +77,8 @@ def processData(INPUT):
         #print ("Timestamp is the same as before, the data is deleted")
         return
 
-
+    #if position == 0 and lastPositionOfCarrier[carrier - 1] == 0:
+    #    return
 
     # If position is zero and if position is lower than it was in the previous run
     if position == 0 and lastPositionOfCarrier[carrier - 1] != 0:
@@ -95,19 +97,19 @@ def processData(INPUT):
     # Ensures enough space in the array
     ensureEnoughSpaceInCarrierData(carrier)
 
-    #positionAbsolute = (drive - 1) * setConstants.DRIVE_LENGTH + position
-    #print ("Position Absolute:    " + str(positionAbsolute))
-
     # Transfer time in ms
     carrierData[carrier - 1][0][currentPositionAtCarrierData[carrier - 1]] = time
     # Transfer position
     carrierData[carrier - 1][1][currentPositionAtCarrierData[carrier - 1]] = position
 
-    carrierData[carrier - 1][2][currentPositionAtCarrierData[carrier - 1]] = position
-    lastPositionOfCarrier[carrier - 1] = position
+    # Transfer the energy
+    carrierData[carrier - 1][2][currentPositionAtCarrierData[carrier - 1]] = energy
 
     # Transfer energy consumption
-    carrierData[carrier - 1][3][currentPositionAtCarrierData[carrier - 1]] = energy
+    carrierData[carrier - 1][3][currentPositionAtCarrierData[carrier - 1]] = drive
+
+    # Saves the last position
+    lastPositionOfCarrier[carrier - 1] = position
 
     # So that next time the next row will be filled with data
     currentPositionAtCarrierData[carrier - 1] += 1
@@ -117,14 +119,19 @@ def processData(INPUT):
 
 # If a drive reset its position to 0, it takes a new carrier
 def evaluateDriveReset(drive, carrier):
+    global driveXHasCarrier
+    global lastPositionOfCarrier
+
     print("Before moving carriers ")
     print(driveXHasCarrier)
 
     # the Carrier leaves the current drive
-    driveXHasCarrier[drive - 1] = 0
+    if drive == amountOfDrives or driveXHasCarrierWaiting[drive - 1 + 1] == 0:
+        driveXHasCarrier[drive - 1] = 0
+
     lastPositionOfCarrier[carrier - 1] = 0
 
-    print ("Drive " + str(drive) + " restarted")
+    print ("Drive " + str(drive) + " restarted, with carrier " + str(carrier))
 
     # If the carrier is at the last drive, the run can be completed
     if drive == amountOfDrives:
@@ -134,6 +141,7 @@ def evaluateDriveReset(drive, carrier):
             global runNumber
             runNumber += 1
 
+
     # The carrier moves to the next drive
     # Check if there is a next drive
     if drive < amountOfDrives:
@@ -141,9 +149,12 @@ def evaluateDriveReset(drive, carrier):
         if driveXHasCarrier[drive - 1 + 1] != 0:
             print("Carrier " + str(carrier) + " wants to go to drive " + str(drive + 1) + " ,but there is carrier " \
                   + str(driveXHasCarrier[drive - 1 + 1]) + " on there")
-            evaluateDriveReset(drive + 1, driveXHasCarrier[drive - 1 + 1])
-
-        driveXHasCarrier[drive - 1 + 1] = carrier
+            # Carriers that want to go to the next drive, but are currently blocked are put on the
+            # waitingToGoToDrive array. Whenever that drive finishes, it pulls the carrier onto its drive
+            driveXHasCarrierWaiting[drive - 1 + 1] = carrier
+            print ("Carriers waiting: " + str(driveXHasCarrierWaiting))
+        else:
+            driveXHasCarrier[drive - 1 + 1] = carrier
 
     # If the current drive is drive 1, then a new carrier is pulled onto the drive 1
     if drive == 1:
@@ -160,15 +171,19 @@ def evaluateDriveReset(drive, carrier):
             carriersThroughTheSystem = 1
 
         driveXHasCarrier[drive - 1] = carriersThroughTheSystem
+    else:
+        if driveXHasCarrierWaiting[drive - 1] != 0:
+            print ("pulling carrier " + str(driveXHasCarrierWaiting[drive - 1]) + " to drive " + str(drive))
+            evaluateDriveReset(drive - 1, driveXHasCarrierWaiting[drive - 1])
+            driveXHasCarrierWaiting[drive - 1] = 0
 
     print ("After the carriers have moved ")
     print (driveXHasCarrier)
-    # If the last carrier completed the run, run number +1
-
 
 # If a carrier leaves the last drive, the data has to be compressed and the CSV file has to be saved
 def completeRun(drive, carrier):
-    compressData(drive, carrier)
+    #TODO FIX compressed data
+    #compressData(drive, carrier)
 
     exportCSV(carrier)
 
@@ -184,12 +199,33 @@ def compressData(drive, carrier):
     print (" ")
     logging.info("Compressing data of carrier: " + str(carrier))
 
-    # the Value where the average is built
-    valueAverage = 0
     # iterates through all the carrier data entries that have been made up to this point
-    # the if else is just there to catch an out of bounds exception where the currentPosition is bigger than the array size of carrierData[2]
+    # the if else is just there to catch an out of bounds exception where the currentPosition is bigger than
+    # the array size of carrierData[2]
     # statement: do a if x < y else b ----> does a if x < y .. otherwise it does b
     print ("range: " + str(int(currentPositionAtCarrierData[carrier - 1])))
+
+    '''
+    # TODO: Move only the relevant time stamps to the top
+
+    print ("First before: 0")
+    print ("Last before: " + str((carrierData.shape[2]) - 1))
+    # Determine the first and last row of relevant timeStamps
+    firstRow = findFirstRowInCarrierData(carrier)
+    lastRow = findLastRowInCarrierData(carrier)
+
+    print ("First after: " + str(firstRow))
+    print ("Last after: " + str(lastRow))
+    if firstRow != 0:
+        # Copy all relevant time stamps to the top
+        carrierData[carrier - 1][:, 0: (lastRow - firstRow)] = carrierData[carrier - 1][:, firstRow: lastRow]
+
+        # Delete the rest of the timeStamps
+        carrierData[carrier - 1][:, (lastRow - firstRow) + 1: lastRow] = 0
+
+        # Update the currentPoisitionAtCarrierData which has now been moved up
+        currentPositionAtCarrierData[carrier - 1] = lastRow
+    '''
 
     for i in range(0, int(currentPositionAtCarrierData[carrier - 1])):
 
@@ -207,8 +243,9 @@ def compressData(drive, carrier):
         else:
             # Test, so that the value at saveTo is not added to itself
             if saveTo != i:
-                # Add the energy to calculate average
-                carrierData[carrier - 1][3][saveTo] += carrierData[carrier - 1][2][i]
+                # Add the absolute energy to calculate average
+                carrierData[carrier - 1][2][saveTo] = abs(carrierData[carrier - 1][2][saveTo]) + \
+                                                      abs(carrierData[carrier - 1][2][i])
 
         #print (str(carrierData[carrier - 1][0][saveTo]) + "    " \
         #      + str(carrierData[carrier - 1][1][saveTo]) + "    " \
@@ -232,7 +269,8 @@ def exportCSV(carrier):
     # print carrierData[carrier - 1]
 
     # Creates the filename
-    fileName = "Session_" + str(setConstants.SESSION) + "_Carrier_" + str(int(carrier)) + "_Iteration_" + str(int(runNumber)) + ".csv"
+    fileName = "Session_" + str(setConstants.SESSION) + "_Carrier_" + str(int(carrier)) + "_Iteration_" + \
+               str(int(runNumber)) + ".csv"
 
     # Adds the relative file path to the name that the files are saved to /InitialData/
     fileName = os.path.abspath(os.path.join("CarrierData", fileName))
@@ -240,7 +278,7 @@ def exportCSV(carrier):
 
     firstRow = findFirstRowInCarrierData(carrier)
     print ("first Row " + str(firstRow))
-    lastRow = int((currentPositionAtCarrierData[carrier - 1] - 1) / KEEP_EVERY_X_ROW)
+    lastRow = findLastRowInCarrierData(carrier)
     print ("last Row " + str(lastRow))
 
     export = np.transpose(carrierData[carrier - 1][:, firstRow:lastRow])
@@ -249,18 +287,50 @@ def exportCSV(carrier):
     # print export
 
     np.savetxt(fileName, export, fmt='%0.5f', delimiter=DATA_SEPARATOR, newline='\n',
-               header='time;posAbsolute;posOnDrive;energy', footer='', comments='# ')
+               header='time;posAbsolute;energy;drive', footer='', comments='# ')
     logging.info("Exported to file " + fileName)
 
 # Finds the first row of the array that will be exported as CSV, where pos and energy consumption != 0
 def findFirstRowInCarrierData(carrier):
-    firstRow = 0
+
+    if carrierData[carrier - 1][1][0] != 0:
+        return 0
+
+    lastRowWithZero = 0
+
     for i in range(0, int(carrierData.shape[2]) - 1):
-        if (carrierData[carrier - 1][1][i] == 0) and (carrierData[carrier - 1][2][i] == 0):
-            firstRow = i
+        if (carrierData[carrier - 1][1][i] == 0):
+            lastRowWithZero = i
         else:
-            return firstRow
-    return firstRow
+            if lastRowWithZero >= (carrierData.shape[2]) - 1:
+                return (carrierData.shape[2]) - 1
+            else:
+                return lastRowWithZero + 1
+
+    print("Error: Couldn't find first row.")
+    assert(1 == 2)
+    return lastRowWithZero
+
+# Finds the first row of the array that will be exported as CSV, where pos and energy consumption != 0
+def findLastRowInCarrierData(carrier):
+
+    if carrierData[carrier - 1][1][(carrierData.shape[2]) - 1] != 0:
+        return (carrierData.shape[2]) - 1
+
+    lastRowWithZero = (carrierData.shape[2]) - 1
+
+    for i in range(0, int(carrierData.shape[2]) - 1):
+        if (carrierData[carrier - 1][1][(carrierData.shape[2]) - 1 - i] == 0):
+            lastRowWithZero = (carrierData.shape[2]) - 1 - i
+        else:
+            if lastRowWithZero <= 0:
+                return 0
+            else:
+                return lastRowWithZero - 1
+
+    print("Error: Couldn't find first row.")
+    assert (1 == 2)
+    return lastRowWithZero
 
 
 # Clear the data array for a certain carrier
@@ -278,9 +348,8 @@ def clearCarrierData(carrier):
 def ensureEnoughSpaceInCarrierData(carrier):
     global carrierData
     if currentPositionAtCarrierData[carrier - 1] >= carrierData.shape[2]:
-        carrierData = np.resize(carrierData,
-                                (int(carrierData.shape[0]), int(carrierData.shape[1]), int(carrierData.shape[2] * 2)))
-
+        extend = np.zeros((AMOUNT_OF_CARRIERS, 4, int(carrierData.shape[2])))
+        carrierData = np.concatenate((carrierData, extend), axis=2)
 
 def modifyCSVFile(filename):
 
@@ -369,7 +438,7 @@ if not DATA_FILE_NAMES:
 for fileName in DATA_FILE_NAMES:
 
     # Calls modifyCSVFile function
-    amountOfDrives = modifyCSVFile (fileName)
+    amountOfDrives = modifyCSVFile(fileName)
 
     # Variables
     # Array that saves for every drive which carrier is on it
@@ -383,6 +452,8 @@ for fileName in DATA_FILE_NAMES:
     # Saves the last position on the drive of every carrier
     lastPositionOfCarrier = np.zeros(AMOUNT_OF_CARRIERS)
     # Number of complete runs through the system
+    driveXHasCarrierWaiting = np.zeros(amountOfDrives)
+    #
     runNumber = 0
     # The amount of carriers who entered drive 1 (Therefore starting with carrier 1) in the current run
     carriersThroughTheSystem = 1
