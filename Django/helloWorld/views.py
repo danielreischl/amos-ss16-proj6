@@ -12,7 +12,7 @@ def db2values (request):
     # session, carrier, value (Which value should be returned)
     requestedSession = request.GET['session']
     requestedCarrier = request.GET['carrier']
-    requestedCarrier = request.GET['iteration']
+    requestedIteration = request.GET['iteration']
     requestedValue = request.GET['value']
 
     # If requested Value is LastItteration of a carrier:
@@ -25,16 +25,16 @@ def db2values (request):
         return HttpResponse('15')
     # returns Average Energy Consumption of a specific carrier in a specific iteration and session
     elif requestedValue=='energyConsumptionAverage':
-        return HttpResponse(iterationdata.objects.filter(session=requestedSession,carrier=requestedCarrier,iteration=iterationdata).energyConsumptionAverage)
+        return HttpResponse(iterationdata.objects.get(session=requestedSession,carrier=requestedCarrier,iteration=requestedIteration).energyConsumptionAverage)
     # returns Average Speed of a specific carrier in a specific iteration and session
     elif requestedValue == 'speedAverage':
-        return HttpResponse(iterationdata.objects.filter(session=requestedSession, carrier=requestedCarrier,iteration=iterationdata).speedAverage)
+        return HttpResponse(iterationdata.objects.get(session=requestedSession,carrier=requestedCarrier,iteration=requestedIteration).speedAverage)
     # returns Total Energy Consumption of a specific carrier in a specific iteration and session
     elif requestedValue == 'energyConsumptionTotal':
-        return HttpResponse(iterationdata.objects.filter(session=requestedSession, carrier=requestedCarrier,iteration=iterationdata).energyConsumptionTotal)
+        return HttpResponse(iterationdata.objects.get(session=requestedSession,carrier=requestedCarrier,iteration=requestedIteration).energyConsumptionTotal)
     # return Average Acceleration of a specific carrier in a specific iteration and session
     elif requestedValue == 'accelerationAverage':
-        return HttpResponse(iterationdata.objects.filter(session=requestedSession, carrier=requestedCarrier, iteration=iterationdata).accelerationAverage)
+        return HttpResponse(iterationdata.objects.get(session=requestedSession,carrier=requestedCarrier,iteration=requestedIteration).accelerationAverage)
 
 
 
