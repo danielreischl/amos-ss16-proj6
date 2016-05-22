@@ -110,10 +110,12 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
         $mdDialog.hide();
         $mdSidenav('comparisonSidebar').toggle();
     }
-
-    $scope.drillDown = function() {         //This function will take the carrier to the drilldown pane.
-        alert("Moving to Drill Down Window, yet to be implemented");
+    //This function will empty first all carriers left in the comparison sidenav AND only add the carrier selected to it. Then it will jump to the comparison chart directly..
+    $scope.drillDown = function() {
+        carrierService.emptyCarrierArray;
+        carrierService.addCarrier(carrierId);
         $mdDialog.hide();
+        window.location.href ="#drillDownChart";
     }
 })
 

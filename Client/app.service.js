@@ -31,11 +31,19 @@ who need the data.
          var toDelete =  carriersForComparison.indexOf(removeCarrier);
          carriersForComparison.splice(toDelete,1);
     }
-     // this service returns 3 functions to the caller, which he can use.
+
+    // this function empties the array, so that no carrier item is left inside anymore.
+    this.emptyCarrierArray = function() {
+        carriersForComparison.splice(0,carriersForComparison.length);
+    }
+
+
+     // this service returns 4 functions to the caller, which he can use.
     return {
         addCarrier: this.addCarrier,
         getCarrier: this.getCarrier,
         deleteCarrier: this.deleteCarrier,
+        emptyCarrierArray: this.emptyCarrierArray,
     };
 });
 

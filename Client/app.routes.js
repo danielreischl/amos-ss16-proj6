@@ -32,8 +32,12 @@ angular
         templateUrl: 'sections/barPage/Barchart_shefali_vicky.html'
       })
         
-        .when('/CompareCarrier', {
+      .when('/CompareCarrier', {
         templateUrl: 'sections/compareCarrier/CompareCarrier.html'
+      })
+
+      .when('/drillDownChart', {
+        templateUrl: 'sections/drillDownChart/drillDownChart.html'
       })
 
       .otherwise({
