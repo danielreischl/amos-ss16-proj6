@@ -20,9 +20,12 @@ def db2values (request):
         # Returns the LastIterration of the called Carrier and Session, returns the max Value in the db (Iterations are counted in the db)
         return HttpResponse(timestampdata.objects.filter(session=requestedSession,carrier=requestedCarrier).aggregate(Max('iteration')))
     # Returns 15 as AmountOfCarriers
-    # TODO: Read it out from setConstants.py
+    # TODO: Read amountOfCarriers and Session out from setConstants.py
     elif requestedValue=='amountOfCarriers':
         return HttpResponse('15')
+    # returns current session
+    elif requestedValue=='currentSession':
+        return HttpResponse('1')
     # returns Average Energy Consumption of a specific carrier in a specific iteration and session
     elif requestedValue=='energyConsumptionAverage':
         return HttpResponse(iterationdata.objects.get(session=requestedSession,carrier=requestedCarrier,iteration=requestedIteration).energyConsumptionAverage)
