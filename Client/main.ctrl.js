@@ -23,6 +23,9 @@ angular.module('app')
 
 
 .controller('visuController', function($scope) {
+    /* Illustration of how to request data from django. Reads out AmountOfCarriers */
+    $scope.test = "django/helloWorld/values?session=1&carrier=1&value=AmountOfCarriers";
+
     $scope.dimensions = [
         {name : "Acceleration", id : "ACCELERATION", default: false},
         {name : "Energy", id : "ENERGY", default: false},
@@ -54,6 +57,7 @@ angular.module('app')
 	    g2 = new Dygraph(
 	    document.getElementById("graphdiv2"), "django/helloWorld/position.csv?carrier="+$scope.selectedCarrier+"&iteration="+$scope.selectedIteration+"&dimension="+$scope.selectedDimension, {});
     }
+
 })
 
 /* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/

@@ -1,4 +1,5 @@
  <div ng-controller="visuController">
+	  <p>{{test}}</p>
 	   <select ng-model="selectedDimension" ng-change = "paintGraphDynamic()">
 	     <option ng-repeat="x in dimensions" value="{{x.id}}">{{x.name}}</option>
 	   </select>

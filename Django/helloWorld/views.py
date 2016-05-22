@@ -2,6 +2,26 @@ import csv
 from django.shortcuts import render
 from django.http import HttpResponse
 from helloWorld.models import timestampdata
+from django.db.models import Max
+
+# Funtion to return values instead of csv - Files
+def db2values (request):
+
+    # possible paramaters:
+    # session, carrier, value (Which value should be returned)
+    requestedSession = request.GET['session']
+    requestedCarrier = request.GET['carrier']
+    requestedValue = request.GET['value']
+
+    # If requested Value is LastItteration of a carrier:
+    if requestedValue=='LastItteration':
+        # Returns the LastIterration of the called Carrier and Session, returns the max Value in the db (Iterations are counted in the db)
+        return HttpResponse(timestampdata.objects.filter(session=requestedSession,carrier=requestedCarrier).aggregate(Max('iteration')))
+    # Returns 15 as AmountOfCarriers
+    # TODO: Read it out from setConstants.py
+    if requestedValue=='AmountOfCarriers':
+        return HttpResponse('15')
+
 
 
 def db2csv(request):
@@ -18,11 +38,11 @@ def db2csv(request):
     requestedCarrier = request.GET['carrier']
     requestedIteration = request.GET['iteration']
     requestedDimension = request.GET['dimension']
-    
+
 
     result = timestampdata.objects.filter(carrier=requestedCarrier,iteration=requestedIteration)
 
-    
+
     writer = csv.writer(response)
 
     # case analysis by the selected dimension: there must be a nicer way to do this
