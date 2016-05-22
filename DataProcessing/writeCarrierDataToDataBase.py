@@ -49,7 +49,7 @@ def process_file(fileName):
     # Loading data into a dataFrame
     data = pd.read_csv(filePath, setConstants.CSV_SEPARATOR)
     # Change name of Columns to fit DataBaseModel
-    data.columns = ['timeStamp', 'positionAbsolute', 'positionOnDrive', 'energyConsumption']
+    data.columns = ['timeStamp', 'positionAbsolute', 'energyConsumption', 'drive']
     # Reads out session of file name and adds column to DataFrame after Casting from str to int
     session = int(fileName.split('_')[1])
     data['session'] = session
@@ -61,7 +61,7 @@ def process_file(fileName):
     data['iteration'] = iteration
     # Calculates the speed between two datapoints (Way/Time)
     data['speed'] = data['positionAbsolute'].diff().divide(data['timeStamp'].diff())
-    # Calculates acceleration (SpeedEnd * SpeedEnd - SpeedBeginn * SpeedBeginn))/distance * 2
+    # Calculates acceleration (SpeedEnd * SpeedEnd - SpeedBegin * SpeedBegin))/distance * 2
     data['acceleration'] = data['speed'].multiply(data['speed']).diff().divide(
         data['positionAbsolute'].diff().multiply(2))
 
@@ -69,7 +69,7 @@ def process_file(fileName):
     # Reads out Columns to a list
     cols = data.columns.tolist()
     # Rearanges the columms
-    cols = cols[4:7] + cols[0:1] + cols[2:3] + cols[1:2] + cols[7:9] + cols[3:4]
+    cols = cols[4:7] + cols[0:1] + cols[3:4] + cols[1:2] + cols[7:9]  + cols[2:3]
     # Reananges the dataframe data
     data = data[cols]
 
@@ -102,7 +102,7 @@ def process_file(fileName):
 
     # Move the processed data files to InitialDataArchive
     logging.info ("Moving processed files")
-    os.rename(fileName, os.path.abspath(os.path.join("CarrierDataArchive", os.path.basename(fileName))))
+    #os.rename(fileName, os.path.abspath(os.path.join("CarrierDataArchive", os.path.basename(fileName))))
     logging.info("Moving file to archive: " + fileName)
 
 
