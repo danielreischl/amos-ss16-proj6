@@ -2,5 +2,3 @@ Django==1.9.5
 gunicorn==19.3.0
 numpy
 SQLAlchemy
-#pandas
-#psycopg2==2.6.1
