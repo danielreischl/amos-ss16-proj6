@@ -60,10 +60,9 @@ def process_file(fileName):
     iteration = int(fileName.split('_')[5].replace('.csv', ''))
     data['iteration'] = iteration
     # Calculates the speed between two datapoints (Way/Time)
-    data['speed'] = data['positionAbsolute'].diff().divide(data['timeStamp'].diff())
-    # Calculates acceleration (SpeedEnd * SpeedEnd - SpeedBegin * SpeedBegin))/distance * 2
-    data['acceleration'] = data['speed'].multiply(data['speed']).diff().divide(
-        data['positionAbsolute'].diff().multiply(2))
+    data['speed'] = data['positionAbsolute'].diff().div(data['timeStamp'].diff())
+    # Calculates acceleration (Speed2 - Speed1)/ (time2 - time1)
+    data['acceleration'] = data['speed'].diff().div(data['timeStamp'].diff())
 
     # Rearanges the columns to fit them to the new database model
     # Reads out Columns to a list
@@ -102,7 +101,7 @@ def process_file(fileName):
 
     # Move the processed data files to InitialDataArchive
     logging.info ("Moving processed files")
-    #os.rename(fileName, os.path.abspath(os.path.join("CarrierDataArchive", os.path.basename(fileName))))
+    os.rename(fileName, os.path.abspath(os.path.join("CarrierDataArchive", os.path.basename(fileName))))
     logging.info("Moving file to archive: " + fileName)
 
 
