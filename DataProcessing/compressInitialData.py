@@ -91,7 +91,7 @@ def processData(time, drive, position, energy):
         # Process the timestamp that caused the drive reset
         # This needs to be done because of the position is 0, this means that the current carrier is not on the drive
         # anymore. Therefore this funciton is called again after the drive has been reset.
-        processData([time, drive, position, energy])
+        processData(time, drive, position, energy)
         return
 
     # Ensures enough space in the carrierData array for storing the data
