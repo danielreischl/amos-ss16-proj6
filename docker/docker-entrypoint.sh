@@ -4,24 +4,19 @@ set -ue
 
 SOCKFILE=/srv/run/gunicorn.sock
 
-
-# Postgresql startup: temporarily removed
-# echo Starting postgresq
-
-# touch /srv/logs/postgresql.log
-# exec su postgres -c 'pg_ctl start -D /var/lib/postgresql/9.3/main -l /srv/logs/postgresql.log'
-# exec sudo su - postgres && /usr/lib/postgresql/9.3/bin/postgres -D /var/lib/postgresql/9.3/main -c config_file=/etc/postgresql/9.3/main/postgresql.conf
-
-
+# Sets up Django
 echo apply django migrations
 
+# Migrates app helloWorld
 python manage.py makemigrations helloWorld
-python manage.py migrate --noinput                 # Apply database migrations
-python manage.py collectstatic --noinput  # Collect static files
+# Applies database migrations
+python manage.py migrate --noinput
+# Collects static files
+python manage.py collectstatic --noinput
 
-# run init script
+# Runs init script
 chmod u+x /srv/DataProcessing/initDataProcessingSimulation.sh
-# open sub-shell, change the directory, and execute - needed since the called python scripts use relative paths
+# Opens sub-shell, change the directory, and execute - needed since the called python scripts use relative paths
 ( cd /srv/DataProcessing/; sh ./initDataProcessingSimulation.sh )
 
 # Prepare log files and start outputting logs to stdout
@@ -33,10 +28,7 @@ touch /srv/logs/nginx-error.log
 touch $SOCKFILE
 tail -n 0 -f /srv/logs/*.log &
 
-
-
-#echo Starting nginx.
-
+# echo Starting nginx.
 # inject the $CONTEXT_PATH variable into nginx - configfile
 # $CONTEXT_PATH is injected by the OSR-servers and is either /ss16/proj6-test or /ss16/proj6
 
@@ -45,14 +37,10 @@ sed -i s:\$CONTEXT_PATH:$CONTEXT_PATH: /etc/nginx/nginx.conf
 # for debugging
 #cp /etc/nginx/nginx.conf /srv/logs/
 
-
 #Start Nginx
-
 exec nginx &
 
-
-
-# Start Gunicorn processes
+# Starts Gunicorn
 echo Starting Gunicorn.
 
 #exec /sbin/setuser www-data \
@@ -62,7 +50,4 @@ exec gunicorn amos.wsgi:application \
     --bind=0.0.0.0:8000  \
     --workers 3 
 
-
 #     authbind --deep \
-
-

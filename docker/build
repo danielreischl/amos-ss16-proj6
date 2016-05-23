@@ -1,9 +1,9 @@
 set -ue
 
-# Copies files from github root to the docker folder
+# Copies files from github root to docker folder
 # Client -> docker/Client
 # DataProcesing -> docker/DataProcessing
-
+# Django -> docker/django
 cp -r ./Client ./docker/Client
 cp -r ./DataProcessing ./docker/DataProcessing
 cp -r ./Django ./docker/django
