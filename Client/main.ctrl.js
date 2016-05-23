@@ -23,9 +23,6 @@ angular.module('app')
 
 
 .controller('visuController', function($scope) {
-    /* Illustration of how to request data from django. Reads out AmountOfCarriers */
-    $scope.test = "django/helloWorld/values?session=1&carrier=1&value=AmountOfCarriers";
-
     $scope.dimensions = [
         {name : "Acceleration", id : "ACCELERATION", default: false},
         {name : "Energy", id : "ENERGY", default: false},
@@ -55,9 +52,8 @@ angular.module('app')
     }
     $scope.paintGraphDynamic = function(carrier) {
 	    g2 = new Dygraph(
-	    document.getElementById("graphdiv2"), "django/helloWorld/position.csv?type="PoC"&carrier="+$scope.selectedCarrier+"&iteration="+$scope.selectedIteration+"&dimension="+$scope.selectedDimension, {});
+	    document.getElementById("graphdiv2"), "django/helloWorld/position.csv?carrier="+$scope.selectedCarrier+"&iteration="+$scope.selectedIteration+"&dimension="+$scope.selectedDimension, {});
     }
-
 })
 
 /* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/
@@ -66,21 +62,6 @@ angular.module('app')
     var carrierCompareList = carrierService.getCarrier();
     var carrierMax = 8; //this needs to be dynamic later if we have connection to the database
     var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
-    var arrayCarrier = [0,1,2,3,4,5,6,7];
-
-
-    $scope.arrayCarrier = arrayCarrier;
-
-    //changes the visibility from true to false and vice versa, depending on the checkboxes.
-
-    $scope.change = function(event) {
-
-        if(visibilityArray[event.target.id]) {
-            visibilityArray[event.target.id] = false;
-        } else {
-            visibilityArray[event.target.id] = true;
-        }
-    }
 
     /* this functions created the dygraph  from a data source and applies options to them*/
 
@@ -89,68 +70,6 @@ angular.module('app')
 	       document.getElementById("compareGraph"), 'sections/compareCarrier/dummy.csv', {title: "Carrier's energy consumption of the latest iteration",
 	                                                                                      ylabel: 'Energy Consumption in (mA)',
 	                                                                                      xlabel: 'Time in (ms)',
-	                                                                                      labelsSeparateLines: true,
-	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
-	                                                                                      visibility: visibilityArray,
-	                                                                                      });
-
-        /* these loops have the purpose to see what carriers the user wants to compare
-        and change the visibilty of the carriers in the dygraph to true */
-
-        if(carrierCompareList.length != 0) {
-            for (var i = 0; i < carrierCompareList.length; i++) {
-                for (var carrier = 0; carrier < carrierMax; carrier++) {
-                    if (carrierCompareList[i].carrierNumber == carrier) {
-                        visibilityArray[carrier] = true;
-                        break;
-                    }
-                }
-            }
-        } else {
-            alert("You did not chose any Carriers to compare")
-        }
-    }
-
-})
-
-/* controller for the drillDown graph. This will show only the carrier selected by drilling Down. Furtheremore it will enable the user to
-add more lines and get different details.*/
-
-.controller('drillDownGraph', function($scope, carrierService) {
-
-    var carrierCompareList = carrierService.getCarrier();
-    var carrierMax = 8; //this needs to be dynamic later if we have connection to the database
-    var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
-    var arrayCarrier = [0,1,2,3,4,5,6,7];
-
- /* Filling the Dropdown menues with options*/
-    $scope.arrayCarrier = arrayCarrier;
-
-    $scope.dimensions = [
-        {name : "Average Energy Consumption", id : "ENERGY"},
-        {name : "Average Acceleration", id : "ACCELERATION"},
-	    {name : "Average Speed", id: "SPEED"},
-	    ]
-
-
-/*chooses one carrier depending on the chosen option. this is done by emptying the comparison Array,
- changing the visibillity array and adding a single carrier to the comparison array in the end.. */
-
-
-    $scope.changeVisibility = function() {
-        carrierService.emptyCarrierArray();
-        for(var i = 0; i < visibilityArray.length; i++) {
-            visibilityArray[i] = false;
-        }
-        carrierService.addCarrier($scope.selectedCarrier);
-    }
-    /* this functions created the dygraph  from a data source and applies options to them*/
-
-    $scope.createDrillDownGraph = function() {
-        graph = new Dygraph(
-	       document.getElementById("drillDownGraph"), 'sections/drillDownChart/dummy3.csv', {title: "Carrier Drilldown ",
-	                                                                                      ylabel: 'Energy Consumption in (mA)',
-	                                                                                      xlabel: 'Iteration',
 	                                                                                      labelsSeparateLines: true,
 	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
 	                                                                                      visibility: visibilityArray,
@@ -191,12 +110,10 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
         $mdDialog.hide();
         $mdSidenav('comparisonSidebar').toggle();
     }
-    //This function will empty first all carriers left in the comparison sidenav AND only add the carrier selected to it. Then it will jump to the comparison chart directly..
-    $scope.drillDown = function() {
-        carrierService.emptyCarrierArray;
-        carrierService.addCarrier(carrierId);
+
+    $scope.drillDown = function() {         //This function will take the carrier to the drilldown pane.
+        alert("Moving to Drill Down Window, yet to be implemented");
         $mdDialog.hide();
-        window.location.href ="#drillDownChart";
     }
 })
 
@@ -307,7 +224,7 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
 })
 
 
-.controller('barchartController',function () {
+/*.controller('barchartController',function () {
 
 
     function barChartPlotter(e) {
@@ -341,13 +258,34 @@ g = new Dygraph(document.getElementById("graph"),data,
 
 
                  {
-
+                         drawlineCallback: function (g, seriesName, ctx, cx, cy, seriesColor, pointSize, row) {
+                             var col = g.indexFromSetName(seriesName);
+                             var val = g.getValue(row, col);
+                             var color = '';
+                             if (val >= 0 && val <= 50) {
+                                 color = 'green';
+                             } else if (val > 50 && val <= 80) {
+                                 color = 'yellow';
+                             } else if (val > 80) {
+                                 color = 'red';
+                             }
+                             if (color) {
+                                
+                        ctx.fillStyle = color;
+                            
+                             }
+                         },
 
                      // options go here. See http://dygraphs.com/options.html
                      legend: 'always',
                      animatedZooms: true,
                      plotter: barChartPlotter,
-                        colors: ["#FF1744", "#00BFA5", "#FFFF8D", ],
+                     
+
+
+
+
+
 
                      
                      axes: {
@@ -420,6 +358,32 @@ g = new Dygraph(document.getElementById("graph"),data,
 
 
 })
+
+*/
+.controller('chartMaker',function($scope) {
+
+        $scope.chartParams = {
+            listOfCarriers: ['carrier1', 'carrier2', 'carrier3', 'carrier4', 'carrier5', 'carrier6', 'carrier7', 'carrier8','carrier9','carrier10','carrier11','carrier12','carrier13','carrier14','carrier15'],
+            percentage: [[80, 100, 60, 90, 150, 200, 100, 170, 100, 75, 120, 250, 170,300, 280]],
+            series: ["Nice Places"],
+            label:'percentage',
+            colours: [{fillColor: ["#FF0000", "#00FF00", "#FF0000", "##FFFF00", "#FFFF00", "#FF0000", "#FF0000", "#00FF00", "#FFFF00", "#00FF00", "#FF0000", "#FF0000", "#FF0000", "#FF0000", "#FF0000"]}],
+
+            options: {barShowStroke: false},
+            options : {
+    // String - Template string for single tooltips
+    tooltipTemplate: "<%if (label){%><%=label %>: <%}%><%= value + '%' %>",
+    // String - Template string for multiple tooltips
+
+    scaleLabel : "<%= value + '%' %>",
+},
+             ctx : document.getElementById("locationBar").getContext("2d")
+
+
+    };
+    }
+)
+    
 
 
 

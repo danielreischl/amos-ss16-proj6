@@ -21,7 +21,7 @@ angular
       })
 
       .when('/', {
-        templateUrl: 'sections/barCirclePage/HomePageIconsShefali-Vicky.html'
+        templateUrl: 'sections/barCirclePage/HomePageIcons.html'
       })
 
       .when('/CircleCarrier', {
@@ -29,7 +29,7 @@ angular
       })
 
       .when('/BarCarrier', {
-        templateUrl: 'sections/barPage/Barchart_shefali_vicky.html'
+        templateUrl: 'sections/barPage/Barchart.html'
       })
         
       .when('/CompareCarrier', {
