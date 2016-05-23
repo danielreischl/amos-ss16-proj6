@@ -62,6 +62,24 @@ angular.module('app')
     var carrierCompareList = carrierService.getCarrier();
     var carrierMax = 8; //this needs to be dynamic later if we have connection to the database
     var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
+    var arrayCarrier = [0,1,2,3,4,5,6,7];
+
+
+    $scope.arrayCarrier = arrayCarrier;
+
+    //changes the visibility from true to false and vice versa, depending on the checkboxes.
+
+    $scope.change = function(event) {
+
+        if(visibilityArray[event.target.id]) {
+            visibilityArray[event.target.id] = false;
+        } else {
+            visibilityArray[event.target.id] = true;
+        }
+    }
+
+
+
 
     /* this functions created the dygraph  from a data source and applies options to them*/
 
@@ -93,6 +111,87 @@ angular.module('app')
     }
 })
 
+
+/* controller for the drillDown graph. This will show only the carrier selected by drilling Down. Furtheremore it will enable the user to
+add more lines and get different details.*/
+
+.controller('drillDownGraph', function($scope, carrierService) {
+
+    var carrierCompareList = carrierService.getCarrier();
+    var carrierMax = 8; //this needs to be dynamic later if we have connection to the database
+    var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
+    var arrayCarrier = [0,1,2,3,4,5,6,7];
+
+ /* Filling the Dropdown menues with options*/
+    $scope.arrayCarrier = arrayCarrier;
+
+    $scope.dimensions = [
+        {name : "Average Energy Consumption", id : "ENERGY"},
+        {name : "Average Acceleration", id : "ACCELERATION"},
+	    {name : "Average Speed", id: "SPEED"},
+	    ]
+
+
+/*chooses one carrier depending on the chosen option. this is done by emptying the comparison Array,
+ changing the visibillity array and adding a single carrier to the comparison array in the end.. */
+
+
+    $scope.changeVisibility = function() {
+        carrierService.emptyCarrierArray();
+        for(var i = 0; i < visibilityArray.length; i++) {
+            visibilityArray[i] = false;
+        }
+        carrierService.addCarrier($scope.selectedCarrier);
+    }
+    /* this functions created the dygraph  from a data source and applies options to them*/
+
+    $scope.createDrillDownGraph = function() {
+        graph = new Dygraph(
+	       document.getElementById("drillDownGraph"), 'sections/drillDownChart/dummy3.csv', {title: "Carrier Drilldown ",
+	                                                                                      ylabel: 'Energy Consumption in (mA)',
+	                                                                                      xlabel: 'Iteration',
+	                                                                                      plotter: barChartPlotter,
+	                                                                                      labelsSeparateLines: true,
+	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
+	                                                                                      visibility: visibilityArray,
+	                                                                                      });
+
+        /* these loops have the purpose to see what carriers the user wants to compare
+        and change the visibilty of the carriers in the dygraph to true */
+
+        if(carrierCompareList.length != 0) {
+            for (var i = 0; i < carrierCompareList.length; i++) {
+                for (var carrier = 0; carrier < carrierMax; carrier++) {
+                    if (carrierCompareList[i].carrierNumber == carrier) {
+                        visibilityArray[carrier] = true;
+                        break;
+                    }
+                }
+            }
+        } else {
+            alert("You did not chose any Carriers to compare")
+        }
+    }
+
+    // this functions changes the plotting of the dygraph to bars instead of lines. /7 need to understand and change it
+
+    function barChartPlotter(e) {
+        var ctx = e.drawingContext;
+        var points = e.points;
+        var y_bottom = e.dygraph.toDomYCoord(0);
+        var bar_width = 2/3 * (points[1].canvasx - points[0].canvasx);
+        ctx.fillStyle = e.color;
+
+        for (var i = 0; i < points.length; i++) {
+            var p = points[i];
+            var center_x = p.canvasx;
+            ctx.fillRect(center_x - bar_width / 2, p.canvasy,
+            bar_width, y_bottom - p.canvasy);
+            ctx.strokeRect(center_x - bar_width / 2, p.canvasy,
+            bar_width, y_bottom - p.canvasy);
+  }
+}
+})
    
 
 /* controller for the popupGraphs. Displays the carrier number and 2 Buttons. Depending on which button is pressed,
@@ -111,9 +210,12 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
         $mdSidenav('comparisonSidebar').toggle();
     }
 
-    $scope.drillDown = function() {         //This function will take the carrier to the drilldown pane.
-        alert("Moving to Drill Down Window, yet to be implemented");
+    //This function will empty first all carriers left in the comparison sidenav AND only add the carrier selected to it. Then it will jump to the comparison chart directly..
+    $scope.drillDown = function() {
+        carrierService.emptyCarrierArray;
+        carrierService.addCarrier(carrierId);
         $mdDialog.hide();
+        window.location.href ="#drillDownChart";
     }
 })
 
