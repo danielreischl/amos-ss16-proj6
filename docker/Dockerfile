@@ -49,8 +49,10 @@ RUN touch /srv/logs/nginx-access.log
 RUN touch /srv/logs/nginx-error.log
 RUN touch $SOCKFILE
 
+# TODO: Define if numpy is still necessary. Pandas is installed earlier and numpy is installed with pandas
 # Installs Python dependencies
-RUN pip install -r $DOCKYARD_SRVPROJ/requirements.txt
+# Django 1.9.5, Gunicorn 19.3.0, nump, SQL Alchemy
+RUN pip install Django==1.9.5 gunicorn==19.3.0 numpy SQLAlchemy
 
 # Exposes port 80
 EXPOSE 80
