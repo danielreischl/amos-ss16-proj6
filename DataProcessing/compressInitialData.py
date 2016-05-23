@@ -9,7 +9,6 @@
 # Output: CSV file for each carrier in each iteration with the following structure (time; posAbsolute; energy; drive)
 # and the following name Session_X_Carrier_X_Iteration_X.csv
 
-# TODO: Make compression only select timeStamps that are not 0. Maybe don't compress over multiple timestamps.
 # TODO: Now that we have the real data some kind of measure for flexibility can be implemented and calculated here!
 
 # IMPORTS
@@ -196,7 +195,7 @@ def evaluateDriveReset(drive, carrier):
 # the data is cleared
 def completeIteration(carrier):
     # Compress the data for the
-    # compressData(carrier)
+    compressData(carrier)
 
     exportCSV(carrier)
 
@@ -206,29 +205,20 @@ def completeIteration(carrier):
 # Compresses the data, so that only every X-th (KEEP_EVERY_X_ROW) is kept in the data
 # Example: rows: 0,1,2,3,4,5,6 --> compressData with KEEP_EVERY_X_ROW == 2 --> rows: 0,2,4,6
 def compressData(carrier):
+    global carrierData
+    global currentPositionAtCarrierData
     logging.info("Compressing data of carrier: " + str(carrier))
 
-    # TODO: Not finished, see beginning of the script.
-    # Select first and last relevant timestamp (with pos != 0) and only compress the sub selection from first to last
-    '''
-    print ("First before: 0")
-    print ("Last before: " + str((carrierData.shape[2]) - 1))
-    # Determine the first and last row of relevant timeStamps
+    # Select first and relevant timestamp, so the timestamps before can be deleted
     firstRow = findFirstRowInCarrierData(carrier)
-    lastRow = findLastRowInCarrierData(carrier)
 
-    print ("First after: " + str(firstRow))
-    print ("Last after: " + str(lastRow))
     if firstRow != 0:
-        # Copy all relevant time stamps to the top
-        carrierData[carrier - 1][:, 0: (lastRow - firstRow)] = carrierData[carrier - 1][:, firstRow: lastRow]
+        # Roll all relevant time stamps to the top
+        carrierData[carrier - 1] = np.roll(carrierData[carrier - 1], -firstRow, axis=1)
 
-        # Delete the rest of the timeStamps
-        carrierData[carrier - 1][:, (lastRow - firstRow) + 1: lastRow] = 0
+        # Update current position in Carrier Data (move up by int(firstRow)
+        currentPositionAtCarrierData[carrier - 1] -= firstRow
 
-        # Update the currentPoisitionAtCarrierData which has now been moved up
-        currentPositionAtCarrierData[carrier - 1] = lastRow
-    '''
     # Iterates through all time stamps
     for i in range(0, int(currentPositionAtCarrierData[carrier - 1])):
 
@@ -240,7 +230,7 @@ def compressData(carrier):
             carrierData[carrier - 1][0][saveTo] = carrierData[carrier - 1][0][i]
             carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][i]
             carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][i]
-            carrierData[carrier - 1][3][saveTo] = carrierData[carrier - 1][2][i]
+            carrierData[carrier - 1][3][saveTo] = carrierData[carrier - 1][3][i]
         else:
             # Test if saveTo doesn't equal the current i, so that the value at saveTo is not added to itself
             if saveTo != i:
@@ -272,7 +262,9 @@ def exportCSV(carrier):
     lastRow = findLastRowInCarrierData(carrier)
 
     # Only selects the relevant sub selection from carrier data (without position == 0) to export to csv
+    # Commented out for testing
     export = np.transpose(carrierData[carrier - 1][:, firstRow:lastRow])
+
 
     # Export carrier data with file name to csv file
     np.savetxt(fileName, export, fmt='%0.5f', delimiter=DATA_SEPARATOR, newline='\n',
@@ -343,7 +335,7 @@ def ensureEnoughSpaceInCarrierData(carrier):
         carrierData = np.concatenate((carrierData, extend), axis=2)
 
 
-# TODO: Refactoring of this def
+# TODO: Refactoring (structure) and code comments
 # Renames the csv file headers to structure: (ms; energy1;...;energyX; pos1;...;posX) (X = Amount of Drives)
 def modifyCSVFile(filename):
     # InputFileName und OutputFileName of CSV
@@ -403,7 +395,7 @@ def modifyCSVFile(filename):
 #########################################################
 ############# START OF SCRIPT ###########################
 #########################################################
-# TODO: Refactoring of this part
+# TODO: Refactoring (strucure) of this part and code comments
 # Initialize Log-File
 # Creates or loads Log DataProcessing.log
 # Format of LogFile: mm/dd/yyyy hh:mm:ss PM LogMessage
