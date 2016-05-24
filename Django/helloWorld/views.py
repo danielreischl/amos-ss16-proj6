@@ -95,7 +95,7 @@ def db2csv(request):
                 writer.writerow([row.timeStamp, row.energyConsumption])
     elif requestedExtractionType == "FULL":
         # use this for debugging -- remove after debugging is finished
-        result = timestampdata.object.all()
+        result = timestampdata.objects.all()
         for row in result:
             writer.writerow([row.timeStamp, row.positionAbsolute])
             
