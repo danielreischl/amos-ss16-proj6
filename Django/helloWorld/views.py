@@ -53,7 +53,7 @@ def db2csv(request):
     requestedCarrier = request.GET['carrier']
     requestedIteration = request.GET['iteration']
     requestedDimension = request.GET['dimension']
-    requestedExtractionType = request.Get['type']
+    requestedExtractionType = request.GET['type']
 
 
     if requestedExtractionType == "PoC":
