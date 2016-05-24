@@ -22,9 +22,6 @@ chmod u+x /srv/DataProcessing/initDataProcessingSimulation.sh
 # Opens sub-shell, change the directory, and execute - needed since the called python scripts use relative paths
 ( cd /srv/DataProcessing/; sh ./initDataProcessingSimulation.sh )
 
-# for debugging makeing dataProcessing.log accessable
-/srv/DataProcessing/dataProcessing.log /srv/static/django_static/dataProcessing.log
-
 # Prepare log files and start outputting logs to stdout
 touch /srv/logs/gunicorn.log
 touch /srv/logs/access.log
