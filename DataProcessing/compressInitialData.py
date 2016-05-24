@@ -366,6 +366,9 @@ def modifyCSVFile(filename):
         # Counter of Columns
         j = 0
 
+        # Initialize amount of drives variable
+        amountOfDrives = 0
+
         # Startposition of Positon Columns
         startPositonOfColumns = 0
 

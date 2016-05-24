@@ -4,7 +4,7 @@ angular.module('app')
 
 .controller("MainController", function(){
     var vm = this;
-    vm.title = 'Siemens Data Analytics App';
+    vm.title = 'Rogue Vision';
 })
 
 /* The side navigation should appear on button click */
