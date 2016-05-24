@@ -93,25 +93,26 @@ def processData(time, drive, position, energy):
         processData(time, drive, position, energy)
         return
 
-    # Ensures enough space in the carrierData array for storing the data
-    ensureEnoughSpaceInCarrierData(carrier)
+    if position != 0:
+        # Ensures enough space in the carrierData array for storing the data
+        ensureEnoughSpaceInCarrierData(carrier)
 
-    # Transfer the time of the timeStamp to the carrierData
-    carrierData[carrier - 1][0][currentPositionAtCarrierData[carrier - 1]] = time
-    # Transfer position to the carrierData
-    carrierData[carrier - 1][1][currentPositionAtCarrierData[carrier - 1]] = position
+        # Transfer the time of the timeStamp to the carrierData
+        carrierData[carrier - 1][0][currentPositionAtCarrierData[carrier - 1]] = time
+        # Transfer position to the carrierData
+        carrierData[carrier - 1][1][currentPositionAtCarrierData[carrier - 1]] = position
 
-    # Transfer the energy of the timeStamp to the carrierData
-    carrierData[carrier - 1][2][currentPositionAtCarrierData[carrier - 1]] = energy
+        # Transfer the energy of the timeStamp to the carrierData
+        carrierData[carrier - 1][2][currentPositionAtCarrierData[carrier - 1]] = energy
 
-    # Transfer energy consumption of the timeStamp to the carrierData
-    carrierData[carrier - 1][3][currentPositionAtCarrierData[carrier - 1]] = drive
+        # Transfer energy consumption of the timeStamp to the carrierData
+        carrierData[carrier - 1][3][currentPositionAtCarrierData[carrier - 1]] = drive
 
-    # Saves current position for carrier for further processing
-    lastPositionOfCarrier[carrier - 1] = position
+        # Saves current position for carrier for further processing
+        lastPositionOfCarrier[carrier - 1] = position
 
-    # Updates current position in the carrierData array, so that the next data point can be written to the next row
-    currentPositionAtCarrierData[carrier - 1] += 1
+        # Updates current position in the carrierData array, so that the next data point can be written to the next row
+        currentPositionAtCarrierData[carrier - 1] += 1
 
 
 # This method is called when da drive reset its position to 0 and the carrier moves on to the next drive.
