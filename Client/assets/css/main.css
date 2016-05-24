@@ -108,3 +108,21 @@ md-content {
 .md-button.navButton {
     color: #E0F2F1;
 }
+
+
+#chartjs-tooltip {
+     opacity: 0;
+     position: absolute;
+     background: rgba(255, 0, 0, 0.3);
+     color: black;
+     padding: 3px;
+     border-radius: 3px;
+     -webkit-transition: all .1s ease;
+     transition: all .1s ease;
+     pointer-events: none;
+     -webkit-transform: translate(-50%, 0);
+     transform: translate(-50%, 0);
+ }
+ #chartjs-tooltip > img {
+     height: 2em;
+ }

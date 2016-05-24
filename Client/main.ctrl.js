@@ -467,7 +467,7 @@ g = new Dygraph(document.getElementById("graph"),data,
         $scope.chartParams = {
             listOfCarriers: ['carrier1', 'carrier2', 'carrier3', 'carrier4', 'carrier5', 'carrier6', 'carrier7', 'carrier8','carrier9','carrier10','carrier11','carrier12','carrier13','carrier14','carrier15'],
             percentage: [[80, 100, 60, 90, 150, 200, 100, 170, 100, 75, 120, 250, 170,300, 280]],
-            series: ["Nice Places"],
+            series: ["energy consumption"],
             label:'percentage',
             colours: [{fillColor: ["#FF0000", "#00FF00", "#FF0000", "##FFFF00", "#FFFF00", "#FF0000", "#FF0000", "#00FF00", "#FFFF00", "#00FF00", "#FF0000", "#FF0000", "#FF0000", "#FF0000", "#FF0000"]}],
 
@@ -475,15 +475,46 @@ g = new Dygraph(document.getElementById("graph"),data,
             options : {
     // String - Template string for single tooltips
     tooltipTemplate: "<%if (label){%><%=label %>: <%}%><%= value + '%' %>",
-    // String - Template string for multiple tooltips
+    
 
     scaleLabel : "<%= value + '%' %>",
 },
-             ctx : document.getElementById("locationBar").getContext("2d")
+            /* ctx : document.getElementById("locationBar").getContext("2d")*/
 
+            options: {
+                customTooltips: function (tooltip) {
+                    var tooltipEl = $('#chartjs-tooltip');
 
-    };
+                    if (!tooltip) {
+                        tooltipEl.css({
+                            opacity: 0
+                        });
+                        return;
+                    }
+
+                    tooltipEl.removeClass('above below');
+                    tooltipEl.addClass(tooltip.yAlign);
+
+                    // split out the label and value and make your own tooltip here
+                    var parts = tooltip.text.split(":");
+                   var innerHtml = '<img src="assets/images/ic_add_circle_black_24px.svg"> <p> Add to comparison pane</p> <img src="assets/images/ic_zoom_in_black_24px.svg"><p>Drill down</p> <span>' + parts[0].trim() + '</span> : <span><b>' + parts[1].trim() + '</b></span>';
+                    tooltipEl.html(innerHtml);
+
+                    tooltipEl.css({
+                        opacity: 1,
+                        left: tooltip.chart.canvas.offsetLeft + tooltip.x + 'px',
+                        top: tooltip.chart.canvas.offsetTop + tooltip.y + 'px',
+                        fontFamily: tooltip.fontFamily,
+                        fontSize: tooltip.fontSize,
+                        fontStyle: tooltip.fontStyle,
+                    });
+                }
+
+            }
+
     }
+        }
+    
 )
     
 
