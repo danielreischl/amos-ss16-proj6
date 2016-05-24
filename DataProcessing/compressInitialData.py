@@ -114,25 +114,26 @@ def processData(time, drive, position, energy):
         processData(time, drive, position, energy)
         return
 
-    # Ensures enough space in the carrierData array for storing the data
-    ensureEnoughSpaceInCarrierData(carrier)
+    if position != 0:
+        # Ensures enough space in the carrierData array for storing the data
+        ensureEnoughSpaceInCarrierData(carrier)
 
-    # Transfer the time of the timeStamp to the carrierData
-    carrierData[carrier - 1][0][currentPositionAtCarrierData[carrier - 1]] = time
-    # Transfer position to the carrierData
-    carrierData[carrier - 1][1][currentPositionAtCarrierData[carrier - 1]] = position
+        # Transfer the time of the timeStamp to the carrierData
+        carrierData[carrier - 1][0][currentPositionAtCarrierData[carrier - 1]] = time
+        # Transfer position to the carrierData
+        carrierData[carrier - 1][1][currentPositionAtCarrierData[carrier - 1]] = position
 
-    # Transfer the energy of the timeStamp to the carrierData
-    carrierData[carrier - 1][2][currentPositionAtCarrierData[carrier - 1]] = energy
+        # Transfer the energy of the timeStamp to the carrierData
+        carrierData[carrier - 1][2][currentPositionAtCarrierData[carrier - 1]] = energy
 
-    # Transfer energy consumption of the timeStamp to the carrierData
-    carrierData[carrier - 1][3][currentPositionAtCarrierData[carrier - 1]] = drive
+        # Transfer energy consumption of the timeStamp to the carrierData
+        carrierData[carrier - 1][3][currentPositionAtCarrierData[carrier - 1]] = drive
 
-    # Saves current position for carrier for further processing
-    lastPositionOfCarrier[carrier - 1] = position
+        # Saves current position for carrier for further processing
+        lastPositionOfCarrier[carrier - 1] = position
 
-    # Updates current position in the carrierData array, so that the next data point can be written to the next row
-    currentPositionAtCarrierData[carrier - 1] += 1
+        # Updates current position in the carrierData array, so that the next data point can be written to the next row
+        currentPositionAtCarrierData[carrier - 1] += 1
 
 
 # This method is called when da drive reset its position to 0 and the carrier moves on to the next drive.
@@ -240,6 +241,9 @@ def compressData(carrier):
         # Update current position in Carrier Data (move up by int(firstRow)
         currentPositionAtCarrierData[carrier - 1] -= firstRow
 
+    # Determine the first time stamp for overwriting the timstamp to have them all start at 0 and increase accordingly
+    firstTimeStamp = carrierData[carrier - 1][0][0]
+
     # Iterates through all time stamps
     for i in range(0, int(currentPositionAtCarrierData[carrier - 1])):
 
@@ -248,9 +252,14 @@ def compressData(carrier):
 
         # Write only data points that are being kept to the carrierData
         if int(i % KEEP_EVERY_X_ROW) == 0:
-            carrierData[carrier - 1][0][saveTo] = carrierData[carrier - 1][0][i]
+            # In order to have all time stamps start at 0 and count up in the same way, the timestamp is overwritten
+            # with it's distance to the first timestamp
+            carrierData[carrier - 1][0][saveTo] = carrierData[carrier - 1][0][i] - firstTimeStamp
+            # Write position over
             carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][i]
+            # Write energy over
             carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][i]
+            # Write drive over
             carrierData[carrier - 1][3][saveTo] = carrierData[carrier - 1][3][i]
         else:
             # Test if saveTo doesn't equal the current i, so that the value at saveTo is not added to itself
@@ -285,7 +294,6 @@ def exportCSV(carrier):
     # Only selects the relevant sub selection from carrier data (without position == 0) to export to csv
     # Commented out for testing
     export = np.transpose(carrierData[carrier - 1][:, firstRow:lastRow])
-
 
     # Export carrier data with file name to csv file
     np.savetxt(fileName, export, fmt='%0.5f', delimiter=DATA_SEPARATOR, newline='\n',
