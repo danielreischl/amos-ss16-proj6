@@ -1,4 +1,4 @@
-#   This file is part of rogueVision.
+#   This file is part of Rogue Vision.
 #
 #   Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
 #       Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
