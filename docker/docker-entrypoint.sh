@@ -14,6 +14,9 @@ python manage.py migrate --noinput
 # Collects static files
 python manage.py collectstatic --noinput
 
+# Copy files that are not on GitHub from persistent directory to directory where the initScript is looking for them
+cp /persistent/Trace_DV.CSV /srv/DataProcessing/InitialData/
+
 # Runs init script
 chmod u+x /srv/DataProcessing/initDataProcessingSimulation.sh
 # Opens sub-shell, change the directory, and execute - needed since the called python scripts use relative paths
