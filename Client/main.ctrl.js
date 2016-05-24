@@ -1,3 +1,26 @@
+/*
+   This file is part of Roguevison.
+
+   Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
+       Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
+       Aleksander Penew, Abinav Puri
+
+   ReqTracker is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   ReqTracker is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PUROSE.  See the
+   GNU Affero General Public License for more details.
+
+   You should have received a copy of the GNU Affero General Public License
+   along with ReqTracker.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
 /* This file should list all main controllers */
 
 angular.module('app')
@@ -52,7 +75,7 @@ angular.module('app')
     }
     $scope.paintGraphDynamic = function(carrier) {
 	    g2 = new Dygraph(
-	    document.getElementById("graphdiv2"), "django/helloWorld/position.csv?carrier="+$scope.selectedCarrier+"&iteration="+$scope.selectedIteration+"&dimension="+$scope.selectedDimension, {});
+	    document.getElementById("graphdiv2"), "django/helloWorld/data.csv?carrier="+$scope.selectedCarrier+"&iteration="+$scope.selectedIteration+"&dimension="+$scope.selectedDimension+"&type=PoC", {});
     }
 })
 

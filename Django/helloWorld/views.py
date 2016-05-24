@@ -1,3 +1,22 @@
+#   This file is part of rogueVision.
+#
+#   Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
+#       Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
+#       Aleksander Penew, Abinav Puri
+#
+#   ReqTracker is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   ReqTracker is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PUROSE.  See the
+#   GNU Affero General Public License for more details.
+#
+#   You should have received a copy of the GNU Affero General Public License
+#   along with rogueVision.  If not, see <http://www.gnu.org/licenses/>.
+
 import csv
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -22,7 +41,7 @@ def db2values (request):
     # Returns 15 as AmountOfCarriers
     # TODO: Read amountOfCarriers and Session out from setConstants.py
     elif requestedValue=='amountOfCarriers':
-        return HttpResponse('15')
+        return HttpResponse('8')
     # returns current session
     elif requestedValue=='currentSession':
         return HttpResponse('1')
@@ -53,7 +72,7 @@ def db2csv(request):
     requestedCarrier = request.GET['carrier']
     requestedIteration = request.GET['iteration']
     requestedDimension = request.GET['dimension']
-    requestedExtractionType = request.Get['type']
+    requestedExtractionType = request.GET['type']
 
 
     if requestedExtractionType == "PoC":
