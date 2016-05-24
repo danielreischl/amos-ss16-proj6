@@ -50,7 +50,8 @@ RUN touch /srv/logs/nginx-error.log
 RUN touch $SOCKFILE
 
 # Installs Python dependencies
-RUN pip install -r $DOCKYARD_SRVPROJ/requirements.txt
+# Django 1.9.5, Gunicorn 19.3.0, SQL Alchemy
+RUN pip install Django==1.9.5 gunicorn==19.3.0 SQLAlchemy
 
 # Exposes port 80
 EXPOSE 80

@@ -1,4 +1,0 @@
-Django==1.9.5
-gunicorn==19.3.0
-numpy
-SQLAlchemy
