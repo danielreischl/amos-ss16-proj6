@@ -74,10 +74,10 @@ def db2csv(request):
     requestedDimension = request.GET['dimension']
     requestedExtractionType = request.GET['type']
 
+    writer = csv.writer(response)
 
     if requestedExtractionType == "PoC":
         result = timestampdata.objects.filter(carrier=requestedCarrier,iteration=requestedIteration)
-        writer = csv.writer(response)
 
         # case analysis by the selected dimension: there must be a nicer way to do this
     
@@ -93,7 +93,12 @@ def db2csv(request):
         elif requestedDimension == "ENERGY":
             for row in result:
                 writer.writerow([row.timeStamp, row.energyConsumption])
-
+    elif requestedExtractionType == "FULL":
+        # use this for debugging -- remove after debugging is finished
+        result = timestampdata.object.all()
+        for row in result:
+            writer.writerow([row.timeStamp, row.positionAbsolute])
+            
     return response
 
 
