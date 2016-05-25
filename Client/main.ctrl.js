@@ -101,6 +101,13 @@ angular.module('app')
         }
     }
 
+    /* This function empties the carriers in the comparison on page leave.
+    If the user leaves the current html snippet/template then, this function will notice that and trigger the function "emptyyCarrierArray" */
+
+     $scope.$on("$destroy", function(){
+         carrierService.emptyCarrierArray();
+    });
+
 
 
 
@@ -226,8 +233,16 @@ add more lines and get different details.*/
             bar_width, y_bottom - p.canvasy);
             ctx.strokeRect(center_x - bar_width / 2, p.canvasy,
             bar_width, y_bottom - p.canvasy);
-  }
-}
+        }
+    }
+
+     /* This function empties the carriers in the comparison on page leave.
+    If the user leaves the current html snippet/template then, this function will notice that and trigger the function "emptyyCarrierArray" */
+
+     $scope.$on("$destroy", function(){
+         carrierService.emptyCarrierArray();
+    });
+
 })
    
 
