@@ -7,7 +7,7 @@ SOCKFILE=/srv/run/gunicorn.sock
 # Sets up Django
 echo apply django migrations
 
-# Migrates app helloWorld
+# Migrates app dataInterface
 python manage.py makemigrations dataInterface
 # Applies database migrations
 python manage.py migrate --noinput
@@ -15,7 +15,7 @@ python manage.py migrate --noinput
 python manage.py collectstatic --noinput
 
 # Copy files that are not on GitHub from persistent directory to directory where the initScript is looking for them
-cp /persistent/Trace_DV.CSV /srv/DataProcessing/InitialData/Trace_DV.CSV
+cp /persistent/Trace_DV.CSV /srv/DataProcessing/InitialData/Trace_DV.csv
 
 # Runs init script
 chmod u+x /srv/DataProcessing/initDataProcessingSimulation.sh
