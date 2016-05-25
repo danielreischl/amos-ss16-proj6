@@ -2,7 +2,16 @@
 ![Travis](https://api.travis-ci.org/AMOSus/amos-ss16-proj6.svg?branch=master)
 
 ## About This Project
-FAU AMOS Group 6: Siemens AG
+The product is a browser based application for Data Visualization for data created by a flexible transportation system demonstrator. The flexible transportation system has a number of carriers that move along the flexible line in iterations. The aim of the application is to ensure condition monitoring of the carriers by the user.
+
+Some of the key functionalities feature:
+
+Graphical presentation of the recorded data in a time series view Visually superimposing data of different carriers so that on this basis a human expert can detect anomalies Compressing the size of the real-time data by sensibly reducing it The graphical representation is based on several key measures that enable condition monitoring:
+
+-Energy consumption
+-Position
+-Speed
+-Acceleration
 
 ## Build Instructions
 
