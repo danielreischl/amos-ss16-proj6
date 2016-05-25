@@ -8,7 +8,7 @@ SOCKFILE=/srv/run/gunicorn.sock
 echo apply django migrations
 
 # Migrates app helloWorld
-python manage.py makemigrations helloWorld
+python manage.py makemigrations dataInterface
 # Applies database migrations
 python manage.py migrate --noinput
 # Collects static files
