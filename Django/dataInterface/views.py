@@ -20,8 +20,8 @@
 import csv
 from django.shortcuts import render
 from django.http import HttpResponse
-from helloWorld.models import timestampdata
-from helloWorld.models import iterationdata
+from dataInterface.models import timestampdata
+from dataInterface.models import iterationdata
 from django.db.models import Max
 
 # Funtion to return values instead of csv - Files
@@ -93,16 +93,36 @@ def db2csv(request):
         elif requestedDimension == "ENERGY":
             for row in result:
                 writer.writerow([row.timeStamp, row.energyConsumption])
-    elif requestedExtractionType == "FULL":
-        # use this for debugging -- remove after debugging is finished
+            
+    return response
+
+def rawData(request):
+    # returns a csv File of the raw database tables 
+    # parameter table, possible values: timestampdata, iterationdata 
+    response = HttpResponse(content_type='text/csv')
+    # the name data.csv is just used by the browser when you query the file directly and want to download it
+    response['Content-Disposition'] = 'attachment; filename="rawData.csv"'
+    writer = csv.writer(response)
+    
+    # extract parameters
+    requestedTable = request.GET['table']
+
+    if requestedTable == "TIMESTAMP":
         result = timestampdata.objects.all()
         for row in result:
+            # todo: get all columns
             writer.writerow([row.timeStamp, row.positionAbsolute])
+
+    elif requestedTable == "ITERATION":
+        result = iterationdata.objects.all()
+        for row in result:
+            # todo: get all columns
+            writer.writerow([row.session, row.carrier, row.speedAverage])
             
     return response
 
 
 def index(request):
     context = {'toGreet': 'World'}
-    return render(request, 'helloWorld/index.html', context)
+    return render(request, 'dataInterface/index.html', context)
 

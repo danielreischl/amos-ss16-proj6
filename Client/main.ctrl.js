@@ -16,7 +16,7 @@
    GNU Affero General Public License for more details.
 
    You should have received a copy of the GNU Affero General Public License
-   along with ReqTracker.  If not, see <http://www.gnu.org/licenses/>.
+   along with Rogue Vison.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
@@ -75,7 +75,7 @@ angular.module('app')
     }
     $scope.paintGraphDynamic = function(carrier) {
 	    g2 = new Dygraph(
-	    document.getElementById("graphdiv2"), "django/helloWorld/data.csv?carrier="+$scope.selectedCarrier+"&iteration="+$scope.selectedIteration+"&dimension="+$scope.selectedDimension+"&type=PoC", {});
+	    document.getElementById("graphdiv2"), "django/dataInterface/data.csv?carrier="+$scope.selectedCarrier+"&iteration="+$scope.selectedIteration+"&dimension="+$scope.selectedDimension+"&type=PoC", {});
     }
 })
 
@@ -144,15 +144,29 @@ add more lines and get different details.*/
     var carrierMax = 8; //this needs to be dynamic later if we have connection to the database
     var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
     var arrayCarrier = [0,1,2,3,4,5,6,7];
+    var selectedDimension = 3;
+    var yAxisLabel = 'Energy Consumption in (mA)';
 
  /* Filling the Dropdown menues with options*/
     $scope.arrayCarrier = arrayCarrier;
 
     $scope.dimensions = [
-        {name : "Average Energy Consumption", id : "ENERGY"},
-        {name : "Average Acceleration", id : "ACCELERATION"},
-	    {name : "Average Speed", id: "SPEED"},
+        {name : "Average Energy Consumption", id : 3},
+        {name : "Average Acceleration", id : 4},
+	    {name : "Average Speed", id: 5},
 	    ]
+
+    // This function receives the changes from the dropDown menu "dimensions" and changes the yAxis name of the graph and requests the needed data by changing the string name.
+	$scope.changeVisibilityDimension = function() {
+    selectedDimension = $scope.selectedDimension;
+
+    if($scope.selectedDimension == 3) {
+
+    } else if($scope.selectedDimension == 4) {
+        yAxisLabel = 'Average Acceleration';
+    } else if ($scope.selectedDimension == 5)
+        yAxisLabel = 'Average Speed';
+	}
 
 
 /*chooses one carrier depending on the chosen option. this is done by emptying the comparison Array,
@@ -170,8 +184,8 @@ add more lines and get different details.*/
 
     $scope.createDrillDownGraph = function() {
         graph = new Dygraph(
-	       document.getElementById("drillDownGraph"), 'sections/drillDownChart/dummy3.csv', {title: "Carrier Drilldown ",
-	                                                                                      ylabel: 'Energy Consumption in (mA)',
+	       document.getElementById("drillDownGraph"), 'sections/drillDownChart/dummy'+selectedDimension+'.csv', {title: "Carrier Drilldown ",
+	                                                                                      ylabel: yAxisLabel,
 	                                                                                      xlabel: 'Iteration',
 	                                                                                      plotter: barChartPlotter,
 	                                                                                      labelsSeparateLines: true,
