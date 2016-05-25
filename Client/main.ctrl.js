@@ -488,20 +488,20 @@ g = new Dygraph(document.getElementById("graph"),data,
 .controller('chartMaker',function($scope) {
 
         $scope.chartParams = {
-            listOfCarriers: ['carrier1', 'carrier2', 'carrier3', 'carrier4', 'carrier5', 'carrier6', 'carrier7', 'carrier8','carrier9','carrier10','carrier11','carrier12','carrier13','carrier14','carrier15'],
-            percentage: [[80, 100, 60, 90, 150, 200, 100, 170, 100, 75, 120, 250, 170,300, 280]],
+            listOfCarriers: ['carrier1', 'carrier2', 'carrier3', 'carrier4', 'carrier5', 'carrier6', 'carrier7', 'carrier8', 'carrier9', 'carrier10', 'carrier11', 'carrier12', 'carrier13', 'carrier14', 'carrier15'],
+            percentage: [[80, 100, 60, 90, 150, 200, 100, 170, 100, 75, 120, 250, 170, 300, 280]],
             series: ["energy consumption"],
-            label:'percentage',
+            label: 'percentage',
             colours: [{fillColor: ["#FF0000", "#00FF00", "#FF0000", "##FFFF00", "#FFFF00", "#FF0000", "#FF0000", "#00FF00", "#FFFF00", "#00FF00", "#FF0000", "#FF0000", "#FF0000", "#FF0000", "#FF0000"]}],
 
             options: {barShowStroke: false},
-            options : {
-    // String - Template string for single tooltips
-    tooltipTemplate: "<%if (label){%><%=label %>: <%}%><%= value + '%' %>",
-    
+            options: {
+                // String - Template string for single tooltips
+                tooltipTemplate: "<%if (label){%><%=label %>: <%}%><%= value + '%' %>",
 
-    scaleLabel : "<%= value + '%' %>",
-},
+
+                scaleLabel: "<%= value + '%' %>",
+            },
             /* ctx : document.getElementById("locationBar").getContext("2d")*/
 
             options: {
@@ -520,7 +520,7 @@ g = new Dygraph(document.getElementById("graph"),data,
 
                     // split out the label and value and make your own tooltip here
                     var parts = tooltip.text.split(":");
-                   var innerHtml = '<img src="assets/images/ic_add_circle_black_24px.svg"> <p> Add to comparison pane</p> <img src="assets/images/ic_zoom_in_black_24px.svg"><p>Drill down</p> <span>' + parts[0].trim() + '</span> : <span><b>' + parts[1].trim() + '</b></span>';
+                    var innerHtml = '<img src="assets/images/ic_add_circle_black_24px.svg"> <p> Add to comparison pane</p> <img src="assets/images/ic_zoom_in_black_24px.svg"><p>Drill down</p> <span>' + parts[0].trim() + '</span> : <span><b>' + parts[1].trim() + '</b></span>';
                     tooltipEl.html(innerHtml);
 
                     tooltipEl.css({
@@ -535,9 +535,13 @@ g = new Dygraph(document.getElementById("graph"),data,
 
             }
 
-    }
         }
-    
+
+
+        $scope.openComparisonSideBar = function () {
+            $mdSidenav('comparisonSidebar').toggle();
+        }
+    }
 )
     
 
