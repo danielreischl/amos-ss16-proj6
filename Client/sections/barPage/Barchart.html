@@ -23,11 +23,22 @@
 <center>
         <br>
         <md-button class="md-raised md-cornered" Onclick="location.href='#CircleCarrier'">Change to Circle Chart View</md-button>
+        <md-button class="md-raised md-cornered"  ng-click="openComparisonSideBar()">Open Comparison Sidebar</md-button>
 </center>
+
 
 <div ng-controller="chartMaker">
     <canvas id="locationBar" class="chart chart-bar" data="chartParams.percentage" labels="chartParams.listOfCarriers" label ="chartParams.label" series="chartParams.series" colours="chartParams.colours" options="chartParams.options" width="502" height="301"></canvas>
     <div id="chartjs-tooltip"></div>
+
+     <md-sidenav md-component-id="comparisonSidebar" layout="column" class="md-sidenav-right" >
+        <md-list-item layout = "column" id="sidenavTOP">
+
+        </md-list-item>
+
+             </md-list-item>
+         </md-sidenav>
+
   </div>
 
 <!-- what does this do ? 
