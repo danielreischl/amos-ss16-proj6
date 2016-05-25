@@ -75,7 +75,7 @@ angular.module('app')
     }
     $scope.paintGraphDynamic = function(carrier) {
 	    g2 = new Dygraph(
-	    document.getElementById("graphdiv2"), "django/helloWorld/data.csv?carrier="+$scope.selectedCarrier+"&iteration="+$scope.selectedIteration+"&dimension="+$scope.selectedDimension+"&type=PoC", {});
+	    document.getElementById("graphdiv2"), "django/dataInterface/data.csv?carrier="+$scope.selectedCarrier+"&iteration="+$scope.selectedIteration+"&dimension="+$scope.selectedDimension+"&type=PoC", {});
     }
 })
 

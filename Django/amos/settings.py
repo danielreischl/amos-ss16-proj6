@@ -51,7 +51,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'helloWorld.apps.HelloWorldConfig',    
+    'dataInterface.apps.DataInterfaceConfig',    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

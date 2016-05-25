@@ -20,8 +20,8 @@
 import csv
 from django.shortcuts import render
 from django.http import HttpResponse
-from helloWorld.models import timestampdata
-from helloWorld.models import iterationdata
+from dataInterface.models import timestampdata
+from dataInterface.models import iterationdata
 from django.db.models import Max
 
 # Funtion to return values instead of csv - Files
@@ -124,5 +124,5 @@ def rawData(request):
 
 def index(request):
     context = {'toGreet': 'World'}
-    return render(request, 'helloWorld/index.html', context)
+    return render(request, 'dataInterface/index.html', context)
 

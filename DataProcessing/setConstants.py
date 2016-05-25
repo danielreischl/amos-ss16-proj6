@@ -39,10 +39,13 @@ CSV_SEPARATOR = ";"
 # Path of SQLITEDB
 PATH_OF_SQLLITE_DB = '/srv/django/db.sqlite3'
 
-NAME_TABLE_PROCESSED_DATA = 'helloWorld_timestampdata'
-NAME_TABLE_COM_DATA = 'helloWorld_iterationdata'
+# The name of the Django-App that connects to database
+NAME_OF_APP = 'dataInterface'
 
-NAME_TABLE_CARRIER = 'helloWorld_carrier'
-NAME_TABLE_ITERATION = 'helloWorld_iteration'
-NAME_TABLE_ITERATION = 'helloWorld_session'
+NAME_TABLE_PROCESSED_DATA = NAME_OF_APP +'_timestampdata'
+NAME_TABLE_COM_DATA = NAME_OF_APP +'_iterationdata'
+
+NAME_TABLE_CARRIER = NAME_OF_APP + '_carrier'
+NAME_TABLE_ITERATION = NAME_OF_APP + '_iteration'
+NAME_TABLE_ITERATION = NAME_OF_APP + '_session'
 

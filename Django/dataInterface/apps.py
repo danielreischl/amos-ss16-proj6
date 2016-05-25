@@ -20,5 +20,5 @@
 from django.apps import AppConfig
 
 
-class HelloWorldConfig(AppConfig):
-    name = 'helloWorld'
+class DataInterfaceConfig(AppConfig):
+    name = 'dataInterface'
