@@ -126,10 +126,12 @@ def logs(request):
     # Returns a Textfile
     # parameter type, possiblie Values: DataProcessing
     requestedType = request.GET['type']
-    response['Content-Disposition'] = 'attachment; filename="Log.text"'
+
+    # Transfer Logfile to String
 
     if requestedType == "DataProcessing":
-        response = HttpResponse("srv/DataProcessing/DataProcessing.log",content_type='text/csv' )
+        response = HttpResponse(output,content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename="Log.txt"'
         return response
 
 def index(request):
