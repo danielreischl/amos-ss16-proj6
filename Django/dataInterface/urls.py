@@ -26,6 +26,8 @@ urlpatterns = [
     url(r'^data.csv', views.db2csv, name='data'),
     # this returns a csv-file of raw database tables - for details see views.py 
     url(r'^rawData.csv', views.rawData, name='rawData'),
+    # This returns the DataProcessing Logfile
+    url(r'^log.txt', views.logs, name='DataProcessingLog'),
 
     # Added the url values to enable the frontend to request values like LastItteratioOfaCarrier
     # Calls views.db2values (Further Information views.py)

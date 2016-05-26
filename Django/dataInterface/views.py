@@ -121,6 +121,18 @@ def rawData(request):
             
     return response
 
+def logs():
+
+    # Returns a Textfile
+    # parameter type, possiblie Values: DataProcessing
+    requestedType = request.GET['DataProcessing']
+    response['Content-Disposition'] = 'attachment; filename="Log.text"'
+
+    if requestedType == "DataProcessing":
+        response = HttpResponse("srv/DataProcessing/DataProcessing.log",content_type='text/csv' )
+        return response
+
+
 
 def index(request):
     context = {'toGreet': 'World'}
