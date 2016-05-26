@@ -120,7 +120,7 @@ def process_file(fileName):
 
     # Move the processed data files to InitialDataArchive
     logging.info ("Moving processed files")
-    os.rename(fileName, os.path.abspath(os.path.join("CarrierDataArchive", os.path.basename(fileName))))
+    #os.rename(fileName, os.path.abspath(os.path.join("CarrierDataArchive", os.path.basename(fileName))))
     logging.info("Moving file to archive: " + fileName)
 
 
