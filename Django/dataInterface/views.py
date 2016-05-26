@@ -128,6 +128,8 @@ def logs(request):
     requestedType = request.GET['type']
 
     # Transfer Logfile to String
+    with open ('srv/DataProcessing/DataProcessing.log','r') as logfile:
+        output = logfile.read()
 
     if requestedType == "DataProcessing":
         response = HttpResponse(output,content_type='text/plain')
