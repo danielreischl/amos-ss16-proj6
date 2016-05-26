@@ -121,7 +121,7 @@ def rawData(request):
             
     return response
 
-def logs():
+def logs(requuest):
 
     # Returns a Textfile
     # parameter type, possiblie Values: DataProcessing
