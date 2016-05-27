@@ -244,6 +244,72 @@ def compressData(carrier):
     # Determine the first time stamp for overwriting the timstamp to have them all start at 0 and increase accordingly
     firstTimeStamp = carrierData[carrier - 1][0][0]
 
+    # First next stamp value that is being searched for in the carrier data to keep it when aggregating the data
+    nextTimeStampValue = 0
+
+    # Add the values to this point in the carrierData array
+    saveTo = 0
+
+
+    for i in range(0, int(currentPositionAtCarrierData[carrier - 1])):
+        # If the current value has been found this time stamp is kept and
+        if carrierData[carrier - 1][0][i] - firstTimeStamp == nextTimeStampValue:
+            # Change the place where the next energy consumption is being saved to
+            saveTo = nextTimeStampValue / KEEP_EVERY_X_ROW
+            # Increase the next value that is being searched for
+            nextTimeStampValue += KEEP_EVERY_X_ROW
+
+            # Transfer the values to the position
+            carrierData[carrier - 1][0][saveTo] = nextTimeStampValue
+            carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][i]
+            carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][i]
+            carrierData[carrier - 1][3][saveTo] = carrierData[carrier - 1][3][i]
+        # If the current value cannot be found because the timestamp was not recorded for that carrier
+        # The position
+        elif (carrierData[carrier - 1][0][i] - firstTimeStamp == nextTimeStampValue):
+            # Change the place where the next energy consumption is being saved to
+            saveTo = nextTimeStampValue / KEEP_EVERY_X_ROW
+            # Increase the next value that is being searched for
+            nextTimeStampValue += KEEP_EVERY_X_ROW
+
+            # All values necessary for interpolation
+            time1 = carrierData[carrier - 1][0][i-1]
+            time2 = carrierData[carrier - 1][0][i]
+            pos1 = carrierData[carrier - 1][1][i-1]
+            pos2 = carrierData[carrier - 1][1][i]
+
+            # Linear interpolation of the position that the carrier was at at the missing time stamp
+            posInter = pos1 + ((pos2-pos1)/(time2-time1)) * (nextTimeStampValue-time1)
+
+            # Because 1: The energy consumption is the total that was consumed during the last time stamp
+            # and 2: The algorithm will continue with the next time stamp in the next iteration cicle
+            # therefore: The energy consumption has to be the last energy consumption
+            # otherwise energy consumption is lost during the interpolation.
+            energyInter = carrierData[carrier - 1][2][i]
+
+            # The interpolated drive is always the 2nd drive because this error only occurs when the drive
+            # that the carrier wants to move to is not free.
+            driveInter = carrierData[carrier - 1][3][i]
+
+            # Transfer the values to the position
+            carrierData[carrier - 1][0][saveTo] = nextTimeStampValue
+            carrierData[carrier - 1][1][saveTo] = posInter
+            carrierData[carrier - 1][2][saveTo] = energyInter
+            carrierData[carrier - 1][3][saveTo] = driveInter
+        else:
+            # Add the energy consumption to the current entry
+            carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][i]
+
+        # if the current row is bigger than what the last row will be after compression, delete it
+        if i >= 1 + int((currentPositionAtCarrierData[carrier - 1] - 1) / float(KEEP_EVERY_X_ROW)):
+            carrierData[carrier - 1][0][i] = 0
+            carrierData[carrier - 1][1][i] = 0
+            carrierData[carrier - 1][2][i] = 0
+            carrierData[carrier - 1][3][i] = 0
+
+
+
+    '''
     # Iterates through all time stamps
     for i in range(0, int(currentPositionAtCarrierData[carrier - 1])):
 
@@ -275,7 +341,7 @@ def compressData(carrier):
             carrierData[carrier - 1][2][i] = 0
             carrierData[carrier - 1][3][i] = 0
 
-
+'''
 # Exports the table of the carrier to a CSV file in the form time; posAbsolute; posOnDrive; energy
 def exportCSV(carrier):
     # Creates the filename in the form Session_X_Carrier_X_Iteration_X.csv
