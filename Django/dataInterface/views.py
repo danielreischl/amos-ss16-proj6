@@ -102,24 +102,27 @@ def rawData(request):
     response = HttpResponse(content_type='text/csv')
     # the name data.csv is just used by the browser when you query the file directly and want to download it
     response['Content-Disposition'] = 'attachment; filename="rawData.csv"'
-    writer = csv.writer(response)
+    writer = csv.writer(response, delimiter=';')
     
     # extract parameters
     requestedTable = request.GET['table']
 
-    if requestedTable == "TIMESTAMP":
+    # Returns all data of the timestamp table
+    # session, carrier, iteration, timeStamp, drive, positionAbsolute, speed, acceleration, energyConsumption
+    if requestedTable == "timestamp":
         result = timestampdata.objects.all()
         for row in result:
-            # todo: get all columns
-            writer.writerow([row.timeStamp, row.positionAbsolute])
+            writer.writerow([row.session, row.carrier, row.iteration, row.timeStamp, row.drive, row.positionAbsolute, row.speed, row.acceleration, row.energyConsumption])
 
-    elif requestedTable == "ITERATION":
+    # Returns all daata of iteration table
+    # session, carrier, iteration, sppedAverage, accelerationAverage, energyConsumptionTotal, energyConsumptionAverage
+    elif requestedTable == "iteration":
         result = iterationdata.objects.all()
         for row in result:
-            # todo: get all columns
-            writer.writerow([row.session, row.carrier, row.speedAverage])
+            writer.writerow([row.session, row.carrier, row.iteration, row.speedAverage, row.accelerationAverage, row.energyConsumptionTotal, row.energyConsumptionAverage])
             
     return response
+
 
 def logs(request):
 
@@ -128,7 +131,7 @@ def logs(request):
     requestedType = request.GET['type']
 
     # Transfer Logfile to String
-    with open ('srv/DataProcessing/DataProcessing.log','r') as logfile:
+    with open ('srv/DataProcessing/dataProcessing.log','r') as logfile:
         output = logfile.read()
 
     if requestedType == "DataProcessing":
