@@ -38,6 +38,8 @@ CSV_SEPARATOR = ";"
 
 # Path of SQLITEDB
 PATH_OF_SQLLITE_DB = '/srv/django/db.sqlite3'
+# For testing
+# PATH_OF_SQLLITE_DB = '/Users/Robax/amos-ss16-proj6/amos-ss16-proj6/Django/db.sqlite3'
 
 # The name of the Django-App that connects to database
 NAME_OF_APP = 'dataInterface'

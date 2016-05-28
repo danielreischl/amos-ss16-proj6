@@ -230,6 +230,7 @@ def compressData(carrier):
     global carrierData
     global currentPositionAtCarrierData
     logging.info("Compressing data of carrier: " + str(carrier))
+    print ("Compressing data of carrier: " + str(carrier))
 
     # Select first and relevant timestamp, so the timestamps before can be deleted
     firstRow = findFirstRowInCarrierData(carrier)
@@ -244,29 +245,60 @@ def compressData(carrier):
     # Determine the first time stamp for overwriting the timstamp to have them all start at 0 and increase accordingly
     firstTimeStamp = carrierData[carrier - 1][0][0]
 
-    # Iterates through all time stamps
+    # First next stamp value that is being searched for in the carrier data to keep it when aggregating the data
+    nextTimeStampValue = 0
+
+    # Add the values to this point in the carrierData array
+    saveTo = 0
+
     for i in range(0, int(currentPositionAtCarrierData[carrier - 1])):
+        # If the current value has been found this time stamp is kept and
+        if (carrierData[carrier - 1][0][i] - firstTimeStamp) == nextTimeStampValue:
+            # Change the place where the next energy consumption is being saved to
+            saveTo = int(nextTimeStampValue / KEEP_EVERY_X_ROW)
+            # Increase the next value that is being searched for
+            nextTimeStampValue += KEEP_EVERY_X_ROW
 
-        # Saves the first x numbers to row 0, then the second x numbers to row 1 and so on
-        saveTo = int(i / KEEP_EVERY_X_ROW)
-
-        # Write only data points that are being kept to the carrierData
-        if int(i % KEEP_EVERY_X_ROW) == 0:
-            # In order to have all time stamps start at 0 and count up in the same way, the timestamp is overwritten
-            # with it's distance to the first timestamp
-            carrierData[carrier - 1][0][saveTo] = carrierData[carrier - 1][0][i] - firstTimeStamp
-            # Write position over
+            # Transfer the values to the position
+            carrierData[carrier - 1][0][saveTo] = nextTimeStampValue
             carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][i]
-            # Write energy over
             carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][i]
-            # Write drive over
             carrierData[carrier - 1][3][saveTo] = carrierData[carrier - 1][3][i]
+        # If the current value cannot be found because the timestamp was not recorded for that carrier
+        # The position
+        elif (carrierData[carrier - 1][0][i] - firstTimeStamp) >= nextTimeStampValue:
+            # Change the place where the next energy consumption is being saved to
+            saveTo = int(nextTimeStampValue / KEEP_EVERY_X_ROW)
+            # Increase the next value that is being searched for
+            nextTimeStampValue += KEEP_EVERY_X_ROW
+
+            # All values necessary for interpolation
+            time1 = carrierData[carrier - 1][0][i-1]
+            time2 = carrierData[carrier - 1][0][i]
+            pos1 = carrierData[carrier - 1][1][i-1]
+            pos2 = carrierData[carrier - 1][1][i]
+
+            # Linear interpolation of the position that the carrier was at at the missing time stamp
+            posInter = pos1 + ((pos2-pos1)/(time2-time1)) * (nextTimeStampValue-time1)
+
+            # Because 1: The energy consumption is the total that was consumed during the last time stamp
+            # and 2: The algorithm will continue with the next time stamp in the next iteration cicle
+            # therefore: The energy consumption has to be the last energy consumption
+            # otherwise energy consumption is lost during the interpolation.
+            energyInter = carrierData[carrier - 1][2][i]
+
+            # The interpolated drive is always the 2nd drive because this error only occurs when the drive
+            # that the carrier wants to move to is not free.
+            driveInter = carrierData[carrier - 1][3][i]
+
+            # Transfer the values to the position
+            carrierData[carrier - 1][0][saveTo] = nextTimeStampValue
+            carrierData[carrier - 1][1][saveTo] = posInter
+            carrierData[carrier - 1][2][saveTo] = energyInter
+            carrierData[carrier - 1][3][saveTo] = driveInter
         else:
-            # Test if saveTo doesn't equal the current i, so that the value at saveTo is not added to itself
-            if saveTo != i:
-                # Add the absolute energy to calculate average
-                carrierData[carrier - 1][2][saveTo] = abs(carrierData[carrier - 1][2][saveTo]) + \
-                                                      abs(carrierData[carrier - 1][2][i])
+            # Add the energy consumption to the current entry
+            carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][i]
 
         # if the current row is bigger than what the last row will be after compression, delete it
         if i >= 1 + int((currentPositionAtCarrierData[carrier - 1] - 1) / float(KEEP_EVERY_X_ROW)):
@@ -274,7 +306,6 @@ def compressData(carrier):
             carrierData[carrier - 1][1][i] = 0
             carrierData[carrier - 1][2][i] = 0
             carrierData[carrier - 1][3][i] = 0
-
 
 # Exports the table of the carrier to a CSV file in the form time; posAbsolute; posOnDrive; energy
 def exportCSV(carrier):
@@ -364,7 +395,6 @@ def ensureEnoughSpaceInCarrierData(carrier):
         carrierData = np.concatenate((carrierData, extend), axis=2)
 
 
-# TODO: Refactoring (structure) and code comments
 # Renames the csv file headers to structure: (ms; energy1;...;energyX; pos1;...;posX) (X = Amount of Drives)
 def modifyCSVFile(filename):
     # InputFileName und OutputFileName of CSV
@@ -379,7 +409,6 @@ def modifyCSVFile(filename):
 
         # Copys first row
         first_row = next(r)
-        num_cols = len(first_row)
 
         # Initialize Array for new ColumnNames
         newColNames = []
@@ -390,7 +419,7 @@ def modifyCSVFile(filename):
         # Initialize amount of drives variable
         amountOfDrives = 0
 
-        # Startposition of Positon Columns
+        # Start position of Position Columns
         startPositonOfColumns = 0
 
         # Iterates the first row of the initial file and depending on the value writes columns into the file
@@ -423,11 +452,15 @@ def modifyCSVFile(filename):
         # Returns amountOfDrives
         return amountOfDrives
 
+def moveFileToFolder(fileName, folderName):
+    print ("Moving: " + fileName + " to " + os.path.join(folderName, os.path.basename(fileName)))
+    logging.info("Moving: " + fileName + " to " + os.path.join(folderName, os.path.basename(fileName)))
+    os.rename(fileName, os.path.abspath(os.path.join(folderName, os.path.basename(fileName))))
+
 
 #########################################################
 ############# START OF SCRIPT ###########################
 #########################################################
-# TODO: Refactoring (strucure) of this part and code comments
 # Initialize Log-File
 # Creates or loads Log DataProcessing.log
 # Format of LogFile: mm/dd/yyyy hh:mm:ss PM LogMessage
@@ -452,6 +485,8 @@ if not DATA_FILE_NAMES:
     logging.info("Terminating compressInitialData.py. 'Running.txt' removed.")
     # Terminates the script
     sys.exit()
+
+print (DATA_FILE_NAMES)
 
 for fileName in DATA_FILE_NAMES:
 
@@ -502,9 +537,12 @@ for fileName in DATA_FILE_NAMES:
 
     # Moves the processed data files to InitialDataArchive
     # Commented out for testing
-    # os.rename(fileName, os.path.abspath(os.path.join("InitialDataArchive", os.path.basename(fileName))))
-    # print ("Moving processed files to: " + os.path.abspath(os.path.join("CarrierData", os.path.basename(fileName))))
-    # logging.info("Moving " + fileName + " to: " + os.path.abspath(os.path.join("InitialDataArchive", os.path.basename(fileName))))
+    moveFileToFolder(fileName, "InitialDataArchive")
+
+    # Delete the "_modified" csv file
+    # Commented out for testing
+    os.remove(os.path.splitext(fileName)[0] + "_modified.csv")
+
 
 # Removes the status.txt file after the end of the simulation and writes its status to log file
 os.remove("Running.txt")
