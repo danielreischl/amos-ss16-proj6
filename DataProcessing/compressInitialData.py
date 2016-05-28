@@ -230,6 +230,7 @@ def compressData(carrier):
     global carrierData
     global currentPositionAtCarrierData
     logging.info("Compressing data of carrier: " + str(carrier))
+    print ("Compressing data of carrier: " + str(carrier))
 
     # Select first and relevant timestamp, so the timestamps before can be deleted
     firstRow = findFirstRowInCarrierData(carrier)
@@ -250,12 +251,11 @@ def compressData(carrier):
     # Add the values to this point in the carrierData array
     saveTo = 0
 
-
     for i in range(0, int(currentPositionAtCarrierData[carrier - 1])):
         # If the current value has been found this time stamp is kept and
-        if carrierData[carrier - 1][0][i] - firstTimeStamp == nextTimeStampValue:
+        if (carrierData[carrier - 1][0][i] - firstTimeStamp) == nextTimeStampValue:
             # Change the place where the next energy consumption is being saved to
-            saveTo = nextTimeStampValue / KEEP_EVERY_X_ROW
+            saveTo = int(nextTimeStampValue / KEEP_EVERY_X_ROW)
             # Increase the next value that is being searched for
             nextTimeStampValue += KEEP_EVERY_X_ROW
 
@@ -266,9 +266,9 @@ def compressData(carrier):
             carrierData[carrier - 1][3][saveTo] = carrierData[carrier - 1][3][i]
         # If the current value cannot be found because the timestamp was not recorded for that carrier
         # The position
-        elif (carrierData[carrier - 1][0][i] - firstTimeStamp == nextTimeStampValue):
+        elif (carrierData[carrier - 1][0][i] - firstTimeStamp) >= nextTimeStampValue:
             # Change the place where the next energy consumption is being saved to
-            saveTo = nextTimeStampValue / KEEP_EVERY_X_ROW
+            saveTo = int(nextTimeStampValue / KEEP_EVERY_X_ROW)
             # Increase the next value that is being searched for
             nextTimeStampValue += KEEP_EVERY_X_ROW
 
