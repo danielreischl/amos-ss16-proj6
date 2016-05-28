@@ -28,7 +28,7 @@ RUN apt-get install -y python python-pip python-dev python-pandas nginx sqlite3 
 
 # Creates application subdirectories
 WORKDIR $DOCKYARD_SRVHOME
-RUN mkdir media static logs run DataProcessing DataProcessing/InitialData DataProcessing/CarrierData DataProcessing/CarrierDataArchive
+RUN mkdir media static logs run DataProcessing DataProcessing/InitialData DataProcessing/CarrierData DataProcessing/CarrierDataArchive DataProcessing/InitialDataArchive
 VOLUME ["$DOCKYARD_SRVHOME/media/", "$DOCKYARD_SRVHOME/logs/"]
 
 # Copy application source code to SRCDIR
