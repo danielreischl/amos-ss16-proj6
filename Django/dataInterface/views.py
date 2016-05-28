@@ -24,10 +24,21 @@ from dataInterface.models import timestampdata
 from dataInterface.models import iterationdata
 from django.db.models import Max
 
+# Retunrs last iteration of a carrier at a session
 def funcMaxIteration(session, carrier):
     return timestampdata.objects.filter(session=session, carrier=carrier).aggregate(Max('iteration')).get('iteration__max')
+# Returns total energy consumption of a carrier in a paticular session and iteration
 def funcTotalEnergyConsumption(session, carrier, iteration):
     return iterationdata.objects.get(session=session,carrier=carrier,iteration=iteration).energyConsumptionTotal
+# Returns average Speed of a carrier in a paticular session and iteration
+def funcSpeedAverage(session, carrier, iteration):
+    return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).speedAverage
+# Returns average energy consumption of a carrier in a paticular session and iteration
+def funcAverageEnergyConsumption (session, carrier, iteration):
+    return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).energyConsumptionAverage
+# Returns average acceleration of a carrier in a paticular session and iteration
+def funcAccelerationAverage (session, carrier, iteration):
+    return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).accelerationAverage
 
 # Funtion to return values instead of csv - Files
 def db2values (request):
@@ -52,16 +63,16 @@ def db2values (request):
         return HttpResponse('1')
     # returns Average Energy Consumption of a specific carrier in a specific iteration and session
     elif requestedValue=='energyConsumptionAverage':
-        return HttpResponse(iterationdata.objects.get(session=requestedSession,carrier=requestedCarrier,iteration=requestedIteration).energyConsumptionAverage)
+        return HttpResponse(funcSpeedAverage(requestedSession,requestedCarrier,requestedIteration))
     # returns Average Speed of a specific carrier in a specific iteration and session
     elif requestedValue == 'speedAverage':
-        return HttpResponse(iterationdata.objects.get(session=requestedSession,carrier=requestedCarrier,iteration=requestedIteration).speedAverage)
+        return HttpResponse(funcSpeedAverage(requestedSession,requestedCarrier,requestedIteration))
     # returns Total Energy Consumption of a specific carrier in a specific iteration and session
     elif requestedValue == 'energyConsumptionTotal':
         return HttpResponse(funcTotalEnergyConsumption(requestedSession,requestedCarrier,requestedIteration))
     # return Average Acceleration of a specific carrier in a specific iteration and session
     elif requestedValue == 'accelerationAverage':
-        return HttpResponse(iterationdata.objects.get(session=requestedSession,carrier=requestedCarrier,iteration=requestedIteration).accelerationAverage)
+        return HttpResponse(funcAccelerationAverage(requestedSession,requestedCarrier,requestedIteration))
     else:
         return HttpResponse ("Value not defined")
 
@@ -173,14 +184,11 @@ def deleteDatabaseValues (request):
 
 def averageEnergyConsumption (request):
 
-    # TODO: Add other dimensions
-
-
     # Provides last 10 iterations  for the averageEnergyConsumptionChart
     # parameters: session, carriers, dimension
     requestedSession = request.GET['session']
     requestedCarriers = request.GET['carriers']
-    requestedDimesnion = request.GET['dimension']
+    requestedDimension = request.GET['dimension']
 
     # Pharsing Carriers because the the different carriers are given comma seperated
     carriers = requestedCarriers.split(',')
@@ -220,17 +228,26 @@ def averageEnergyConsumption (request):
         # Iterates all carriers
         for carrier in carriers:
             #  Appends result of function funcTotalEnergyConsumption to the list
-            if requestedDimesnion == 'energyConsumptionTotal':
+            if requestedDimension == 'energyConsumptionTotal':
                 rowOfValues.append(funcTotalEnergyConsumption(requestedSession,carrier,iteration))
+            #  Appends result of function funcSpeedAverage to the list
+            elif requestedDimension == 'speedAverage':
+                rowOfValues.append(funcTotalEnergyConsumption(requestedSession, carrier, iteration))
+            # Appends result of function funcAccelerationAverage to the list
+            elif requestedDimension == 'accelerationAverage':
+                rowOfValues.append(funcAccelerationAverage(requestedSession,carrier,iteration))
+            # Appends result of function funcAverageEnergyConsumption to the list
+            elif requestedDimension == 'energyConsumptionAverage':
+                rowOfValues.append(funcAverageEnergyConsumption(requestedSession,carrier,iteration))
             # any other paramater returns 'no such paramater defined'
             else:
                 return HttpResponse('No such paramter defined')
 
+        # Writes the row
         writer.writerow (rowOfValues)
 
     # Retunrs csv file
     return response
-
 
 def index(request):
     context = {'toGreet': 'World'}
