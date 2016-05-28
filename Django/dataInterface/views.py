@@ -218,7 +218,7 @@ def averageEnergyConsumption (request):
 
     # write first row of iteration.
     # Iterations, Carrier 0, Carrier 1, Carrier X
-    firstrow = ['Iterations']
+    firstrow = ['Iteration']
     for carrier in carriers:
         firstrow.append('Carrier ' + carrier)
     writer.writerow(firstrow)
@@ -227,7 +227,7 @@ def averageEnergyConsumption (request):
     for iteration in range(startIterationOfAllCarriers,maxIterationOfAllCarriers):
         # Creates a list with all values.
         # first value is "Iteration No"
-        rowOfValues = ['Iteration ' + str (iteration)]
+        rowOfValues = [iteration]
         # Iterates all carriers
         for carrier in carriers:
             #  Appends result of function funcTotalEnergyConsumption to the list
@@ -251,3 +251,36 @@ def averageEnergyConsumption (request):
 
     # Retunrs csv file
     return response
+
+def percentageForCircleAndBarChart(request):
+    # Provides a csv file of percent energy consumption from first to last iteration
+    # parameter requested Session
+    requestedSession = request.GET['session']
+
+    # Creating response with attachment as data.csv
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="data.csv"'
+    # Dygraph can just handle , - seperated csv files
+    writer = csv.writer(response, delimiter=',')
+
+    # Reads out amountOfCarriers for requested Session
+    amountOfCarriers = funcAmountOfCarriers(requestedSession)
+
+    # Initializes list for first and second row
+    firstRow = []
+    secondRow = []
+
+    for carrier in range(1, amountOfCarriers + 1):
+        # Appends Carrier + No to the first row
+        firstRow.append ('Carrier' + str(carrier))
+        # Appends the percentage for each carrier (EnergyConsumption last iteration/energyConsumption first iteration)
+        secondRow.append(funcTotalEnergyConsumption(requestedSession,carrier,funcMaxIteration(requestedSession,carrier))/funcTotalEnergyConsumption(requestedSession,carrier,1))
+
+    # Wirtes CSV - File
+    writer.writerow (firstRow)
+    writer.writerow (secondRow)
+
+    # Returns CSV-File
+    return response
+
+

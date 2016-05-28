@@ -34,7 +34,9 @@ urlpatterns = [
     # URL that enables to delete values out of database
     url (r'^deleteTables.request', views.deleteDatabaseValues, name = 'deleteTables'),
     # URL that provides data to the averageEnergyConsumptionChart
-    url (r'^averageEnergyConsumption.csv', views.averageEnergyConsumption, name ='averageEnergyConsumption')
+    url (r'^averageEnergyConsumption.csv', views.averageEnergyConsumption, name ='averageEnergyConsumption'),
+    # URL that provides the percanteges for the Circle View and Bar Chart
+    url (r'^percentages.csv', views.percentageForCircleAndBarChart, name = 'percentageForCircleAndBarChart'),
 
 
 ]
