@@ -527,7 +527,6 @@ for fileName in DATA_FILE_NAMES:
     # Iterates each row and afterwards each drive
     #  Calls compressData with a pd.Series. The values are:
     # ms, No. of Drive, Energy Consmption, Position
-    '''
     for index, row in initialData.iterrows():
         for drive in range(0, amountOfDrives):
             time = int(float(str(row['ms']).replace(',', '.')))
@@ -535,7 +534,6 @@ for fileName in DATA_FILE_NAMES:
             energy = float(str(row['energy' + str(drive)]).replace(',', '.'))
             processData(time, drive + 1, position, energy)
             # sleep(WAIT_TIME_IN_SECONDS)
-    '''
 
     # Moves the processed data files to InitialDataArchive
     # Commented out for testing
