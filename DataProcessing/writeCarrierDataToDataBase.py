@@ -172,6 +172,9 @@ while os.path.isfile("Running.txt"):
             # Move the processed data files to CarrierDataArchive
             moveFileToFolder(str(fileName), "CarrierDataArchive")
 
+        # Clears dataFileNames
+        dataFileNames = []
+
     # put the script a sleep for setConstants.WAIT_TIME_IN_SECONDS_MPY before it checks the folder again for new files
     logging.info("writeCarrierDataToDataBase.py goes asleep for " + str(setConstants.WAIT_TIME_IN_SECONDS_MPY) + "Sec")
     sleep(setConstants.WAIT_TIME_IN_SECONDS_MPY)
@@ -187,4 +190,7 @@ else:
 
             # Move the processed data files to CarrierDataArchive
             moveFileToFolder(str(fileName), "CarrierDataArchive")
+
+        # Clears dataFileNames
+        dataFileNames = []
     logging.info("writeCarrierDataToDataBase.py: Shut down")
