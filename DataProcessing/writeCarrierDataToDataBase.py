@@ -155,7 +155,7 @@ logging.basicConfig(filename='dataProcessing.log',level=logging.INFO,format='%(a
 
 # Putting Script a sleep for 0.5 sec to ensure that Running.txt is already created
 logging.info("compressInitialData.py goes a sleep for 0.5 sec")
-sleep(0.5)
+sleep(60)
 
 # Initialize dataFileNames as list. (List has to be available for all functions thats why it's declared global
 dataFileNames = []
