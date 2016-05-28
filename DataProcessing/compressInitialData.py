@@ -307,41 +307,6 @@ def compressData(carrier):
             carrierData[carrier - 1][2][i] = 0
             carrierData[carrier - 1][3][i] = 0
 
-
-
-    '''
-    # Iterates through all time stamps
-    for i in range(0, int(currentPositionAtCarrierData[carrier - 1])):
-
-        # Saves the first x numbers to row 0, then the second x numbers to row 1 and so on
-        saveTo = int(i / KEEP_EVERY_X_ROW)
-
-        # Write only data points that are being kept to the carrierData
-        if int(i % KEEP_EVERY_X_ROW) == 0:
-            # In order to have all time stamps start at 0 and count up in the same way, the timestamp is overwritten
-            # with it's distance to the first timestamp
-            carrierData[carrier - 1][0][saveTo] = carrierData[carrier - 1][0][i] - firstTimeStamp
-            # Write position over
-            carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][i]
-            # Write energy over
-            carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][i]
-            # Write drive over
-            carrierData[carrier - 1][3][saveTo] = carrierData[carrier - 1][3][i]
-        else:
-            # Test if saveTo doesn't equal the current i, so that the value at saveTo is not added to itself
-            if saveTo != i:
-                # Add the absolute energy to calculate average
-                carrierData[carrier - 1][2][saveTo] = abs(carrierData[carrier - 1][2][saveTo]) + \
-                                                      abs(carrierData[carrier - 1][2][i])
-
-        # if the current row is bigger than what the last row will be after compression, delete it
-        if i >= 1 + int((currentPositionAtCarrierData[carrier - 1] - 1) / float(KEEP_EVERY_X_ROW)):
-            carrierData[carrier - 1][0][i] = 0
-            carrierData[carrier - 1][1][i] = 0
-            carrierData[carrier - 1][2][i] = 0
-            carrierData[carrier - 1][3][i] = 0
-
-'''
 # Exports the table of the carrier to a CSV file in the form time; posAbsolute; posOnDrive; energy
 def exportCSV(carrier):
     # Creates the filename in the form Session_X_Carrier_X_Iteration_X.csv
@@ -430,7 +395,6 @@ def ensureEnoughSpaceInCarrierData(carrier):
         carrierData = np.concatenate((carrierData, extend), axis=2)
 
 
-# TODO: Refactoring (structure) and code comments
 # Renames the csv file headers to structure: (ms; energy1;...;energyX; pos1;...;posX) (X = Amount of Drives)
 def modifyCSVFile(filename):
     # InputFileName und OutputFileName of CSV
@@ -445,7 +409,6 @@ def modifyCSVFile(filename):
 
         # Copys first row
         first_row = next(r)
-        num_cols = len(first_row)
 
         # Initialize Array for new ColumnNames
         newColNames = []
@@ -456,7 +419,7 @@ def modifyCSVFile(filename):
         # Initialize amount of drives variable
         amountOfDrives = 0
 
-        # Startposition of Positon Columns
+        # Start position of Position Columns
         startPositonOfColumns = 0
 
         # Iterates the first row of the initial file and depending on the value writes columns into the file
@@ -489,11 +452,15 @@ def modifyCSVFile(filename):
         # Returns amountOfDrives
         return amountOfDrives
 
+def moveFileToFolder(fileName, folderName):
+    print ("Moving: " + fileName + " to " + os.path.join(folderName, os.path.basename(fileName)))
+    logging.info("Moving: " + fileName + " to " + os.path.join(folderName, os.path.basename(fileName)))
+    os.rename(fileName, os.path.abspath(os.path.join(folderName, os.path.basename(fileName))))
+
 
 #########################################################
 ############# START OF SCRIPT ###########################
 #########################################################
-# TODO: Refactoring (strucure) of this part and code comments
 # Initialize Log-File
 # Creates or loads Log DataProcessing.log
 # Format of LogFile: mm/dd/yyyy hh:mm:ss PM LogMessage
@@ -518,6 +485,8 @@ if not DATA_FILE_NAMES:
     logging.info("Terminating compressInitialData.py. 'Running.txt' removed.")
     # Terminates the script
     sys.exit()
+
+print (DATA_FILE_NAMES)
 
 for fileName in DATA_FILE_NAMES:
 
@@ -558,6 +527,7 @@ for fileName in DATA_FILE_NAMES:
     # Iterates each row and afterwards each drive
     #  Calls compressData with a pd.Series. The values are:
     # ms, No. of Drive, Energy Consmption, Position
+    '''
     for index, row in initialData.iterrows():
         for drive in range(0, amountOfDrives):
             time = int(float(str(row['ms']).replace(',', '.')))
@@ -565,12 +535,16 @@ for fileName in DATA_FILE_NAMES:
             energy = float(str(row['energy' + str(drive)]).replace(',', '.'))
             processData(time, drive + 1, position, energy)
             # sleep(WAIT_TIME_IN_SECONDS)
+    '''
 
     # Moves the processed data files to InitialDataArchive
     # Commented out for testing
-    # os.rename(fileName, os.path.abspath(os.path.join("InitialDataArchive", os.path.basename(fileName))))
-    # print ("Moving processed files to: " + os.path.abspath(os.path.join("CarrierData", os.path.basename(fileName))))
-    # logging.info("Moving " + fileName + " to: " + os.path.abspath(os.path.join("InitialDataArchive", os.path.basename(fileName))))
+    #moveFileToFolder(fileName, "InitialDataArchive")
+
+    # Delete the "_modified" csv file
+    # Commented out for testing
+    #os.remove(os.path.splitext(fileName)[0] + "_modified.csv")
+
 
 # Removes the status.txt file after the end of the simulation and writes its status to log file
 os.remove("Running.txt")
