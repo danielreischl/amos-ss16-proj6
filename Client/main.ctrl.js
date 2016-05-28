@@ -27,7 +27,8 @@ angular.module('app')
 
 .controller("MainController", function(){
     var vm = this;
-    vm.title = 'Rogue Vision';
+    var test = $.get('django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers')
+    vm.title = test;
 })
 
 /* The side navigation should appear on button click */
