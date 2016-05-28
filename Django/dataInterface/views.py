@@ -139,6 +139,30 @@ def logs(request):
         response['Content-Disposition'] = 'attachment; filename="Log.txt"'
         return response
 
+def deleteDatabaseValues (request):
+    # deletes all values of a particular table of the database
+    # parameter: table
+
+    # Transform request to variable
+    requestedTable = request.GET['table']
+
+    # paramaeter 'iteration' deletes all values in iterationdata and returns OK
+    if requestedTable == 'iteration':
+        iterationdata.objects.all().delete()
+        return HttpResponse ('OK')
+    # paramaeter 'timestamp' deletes all values in timestampdata and returns OK
+    elif requestedTable == 'timestamp':
+        timestampdata.objects.all().delete()
+        return HttpResponse('OK')
+    # paramaeter 'all' deletes all values in iterationdata and timestampdata and returns OK
+    elif requestedTable == 'all':
+        iterationdata.objects.all().delete()
+        timestampdata.objects.all().delete()
+        return HttpResponse('OK')
+    else:
+        # Any Other parameter returns 'FAIL'
+        return HttpResponse('FAIL')
+
 def index(request):
     context = {'toGreet': 'World'}
     return render(request, 'dataInterface/index.html', context)

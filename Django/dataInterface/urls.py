@@ -31,6 +31,8 @@ urlpatterns = [
     # Added the url values to enable the frontend to request values like LastItteratioOfaCarrier
     # Calls views.db2values (Further Information views.py)
     url(r'^values.request', views.db2values, name='values'),
+    # URL that enables to delete values out of database
+    url (r'^deleteTables.request', views.deleteDatabaseValues, name = 'deleteTables'),
 
 
 ]
