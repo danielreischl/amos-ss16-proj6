@@ -27,11 +27,7 @@ angular.module('app')
 
 .controller("MainController", function(){
     var vm = this;
-
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
-    xmlHttp.send(null);
-    vm.title = xmlHttp.responseText;
+    vm.title = "Rogue Vision";
 })
 
 /* The side navigation should appear on button click */
@@ -307,16 +303,21 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
 
     $scope.circleGraph = function() {
 
-    // create circle graphs and give them a unique ID
+    /* open connection to the REST APi from the middleware and get the amount of carriers.
+       After receiving the data, the  integer varoable will be saved ionsdie amountOfCarriers
+    */
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.send(null);
+    var amountOfCarriers = xmlHttp.responseText;
 
-    var arrayCarrier = ["carrier1", "carrier2", "carrier3", "carrier4", "carrier5", "carrier6", "carrier7", "carrier8"];
     var arrayEnergy = [2, 42, 24, 10, 6, 4, 3, 23];
     var arrayAverageEnergy =[2, 30, 25, 11, 2, 7, 23, 87]
     var idCounter = 0;
 
-    /* for each carrier in the array, create a new code fragment to be injected into the hdtml file. Each fragment is the base for a circle */
+    /* for every carrier in the database, create a new code fragment to be injected into the hdtml file. Each fragment is the base for a circle */
 
-    for (x in arrayCarrier) {
+    while (amountOfCarriers >= 0) {
 
         var circleId = "carrier " + idCounter;
         var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="openDialog($event)" ng-mouseenter="openDialog($event)" ng-mouseleave="closeDialog()"></canvas>';
@@ -325,6 +326,7 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
 
         createCircle(circleId, arrayEnergy[idCounter], arrayAverageEnergy[idCounter]);
         idCounter = idCounter+1;
+        amountOfCarriers = amountOfCarriers -1;
     }
 
     /*  This function will create the circle graph, depending on the input parameters from the databse (right now it is hard coded*/
