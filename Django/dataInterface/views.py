@@ -57,7 +57,7 @@ def db2values (request):
     # Returns 15 as AmountOfCarriers
     # TODO: Read amountOfCarriers and Session out from setConstants.py
     elif requestedValue=='amountOfCarriers':
-        return HttpResponse('8')
+        return HttpResponse('15')
     # returns current session
     elif requestedValue=='currentSession':
         return HttpResponse('1')
