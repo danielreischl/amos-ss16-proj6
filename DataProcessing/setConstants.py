@@ -6,12 +6,12 @@
 #       Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
 #       Aleksander Penew, Abinav Puri
 #
-#   ReqTracker is free software: you can redistribute it and/or modify
+#   Rogue Vision is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as published by
 #   the Free Software Foundation, either version 3 of the License, or
 #   (at your option) any later version.
 #
-#   ReqTracker is distributed in the hope that it will be useful,
+#   Rogue Vision is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PUROSE.  See the
 #   GNU Affero General Public License for more details.
@@ -21,10 +21,6 @@
 
 # File to maintain all constants which will be used in all DataProcessing Scripts
 
-# Length of one Drive
-DRIVE_LENGTH = 4
-# Length of all drives
-LINE_LENGTH = 12
 # Amount of Carriers
 AMOUNT_OF_CARRIERS = 15
 # Wait time of the Simulator in Seconds used in compressInitialData.py
@@ -38,16 +34,10 @@ CSV_SEPARATOR = ";"
 
 # Path of SQLITEDB
 PATH_OF_SQLLITE_DB = '/srv/django/db.sqlite3'
-# For testing
-# PATH_OF_SQLLITE_DB = '/Users/Robax/amos-ss16-proj6/amos-ss16-proj6/Django/db.sqlite3'
 
 # The name of the Django-App that connects to database
 NAME_OF_APP = 'dataInterface'
 
 NAME_TABLE_PROCESSED_DATA = NAME_OF_APP +'_timestampdata'
 NAME_TABLE_COM_DATA = NAME_OF_APP +'_iterationdata'
-
-NAME_TABLE_CARRIER = NAME_OF_APP + '_carrier'
-NAME_TABLE_ITERATION = NAME_OF_APP + '_iteration'
-NAME_TABLE_ITERATION = NAME_OF_APP + '_session'
 
