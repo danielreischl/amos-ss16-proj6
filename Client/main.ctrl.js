@@ -27,8 +27,11 @@ angular.module('app')
 
 .controller("MainController", function(){
     var vm = this;
-    var test = $.get('django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers')
-    vm.title = test;
+
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.send(null);
+    vm.title = xmlHttp.responseText;
 })
 
 /* The side navigation should appear on button click */
