@@ -537,11 +537,11 @@ for fileName in DATA_FILE_NAMES:
 
     # Moves the processed data files to InitialDataArchive
     # Commented out for testing
-    #moveFileToFolder(fileName, "InitialDataArchive")
+    moveFileToFolder(fileName, "InitialDataArchive")
 
     # Delete the "_modified" csv file
     # Commented out for testing
-    #os.remove(os.path.splitext(fileName)[0] + "_modified.csv")
+    os.remove(os.path.splitext(fileName)[0] + "_modified.csv")
 
 
 # Removes the status.txt file after the end of the simulation and writes its status to log file

@@ -106,22 +106,20 @@ def process_file(fileName):
     averageAcceleration = data['acceleration'].mean()
 
     # Inizialize DataFrame comulatedData with columns based on new DataBaseModel
-    comaulatedData = pd.DataFrame(
+    cumulatedData = pd.DataFrame(
         columns=['session', 'carrier', 'iteration', 'speedAverage', 'accelerationAverage',
                  'energyConsumptionTotal', 'energyConsumptionAverage'], index=['1'])
     # Adding previous extracted and calculated values to DataFrame
-    comaulatedData.loc['1'] = pd.Series(
+    cumulatedData.loc['1'] = pd.Series(
         {'session': session, 'carrier': carrier, 'iteration': iteration, 'speedAverage': averageSpeed,
          'accelerationAverage': averageAcceleration, 'energyConsumptionTotal': totalEnergyConsumption,
          'energyConsumptionAverage': averageEnergyConsumption})
 
     # calls function to load the processed data into the database
-    load_to_database(comaulatedData, setConstants.NAME_TABLE_COM_DATA)
+    load_to_database(cumulatedData, setConstants.NAME_TABLE_COM_DATA)
 
     # Move the processed data files to InitialDataArchive
-    logging.info ("Moving processed files")
-    #os.rename(fileName, os.path.abspath(os.path.join("CarrierDataArchive", os.path.basename(fileName))))
-    logging.info("Moving file to archive: " + fileName)
+    moveFileToFolder(fileName, "CarrierDataArchive")
 
 
 # Loads data into the Database. Input = DataFrame
@@ -145,6 +143,11 @@ def load_to_database(data, tableName):
 
     logging.info("Data loaded into Database")
 
+
+def moveFileToFolder(fileName, folderName):
+    print ("Moving: " + fileName + " to " + os.path.join(folderName, os.path.basename(fileName)))
+    logging.info("Moving: " + fileName + " to " + os.path.join(folderName, os.path.basename(fileName)))
+    os.rename(fileName, os.path.abspath(os.path.join(folderName, os.path.basename(fileName))))
 
 #########################################################
 ############# START OF SCRIPT ###########################
