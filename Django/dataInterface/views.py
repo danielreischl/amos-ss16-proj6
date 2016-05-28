@@ -39,6 +39,10 @@ def funcAverageEnergyConsumption (session, carrier, iteration):
 # Returns average acceleration of a carrier in a paticular session and iteration
 def funcAccelerationAverage (session, carrier, iteration):
     return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).accelerationAverage
+def funcAmountOfCarriers(session):
+    return timestampdata.objects.filter(session=session).aggregate(Max('carrier')).get('carrier__max')
+def funcRecentSession():
+    return timestampdata.objects.aggregate(Max('session')).get('session__max')
 
 # Funtion to return values instead of csv - Files
 def db2values (request):
@@ -51,16 +55,15 @@ def db2values (request):
     requestedValue = request.GET['value']
 
     # If requested Value is LastItteration of a carrier:
+    # Returns the LastIterration of the called Carrier and Session, returns the max Value in the db (Iterations are counted in the db)
     if requestedValue=='lastIteration':
-        # Returns the LastIterration of the called Carrier and Session, returns the max Value in the db (Iterations are counted in the db)
         return HttpResponse(funcMaxIteration(requestedSession, requestedCarrier))
-    # Returns 15 as AmountOfCarriers
-    # TODO: Read amountOfCarriers and Session out from setConstants.py
+    # Returns AmountOfCarriers of a specific session
     elif requestedValue=='amountOfCarriers':
-        return HttpResponse('15')
+        return HttpResponse(funcAmountOfCarriers(requestedSession))
     # returns current session
     elif requestedValue=='currentSession':
-        return HttpResponse('1')
+        return HttpResponse(funcRecentSession)
     # returns Average Energy Consumption of a specific carrier in a specific iteration and session
     elif requestedValue=='energyConsumptionAverage':
         return HttpResponse(funcSpeedAverage(requestedSession,requestedCarrier,requestedIteration))
