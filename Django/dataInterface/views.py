@@ -248,8 +248,3 @@ def averageEnergyConsumption (request):
 
     # Retunrs csv file
     return response
-
-def index(request):
-    context = {'toGreet': 'World'}
-    return render(request, 'dataInterface/index.html', context)
-
