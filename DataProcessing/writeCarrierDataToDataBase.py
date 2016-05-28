@@ -6,12 +6,12 @@
 #       Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
 #       Aleksander Penew, Abinav Puri
 #
-#   ReqTracker is free software: you can redistribute it and/or modify
+#   Rogue Vision is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as published by
 #   the Free Software Foundation, either version 3 of the License, or
 #   (at your option) any later version.
 #
-#   ReqTracker is distributed in the hope that it will be useful,
+#   Rogue Vision is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PUROSE.  See the
 #   GNU Affero General Public License for more details.
@@ -118,8 +118,6 @@ def process_file(fileName):
     # calls function to load the processed data into the database
     load_to_database(cumulatedData, setConstants.NAME_TABLE_COM_DATA)
 
-    # Move the processed data files to InitialDataArchive
-    moveFileToFolder(fileName, "CarrierDataArchive")
 
 
 # Loads data into the Database. Input = DataFrame
@@ -137,9 +135,6 @@ def load_to_database(data, tableName):
     # Loads dataframe to database. Appends data or creates table and is not adding the index of the dataFrame.
     data.to_sql(name=tableName, con=con, if_exists='append', index=False)
     print "pushed!"
-
-    #df = pd.read_sql_query("SELECT * FROM " + tableName, con)
-    #print(df.head())
 
     logging.info("Data loaded into Database")
 
@@ -171,8 +166,11 @@ while os.path.isfile("Running.txt"):
     logging.info("compressInitialData.py is still running")
     if check_folder():
         # If there are files which are not processed yet, call for each file process_file
-        for filename in dataFileNames:
-            process_file(str(filename))
+        for fileName in dataFileNames:
+            process_file(str(fileName))
+
+            # Move the processed data files to CarrierDataArchive
+            moveFileToFolder(str(fileName), "CarrierDataArchive")
 
     # put the script a sleep for setConstants.WAIT_TIME_IN_SECONDS_MPY before it checks the folder again for new files
     logging.info("writeCarrierDataToDataBase.py goes asleep for " + str(setConstants.WAIT_TIME_IN_SECONDS_MPY) + "Sec")
@@ -184,6 +182,9 @@ else:
     logging.info("compressInitialData.py is not running")
     if check_folder():
         # If there are files which are not processed yet, call for each file process_file
-        for filename in dataFileNames:
-            process_file(filename)
+        for fileName in dataFileNames:
+            process_file(fileName)
+
+            # Move the processed data files to CarrierDataArchive
+            moveFileToFolder(str(fileName), "CarrierDataArchive")
     logging.info("writeCarrierDataToDataBase.py: Shut down")

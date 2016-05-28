@@ -15,8 +15,7 @@ python manage.py migrate --noinput
 python manage.py collectstatic --noinput
 
 # Copy files that are not on GitHub from persistent directory to directory where the initScript is looking for them
-# deactivated until issues are resolved
-# cp /persistent/*.csv /srv/DataProcessing/InitialData/
+cp /persistent/*.csv /srv/DataProcessing/InitialData/
 
 # Runs init script
 chmod u+x /srv/DataProcessing/initDataProcessingSimulation.sh

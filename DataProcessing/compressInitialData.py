@@ -6,12 +6,12 @@
 #       Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
 #       Aleksander Penew, Abinav Puri
 #
-#   ReqTracker is free software: you can redistribute it and/or modify
+#   Rogue Vision is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as published by
 #   the Free Software Foundation, either version 3 of the License, or
 #   (at your option) any later version.
 #
-#   ReqTracker is distributed in the hope that it will be useful,
+#   Rogue Vision is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PUROSE.  See the
 #   GNU Affero General Public License for more details.
@@ -65,7 +65,7 @@ DATA_SEPARATOR = setConstants.CSV_SEPARATOR
 # Every X th row of the data is kept when compressing the data
 KEEP_EVERY_X_ROW = 100
 # Current Session
-SESSION = setConstants.SESSION
+session = setConstants.SESSION
 
 
 # Main data processing script. Gets input data of drives and maps it to the carries and saves them as CSV files once
@@ -310,7 +310,7 @@ def compressData(carrier):
 # Exports the table of the carrier to a CSV file in the form time; posAbsolute; posOnDrive; energy
 def exportCSV(carrier):
     # Creates the filename in the form Session_X_Carrier_X_Iteration_X.csv
-    fileName = "Session_" + str(setConstants.SESSION) + "_Carrier_" + str(int(carrier)) + "_Iteration_" + \
+    fileName = "Session_" + str(session) + "_Carrier_" + str(int(carrier)) + "_Iteration_" + \
                str(int(iterationNumber)) + ".csv"
 
     # Adds the relative file path to the name that the files are saved to /InitialData/
@@ -536,13 +536,13 @@ for fileName in DATA_FILE_NAMES:
             # sleep(WAIT_TIME_IN_SECONDS)
 
     # Moves the processed data files to InitialDataArchive
-    # Commented out for testing
     moveFileToFolder(fileName, "InitialDataArchive")
 
     # Delete the "_modified" csv file
-    # Commented out for testing
     os.remove(os.path.splitext(fileName)[0] + "_modified.csv")
 
+    # Counts up session for each filename
+    session = session + 1
 
 # Removes the status.txt file after the end of the simulation and writes its status to log file
 os.remove("Running.txt")
