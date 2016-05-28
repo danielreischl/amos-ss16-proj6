@@ -33,6 +33,8 @@ urlpatterns = [
     url(r'^values.request', views.db2values, name='values'),
     # URL that enables to delete values out of database
     url (r'^deleteTables.request', views.deleteDatabaseValues, name = 'deleteTables'),
+    # URL that provides data to the averageEnergyConsumptionChart
+    url (r'^averageEnergyConsumption.csv', views.averageEnergyConsumption, name ='averageEnergyConsumption')
 
 
 ]

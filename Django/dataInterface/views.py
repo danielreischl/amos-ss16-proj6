@@ -4,12 +4,12 @@
 #       Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
 #       Aleksander Penew, Abinav Puri
 #
-#   ReqTracker is free software: you can redistribute it and/or modify
+#   Rogue Vision is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as published by
 #   the Free Software Foundation, either version 3 of the License, or
 #   (at your option) any later version.
 #
-#   ReqTracker is distributed in the hope that it will be useful,
+#   Rogue Vision is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PUROSE.  See the
 #   GNU Affero General Public License for more details.
@@ -24,6 +24,11 @@ from dataInterface.models import timestampdata
 from dataInterface.models import iterationdata
 from django.db.models import Max
 
+def funcMaxIteration(session, carrier):
+    return timestampdata.objects.filter(session=session, carrier=carrier).aggregate(Max('iteration')).get('iteration__max')
+def funcTotalEnergyConsumption(session, carrier, iteration):
+    return iterationdata.objects.get(session=session,carrier=carrier,iteration=iteration).energyConsumptionTotal
+
 # Funtion to return values instead of csv - Files
 def db2values (request):
 
@@ -37,7 +42,7 @@ def db2values (request):
     # If requested Value is LastItteration of a carrier:
     if requestedValue=='lastIteration':
         # Returns the LastIterration of the called Carrier and Session, returns the max Value in the db (Iterations are counted in the db)
-        return HttpResponse(timestampdata.objects.filter(session=requestedSession,carrier=requestedCarrier).aggregate(Max('iteration')))
+        return HttpResponse(funcMaxIteration(requestedSession, requestedCarrier))
     # Returns 15 as AmountOfCarriers
     # TODO: Read amountOfCarriers and Session out from setConstants.py
     elif requestedValue=='amountOfCarriers':
@@ -53,10 +58,12 @@ def db2values (request):
         return HttpResponse(iterationdata.objects.get(session=requestedSession,carrier=requestedCarrier,iteration=requestedIteration).speedAverage)
     # returns Total Energy Consumption of a specific carrier in a specific iteration and session
     elif requestedValue == 'energyConsumptionTotal':
-        return HttpResponse(iterationdata.objects.get(session=requestedSession,carrier=requestedCarrier,iteration=requestedIteration).energyConsumptionTotal)
+        return HttpResponse(funcTotalEnergyConsumption(requestedSession,requestedCarrier,requestedIteration))
     # return Average Acceleration of a specific carrier in a specific iteration and session
     elif requestedValue == 'accelerationAverage':
         return HttpResponse(iterationdata.objects.get(session=requestedSession,carrier=requestedCarrier,iteration=requestedIteration).accelerationAverage)
+    else:
+        return HttpResponse ("Value not defined")
 
 
 def db2csv(request):
@@ -96,6 +103,7 @@ def db2csv(request):
             
     return response
 
+
 def rawData(request):
     # returns a csv File of the raw database tables 
     # parameter table, possible values: timestampdata, iterationdata 
@@ -125,13 +133,12 @@ def rawData(request):
 
 
 def logs(request):
-
-    # Returns a Textfile
+    # Returns a log file
     # parameter type, possiblie Values: DataProcessing
     requestedType = request.GET['type']
 
     # Transfer Logfile to String
-    with open ('srv/DataProcessing/dataProcessing.log','r') as logfile:
+    with open ('./srv/DataProcessing/dataProcessing.log','r') as logfile:
         output = logfile.read()
 
     if requestedType == "DataProcessing":
@@ -139,10 +146,10 @@ def logs(request):
         response['Content-Disposition'] = 'attachment; filename="Log.txt"'
         return response
 
+
 def deleteDatabaseValues (request):
     # deletes all values of a particular table of the database
     # parameter: table
-
     # Transform request to variable
     requestedTable = request.GET['table']
 
@@ -162,6 +169,68 @@ def deleteDatabaseValues (request):
     else:
         # Any Other parameter returns 'FAIL'
         return HttpResponse('FAIL')
+
+
+def averageEnergyConsumption (request):
+
+    # TODO: Add other dimensions
+
+
+    # Provides last 10 iterations  for the averageEnergyConsumptionChart
+    # parameters: session, carriers, dimension
+    requestedSession = request.GET['session']
+    requestedCarriers = request.GET['carriers']
+    requestedDimesnion = request.GET['dimension']
+
+    # Pharsing Carriers because the the different carriers are given comma seperated
+    carriers = requestedCarriers.split(',')
+
+    # Creating response with attachment as data.csv
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="data.csv"'
+    # Dygraph can just handle , - seperated csv files
+    writer = csv.writer(response, delimiter=',')
+
+    # determine max iteration of all requested carriers
+    maxIterationOfAllCarriers = 0
+    for carrier in carriers:
+        if funcMaxIteration(requestedSession, carrier) > maxIterationOfAllCarriers:
+            maxIterationOfAllCarriers = funcMaxIteration(requestedSession, carrier)
+
+
+    # Determines the startIteration that should be provided in the .csv file
+    # currently just the last 10 iterations are provided to the frontend
+    if maxIterationOfAllCarriers > 10:
+        startIterationOfAllCarriers = maxIterationOfAllCarriers - 10
+    else:
+        startIterationOfAllCarriers = 1
+
+    # write first row of iteration.
+    # Iterations, Carrier 0, Carrier 1, Carrier X
+    firstrow = ['Iterations']
+    for carrier in carriers:
+        firstrow.append('Carrier ' + carrier)
+    writer.writerow(firstrow)
+
+    # Writes rest of the csv file
+    for iteration in range(startIterationOfAllCarriers,maxIterationOfAllCarriers):
+        # Creates a list with all values.
+        # first value is "Iteration No"
+        rowOfValues = ['Iteration ' + str (iteration)]
+        # Iterates all carriers
+        for carrier in carriers:
+            #  Appends result of function funcTotalEnergyConsumption to the list
+            if requestedDimesnion == 'energyConsumptionTotal':
+                rowOfValues.append(funcTotalEnergyConsumption(requestedSession,carrier,iteration))
+            # any other paramater returns 'no such paramater defined'
+            else:
+                return HttpResponse('No such paramter defined')
+
+        writer.writerow (rowOfValues)
+
+    # Retunrs csv file
+    return response
+
 
 def index(request):
     context = {'toGreet': 'World'}
