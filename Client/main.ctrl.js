@@ -363,7 +363,7 @@ add more lines and get different details.*/
     /* ID of first Carrier */
     var idCounter = 1;
 
-    /* for every carrier in the database, create a new code fragment to be injected into the hdtml file. Each fragment is the base for a circle */
+    /* for every carrier in the database, create a new code fragment to be injected into the html file. Each fragment is the base for a circle */
     while (amountOfCarriers > 0) {
         var circleId = "carrier " + idCounter;
         var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="selectCarrier($event)"></canvas>';
