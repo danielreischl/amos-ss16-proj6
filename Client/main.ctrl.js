@@ -238,7 +238,7 @@ add more lines and get different details.*/
         // create the graph with the parameters set. The request path for the database depends on 3 parameters: session, carrierRequested and selectedDimension
 
         graph = new Dygraph(
-	       document.getElementById("drillDownGraph"), 'django/dataInterface/averageEnergyConsumption.csv?session='+sesssion+'&carriers='+carriersRequested+'&dimension='+selectedDimension+'',
+	       document.getElementById("drillDownGraph"), 'django/dataInterface/averageEnergyConsumption.csv?session='+session+'&carriers='+carriersRequested+'&dimension='+selectedDimension+'',
 	                                                                                     {title: "Average Energy Consumption Chart",
 	                                                                                      ylabel: yAxisLabel,
 	                                                                                      xlabel: 'Iteration',
