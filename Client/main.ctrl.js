@@ -357,13 +357,10 @@ add more lines and get different details.*/
                                                                    dynamicTyping: true,
                                                                    complete: function(results) {
                                                                        var data = results;
+                                                                       console.log("Parsing complete:", results);
                                                                    }
                                                                   }
     )
-
-    alert(data[1][0]);
-
-
 
     var percentageOfEnergy =[1, 0.6, 0.8, 1.2, 3, 0.6, 0.3, 0.2]
     /* ID of first Carrier */
