@@ -303,35 +303,49 @@ add more lines and get different details.*/
 
 /* Refresh the circle Page. The purporse of this controller is listen to the Button
  and upon receiving an event, it should trigger the update circle button*/
-
-
 .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
 
 /* This function will highlight the carrier and save the id of the carrier inside the comaprison arrary in app.service.js*/
-
     $scope.selectCarrier = function(event) {
         var id = event.target.id;
         // This method is necessary, because the string is "carrier_x" To extract x, I need to get the subsstring
         var carrierId = id.substr(7, 8);
 
+        //var circle = document.getElementById("carrier " + carrierId);
+        circle = document.getElementById(id);
+
+        alert(carrierId);
+
+        //alert(circle)
+
+        circle.style.lineWidth = 20;
+
         //check if carrier is already in list. If it already exists, then show a message, else it will save the value to the compare array
         if(!carrierService.addCarrier(carrierId)) {
-           alert('Carrier: ' +carrierId+ ' is already in the comparison sidebar')
-       }
+            carrierService.deleteCarrier(carrierId);
+            // TODO highlight
+            //circle.lineWidth = 20;
+            //context.strokeStyle = '#003300';
+            //context.stroke();
+        } else {
+            // TODO unhighlight
+            // TODO BUG IN DELETE CARRIER
+            //circle.lineWidth = 1;
+            //alert('Carrier: ' +carrierId+ ' is already in the comparison sidebar');
+        }
     }
 
-
 /* create the circle page upon page load. */
-
     $scope.circleGraph = function() {
-
     /* open connection to the REST APi from the middleware and get the amount of carriers.
        After receiving the data, the  integer varoable will be saved ionsdie amountOfCarriers
     */
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
-    xmlHttp.send(null);
-    var amountOfCarriers = xmlHttp.responseText;
+    //xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
+    //xmlHttp.send(null);
+    //var amountOfCarriers = xmlHttp.responseText;
+    // Changed for testing
+    var amountOfCarriers = 15
 
     var arrayEnergy = [2, 42, 24, 10, 6, 4, 3, 23];
     var arrayAverageEnergy =[2, 30, 25, 11, 2, 7, 23, 87]
@@ -339,12 +353,11 @@ add more lines and get different details.*/
     var idCounter = 1;
 
     /* for every carrier in the database, create a new code fragment to be injected into the hdtml file. Each fragment is the base for a circle */
-
     while (amountOfCarriers > 0) {
-
         var circleId = "carrier " + idCounter;
         var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="selectCarrier($event)"></canvas>';
         var temp = $compile(fragmenthtml)($scope);
+
         angular.element(document.getElementById('circleGraphs')).append(temp);
 
         createCircle(circleId, arrayEnergy[idCounter], arrayAverageEnergy[idCounter]);
@@ -353,10 +366,7 @@ add more lines and get different details.*/
     }
 
     /*  This function will create the circle graph, depending on the input parameters from the databse (right now it is hard coded*/
-
     function createCircle(carrier, energy, averageEnergy) {
-
-
         var canvas = document.getElementById(carrier);
         var context = canvas.getContext('2d');
         var centerX = canvas.width / 2;
@@ -371,10 +381,9 @@ add more lines and get different details.*/
         context.stroke();
 
         /* depending on the ratio energy to average Energy, the color changes */
-
-        if( energy  > averageEnergy) {
+        if( energy / averageEnergy >= 1.1) {
             context.fillStyle = '#FF1744';
-        } else if(energy  < averageEnergy ) {
+        } else if(energy  / averageEnergy <= 0.9 ) {
             context.fillStyle = '#00BFA5';
         } else {
             context.fillStyle = "#FFFF8D";
@@ -382,18 +391,16 @@ add more lines and get different details.*/
 
         context.fill();
         context.lineWidth = 5;
-        context.lineWidth=1;
-        context.fillStyle="#212121";
-        context.lineStyle="#212121";
-        context.font="15px sans-serif";
+        context.lineWidth = 1;
+        context.fillStyle = "#212121";
+        context.lineStyle = "#212121";
+        context.font = "15px sans-serif";
         context.fillText(carrier, centerX - 15, centerY);
         context.fillText(percentageEnergy + "%", centerX - 15, centerY + 20);
     }
 }
 
 /* This function is for the side comparison navigation*/
-
-
     $scope.carriersForComparison = carrierService.getCarrier;
 
     $scope.removeCarrier = function(carrier) {
