@@ -2,7 +2,7 @@
 #
 #   Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
 #       Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
-#       Aleksander Penew, Abinav Puri
+#       Aleksander Penew, Abhinav Puri
 #
 #   Rogue Vision is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU Affero General Public License as published by
