@@ -348,7 +348,7 @@ add more lines and get different details.*/
     var amountOfCarriers = xmlHttp.responseText;
 
     // the array variable where the converted content from the csv file will be.
-    var carrierPercentageData;
+    var carrierPercentageData = [];
 
     // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
     Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
@@ -356,6 +356,8 @@ add more lines and get different details.*/
                                                                    complete: function(results) {
                                                                        carrierPercentageData = results.data[1];
                                                                        console.log("Parsing complete:", results);
+                                                                       console.log("Parsing data:", results.data);
+                                                                       console.log("Parsing data[1]:", results.data[1]);
                                                                    }
                                                                   }
     )
