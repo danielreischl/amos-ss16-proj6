@@ -147,7 +147,7 @@ add more lines and get different details.*/
     var selectedDimension = "energyConsumptionAverage";
     var yAxisLabel = 'Energy Consumption in (mA)';
 
-    // the session requested from the dimension. For now it is fixed.
+    // the session requested from the database. For now it is fixed.
     var sesssion = 1;
 
     //a string, which tells the database how many carrier the user is requesting.
@@ -224,10 +224,11 @@ add more lines and get different details.*/
                 for (var carrier = 1; carrier <= amountOfCarriers; carrier++) {
                     if (carrierCompareList[i].carrierNumber == carrier) {
                         if(carriersRequested === "") {
-                            carriersRequested+= ""+carrier+",";
-                            document.getElementById(carrier).checked = true;
+                            carriersRequested+=carrier;
+                        //    document.getElementById(carrier).checked = true;
                         } else {
                             carriersRequested+= ","+carrier+"";
+                        //    document.getElementById(carrier).checked = true;
                         }
                         break;
                     }
