@@ -343,11 +343,11 @@ add more lines and get different details.*/
        After receiving the data, the  integer varoable will be saved ionsdie amountOfCarriers
     */
     var xmlHttp = new XMLHttpRequest();
-    //xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
-    //xmlHttp.send(null);
-    //var amountOfCarriers = xmlHttp.responseText;
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.send(null);
+    var amountOfCarriers = xmlHttp.responseText;
     // Changed for testing
-    var amountOfCarriers = 15
+    //var amountOfCarriers = 15
 
     var arrayEnergy = [2, 42, 24, 10, 6, 4, 3, 23];
     var arrayAverageEnergy =[2, 30, 25, 11, 2, 7, 23, 87]
