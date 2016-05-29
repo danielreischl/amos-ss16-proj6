@@ -306,7 +306,8 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
 
     var arrayEnergy = [2, 42, 24, 10, 6, 4, 3, 23];
     var arrayAverageEnergy =[2, 30, 25, 11, 2, 7, 23, 87]
-    var idCounter = 0;
+    /* ID of first Carrier */
+    var idCounter = 1;
 
     /* for every carrier in the database, create a new code fragment to be injected into the hdtml file. Each fragment is the base for a circle */
 
