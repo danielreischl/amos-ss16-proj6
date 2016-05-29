@@ -26,18 +26,23 @@
      and show all items stored. The User can remove the items by clicking on the "remove " button next to the item.
 -->
 
-
 <div ng-controller="circleGraphController">
 
     <section layout="column" ng-init="circleGraph()">
     </section>
 
-       <center>
-          <br>
-          <md-button class="md-raised md-cornered" Onclick="location.href='#BarCarrier'">Change to Barchart View</md-button>
-          <md-button class="md-raised md-cornered"  ng-click="openComparisonSideBar()">Open Comparison Sidebar</md-button>
-       </center>
-    <br>
+    <center>
+        <section layout="row" layout-align="center start">
+            <md-button class="md-raised md-cornered" Onclick="location.href='#BarCarrier'">Change to Barchart View</md-button>
+            <md-button class="md-raised md-cornered" ng-click="openComparisonSideBar()">Open Comparison Sidebar</md-button>
+        </section>
+    </center>
+
+    <section layout="column" layout-align="center end">
+        <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#CompareCarrier'">Continuous Consumption Graph</md-button>
+        <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#drillDownChart'">Average Consumption Graph</md-button>
+    </section>
+
     <section layout ="column" layout-align="center center">
         <div id="circleGraphs"> </div>
     </section>
