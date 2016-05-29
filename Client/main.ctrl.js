@@ -353,12 +353,12 @@ add more lines and get different details.*/
     var data;
 
     // get the csv files with the percentages from the middleware
-    Papa.parse('django/dataInterface/percentages.csv?session=1', { download: false,
+    Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
                                                                    dynamicTyping: true,
                                                                    complete: function(results) {
                                                                        var data = results;
-                                                                   };
-                                                                  };
+                                                                   }
+                                                                  }
     )
 
     alert(data[1][0]);
