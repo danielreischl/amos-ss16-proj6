@@ -239,8 +239,7 @@ add more lines and get different details.*/
 })
    
 
-/* controller for the popupGraphs. Displays the carrier number and 2 Buttons. Depending on which button is pressed,
-the carrier Id will be put into the comparison sidebar or the drill down chart*/
+/* to be deleted, this is the old carrier compare function.
 
 .controller('circlePopUpController', function($scope, $mdDialog, $mdSidenav, circleId, carrierService) {
     var id = circleId;
@@ -264,31 +263,25 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
     }
 })
 
+*/
+
 /* Refresh the circle Page. The purporse of this controller is listen to the Button
  and upon receiving an event, it should trigger the update circle button*/
 
 
 .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
 
-/* open up a dialogue window upon triggering it via button click or via the hover function. The event is delayed by a timer
- if the the user is not leaving the hover area by the time the timer runs out, it will open up the popup. Else it will be canceled */
-    var timer;
+/* This function will highlight the carrier and save the id of the carrier inside the comaprison arrary in app.service.js*/
 
-    $scope.openDialog = function(event) {
+    $scope.selectCarrier = function(event) {
         var id = event.target.id;
-        timer = $timeout(function () {
-            $mdDialog.show({
-                controller: "circlePopUpController",
-                templateUrl: 'sections/circlePage/circlePopUp.html',
-                clickOutsideToClose:true,
-                locals: {circleId: id
-                }
-            });
-        }, 1000)
-    }
+        // This method is necessary, because the string is "carrier_x" To extract x, I need to get the subsstring
+        var carrierId = id.substr(7, 8);
 
-    $scope.closeDialog = function() {
-        $timeout.cancel(timer);
+        //check if carrier is already in list. If it already exists, then show a message, else it will save the value to the compare array
+        if(!carrierService.addCarrier(carrierId)) {
+           alert('Carrier: ' +carrierId+ ' is already in the comparison sidebar')
+       }
     }
 
 
@@ -314,7 +307,7 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
     while (amountOfCarriers > 0) {
 
         var circleId = "carrier " + idCounter;
-        var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="openDialog($event)" ng-mouseenter="openDialog($event)" ng-mouseleave="closeDialog()"></canvas>';
+        var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="selectCarrier($event)"></canvas>';
         var temp = $compile(fragmenthtml)($scope);
         angular.element(document.getElementById('circleGraphs')).append(temp);
 
