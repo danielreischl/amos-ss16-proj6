@@ -148,14 +148,14 @@ add more lines and get different details.*/
     var yAxisLabel = 'Energy Consumption in (mA)';
 
     // the session requested from the database. For now it is fixed.
-    var sesssion = 1;
+    var session = 1;
 
     //a string, which tells the database how many carrier the user is requesting.
     var carriersRequested = "";
 
     // Get the maxAmount of Carriers from the database and save it in a variable called amountOfCarriers
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+sesssion+'&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+session+'&carrier=1&iteration=1&value=amountOfCarriers', false );
     xmlHttp.send(null);
     var amountOfCarriers = xmlHttp.responseText;
 
@@ -175,11 +175,7 @@ add more lines and get different details.*/
         //if the carrier is already inside the comparison array, then it will be removed.
         if(!carrierService.addCarrier(event.target.id)) {
             carrierService.deleteCarrier(event.target.id);
-            document.getElementById(event.target.id).checked = false;
-        } else {
-            document.getElementById(event.target.id).checked = true;
         }
-
     }
 
 
@@ -221,16 +217,17 @@ add more lines and get different details.*/
 
         if(carrierCompareList.length != 0) {
             for (var i = 0; i < carrierCompareList.length; i++) {
-                for (var carrier = 1; carrier <= amountOfCarriers; carrier++) {
+                for (var carrier = 1; carrier < amountOfCarriers; carrier++) {
                     if (carrierCompareList[i].carrierNumber == carrier) {
                         if(carriersRequested === "") {
                             carriersRequested+=carrier;
-                        //    document.getElementById(carrier).checked = true;
+                            document.getElementById(carrier).checked = true;
                         } else {
                             carriersRequested+= ","+carrier+"";
-                        //    document.getElementById(carrier).checked = true;
+                            document.getElementById(carrier).checked = true;
                         }
                         break;
+                    } else {
                     }
                 }
             }
@@ -250,7 +247,7 @@ add more lines and get different details.*/
 	                                                                                      });
 
 
-        // After the graph has been plotted, the compareCarrier will be emptied.
+        // After the graph has been plotted, the compareCarrier Array will be emptied.
         carrierService.emptyCarrierArray();
     }
 

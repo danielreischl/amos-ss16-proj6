@@ -23,7 +23,7 @@
 <!-- This html fragment displays the drilldown Graph -->
 
 <div ng-controller="drillDownGraph">
-    <section>
+    <section layout = "row">
          <ul>
             <li ng-repeat="carrier in arrayCarrier" style=" color: black;  list-style-type: none; font-size: 20px;">
                 <input type="checkbox" id = "{{carrier}}" ng-click="changeCarrierToCompare($event)"> Carrier {{carrier}}
