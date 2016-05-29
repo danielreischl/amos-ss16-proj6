@@ -365,9 +365,11 @@ add more lines and get different details.*/
 
     //this function will save the array from
     function setCarrierPercentage(percentageArray) {
-        alert("called: " + percentageArray[0]);
+        alert("inside the function");
         for(var i=0; i < percentageArray.length; i++) {
+            alert("called: " + percentageArray[i]);
             carrierPercentageData.push(percentageArray[i]);
+            alert("called NewArray: " + carrierPercentageData[i]);
         }
     }
 
