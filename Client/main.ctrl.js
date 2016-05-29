@@ -140,67 +140,95 @@ add more lines and get different details.*/
 
 .controller('drillDownGraph', function($scope, carrierService) {
 
+    // get the array with the carriers the user wants to see in the graph.
     var carrierCompareList = carrierService.getCarrier();
-    var carrierMax = 8; //this needs to be dynamic later if we have connection to the database
-    var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
-    var arrayCarrier = [0,1,2,3,4,5,6,7];
-    var selectedDimension = 3;
+
+    // default value for the dimension and yAxislabel
+    var selectedDimension = "energyConsumptionAverage";
     var yAxisLabel = 'Energy Consumption in (mA)';
 
- /* Filling the Dropdown menues with options*/
+    // the session requested from the dimension. For now it is fixed.
+    var sesssion = 1;
+
+    //a string, which tells the database how many carrier the user is requesting.
+    var carriersRequested = "";
+
+    // Get the maxAmount of Carriers from the database and save it in a variable called amountOfCarriers
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+sesssion+'&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.send(null);
+    var amountOfCarriers = xmlHttp.responseText;
+
+    //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
+    var arrayCarrier = [];
+    var idCounter = 1;
+    while(arrayCarrier.length <= amountOfCarriers ) {
+        arrayCarrier.push(idCounter);
+        idCounter++;
+    }
+    /* Filling the Dropdown menues with the items of the array. The number of checkboxes depend on the amount of carriers in the database*/
     $scope.arrayCarrier = arrayCarrier;
 
+
+    // This function is called, when a change is made in the checkbox field.
+    $scope.changeCarrierToCompare = function(event) {
+        //if the carrier is already inside the comparison array, then it will be removed.
+        if(!carrierService.addCarrier(event.target.id)) {
+            carrierService.deleteCarrier(event.target.id);
+            document.getElementById(event.target.id).checked = false;
+        } else {
+            document.getElementById(event.target.id).checked = true;
+        }
+
+    }
+
+
+    // create the dropdown menu. the id is corresponding to the key word used in the database to extract the dimension.
     $scope.dimensions = [
-        {name : "Average Energy Consumption", id : 3},
-        {name : "Average Acceleration", id : 4},
-	    {name : "Average Speed", id: 5},
+        {name : "Average Energy Consumption", id : 1 },
+        {name : "Average Acceleration", id : 2 },
+	    {name : "Average Speed", id: 3 },
 	    ]
 
-    // This function receives the changes from the dropDown menu "dimensions" and changes the yAxis name of the graph and requests the needed data by changing the string name.
-	$scope.changeVisibilityDimension = function() {
+
+     // This function receives the changes from the dropDown menu "dimensions" and changes the yAxis name of the graph and requests the needed data by changing the string name.
+	$scope.changeDimension = function() {
     selectedDimension = $scope.selectedDimension;
 
-    if($scope.selectedDimension == 3) {
+    if($scope.selectedDimension == 1) {
+        selectedDimension = "energyConsumptionAverage";
+        yAxisLabel = 'Energy Consumption in (mA)'
 
-    } else if($scope.selectedDimension == 4) {
+    } else if($scope.selectedDimension == 2) {
+        selectedDimension = "accelerationAverage";
         yAxisLabel = 'Average Acceleration';
-    } else if ($scope.selectedDimension == 5)
+
+    } else if ($scope.selectedDimension == 3)
+        selectedDimension = "speedAverage";
         yAxisLabel = 'Average Speed';
 	}
 
 
-/*chooses one carrier depending on the chosen option. this is done by emptying the comparison Array,
- changing the visibillity array and adding a single carrier to the comparison array in the end.. */
-
-
-    $scope.changeVisibility = function() {
-        carrierService.emptyCarrierArray();
-        for(var i = 0; i < visibilityArray.length; i++) {
-            visibilityArray[i] = false;
-        }
-        carrierService.addCarrier($scope.selectedCarrier);
-    }
     /* this functions created the dygraph  from a data source and applies options to them*/
 
     $scope.createDrillDownGraph = function() {
-        graph = new Dygraph(
-	       document.getElementById("drillDownGraph"), 'sections/drillDownChart/dummy'+selectedDimension+'.csv', {title: "Carrier Drilldown ",
-	                                                                                      ylabel: yAxisLabel,
-	                                                                                      xlabel: 'Iteration',
-	                                                                                      plotter: barChartPlotter,
-	                                                                                      labelsSeparateLines: true,
-	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
-	                                                                                      visibility: visibilityArray,
-	                                                                                      });
 
+        //ensure that the variable is empty, before saving the new request path into it
+        carriersRequested = "";
         /* these loops have the purpose to see what carriers the user wants to compare
-        and change the visibilty of the carriers in the dygraph to true */
+        and change request String path for the database. It will also set all checkboxes to true, which are corresponding to the carriers
+        in the compare array */
 
         if(carrierCompareList.length != 0) {
             for (var i = 0; i < carrierCompareList.length; i++) {
-                for (var carrier = 0; carrier < carrierMax; carrier++) {
+                for (var carrier = 1; carrier <= amountOfCarriers; carrier++) {
                     if (carrierCompareList[i].carrierNumber == carrier) {
-                        visibilityArray[carrier] = true;
+                        if(carriersRequested === "") {
+                            carriersRequested+= ""+carrier+",";
+                            document.getElementById(carrier).checked = true;
+                        } else {
+                            carriersRequested+= ","+carrier+"";
+                        }
                         break;
                     }
                 }
@@ -208,26 +236,23 @@ add more lines and get different details.*/
         } else {
             alert("You did not chose any Carriers to compare")
         }
+
+        // create the graph with the parameters set. The request path for the database depends on 3 parameters: session, carrierRequested and selectedDimension
+
+        graph = new Dygraph(
+	       document.getElementById("drillDownGraph"), 'django/dataInterface/averageEnergyConsumption.csv?session='+sesssion+'&carriers='+carriersRequested+'&dimension='+selectedDimension+'',
+	                                                                                     {title: "Average Energy Consumption Chart",
+	                                                                                      ylabel: yAxisLabel,
+	                                                                                      xlabel: 'Iteration',
+	                                                                                      labelsSeparateLines: true,
+	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
+	                                                                                      });
+
+
+        // After the graph has been plotted, the compareCarrier will be emptied.
+        carrierService.emptyCarrierArray();
     }
 
-    // this functions changes the plotting of the dygraph to bars instead of lines. /7 need to understand and change it
-
-    function barChartPlotter(e) {
-        var ctx = e.drawingContext;
-        var points = e.points;
-        var y_bottom = e.dygraph.toDomYCoord(0);
-        var bar_width = 2/3 * (points[1].canvasx - points[0].canvasx);
-        ctx.fillStyle = e.color;
-
-        for (var i = 0; i < points.length; i++) {
-            var p = points[i];
-            var center_x = p.canvasx;
-            ctx.fillRect(center_x - bar_width / 2, p.canvasy,
-            bar_width, y_bottom - p.canvasy);
-            ctx.strokeRect(center_x - bar_width / 2, p.canvasy,
-            bar_width, y_bottom - p.canvasy);
-        }
-    }
 
      /* This function empties the carriers in the comparison on page leave.
     If the user leaves the current html snippet/template then, this function will notice that and trigger the function "emptyyCarrierArray" */
