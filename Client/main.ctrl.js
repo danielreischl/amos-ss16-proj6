@@ -339,30 +339,27 @@ add more lines and get different details.*/
 
 /* create the circle page upon page load. */
     $scope.circleGraph = function() {
-    /* open connection to the REST APi from the middleware and get the amount of carriers.
-       After receiving the data, the  integer varoable will be saved ionsdie amountOfCarriers
+    /* open connection to the REST API from the middleware and get the amount of carriers.
+       After receiving the data, the integer variable will be saved inside of amountOfCarriers
     */
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
     xmlHttp.send(null);
     var amountOfCarriers = xmlHttp.responseText;
-    // Changed for testing
-   // var amountOfCarriers = 15
 
     // the array variable where the converted content from the csv file will be.
-    var data;
+    var carrierPercentageData;
 
-    // get the csv files with the percentages from the middleware
+    // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
     Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
                                                                    dynamicTyping: true,
                                                                    complete: function(results) {
-                                                                       var data = results;
+                                                                       var carrierPercentageData = results.data[1];
                                                                        console.log("Parsing complete:", results);
                                                                    }
                                                                   }
     )
 
-    var percentageOfEnergy =[1, 0.6, 0.8, 1.2, 3, 0.6, 0.3, 0.2]
     /* ID of first Carrier */
     var idCounter = 1;
 
@@ -374,7 +371,7 @@ add more lines and get different details.*/
 
         angular.element(document.getElementById('circleGraphs')).append(temp);
 
-        createCircle(circleId, percentageOfEnergy[idCounter]);
+        createCircle(circleId, carrierPercentageData[idCounter - 1]);
         idCounter = idCounter+1;
         amountOfCarriers = amountOfCarriers -1;
     }
