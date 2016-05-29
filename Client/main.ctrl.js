@@ -302,6 +302,26 @@ add more lines and get different details.*/
  and upon receiving an event, it should trigger the update circle button*/
 .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
 
+ // the array variable where the converted content from the csv file will be.
+    var carrierPercentageData = [];
+
+    // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
+    Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
+                                                                   dynamicTyping: true,
+                                                                   complete: function(results) {
+                                                                       setCarrierPercentage(results.data[1])
+                                                                   }
+                                                                  }
+    )
+    //this function will save the array from
+    function setCarrierPercentage(percentageArray) {
+        for(var i=0; i < percentageArray.length; i++) {
+            carrierPercentageData.push(percentageArray[i]);
+        }
+    }
+
+
+
 /* This function will highlight the carrier and save the id of the carrier inside the comaprison arrary in app.service.js*/
     $scope.selectCarrier = function(event) {
         // id = carrier x
@@ -346,32 +366,6 @@ add more lines and get different details.*/
     xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
     xmlHttp.send(null);
     var amountOfCarriers = xmlHttp.responseText;
-
-    // the array variable where the converted content from the csv file will be.
-    var carrierPercentageData = [];
-
-    // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-    Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
-                                                                   dynamicTyping: true,
-                                                                   complete: function(results) {
-                                                                       setCarrierPercentage(results.data[1])
-                                                                       console.log("Parsing complete:", results);
-                                                                       console.log("Parsing data:", results.data);
-                                                                       console.log("Parsing data[1]:", results.data[1]);
-                                                                       console.log("Parsing data[1]:", results.data[1][0]);
-                                                                   }
-                                                                  }
-    )
-
-    //this function will save the array from
-    function setCarrierPercentage(percentageArray) {
-        alert("inside the function");
-        for(var i=0; i < percentageArray.length; i++) {
-            alert("called: " + percentageArray[i]);
-            carrierPercentageData.push(percentageArray[i]);
-            alert("called NewArray: " + carrierPercentageData[i]);
-        }
-    }
 
     /* ID of first Carrier */
     var idCounter = 1;
