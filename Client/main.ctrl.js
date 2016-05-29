@@ -208,7 +208,7 @@ add more lines and get different details.*/
         yAxisLabel = 'Average Speed';
 
 	} else if ($scope.selectedDimension == 4)
-        selectedDimension = "energyConsumptionTotal ";
+        selectedDimension = "energyConsumptionTotal";
         yAxisLabel = 'Total Energy Consumption in (W)';
     }
 
