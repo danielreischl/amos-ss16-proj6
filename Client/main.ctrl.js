@@ -599,7 +599,7 @@ g = new Dygraph(document.getElementById("graph"),data,
     labels: ["carrier1", "carrier2", "carrier3","carrier4","carrier5","carrier6","carrier7","carrier8"],
     datasets: [
         {
-            label: "My First dataset",
+            yAxisLabel: "My Y Axis Label",
             fillColor: "rgba(220,220,220,0.5)", 
             strokeColor: "rgba(220,220,220,0.8)", 
             highlightFill: "rgba(220,220,220,0.75)",
@@ -618,6 +618,23 @@ g = new Dygraph(document.getElementById("graph"),data,
     window.myObjBar = new Chart(ctx).Bar(barChartData, {
           responsive : true,
         scaleLabel: "<%= value %> %",
+
+
+        showTooltips: false,
+    onAnimationComplete: function () {
+
+        var ctx = this.chart.ctx;
+        ctx.font = this.scale.font;
+        ctx.fillStyle = this.scale.textColor
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+
+        this.datasets.forEach(function (dataset) {
+            dataset.bars.forEach(function (bar) {
+                ctx.fillText(bar.value, bar.x, bar.y - 5);
+            });
+        })
+    }
 
     });
 
