@@ -184,9 +184,10 @@ add more lines and get different details.*/
 
     // create the dropdown menu. the id is corresponding to the key word used in the database to extract the dimension.
     $scope.dimensions = [
-        {name : "Average Energy Consumption", id : 1 },
-        {name : "Average Acceleration", id : 2 },
-	    {name : "Average Speed", id: 3 },
+        {name : "Average Energy Consumption", id : 1},
+        {name : "Average Acceleration", id : 2},
+	    {name : "Average Speed", id: 3},
+	    {name : "Total Energy Consumption", id: 4},
 	    ]
 
 
@@ -196,16 +197,20 @@ add more lines and get different details.*/
 
     if($scope.selectedDimension == 1) {
         selectedDimension = "energyConsumptionAverage";
-        yAxisLabel = 'Energy Consumption in (mA)';
+        yAxisLabel = 'Energy Consumption in (W)';
 
     } else if($scope.selectedDimension == 2) {
         selectedDimension = "accelerationAverage";
         yAxisLabel = 'Average Acceleration';
 
-    } else if ($scope.selectedDimension == 3)
+    } else if ($scope.selectedDimension == 3) {
         selectedDimension = "speedAverage";
         yAxisLabel = 'Average Speed';
-	}
+
+	} else if ($scope.selectedDimension == 4)
+        selectedDimension = "energyConsumptionTotal ";
+        yAxisLabel = 'Total Energy Consumption in (W)';
+    }
 
 
     /* this functions creates the dygraph  from a data source and applies options to them*/
