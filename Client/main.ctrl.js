@@ -566,15 +566,15 @@ g = new Dygraph(document.getElementById("graph"),data,
 })
 
 */
-.controller('chartMaker',function($scope) {
+/*.controller('chartMaker',function($scope) {
 
         $scope.chartParams = {
             listOfCarriers: ['carrier1', 'carrier2', 'carrier3', 'carrier4', 'carrier5', 'carrier6', 'carrier7', 'carrier8', 'carrier9', 'carrier10', 'carrier11', 'carrier12', 'carrier13', 'carrier14', 'carrier15'],
-            percentage: [[80, 100, 60, 90, 150, 200, 100, 170, 100, 75, 120, 250, 170, 300, 280]],
+            dataset: [[80, 100, 60, 90, 150, 200, 100, 170, 100, 75, 120, 250, 170, 300, 280]],
             series: ["energy consumption"],
             label: 'percentage',
             colours: [{fillColor: ["#FF0000", "#00FF00", "#FF0000", "##FFFF00", "#FFFF00", "#FF0000", "#FF0000", "#00FF00", "#FFFF00", "#00FF00", "#FF0000", "#FF0000", "#FF0000", "#FF0000", "#FF0000"]}],
-
+          
             options: {barShowStroke: false},
             options: {
                 // String - Template string for single tooltips
@@ -583,50 +583,75 @@ g = new Dygraph(document.getElementById("graph"),data,
 
                 scaleLabel: "<%= value + '%' %>",
             },
-            /* ctx : document.getElementById("locationBar").getContext("2d")*/
 
-            options: {
-                customTooltips: function (tooltip) {
-                    var tooltipEl = $('#chartjs-tooltip');
+            /* ctx : document.getElementById("locationBar").getContext("2d")
 
-                    if (!tooltip) {
-                        tooltipEl.css({
-                            opacity: 0
-                        });
-                        return;
-                    }
 
-                    tooltipEl.removeClass('above below');
-                    tooltipEl.addClass(tooltip.yAlign);
-
-                    // split out the label and value and make your own tooltip here
-                    var parts = tooltip.text.split(":");
-                    var innerHtml = '<img src="assets/images/ic_add_circle_black_24px.svg"> <p> Add to comparison pane</p> <img src="assets/images/ic_zoom_in_black_24px.svg"><p>Drill down</p> <span>' + parts[0].trim() + '</span> : <span><b>' + parts[1].trim() + '</b></span>';
-                    tooltipEl.html(innerHtml);
-
-                    tooltipEl.css({
-                        opacity: 1,
-                        left: tooltip.chart.canvas.offsetLeft + tooltip.x + 'px',
-                        top: tooltip.chart.canvas.offsetTop + tooltip.y + 'px',
-                        fontFamily: tooltip.fontFamily,
-                        fontSize: tooltip.fontSize,
-                        fontStyle: tooltip.fontStyle,
-                    });
-                }
 
             }
 
         }
 
 
-        $scope.openComparisonSideBar = function () {
-            $mdSidenav('comparisonSidebar').toggle();
-        }
-    }
-)
+
+)*/
     
+.controller('chartMaker',function($scope) {
+
+    var barChartData = {
+    labels: ["carrier1", "carrier2", "carrier3","carrier4","carrier5","carrier6","carrier7","carrier8"],
+    datasets: [
+        {
+            label: "My First dataset",
+            fillColor: "rgba(220,220,220,0.5)", 
+            strokeColor: "rgba(220,220,220,0.8)", 
+            highlightFill: "rgba(220,220,220,0.75)",
+            highlightStroke: "rgba(220,220,220,1)",
+            data: [100, 150, 200, 75, 250, 80, 130, 60]
+            
+          
+        }
+    ],
+        
+
+};
 
 
+    var ctx = document.getElementById("mycanvas").getContext("2d");
+    window.myObjBar = new Chart(ctx).Bar(barChartData, {
+          responsive : true,
+        scaleLabel: "<%= value %> %",
+
+    });
+
+     var bars = myObjBar.datasets[0].bars;
+    for(i=0;i<bars.length;i++){
+       var color="green";
+       
+       if(bars[i].value<=100){
+       	color="yellow";
+       }
+       else if(bars[i].value<=150){
+       	color="green"
+          
+       
+       }
+       else if(bars[i].value<=200){
+       	color="red"
+       }
+       else{
+       	color="red"
+       }
+       
+       bars[i].fillColor = color;
+        bars[i].highlightFill = color;
+
+    }
+    myObjBar.update(); //update the cahrt
+
+
+}
+)
 
 
 
