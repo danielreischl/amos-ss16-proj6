@@ -8,10 +8,10 @@ Some of the key functionalities feature:
 
 Graphical presentation of the recorded data in a time series view Visually superimposing data of different carriers so that on this basis a human expert can detect anomalies Compressing the size of the real-time data by sensibly reducing it The graphical representation is based on several key measures that enable condition monitoring:
 
--Energy consumption
--Position
--Speed
--Acceleration
+* Energy consumption
+* Position
+* Speed
+* Acceleration
 
 ## Build Instructions
 
