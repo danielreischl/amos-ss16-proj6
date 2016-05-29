@@ -354,7 +354,9 @@ add more lines and get different details.*/
     Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
                                                                    dynamicTyping: true,
                                                                    complete: function(results) {
-                                                                       carrierPercentageData = results.data[1];
+                                                                       for(var i=0; i < results.data[1].length; i++) {
+                                                                           carrierPercentageData.push(results.data[1][i]);
+                                                                       }
                                                                        console.log("Parsing complete:", results);
                                                                        console.log("Parsing data:", results.data);
                                                                        console.log("Parsing data[1]:", results.data[1]);
