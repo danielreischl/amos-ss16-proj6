@@ -51,8 +51,13 @@ who need the data.
 
     // deletes a carrier with a given ID
     this.deleteCarrier = function(removeCarrier) {
-         var toDelete =  carriersForComparison.indexOf(removeCarrier);
-         carriersForComparison.splice(toDelete,1);
+        for(var i = 0; i < carriersForComparison.length; i++) {
+            if (carriersForComparison[i].carrierNumber == removeCarrier) {
+                carriersForComparison.splice(i,1);
+                return true;
+            }
+        }
+        return false;
     }
 
     // this function empties the array, so that no carrier item is left inside anymore.
@@ -60,9 +65,9 @@ who need the data.
         carriersForComparison.splice(0,carriersForComparison.length);
     }
 
-
      // this service returns 4 functions to the caller, which he can use.
     return {
+        hasCarrier: this.hasCarrier,
         addCarrier: this.addCarrier,
         getCarrier: this.getCarrier,
         deleteCarrier: this.deleteCarrier,
