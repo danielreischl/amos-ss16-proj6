@@ -347,10 +347,25 @@ add more lines and get different details.*/
     xmlHttp.send(null);
     var amountOfCarriers = xmlHttp.responseText;
     // Changed for testing
-    //var amountOfCarriers = 15
+   // var amountOfCarriers = 15
 
-    var arrayEnergy = [2, 42, 24, 10, 6, 4, 3, 23];
-    var arrayAverageEnergy =[2, 30, 25, 11, 2, 7, 23, 87]
+    // the array variable where the converted content from the csv file will be.
+    var data;
+
+    // get the csv files with the percentages from the middleware
+    Papa.parse('django/dataInterface/percentages.csv?session=1', { download: false,
+                                                                   dynamicTyping: true,
+                                                                   complete: function(results) {
+                                                                       var data = results;
+                                                                   };
+                                                                  };
+    )
+
+    alert(data[1][0]);
+
+
+
+    var percentageOfEnergy =[1, 0.6, 0.8, 1.2, 3, 0.6, 0.3, 0.2]
     /* ID of first Carrier */
     var idCounter = 1;
 
@@ -362,19 +377,18 @@ add more lines and get different details.*/
 
         angular.element(document.getElementById('circleGraphs')).append(temp);
 
-        createCircle(circleId, arrayEnergy[idCounter], arrayAverageEnergy[idCounter]);
+        createCircle(circleId, percentageOfEnergy[idCounter]);
         idCounter = idCounter+1;
         amountOfCarriers = amountOfCarriers -1;
     }
 
     /*  This function will create the circle graph, depending on the input parameters from the databse (right now it is hard coded*/
-    function createCircle(carrier, energy, averageEnergy) {
+    function createCircle(carrier, percentageOfEnergy) {
         var canvas = document.getElementById(carrier);
         var context = canvas.getContext('2d');
         var centerX = canvas.width / 2;
         var centerY = canvas.height / 2;
         var radius = 60;
-        var percentageEnergy =  Math.round((energy/averageEnergy) * 100);
 
         context.beginPath();
         context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -383,9 +397,9 @@ add more lines and get different details.*/
         context.stroke();
 
         /* depending on the ratio energy to average Energy, the color changes */
-        if( energy / averageEnergy >= 1.1) {
+        if(percentageOfEnergy >= 1.0) {
             context.fillStyle = '#FF1744';
-        } else if(energy  / averageEnergy <= 0.9 ) {
+        } else if(percentageOfEnergy <= 0.6 ) {
             context.fillStyle = '#00BFA5';
         } else {
             context.fillStyle = "#FFFF8D";
@@ -398,7 +412,7 @@ add more lines and get different details.*/
         context.lineStyle = "#212121";
         context.font = "15px sans-serif";
         context.fillText(carrier, centerX - 15, centerY);
-        context.fillText(percentageEnergy + "%", centerX - 15, centerY + 20);
+        context.fillText(percentageOfEnergy*100 + "%", centerX - 15, centerY + 20);
     }
 }
 
