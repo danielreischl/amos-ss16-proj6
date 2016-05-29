@@ -317,7 +317,7 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
 
     /* for every carrier in the database, create a new code fragment to be injected into the hdtml file. Each fragment is the base for a circle */
 
-    while (amountOfCarriers >= 0) {
+    while (amountOfCarriers > 0) {
 
         var circleId = "carrier " + idCounter;
         var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="openDialog($event)" ng-mouseenter="openDialog($event)" ng-mouseleave="closeDialog()"></canvas>';
