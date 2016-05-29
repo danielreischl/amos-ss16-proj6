@@ -354,15 +354,22 @@ add more lines and get different details.*/
     Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
                                                                    dynamicTyping: true,
                                                                    complete: function(results) {
-                                                                       for(var i=0; i < results.data[1].length; i++) {
-                                                                           carrierPercentageData.push(results.data[1][i]);
-                                                                       }
+                                                                       setCarrierPercentage(results.data[1])
                                                                        console.log("Parsing complete:", results);
                                                                        console.log("Parsing data:", results.data);
                                                                        console.log("Parsing data[1]:", results.data[1]);
+                                                                       console.log("Parsing data[1]:", results.data[1][0]);
                                                                    }
                                                                   }
     )
+
+    //this function will save the array from
+    function setCarrierPercentage(percentageArray) {
+        alert("called: " + results.data[1][0]);
+        for(var i=0; i < results.data[1].length; i++) {
+            carrierPercentageData.push(results.data[1][i]);
+        }
+    }
 
     /* ID of first Carrier */
     var idCounter = 1;
