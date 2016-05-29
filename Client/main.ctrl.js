@@ -145,7 +145,7 @@ add more lines and get different details.*/
 
     // default value for the dimension and yAxislabel
     var selectedDimension = "energyConsumptionAverage";
-    var yAxisLabel = 'Energy Consumption in (mA)';
+    var yAxisLabel = 'Energy Consumption in (W)';
 
     // the session requested from the database. For now it is fixed.
     var session = 1;
@@ -162,7 +162,7 @@ add more lines and get different details.*/
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     var arrayCarrier = [];
     var idCounter = 1;
-    while(arrayCarrier.length <= amountOfCarriers ) {
+    while(arrayCarrier.length < amountOfCarriers ) {
         arrayCarrier.push(idCounter);
         idCounter++;
     }
@@ -175,6 +175,9 @@ add more lines and get different details.*/
         //if the carrier is already inside the comparison array, then it will be removed.
         if(!carrierService.addCarrier(event.target.id)) {
             carrierService.deleteCarrier(event.target.id);
+            document.getElementById(event.target.id).checked = false;
+        } else {
+             document.getElementById(event.target.id).checked = true;
         }
     }
 
@@ -193,7 +196,7 @@ add more lines and get different details.*/
 
     if($scope.selectedDimension == 1) {
         selectedDimension = "energyConsumptionAverage";
-        yAxisLabel = 'Energy Consumption in (mA)'
+        yAxisLabel = 'Energy Consumption in (mA)';
 
     } else if($scope.selectedDimension == 2) {
         selectedDimension = "accelerationAverage";
@@ -205,7 +208,7 @@ add more lines and get different details.*/
 	}
 
 
-    /* this functions created the dygraph  from a data source and applies options to them*/
+    /* this functions creates the dygraph  from a data source and applies options to them*/
 
     $scope.createDrillDownGraph = function() {
 
@@ -217,14 +220,12 @@ add more lines and get different details.*/
 
         if(carrierCompareList.length != 0) {
             for (var i = 0; i < carrierCompareList.length; i++) {
-                for (var carrier = 1; carrier < amountOfCarriers; carrier++) {
+                for (var carrier = 1; carrier <= amountOfCarriers; carrier++) {
                     if (carrierCompareList[i].carrierNumber == carrier) {
                         if(carriersRequested === "") {
                             carriersRequested+=carrier;
-                            document.getElementById(carrier).checked = true;
                         } else {
                             carriersRequested+= ","+carrier+"";
-                            document.getElementById(carrier).checked = true;
                         }
                         break;
                     } else {
@@ -247,8 +248,20 @@ add more lines and get different details.*/
 	                                                                                      });
 
 
-        // After the graph has been plotted, the compareCarrier Array will be emptied.
+        // After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
         carrierService.emptyCarrierArray();
+        uncheckAllCheckboxes();
+    }
+
+
+    function uncheckAllCheckboxes() {
+        var checkboxElements = document.getElementsByTagName('input');
+        for (var i = 0; i < checkboxElements.length; i++) {
+            if(checkboxElements[i].type == 'checkbox') {
+                 checkboxElements[i].checked = false;
+            }
+        }
+
     }
 
 
