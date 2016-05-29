@@ -22,6 +22,7 @@
 
 
 /* This file should list all main controllers */
+
 angular.module('app')
 
 .controller("MainController", function(){
@@ -29,17 +30,21 @@ angular.module('app')
     vm.title = "Rogue Vision";
 })
 
-
 /* The side navigation should appear on button click */
+
 .controller('sideNavController', function($scope, $mdSidenav) {
  $scope.openLeftMenu = function() {
         $mdSidenav('menue').toggle();
         };
 })
 
-
 /* controller for the graph example. This should show the files in the dropdown menue.
  The user is then able to chose from one, which will be displayed on the page*/
+
+
+   
+
+
 .controller('visuController', function($scope) {
     $scope.dimensions = [
         {name : "Acceleration", id : "ACCELERATION", default: false},
@@ -73,7 +78,6 @@ angular.module('app')
 	    document.getElementById("graphdiv2"), "django/dataInterface/data.csv?carrier="+$scope.selectedCarrier+"&iteration="+$scope.selectedIteration+"&dimension="+$scope.selectedDimension+"&type=PoC", {});
     }
 })
-
 
 /* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/
 .controller('compareCircleGraph', function($scope, carrierService) {
@@ -133,6 +137,7 @@ angular.module('app')
 
 /* controller for the drillDown graph. This will show only the carrier selected by drilling Down. Furtheremore it will enable the user to
 add more lines and get different details.*/
+
 .controller('drillDownGraph', function($scope, carrierService) {
 
     var carrierCompareList = carrierService.getCarrier();
@@ -234,8 +239,8 @@ add more lines and get different details.*/
 })
    
 
-/* controller for the popupGraphs. Displays the carrier number and 2 Buttons. Depending on which button is pressed,
-the carrier Id will be put into the comparison sidebar or the drill down chart*/
+/* to be deleted, this is the old carrier compare function.
+
 .controller('circlePopUpController', function($scope, $mdDialog, $mdSidenav, circleId, carrierService) {
     var id = circleId;
     var carrierId = id.substr(7, 8); // This method is necessary, because the string is "carrier_x" To extract x, I need to get the subsstring
@@ -258,37 +263,35 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
     }
 })
 
+*/
 
-/* Refresh the circle Page. The purpose of this controller is listen to the Button
+/* Refresh the circle Page. The purporse of this controller is listen to the Button
  and upon receiving an event, it should trigger the update circle button*/
+
+
 .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
 
-/* open up a dialogue window upon triggering it via button click or via the hover function. The event is delayed by a timer
- if the the user is not leaving the hover area by the time the timer runs out, it will open up the popup. Else it will be canceled */
-    var timer;
+/* This function will highlight the carrier and save the id of the carrier inside the comaprison arrary in app.service.js*/
 
-    $scope.openDialog = function(event) {
+    $scope.selectCarrier = function(event) {
         var id = event.target.id;
-        timer = $timeout(function () {
-            $mdDialog.show({
-                controller: "circlePopUpController",
-                templateUrl: 'sections/circlePage/circlePopUp.html',
-                clickOutsideToClose:true,
-                locals: {circleId: id
-                }
-            });
-        }, 1000)
-    }
+        // This method is necessary, because the string is "carrier_x" To extract x, I need to get the subsstring
+        var carrierId = id.substr(7, 8);
 
-    $scope.closeDialog = function() {
-        $timeout.cancel(timer);
+        //check if carrier is already in list. If it already exists, then show a message, else it will save the value to the compare array
+        if(!carrierService.addCarrier(carrierId)) {
+           alert('Carrier: ' +carrierId+ ' is already in the comparison sidebar')
+       }
     }
 
 
-    /* create the circle page upon page load. */
+/* create the circle page upon page load. */
+
     $scope.circleGraph = function() {
+
     /* open connection to the REST APi from the middleware and get the amount of carriers.
-       After receiving the data, the  integer variable will be saved inside amountOfCarriers */
+       After receiving the data, the  integer varoable will be saved ionsdie amountOfCarriers
+    */
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
     xmlHttp.send(null);
@@ -299,20 +302,25 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
     /* ID of first Carrier */
     var idCounter = 1;
 
-    /* for every carrier in the database, create a new code fragment to be injected into the HTML file. Each fragment is the base for a circle */
-    while (amountOfCarriers > 0) {
-        var circleId = "carrier " + idCounter;
-        var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="openDialog($event)" ng-mouseenter="openDialog($event)" ng-mouseleave="closeDialog()"></canvas>';
-        var temp = $compile(fragmenthtml)($scope);
+    /* for every carrier in the database, create a new code fragment to be injected into the hdtml file. Each fragment is the base for a circle */
 
+    while (amountOfCarriers > 0) {
+
+        var circleId = "carrier " + idCounter;
+        var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="selectCarrier($event)"></canvas>';
+        var temp = $compile(fragmenthtml)($scope);
         angular.element(document.getElementById('circleGraphs')).append(temp);
+
         createCircle(circleId, arrayEnergy[idCounter], arrayAverageEnergy[idCounter]);
         idCounter = idCounter+1;
         amountOfCarriers = amountOfCarriers -1;
     }
 
     /*  This function will create the circle graph, depending on the input parameters from the databse (right now it is hard coded*/
+
     function createCircle(carrier, energy, averageEnergy) {
+
+
         var canvas = document.getElementById(carrier);
         var context = canvas.getContext('2d');
         var centerX = canvas.width / 2;
@@ -327,6 +335,7 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
         context.stroke();
 
         /* depending on the ratio energy to average Energy, the color changes */
+
         if( energy  > averageEnergy) {
             context.fillStyle = '#FF1744';
         } else if(energy  < averageEnergy ) {
@@ -344,9 +353,11 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
         context.fillText(carrier, centerX - 15, centerY);
         context.fillText(percentageEnergy + "%", centerX - 15, centerY + 20);
     }
-    }
+}
 
-    /* This function is for the side comparison navigation*/
+/* This function is for the side comparison navigation*/
+
+
     $scope.carriersForComparison = carrierService.getCarrier;
 
     $scope.removeCarrier = function(carrier) {
@@ -361,6 +372,8 @@ the carrier Id will be put into the comparison sidebar or the drill down chart*/
 
 
 /*.controller('barchartController',function () {
+
+
     function barChartPlotter(e) {
   var ctx = e.drawingContext;
   var points = e.points;
