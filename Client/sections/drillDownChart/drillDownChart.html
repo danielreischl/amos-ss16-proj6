@@ -23,20 +23,20 @@
 <!-- This html fragment displays the drilldown Graph -->
 
 <div ng-controller="drillDownGraph">
-    <section>
-         <select ng-model = "selectedCarrier" ng-change = "changeVisibility()">
-            <option selected disabled  value="">Chose Carrier</option>
-	        <option ng-repeat="carrier in arrayCarrier" value="{{carrier}}">Carrier {{carrier}}</option>
-         </select>
+    <ul>
+        <li ng-repeat="carrier in arrayCarrier" style=" color: black;  list-style-type: none; font-size: 20px;">
+            <input type="checkbox" id = "{{carrier}}" ng-click="changeCarrierToCompare($event)"> Carrier {{carrier}}
+        </li>
+    </ul>
 
-         <select ng-model="selectedDimension" ng-change = "changeVisibilityDimension()">
-            <option selected disabled  value="">Chose Dimension</option>
-	        <option ng-repeat="x in dimensions" value="{{x.id}}">{{x.name}}</option>
-         </select>
-    </section>
+    <select ng-model="selectedDimension" ng-change = "changeDimension()">
+        <option selected disabled  value="">Chose Dimension</option>
+	    <option ng-repeat="x in dimensions" value="{{x.id}}">{{x.name}}</option>
+    </select>
 
 
-      <md-button class="md-raised md-cornered"  ng-click="createDrillDownGraph()">Refresh</md-button>
-        <div ng-init ="createDrillDownGraph()" id="drillDownGraph" style="width:1600px; height:600px;"></div>
+    <md-button class="md-raised md-cornered"  ng-click="createDrillDownGraph()">Refresh</md-button>
+
+    <div ng-init ="createDrillDownGraph()" id="drillDownGraph" style="width:1600px; height:600px;"></div>
  </div>
 
