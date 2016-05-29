@@ -80,8 +80,8 @@ angular.module('app')
 })
 
 /* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/
-
 .controller('compareCircleGraph', function($scope, carrierService) {
+    // TODO these arrays need to be dynamic
     var carrierCompareList = carrierService.getCarrier();
     var carrierMax = 8; //this needs to be dynamic later if we have connection to the database
     var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
@@ -91,7 +91,6 @@ angular.module('app')
     $scope.arrayCarrier = arrayCarrier;
 
     //changes the visibility from true to false and vice versa, depending on the checkboxes.
-
     $scope.change = function(event) {
 
         if(visibilityArray[event.target.id]) {
@@ -103,16 +102,11 @@ angular.module('app')
 
     /* This function empties the carriers in the comparison on page leave.
     If the user leaves the current html snippet/template then, this function will notice that and trigger the function "emptyyCarrierArray" */
-
      $scope.$on("$destroy", function(){
          carrierService.emptyCarrierArray();
     });
 
-
-
-
     /* this functions created the dygraph  from a data source and applies options to them*/
-
     $scope.createCompareGraph = function() {
         graph = new Dygraph(
 	       document.getElementById("compareGraph"), 'sections/compareCarrier/dummy.csv', {title: "Carrier's energy consumption of the latest iteration",
@@ -124,8 +118,7 @@ angular.module('app')
 	                                                                                      });
 
         /* these loops have the purpose to see what carriers the user wants to compare
-        and change the visibilty of the carriers in the dygraph to true */
-
+        and change the visibility of the carriers in the dygraph to true */
         if(carrierCompareList.length != 0) {
             for (var i = 0; i < carrierCompareList.length; i++) {
                 for (var carrier = 0; carrier < carrierMax; carrier++) {
