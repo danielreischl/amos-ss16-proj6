@@ -302,6 +302,26 @@ add more lines and get different details.*/
  and upon receiving an event, it should trigger the update circle button*/
 .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
 
+ // the array variable where the converted content from the csv file will be.
+    var carrierPercentageData = [];
+
+    // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
+    Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
+                                                                   dynamicTyping: true,
+                                                                   complete: function(results) {
+                                                                       setCarrierPercentage(results.data[1])
+                                                                   }
+                                                                  }
+    )
+    //this function will save the array from
+    function setCarrierPercentage(percentageArray) {
+        for(var i=0; i < percentageArray.length; i++) {
+            carrierPercentageData.push(percentageArray[i]);
+        }
+    }
+
+
+
 /* This function will highlight the carrier and save the id of the carrier inside the comaprison arrary in app.service.js*/
     $scope.selectCarrier = function(event) {
         // id = carrier x
@@ -339,34 +359,18 @@ add more lines and get different details.*/
 
 /* create the circle page upon page load. */
     $scope.circleGraph = function() {
-    /* open connection to the REST APi from the middleware and get the amount of carriers.
-       After receiving the data, the  integer varoable will be saved ionsdie amountOfCarriers
+    /* open connection to the REST API from the middleware and get the amount of carriers.
+       After receiving the data, the integer variable will be saved inside of amountOfCarriers
     */
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
     xmlHttp.send(null);
     var amountOfCarriers = xmlHttp.responseText;
-    // Changed for testing
-   // var amountOfCarriers = 15
 
-    // the array variable where the converted content from the csv file will be.
-    var data;
-
-    // get the csv files with the percentages from the middleware
-    Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
-                                                                   dynamicTyping: true,
-                                                                   complete: function(results) {
-                                                                       var data = results;
-                                                                       console.log("Parsing complete:", results);
-                                                                   }
-                                                                  }
-    )
-
-    var percentageOfEnergy =[1, 0.6, 0.8, 1.2, 3, 0.6, 0.3, 0.2]
     /* ID of first Carrier */
     var idCounter = 1;
 
-    /* for every carrier in the database, create a new code fragment to be injected into the hdtml file. Each fragment is the base for a circle */
+    /* for every carrier in the database, create a new code fragment to be injected into the html file. Each fragment is the base for a circle */
     while (amountOfCarriers > 0) {
         var circleId = "carrier " + idCounter;
         var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="selectCarrier($event)"></canvas>';
@@ -374,7 +378,7 @@ add more lines and get different details.*/
 
         angular.element(document.getElementById('circleGraphs')).append(temp);
 
-        createCircle(circleId, percentageOfEnergy[idCounter]);
+        createCircle(circleId, carrierPercentageData[idCounter - 1]);
         idCounter = idCounter+1;
         amountOfCarriers = amountOfCarriers -1;
     }
