@@ -152,7 +152,7 @@ def logs(request):
     requestedType = request.GET['type']
 
     # Transfer Logfile to String
-    with open ('./srv/DataProcessing/dataProcessing.log','r') as logfile:
+    with open ('../../DataProcessing/dataProcessing.log','r') as logfile:
         output = logfile.read()
 
     if requestedType == "DataProcessing":
