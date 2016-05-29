@@ -38,13 +38,12 @@
         </section>
     </center>
 
-    <section layout="column" layout-align="center end">
-        <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#CompareCarrier'">Continuous Consumption Graph</md-button>
-        <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#drillDownChart'">Average Consumption Graph</md-button>
-    </section>
-
-    <section layout ="column" layout-align="center center">
-        <div id="circleGraphs"> </div>
+    <section layout="row" layout-align="center center">
+        <div layout ="column" layout-align="center center" id="circleGraphs"> </div>
+        <div layout="column" layout-align="center end">
+            <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#CompareCarrier'">Continuous Consumption Graph</md-button>
+            <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#drillDownChart'">Average Consumption Graph</md-button>
+        </div>
     </section>
 
     <md-sidenav md-component-id="comparisonSidebar" layout="column" class="md-sidenav-right" >
