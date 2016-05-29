@@ -22,7 +22,6 @@
 
 
 /* This file should list all main controllers */
-
 angular.module('app')
 
 .controller("MainController", function(){
@@ -40,11 +39,6 @@ angular.module('app')
 
 /* controller for the graph example. This should show the files in the dropdown menue.
  The user is then able to chose from one, which will be displayed on the page*/
-
-
-   
-
-
 .controller('visuController', function($scope) {
     $scope.dimensions = [
         {name : "Acceleration", id : "ACCELERATION", default: false},
@@ -137,7 +131,6 @@ angular.module('app')
 
 /* controller for the drillDown graph. This will show only the carrier selected by drilling Down. Furtheremore it will enable the user to
 add more lines and get different details.*/
-
 .controller('drillDownGraph', function($scope, carrierService) {
 
     // get the array with the carriers the user wants to see in the graph.
@@ -267,7 +260,6 @@ add more lines and get different details.*/
 
      /* This function empties the carriers in the comparison on page leave.
     If the user leaves the current html snippet/template then, this function will notice that and trigger the function "emptyyCarrierArray" */
-
      $scope.$on("$destroy", function(){
          carrierService.emptyCarrierArray();
     });
@@ -307,31 +299,36 @@ add more lines and get different details.*/
 
 /* This function will highlight the carrier and save the id of the carrier inside the comaprison arrary in app.service.js*/
     $scope.selectCarrier = function(event) {
+        // id = carrier x
         var id = event.target.id;
-        // This method is necessary, because the string is "carrier_x" To extract x, I need to get the subsstring
+        // This method is necessary, because the string is "carrier x" To extract x, I need to get the subsstring
         var carrierId = id.substr(7, 8);
 
         //var circle = document.getElementById("carrier " + carrierId);
-        circle = document.getElementById(id);
+        var canvas = document.getElementById(id);
+        var context = canvas.getContext('2d');
+        var centerX = canvas.width / 2;
+        var centerY = canvas.height / 2;
+        var radius = 70;
 
-        alert(carrierId);
-
-        //alert(circle)
-
-        circle.style.lineWidth = 20;
-
-        //check if carrier is already in list. If it already exists, then show a message, else it will save the value to the compare array
+        //check if carrier is already in list.
         if(!carrierService.addCarrier(carrierId)) {
+            //Already in the list, remove the highlight
+            context.beginPath();
+            context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            context.lineWidth = 9;
+            context.strokeStyle = "#ECEFF1";
+            context.stroke();
+
+            //If it exists delete the carrier
             carrierService.deleteCarrier(carrierId);
-            // TODO highlight
-            //circle.lineWidth = 20;
-            //context.strokeStyle = '#003300';
-            //context.stroke();
         } else {
-            // TODO unhighlight
-            // TODO BUG IN DELETE CARRIER
-            //circle.lineWidth = 1;
-            //alert('Carrier: ' +carrierId+ ' is already in the comparison sidebar');
+            //Not in the list, highlight
+            context.beginPath();
+            context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            context.lineWidth = 7;
+            context.strokeStyle = "#003300";
+            context.stroke();
         }
     }
 
