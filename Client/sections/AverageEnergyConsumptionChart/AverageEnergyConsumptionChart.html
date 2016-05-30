@@ -36,11 +36,16 @@
         </ul>
     </div>
 
+    <!-- ng-change is empty right now. this has to change, when iterations can be selected from the database -->
+    <select ng-model="selectedIteration" ng-change = "">
+        <option selected disabled  value="">Chose iteration</option>
+	    <option ng-repeat="x in iterations" value="{{x.id}}">{{x.name}}</option>
+    </select>
+
     <select ng-model="selectedDimension" ng-change = "changeDimension()">
         <option selected disabled  value="">Chose Dimension</option>
 	    <option ng-repeat="x in dimensions" value="{{x.id}}">{{x.name}}</option>
     </select>
-
 
     <md-button class="md-raised md-cornered"  ng-click="createAverageEnergyConsumptionChart()">Refresh</md-button>
 

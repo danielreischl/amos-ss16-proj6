@@ -192,8 +192,12 @@ which kind of data he wants to see. The default value is average energy consumpt
         }
     }
 
+    // create the dropdown menu for iterations. the id is corresponding to the key word used in the database to extract the dimension.
+    $scope.iterations = [
+        {name : "Last 10 Iterations", id : 'lastTen'},
+    ]
 
-    // create the dropdown menu. the id is corresponding to the key word used in the database to extract the dimension.
+    // create the dropdown menu for dimensions. the id is corresponding to the key word used in the database to extract the dimension.
     $scope.dimensions = [
         {name : "Average Energy Consumption", id : 'energyConsumptionAverage'},
         {name : "Average Acceleration", id : 'accelerationAverage'},
