@@ -39,8 +39,10 @@ def funcAverageEnergyConsumption (session, carrier, iteration):
 # Returns average acceleration of a carrier in a paticular session and iteration
 def funcAccelerationAverage (session, carrier, iteration):
     return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).accelerationAverage
+# Returns the amout of carriers in a specific session
 def funcAmountOfCarriers(session):
     return timestampdata.objects.filter(session=session).aggregate(Max('carrier')).get('carrier__max')
+# Returns the most recent session
 def funcRecentSession():
     return timestampdata.objects.aggregate(Max('session')).get('session__max')
 
