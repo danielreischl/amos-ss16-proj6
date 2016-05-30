@@ -248,7 +248,7 @@ add more lines and get different details.*/
         graph = new Dygraph(
 	       document.getElementById("drillDownGraph"), 'django/dataInterface/averageEnergyConsumption.csv?session='+session+'&carriers='+carriersRequested+'&dimension='+selectedDimension+'',
 	                                                                                     {title: "Average Energy Consumption Chart",
-	                                                                                      ylabel: yAxisLabel,
+	                                                                                      ylabel: yAxisLabels[selectedDimension],
 	                                                                                      xlabel: 'Iteration',
 	                                                                                      labelsSeparateLines: true,
 	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
