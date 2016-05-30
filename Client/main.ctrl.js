@@ -351,7 +351,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         }
     }
 
-    /*  This function will create the circle graph, depending on the input parameters from the databse (right now it is hard coded*/
+    /*  This function will create the circles, depending on the input parameters from the database*/
     function createCircle(carrier, percentageOfEnergy) {
         var canvas = document.getElementById(carrier);
         var context = canvas.getContext('2d');
@@ -366,7 +366,13 @@ which kind of data he wants to see. The default value is average energy consumpt
         context.strokeStyle = '#003300';
         context.stroke();
 
-        /* depending on the ratio energy to average Energy, the color changes */
+        /* Logic of the color: if the percentage of a carrier is above 1.05 it will be coded red,
+           because the energy consumption of the last iteration is too high in comparison to the
+           first iteration. If the value is < 1, then the color will be green, because the energy
+           consumption is less than the first iteration.
+           Any value between is coded yellow, because it should warn the user, that the energy
+           is higher than the very first iteration.
+         */
         if(percentageOfEnergy > 1.05) {
             context.fillStyle = '#FF1744';
         } else if(percentageOfEnergy < 1 ) {
