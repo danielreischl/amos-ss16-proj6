@@ -136,9 +136,15 @@ add more lines and get different details.*/
     // get the array with the carriers the user wants to see in the graph.
     var carrierCompareList = carrierService.getCarrier();
 
+    // y-Axis labels for different dimensions
+    var yAxisLabels = {'energyConsumptionAverage': 'Energy Consumption in (W)',
+		       'accelerationAverage"' : 'Average Acceleration',
+		       'speedAverage': 'Average Speed',
+		       'energyConsumptionTotal': 'Total Energy Consumption in (W)' };
+
     // default value for the dimension and yAxislabel
     var selectedDimension = "energyConsumptionAverage";
-    var yAxisLabel = 'Energy Consumption in (W)';
+    var yAxisLabel = yAxisLabels[selectedDimension];
 
     // the session requested from the database. For now it is fixed.
     var session = 1;
@@ -177,17 +183,19 @@ add more lines and get different details.*/
 
     // create the dropdown menu. the id is corresponding to the key word used in the database to extract the dimension.
     $scope.dimensions = [
-        {name : "Average Energy Consumption", id : 1},
-        {name : "Average Acceleration", id : 2},
-	    {name : "Average Speed", id: 3},
-	    {name : "Total Energy Consumption", id: 4},
-	    ]
+        {name : "Average Energy Consumption", id : 'energyConsumptionAverage'},
+        {name : "Average Acceleration", id : 'accelerationAverage'},
+	{name : "Average Speed", id: 'speedAverage'},
+	{name : "Total Energy Consumption", id: 'energyConsumptionTotal'}
+    ]
 
 
      // This function receives the changes from the dropDown menu "dimensions" and changes the yAxis name of the graph and requests the needed data by changing the string name.
 	$scope.changeDimension = function() {
-    selectedDimension = $scope.selectedDimension;
-
+	    selectedDimension = $scope.selectedDimension;
+	    yAxisLabel = yAxisLabels[selectedDimension];
+	}
+	    /*
     if($scope.selectedDimension == 1) {
         selectedDimension = "energyConsumptionAverage";
         yAxisLabel = 'Energy Consumption in (W)';
@@ -204,6 +212,7 @@ add more lines and get different details.*/
         selectedDimension = "energyConsumptionTotal";
         yAxisLabel = 'Total Energy Consumption in (W)';
     }
+    /*
 
 
     /* this functions creates the dygraph  from a data source and applies options to them*/
