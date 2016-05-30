@@ -173,6 +173,13 @@ which kind of data he wants to see. The default value is average energy consumpt
     /* Filling the Dropdown menues with the items of the array. The number of checkboxes depend on the amount of carriers in the database*/
     $scope.arrayCarrier = arrayCarrier;
 
+    // showCheckBoxes is at startup false, because the checkboxes should be hidden.
+    $scope.showCheckBoxes = false;
+
+    // When the user clicks on the Button, showCheckBoxes changes to true/false, depending on the previous state.
+    $scope.toggle = function(){
+        $scope.showCheckBoxes = !$scope.showCheckBoxes;
+    }
 
     // This function is called, when a change is made in the checkbox field.
     $scope.changeCarrierToCompare = function(event) {
@@ -255,7 +262,6 @@ which kind of data he wants to see. The default value is average energy consumpt
         }
 
     }
-
 
      /* This function empties the carriers in the comparison on page leave.
     If the user leaves the current html snippet/template then, this function will notice that and trigger the function "emptyyCarrierArray" */

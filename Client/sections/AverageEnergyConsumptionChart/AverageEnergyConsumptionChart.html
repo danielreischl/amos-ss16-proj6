@@ -26,11 +26,15 @@
 -->
 
 <div ng-controller="AverageEnergyConsumptionChart">
-    <ul>
-        <li ng-repeat="carrier in arrayCarrier" style=" color: black;  list-style-type: none; font-size: 20px;">
-            <input type="checkbox" id = "{{carrier}}" ng-click="changeCarrierToCompare($event)"> Carrier {{carrier}}
-        </li>
-    </ul>
+
+    <md-button class="md-raised md-cornered"  ng-click="toggle()">Carriers</md-button>
+    <div ng-show="showCheckBoxes">
+        <ul>
+            <li ng-repeat="carrier in arrayCarrier" style=" color: black;  list-style-type: none; font-size: 20px;">
+                <input type="checkbox" id = "{{carrier}}" ng-click="changeCarrierToCompare($event)"> Carrier {{carrier}}
+            </li>
+        </ul>
+    </div>
 
     <select ng-model="selectedDimension" ng-change = "changeDimension()">
         <option selected disabled  value="">Chose Dimension</option>
