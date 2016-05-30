@@ -359,24 +359,18 @@ add more lines and get different details.*/
     /* ID of first Carrier */
     var idCounter = 1;
     // the array variable where the converted content from the csv file will be.
-    var carrierPercentageData = [];
+    var carrierPercentageData;
     // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
     Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
                                                                    dynamicTyping: true,
                                                                    complete: function(results) {
-                                                                       setCarrierPercentage(results.data[1])
+                                                                       carrierPercentageData =results.data[1];
                                                                    }
                                                                   }
     )
-    //this function will save the array from
-    function setCarrierPercentage(percentageArray) {
-        for(var i=0; i < percentageArray.length; i++) {
-            carrierPercentageData.push(percentageArray[i]);
-        }
-    }
 
     //delay the creation of the circles by 2 seconds, so that the percentage data can be loaded into the function.
-    $timeout(createCarrierHTML, 2000);
+    $timeout(createCarrierHTML, 1000);
 
     // function to create HTML circle fragments dynamically
     function createCarrierHTML() {
@@ -405,6 +399,7 @@ add more lines and get different details.*/
         var centerX = canvas.width / 2;
         var centerY = canvas.height / 2;
         var radius = 60;
+        var percentageOfEnergyRounded = percentageOfEnergy.toFixed(2);
 
         context.beginPath();
         context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -413,9 +408,9 @@ add more lines and get different details.*/
         context.stroke();
 
         /* depending on the ratio energy to average Energy, the color changes */
-        if(percentageOfEnergy >= 1.0) {
+        if(percentageOfEnergy > 1.05) {
             context.fillStyle = '#FF1744';
-        } else if(percentageOfEnergy <= 0.6 ) {
+        } else if(percentageOfEnergy < 1 ) {
             context.fillStyle = '#00BFA5';
         } else {
             context.fillStyle = "#FFFF8D";
@@ -428,7 +423,7 @@ add more lines and get different details.*/
         context.lineStyle = "#212121";
         context.font = "15px sans-serif";
         context.fillText(carrier, centerX - 15, centerY);
-        context.fillText(percentageOfEnergy*100 + "%", centerX - 15, centerY + 20);
+        context.fillText(percentageOfEnergyRounded*100 + "%", centerX - 15, centerY + 20);
     }
 }
 

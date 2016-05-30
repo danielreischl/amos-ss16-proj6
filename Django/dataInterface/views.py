@@ -45,6 +45,14 @@ def funcAmountOfCarriers(session):
 # Returns the most recent session
 def funcRecentSession():
     return timestampdata.objects.aggregate(Max('session')).get('session__max')
+# Returns one percent value for CarrierView & BarchartView
+def funcPecentageOfConsumption (session, carrier):
+    # Consumption at first iteration
+    initialConsumption =  funcTotalEnergyConsumption(session, carrier, 1)
+    # Consumption at current iteration
+    lastConsumption = funcTotalEnergyConsumption(session, carrier, funcMaxIteration(session, carrier))
+    # Divides last Consumption by First Consumption and retunrs it
+    return (lastConsumption/initialConsumption)
 
 # Funtion to return values instead of csv - Files
 def db2values (request):
@@ -276,7 +284,7 @@ def percentageForCircleAndBarChart(request):
         # Appends Carrier + No to the first row
         firstRow.append ('Carrier' + str(carrier))
         # Appends the percentage for each carrier (EnergyConsumption last iteration/energyConsumption first iteration)
-        secondRow.append(funcTotalEnergyConsumption(requestedSession,carrier,funcMaxIteration(requestedSession,carrier))/funcTotalEnergyConsumption(requestedSession,carrier,1))
+        secondRow.append(funcPecentageOfConsumption(requestedSession, carrier))
 
     # Wirtes CSV - File
     writer.writerow (firstRow)
