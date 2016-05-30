@@ -138,12 +138,12 @@ which kind of data he wants to see. The default value is average energy consumpt
 
     // y-Axis labels for different dimensions
     var yAxisLabels = {'energyConsumptionAverage': 'Average Energy Consumption in (W)',
-		       'accelerationAverage"' : 'Average Acceleration',
+		       'accelerationAverage' : 'Average Acceleration',
 		       'speedAverage': 'Average Speed',
 		       'energyConsumptionTotal': 'Total Energy Consumption in (W)' };
 
     var units = {'energyConsumptionAverage': 'W',
-		 'accelerationAverage"' : '?',
+		 'accelerationAverage' : '?',
 		 'speedAverage': '?',
 		 'energyConsumptionTotal': 'W' };
 
