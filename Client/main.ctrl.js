@@ -281,33 +281,7 @@ add more lines and get different details.*/
 })
    
 
-/* to be deleted, this is the old carrier compare function.
-
-.controller('circlePopUpController', function($scope, $mdDialog, $mdSidenav, circleId, carrierService) {
-    var id = circleId;
-    var carrierId = id.substr(7, 8); // This method is necessary, because the string is "carrier_x" To extract x, I need to get the subsstring
-    $scope.carrierNumber =  carrierId;
-
-    $scope.addToComparison = function() {  //This function will add the carrier to the Side Panel "Compare". It will also check, if the item is already inside the comaprison pane.
-        if(!carrierService.addCarrier(carrierId)) {         //check if carrier is already in list. If it already exists, then show a message.
-            alert('Carrier: ' +carrierId+ ' is already in the comparison sidebar')
-       }
-        $mdDialog.hide();
-        $mdSidenav('comparisonSidebar').toggle();
-    }
-
-    //This function will empty first all carriers left in the comparison sidenav AND only add the carrier selected to it. Then it will jump to the comparison chart directly..
-    $scope.drillDown = function() {
-        carrierService.emptyCarrierArray;
-        carrierService.addCarrier(carrierId);
-        $mdDialog.hide();
-        window.location.href ="#drillDownChart";
-    }
-})
-
-*/
-
-/* Refresh the circle Page. The purporse of this controller is listen to the Button
+/* Refresh the circle Page. The purpose of this controller is listen to the Button
  and upon receiving an event, it should trigger the update circle button*/
 .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
 
@@ -369,7 +343,7 @@ add more lines and get different details.*/
                                                                   }
     )
 
-    //delay the creation of the circles by 2 seconds, so that the percentage data can be loaded into the function.
+    //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
     $timeout(createCarrierHTML, 1000);
 
     // function to create HTML circle fragments dynamically
@@ -426,17 +400,6 @@ add more lines and get different details.*/
         context.fillText(percentageOfEnergyRounded*100 + "%", centerX - 15, centerY + 20);
     }
 }
-
-/* This function is for the side comparison navigation*/
-    $scope.carriersForComparison = carrierService.getCarrier;
-
-    $scope.removeCarrier = function(carrier) {
-        carrierService.deleteCarrier(carrier);
-    }
-
-    $scope.openComparisonSideBar = function() {
-        $mdSidenav('comparisonSidebar').toggle();
-    }
 
 })
 

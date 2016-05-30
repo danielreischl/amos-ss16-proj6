@@ -34,7 +34,6 @@
     <center>
         <section layout="row" layout-align="center start">
             <md-button class="md-raised md-cornered" Onclick="location.href='#BarCarrier'">Change to Barchart View</md-button>
-            <md-button class="md-raised md-cornered" ng-click="openComparisonSideBar()">Open Comparison Sidebar</md-button>
         </section>
     </center>
 
@@ -47,17 +46,6 @@
             <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#drillDownChart'">Average Consumption Graph</md-button>
         </div>
     </section>
-
-    <md-sidenav md-component-id="comparisonSidebar" layout="column" class="md-sidenav-right" >
-        <md-list-item layout = "column" id="sidenavTOP">
-            <ul id="CarrierItems" ng-repeat = "carrier in carriersForComparison()" layout="row">
-                <li >Carrier {{carrier.carrierNumber}}</li>
-                <md-button class="md-raised md-cornered md-small" ng-click="removeCarrier(carrier)">Remove</md-button>
-            </ul>
-        </md-list-item>
-
-        <md-button class="submitButton" onclick="location.href='#CompareCarrier'" >Compare Carriers</md-button>
-    </md-sidenav>
 </div>
 
 
