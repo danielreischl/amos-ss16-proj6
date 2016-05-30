@@ -1,22 +1,22 @@
 /*
-   This file is part of Rogue Vison.
+   This file is part of Rogue Vision.
 
    Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
        Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
        Aleksander Penew, Abinav Puri
 
-   ReqTracker is free software: you can redistribute it and/or modify
+   Rogue Vision is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ReqTracker is distributed in the hope that it will be useful,
+   Rogue Vision is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PUROSE.  See the
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU Affero General Public License for more details.
 
    You should have received a copy of the GNU Affero General Public License
-   along with Rogue Vison.  If not, see <http://www.gnu.org/licenses/>.
+   along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
@@ -291,10 +291,10 @@ which kind of data he wants to see. The default value is average energy consumpt
     var carrierCompareList = carrierService.getCarrier();
 
     // y-Axis labels for different dimensions
-    var yAxisLabels = {'energyConsumptionAverage': 'Average Energy Consumption in (W)',
+    var yAxisLabels = {'energyConsumptionAverage' : 'Average Energy Consumption',
 		       'accelerationAverage' : 'Average Acceleration',
 		       'speedAverage': 'Average Speed',
-		       'energyConsumptionTotal': 'Total Energy Consumption in (W)' };
+		       'energyConsumptionTotal': 'Total Energy Consumption' };
 
     var units = {'energyConsumptionAverage': 'W',
 		 'accelerationAverage' : '?',
@@ -327,6 +327,13 @@ which kind of data he wants to see. The default value is average energy consumpt
     /* Filling the Dropdown menues with the items of the array. The number of checkboxes depend on the amount of carriers in the database*/
     $scope.arrayCarrier = arrayCarrier;
 
+    // showCheckBoxes is at startup false, because the checkboxes should be hidden.
+    $scope.showCheckBoxes = false;
+
+    // When the user clicks on the Button, showCheckBoxes changes to true/false, depending on the previous state.
+    $scope.toggle = function(){
+        $scope.showCheckBoxes = !$scope.showCheckBoxes;
+    }
 
     // This function is called, when a change is made in the checkbox field.
     $scope.changeCarrierToCompare = function(event) {
@@ -339,8 +346,12 @@ which kind of data he wants to see. The default value is average energy consumpt
         }
     }
 
+    // create the dropdown menu for iterations. the id is corresponding to the key word used in the database to extract the dimension.
+    $scope.iterations = [
+        {name : "Last 10 Iterations", id : 'lastTen'},
+    ]
 
-    // create the dropdown menu. the id is corresponding to the key word used in the database to extract the dimension.
+    // create the dropdown menu for dimensions. the id is corresponding to the key word used in the database to extract the dimension.
     $scope.dimensions = [
         {name : "Average Energy Consumption", id : 'energyConsumptionAverage'},
         {name : "Average Acceleration", id : 'accelerationAverage'},
@@ -408,7 +419,6 @@ which kind of data he wants to see. The default value is average energy consumpt
             }
         }
     }
-
 
      /* This function empties the carriers in the comparison on page leave.
      If the user leaves the current html snippet/template then, this function will notice that and trigger the function "emptyyCarrierArray" */
