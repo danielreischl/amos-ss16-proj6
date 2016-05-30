@@ -137,10 +137,10 @@ add more lines and get different details.*/
     var carrierCompareList = carrierService.getCarrier();
 
     // y-Axis labels for different dimensions
-    var yAxisLabels = {'energyConsumptionAverage': 'Average Energy Consumption in (W)',
-		       'accelerationAverage"' : 'Average Acceleration',
+    var yAxisLabels = {'energyConsumptionAverage': 'Average Energy Consumption',
+		       'accelerationAverage' : 'Average Acceleration',
 		       'speedAverage': 'Average Speed',
-		       'energyConsumptionTotal': 'Total Energy Consumption in (W)' };
+		       'energyConsumptionTotal': 'Total Energy Consumption' };
 
     var units = {'energyConsumptionAverage': 'W',
 		 'accelerationAverage"' : '?',
