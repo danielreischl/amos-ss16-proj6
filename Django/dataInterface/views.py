@@ -197,7 +197,7 @@ def deleteDatabaseValues (request):
 
 def averageEnergyConsumption (request):
 
-    # Provides last 10 iterations  for the drillDownChart
+    # Provides last 10 iterations  for the AverageEnergyConsumptionChart
     # parameters: session, carriers, dimension
     requestedSession = request.GET['session']
     requestedCarriers = request.GET['carriers']

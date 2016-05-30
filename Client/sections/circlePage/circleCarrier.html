@@ -20,10 +20,9 @@
 -->
 
 
-<!-- This page displays the circle carrier dashbaord view fragment. The function circleGraph will be called to create circles,
-     depending on the amount of carriers avaiable in the database.
-     Also, the comparison sidebar is shown in this snippet. When the user puts carriers into the comparison sidebar, the sidebar will open
-     and show all items stored. The User can remove the items by clicking on the "remove " button next to the item.
+<!-- This page displays the circle carrier dashboard view fragment. The function circleGraph will be called to create circles,
+     depending on the amount of carriers available in the database.
+     The user will be able to select carriers and compare them in either the average Consumption Graph or Continuous Consumption graph
 -->
 
 <div ng-controller="circleGraphController">
@@ -43,7 +42,7 @@
         </div>
         <div layout="row" layout-align="center center">
             <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#CompareCarrier'">Continuous Consumption Graph</md-button>
-            <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#drillDownChart'">Average Consumption Graph</md-button>
+            <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#AverageEnergyConsumptionChart'">Average Consumption Graph</md-button>
         </div>
     </section>
 </div>

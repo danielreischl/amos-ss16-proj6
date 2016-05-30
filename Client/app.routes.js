@@ -59,8 +59,8 @@ angular
         templateUrl: 'sections/compareCarrier/CompareCarrier.html'
       })
 
-      .when('/drillDownChart', {
-        templateUrl: 'sections/drillDownChart/drillDownChart.html'
+      .when('/AverageEnergyConsumptionChart', {
+        templateUrl: 'sections/AverageEnergyConsumptionChart/AverageEnergyConsumptionChart.html'
       })
 
       .otherwise({

@@ -129,9 +129,9 @@ angular.module('app')
 })
 
 
-/* controller for the drillDown graph. This will show only the carrier selected by drilling Down. Furtheremore it will enable the user to
-add more lines and get different details.*/
-.controller('drillDownGraph', function($scope, carrierService) {
+/* controller for the AverageEnergyConsumption Chart. This chart will display the data over iterations. The user can select
+which kind of data he wants to see. The default value is average energy consumption.*/
+.controller('AverageEnergyConsumptionChart', function($scope, carrierService) {
 
     // get the array with the carriers the user wants to see in the graph.
     var carrierCompareList = carrierService.getCarrier();
@@ -185,8 +185,8 @@ add more lines and get different details.*/
     $scope.dimensions = [
         {name : "Average Energy Consumption", id : 'energyConsumptionAverage'},
         {name : "Average Acceleration", id : 'accelerationAverage'},
-	{name : "Average Speed", id: 'speedAverage'},
-	{name : "Total Energy Consumption", id: 'energyConsumptionTotal'}
+	    {name : "Average Speed", id: 'speedAverage'},
+	    {name : "Total Energy Consumption", id: 'energyConsumptionTotal'}
     ]
 
 
@@ -217,7 +217,7 @@ add more lines and get different details.*/
 
     /* this functions creates the dygraph  from a data source and applies options to them*/
 
-    $scope.createDrillDownGraph = function() {
+    $scope.createAverageEnergyConsumptionChart = function() {
 
         //ensure that the variable is empty, before saving the new request path into it
         carriersRequested = "";
@@ -246,7 +246,7 @@ add more lines and get different details.*/
         // create the graph with the parameters set. The request path for the database depends on 3 parameters: session, carrierRequested and selectedDimension
 
         graph = new Dygraph(
-	       document.getElementById("drillDownGraph"), 'django/dataInterface/averageEnergyConsumption.csv?session='+session+'&carriers='+carriersRequested+'&dimension='+selectedDimension+'',
+	       document.getElementById("AverageEnergyConsumptionChart"), 'django/dataInterface/averageEnergyConsumption.csv?session='+session+'&carriers='+carriersRequested+'&dimension='+selectedDimension+'',
 	                                                                                     {title: "Average Energy Consumption Chart",
 	                                                                                      ylabel: yAxisLabels[selectedDimension],
 	                                                                                      xlabel: 'Iteration',
