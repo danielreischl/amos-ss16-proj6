@@ -11,11 +11,11 @@
 #
 #   Rogue Vision is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PUROSE.  See the
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU Affero General Public License for more details.
 #
 #   You should have received a copy of the GNU Affero General Public License
-#   along with rogueVision.  If not, see <http://www.gnu.org/licenses/>.
+#   along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
 
 import csv
 from django.shortcuts import render
@@ -197,7 +197,7 @@ def deleteDatabaseValues (request):
 
 def averageEnergyConsumption (request):
 
-    # Provides last 10 iterations  for the drillDownChart
+    # Provides last 10 iterations  for the AverageEnergyConsumptionChart
     # parameters: session, carriers, dimension
     requestedSession = request.GET['session']
     requestedCarriers = request.GET['carriers']

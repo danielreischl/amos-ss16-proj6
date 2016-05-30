@@ -11,11 +11,11 @@
 #
 #   Rogue Vision is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PUROSE.  See the
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU Affero General Public License for more details.
 #
 #   You should have received a copy of the GNU Affero General Public License
-#   along with rogueVision.  If not, see <http://www.gnu.org/licenses/>.
+#   along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.conf.urls import url
 
@@ -33,7 +33,7 @@ urlpatterns = [
     url(r'^values.request', views.db2values, name='values'),
     # URL that enables to delete values out of database
     url (r'^deleteTables.request', views.deleteDatabaseValues, name = 'deleteTables'),
-    # URL that provides data to the drillDownChart
+    # URL that provides data to the AverageEnergyConsumptionChart
     url (r'^averageEnergyConsumption.csv', views.averageEnergyConsumption, name ='averageEnergyConsumption'),
     # URL that provides the percanteges for the Circle View and Bar Chart
     url (r'^percentages.csv', views.percentageForCircleAndBarChart, name = 'percentageForCircleAndBarChart'),

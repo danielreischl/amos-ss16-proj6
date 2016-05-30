@@ -1,5 +1,5 @@
 <!--
-   This file is part of Rogue Vison.
+   This file is part of Rogue Vision.
 
    Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
        Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
@@ -12,18 +12,17 @@
 
    Rogue Vision is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PUROSE.  See the
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU Affero General Public License for more details.
 
    You should have received a copy of the GNU Affero General Public License
-   along with Rogue Vison.  If not, see <http://www.gnu.org/licenses/>.
+   along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 
-<!-- This page displays the circle carrier dashbaord view fragment. The function circleGraph will be called to create circles,
-     depending on the amount of carriers avaiable in the database.
-     Also, the comparison sidebar is shown in this snippet. When the user puts carriers into the comparison sidebar, the sidebar will open
-     and show all items stored. The User can remove the items by clicking on the "remove " button next to the item.
+<!-- This page displays the circle carrier dashboard view fragment. The function circleGraph will be called to create circles,
+     depending on the amount of carriers available in the database.
+     The user will be able to select carriers and compare them in either the average Consumption Graph or Continuous Consumption graph
 -->
 
 <div ng-controller="circleGraphController">
@@ -34,7 +33,6 @@
     <center>
         <section layout="row" layout-align="center start">
             <md-button class="md-raised md-cornered" Onclick="location.href='#BarCarrier'">Change to Barchart View</md-button>
-            <md-button class="md-raised md-cornered" ng-click="openComparisonSideBar()">Open Comparison Sidebar</md-button>
         </section>
     </center>
 
@@ -44,20 +42,9 @@
         </div>
         <div layout="row" layout-align="center center">
             <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#CompareCarrier'">Continuous Consumption Graph</md-button>
-            <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#drillDownChart'">Average Consumption Graph</md-button>
+            <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#AverageEnergyConsumptionChart'">Average Consumption Graph</md-button>
         </div>
     </section>
-
-    <md-sidenav md-component-id="comparisonSidebar" layout="column" class="md-sidenav-right" >
-        <md-list-item layout = "column" id="sidenavTOP">
-            <ul id="CarrierItems" ng-repeat = "carrier in carriersForComparison()" layout="row">
-                <li >Carrier {{carrier.carrierNumber}}</li>
-                <md-button class="md-raised md-cornered md-small" ng-click="removeCarrier(carrier)">Remove</md-button>
-            </ul>
-        </md-list-item>
-
-        <md-button class="submitButton" onclick="location.href='#CompareCarrier'" >Compare Carriers</md-button>
-    </md-sidenav>
 </div>
 
 

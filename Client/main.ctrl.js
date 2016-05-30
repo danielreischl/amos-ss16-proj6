@@ -1,22 +1,22 @@
 /*
-   This file is part of Rogue Vison.
+   This file is part of Rogue Vision.
 
    Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
        Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
        Aleksander Penew, Abinav Puri
 
-   ReqTracker is free software: you can redistribute it and/or modify
+   Rogue Vision is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ReqTracker is distributed in the hope that it will be useful,
+   Rogue Vision is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PUROSE.  See the
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU Affero General Public License for more details.
 
    You should have received a copy of the GNU Affero General Public License
-   along with Rogue Vison.  If not, see <http://www.gnu.org/licenses/>.
+   along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
@@ -129,21 +129,21 @@ angular.module('app')
 })
 
 
-/* controller for the drillDown graph. This will show only the carrier selected by drilling Down. Furtheremore it will enable the user to
-add more lines and get different details.*/
-.controller('drillDownGraph', function($scope, carrierService) {
+/* controller for the AverageEnergyConsumption Chart. This chart will display the data over iterations. The user can select
+which kind of data he wants to see. The default value is average energy consumption.*/
+.controller('AverageEnergyConsumptionChart', function($scope, carrierService) {
 
     // get the array with the carriers the user wants to see in the graph.
     var carrierCompareList = carrierService.getCarrier();
 
     // y-Axis labels for different dimensions
-    var yAxisLabels = {'energyConsumptionAverage': 'Average Energy Consumption',
+    var yAxisLabels = {'energyConsumptionAverage' : 'Average Energy Consumption',
 		       'accelerationAverage' : 'Average Acceleration',
 		       'speedAverage': 'Average Speed',
 		       'energyConsumptionTotal': 'Total Energy Consumption' };
 
     var units = {'energyConsumptionAverage': 'W',
-		 'accelerationAverage"' : '?',
+		 'accelerationAverage' : '?',
 		 'speedAverage': '?',
 		 'energyConsumptionTotal': 'W' };
 
@@ -190,8 +190,8 @@ add more lines and get different details.*/
     $scope.dimensions = [
         {name : "Average Energy Consumption", id : 'energyConsumptionAverage'},
         {name : "Average Acceleration", id : 'accelerationAverage'},
-	{name : "Average Speed", id: 'speedAverage'},
-	{name : "Total Energy Consumption", id: 'energyConsumptionTotal'}
+	    {name : "Average Speed", id: 'speedAverage'},
+	    {name : "Total Energy Consumption", id: 'energyConsumptionTotal'}
     ]
 
 
@@ -202,7 +202,7 @@ add more lines and get different details.*/
 
     /* this functions creates the dygraph  from a data source and applies options to them*/
 
-    $scope.createDrillDownGraph = function() {
+    $scope.createAverageEnergyConsumptionChart = function() {
 
         //ensure that the variable is empty, before saving the new request path into it
         carriersRequested = "";
@@ -231,7 +231,7 @@ add more lines and get different details.*/
         // create the graph with the parameters set. The request path for the database depends on 3 parameters: session, carrierRequested and selectedDimension
 
         graph = new Dygraph(
-	       document.getElementById("drillDownGraph"), 'django/dataInterface/averageEnergyConsumption.csv?session='+session+'&carriers='+carriersRequested+'&dimension='+selectedDimension+'',
+	       document.getElementById("AverageEnergyConsumptionChart"), 'django/dataInterface/averageEnergyConsumption.csv?session='+session+'&carriers='+carriersRequested+'&dimension='+selectedDimension+'',
 	                                                                                     {title: yAxisLabels[selectedDimension],
 	                                                                                      ylabel: yAxisLabels[selectedDimension]+' in '+units[selectedDimension],
 	                                                                                      xlabel: 'Iteration',
@@ -266,33 +266,7 @@ add more lines and get different details.*/
 })
    
 
-/* to be deleted, this is the old carrier compare function.
-
-.controller('circlePopUpController', function($scope, $mdDialog, $mdSidenav, circleId, carrierService) {
-    var id = circleId;
-    var carrierId = id.substr(7, 8); // This method is necessary, because the string is "carrier_x" To extract x, I need to get the subsstring
-    $scope.carrierNumber =  carrierId;
-
-    $scope.addToComparison = function() {  //This function will add the carrier to the Side Panel "Compare". It will also check, if the item is already inside the comaprison pane.
-        if(!carrierService.addCarrier(carrierId)) {         //check if carrier is already in list. If it already exists, then show a message.
-            alert('Carrier: ' +carrierId+ ' is already in the comparison sidebar')
-       }
-        $mdDialog.hide();
-        $mdSidenav('comparisonSidebar').toggle();
-    }
-
-    //This function will empty first all carriers left in the comparison sidenav AND only add the carrier selected to it. Then it will jump to the comparison chart directly..
-    $scope.drillDown = function() {
-        carrierService.emptyCarrierArray;
-        carrierService.addCarrier(carrierId);
-        $mdDialog.hide();
-        window.location.href ="#drillDownChart";
-    }
-})
-
-*/
-
-/* Refresh the circle Page. The purporse of this controller is listen to the Button
+/* Refresh the circle Page. The purpose of this controller is listen to the Button
  and upon receiving an event, it should trigger the update circle button*/
 .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
 
@@ -354,7 +328,7 @@ add more lines and get different details.*/
                                                                   }
     )
 
-    //delay the creation of the circles by 2 seconds, so that the percentage data can be loaded into the function.
+    //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
     $timeout(createCarrierHTML, 1000);
 
     // function to create HTML circle fragments dynamically
@@ -377,7 +351,7 @@ add more lines and get different details.*/
         }
     }
 
-    /*  This function will create the circle graph, depending on the input parameters from the databse (right now it is hard coded*/
+    /*  This function will create the circles, depending on the input parameters from the database*/
     function createCircle(carrier, percentageOfEnergy) {
         var canvas = document.getElementById(carrier);
         var context = canvas.getContext('2d');
@@ -392,7 +366,13 @@ add more lines and get different details.*/
         context.strokeStyle = '#003300';
         context.stroke();
 
-        /* depending on the ratio energy to average Energy, the color changes */
+        /* Logic of the color: if the percentage of a carrier is above 1.05 it will be coded red,
+           because the energy consumption of the last iteration is too high in comparison to the
+           first iteration. If the value is < 1, then the color will be green, because the energy
+           consumption is less than the first iteration.
+           Any value between is coded yellow, because it should warn the user, that the energy
+           is higher than the very first iteration.
+         */
         if(percentageOfEnergy > 1.05) {
             context.fillStyle = '#FF1744';
         } else if(percentageOfEnergy < 1 ) {
@@ -411,17 +391,6 @@ add more lines and get different details.*/
         context.fillText(percentageOfEnergyRounded*100 + "%", centerX - 15, centerY + 20);
     }
 }
-
-/* This function is for the side comparison navigation*/
-    $scope.carriersForComparison = carrierService.getCarrier;
-
-    $scope.removeCarrier = function(carrier) {
-        carrierService.deleteCarrier(carrier);
-    }
-
-    $scope.openComparisonSideBar = function() {
-        $mdSidenav('comparisonSidebar').toggle();
-    }
 
 })
 

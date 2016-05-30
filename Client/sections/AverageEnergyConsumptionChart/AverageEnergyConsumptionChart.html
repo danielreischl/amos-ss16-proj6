@@ -1,5 +1,5 @@
 <!--
-   This file is part of Rogue Vison.
+   This file is part of Rogue Vision.
 
    Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
        Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
@@ -12,17 +12,20 @@
 
    Rogue Vision is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PUROSE.  See the
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU Affero General Public License for more details.
 
    You should have received a copy of the GNU Affero General Public License
-   along with Rogue Vison.  If not, see <http://www.gnu.org/licenses/>.
+   along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 
-<!-- This html fragment displays the drilldown Graph -->
+<!-- This html fragment displays the AverageEnergyConsumption Chart
+     Additionally to the graph, a checkbox menu to choose carriers from and a dropdown menu to choose
+     dimensions is shown in this view.
+-->
 
-<div ng-controller="drillDownGraph">
+<div ng-controller="AverageEnergyConsumptionChart">
     <ul>
         <li ng-repeat="carrier in arrayCarrier" style=" color: black;  list-style-type: none; font-size: 20px;">
             <input type="checkbox" id = "{{carrier}}" ng-click="changeCarrierToCompare($event)"> Carrier {{carrier}}
@@ -35,8 +38,8 @@
     </select>
 
 
-    <md-button class="md-raised md-cornered"  ng-click="createDrillDownGraph()">Refresh</md-button>
+    <md-button class="md-raised md-cornered"  ng-click="createAverageEnergyConsumptionChart()">Refresh</md-button>
 
-    <div ng-init ="createDrillDownGraph()" id="drillDownGraph" style="width:1600px; height:600px;"></div>
+    <div ng-init ="createAverageEnergyConsumptionChart()" id="AverageEnergyConsumptionChart" style="width:1600px; height:600px;"></div>
  </div>
 
