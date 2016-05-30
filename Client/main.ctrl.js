@@ -137,10 +137,15 @@ which kind of data he wants to see. The default value is average energy consumpt
     var carrierCompareList = carrierService.getCarrier();
 
     // y-Axis labels for different dimensions
-    var yAxisLabels = {'energyConsumptionAverage': 'Energy Consumption in (W)',
+    var yAxisLabels = {'energyConsumptionAverage': 'Average Energy Consumption in (W)',
 		       'accelerationAverage"' : 'Average Acceleration',
 		       'speedAverage': 'Average Speed',
 		       'energyConsumptionTotal': 'Total Energy Consumption in (W)' };
+
+    var units = {'energyConsumptionAverage': 'W',
+		 'accelerationAverage"' : '?',
+		 'speedAverage': '?',
+		 'energyConsumptionTotal': 'W' };
 
     // default value for the dimension and yAxislabel
     var selectedDimension = "energyConsumptionAverage";
@@ -191,29 +196,9 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 
      // This function receives the changes from the dropDown menu "dimensions" and changes the yAxis name of the graph and requests the needed data by changing the string name.
-	$scope.changeDimension = function() {
+        $scope.changeDimension = function() {
 	    selectedDimension = $scope.selectedDimension;
-	    yAxisLabel = yAxisLabels[selectedDimension];
 	}
-	    /*
-    if($scope.selectedDimension == 1) {
-        selectedDimension = "energyConsumptionAverage";
-        yAxisLabel = 'Energy Consumption in (W)';
-
-    } else if($scope.selectedDimension == 2) {
-        selectedDimension = "accelerationAverage";
-        yAxisLabel = 'Average Acceleration';
-
-    } else if ($scope.selectedDimension == 3) {
-        selectedDimension = "speedAverage";
-        yAxisLabel = 'Average Speed';
-
-	} else if ($scope.selectedDimension == 4)
-        selectedDimension = "energyConsumptionTotal";
-        yAxisLabel = 'Total Energy Consumption in (W)';
-    }
-    /*
-
 
     /* this functions creates the dygraph  from a data source and applies options to them*/
 
@@ -247,8 +232,8 @@ which kind of data he wants to see. The default value is average energy consumpt
 
         graph = new Dygraph(
 	       document.getElementById("AverageEnergyConsumptionChart"), 'django/dataInterface/averageEnergyConsumption.csv?session='+session+'&carriers='+carriersRequested+'&dimension='+selectedDimension+'',
-	                                                                                     {title: "Average Energy Consumption Chart",
-	                                                                                      ylabel: yAxisLabels[selectedDimension],
+	                                                                                     {title: yAxisLabels[selectedDimension],
+	                                                                                      ylabel: yAxisLabels[selectedDimension]+' in '+units[selectedDimension],
 	                                                                                      xlabel: 'Iteration',
 	                                                                                      labelsSeparateLines: true,
 	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
