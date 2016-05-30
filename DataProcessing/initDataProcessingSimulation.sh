@@ -1,4 +1,4 @@
-#   This file is part of rogueVision.
+#   This file is part of Rogue Vision.
 #
 #   Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
 #       Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
@@ -11,11 +11,11 @@
 #
 #   Rogue Vision is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PUROSE.  See the
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU Affero General Public License for more details.
 #
 #   You should have received a copy of the GNU Affero General Public License
-#   along with rogueVision.  If not, see <http://www.gnu.org/licenses/>.
+#   along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
 
 #Bash to run the two scripts at the same time
 
