@@ -73,7 +73,51 @@ who need the data.
         deleteCarrier: this.deleteCarrier,
         emptyCarrierArray: this.emptyCarrierArray,
     };
-});
+})
 
+.service('iterationService', function() {
+    var iterationsForComparison = [];
+
+    // function adds a iteration with a given ID
+    this.addIteration = function(newIteration) {
+        for(var i = 0; i < iterationsForComparison.length; i++) {
+            if (iterationsForComparison[i].iterationNumber == newIteration) {
+                return false;
+             }
+        }
+        iterationsForComparison.push({iterationNumber: newIteration});
+        return true;
+    };
+
+    // returns the array with iteration IDs to be compared
+    this.getIteration = function(){
+        return iterationsForComparison;
+    }
+
+    // deletes a iteration with a given ID
+    this.deleteIteration = function(removeIteration) {
+        for(var i = 0; i < iterationsForComparison.length; i++) {
+            if (iterationsForComparison[i].iterationNumber == removeIteration) {
+                iterationsForComparison.splice(i,1);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // this function empties the array, so that no iteration item is left inside anymore.
+    this.emptyIterationArray = function() {
+        iterationsForComparison.splice(0,iterationsForComparison.length);
+    }
+
+     // this service returns functions to the caller, which he can use.
+    return {
+        hasIteration: this.hasIteration,
+        addIteration: this.addIteration,
+        getIteration: this.getIteration,
+        deleteIteration: this.deleteIteration,
+        emptyIterationArray: this.emptyIterationArray,
+    };
+});
 
 

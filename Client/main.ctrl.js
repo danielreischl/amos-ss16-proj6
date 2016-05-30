@@ -74,58 +74,212 @@ angular.module('app')
 })
 
 /* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/
-.controller('compareCircleGraph', function($scope, carrierService) {
-    // TODO these arrays need to be dynamic
+.controller('compareCircleGraph', function($scope, carrierService, iterationService) {
+
+    // Get the array with the carriers that were selected from the carrierService
     var carrierCompareList = carrierService.getCarrier();
-    var carrierMax = 8; //this needs to be dynamic later if we have connection to the database
-    var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
-    var arrayCarrier = [0,1,2,3,4,5,6,7];
 
+     // Get the array with the iterations that were selected from the carrierService
+    var iterationCompareList = iterationService.getIteration();
 
-    $scope.arrayCarrier = arrayCarrier;
+    // y-Axis labels for the dimensions
+    var yAxisLabels = {'energyConsumption': 'Energy Consumption in W',
+		       'positionAbsolute' : 'Position in mm',
+		       'speed': 'Speed in m/s',
+		       'acceleration': 'Acceleration in m/s*s',
+		       'drive': 'Drive'};
 
-    //changes the visibility from true to false and vice versa, depending on the checkboxes.
+    var units = {'energyConsumption': 'W',
+		       'positionAbsolute' : 'mm',
+		       'speed': 'm/s',
+		       'acceleration': 'm/s*s',
+		       'drive': 'Drive'};
+
+    // default value for the dimension and yAxislabel
+    var selectedDimension = "energyConsumption";
+    var yAxisLabel = yAxisLabels[selectedDimension];
+
+    // the session requested from the database. For now it is fixed.
+    var session = 1;
+
+    //a string, which tells the database how many carrier the user is requesting.
+    var carriersRequested = "";
+
+    // Get the maxAmount of Carriers from the database and save it in a variable called amountOfCarriers
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+session+'&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.send(null);
+    var amountOfCarriers = xmlHttp.responseText;
+
+    // Get the last iteration database and save it
+    var xmlHttp2 = new XMLHttpRequest();
+    xmlHttp2.open( "GET", 'django/dataInterface/values.request?session='+session+'&carrier=1&iteration=1&value=lastIteration', false );
+    xmlHttp2.send(null);
+    var amountOfIterations = xmlHttp.responseText;
+
+    //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
+    var arrayCarrier = [];
+    var idCounter = 1;
+    while(arrayCarrier.length < amountOfCarriers) {
+        arrayCarrier.push(idCounter);
+        idCounter++;
+    }
+
+    //create an array depending on the amount of iterations. The items of the array will be used to initialize the checkboxes.
+    var arrayIteration = [];
+    idCounter = 1;
+    while(arrayIteration.length < amountOfIterations) {
+        arrayIteration.push(idCounter);
+        idCounter++;
+    }
+
+    // Commented out, this was in the original controller method and is not used in the chart anymore
+    //var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
+
+    // Changes the visibility from true to false and vice versa, depending on the selected checkboxes.
+    // Also commented out
+    /*
     $scope.change = function(event) {
-
         if(visibilityArray[event.target.id]) {
             visibilityArray[event.target.id] = false;
         } else {
             visibilityArray[event.target.id] = true;
         }
     }
+    */
 
-    /* This function empties the carriers in the comparison on page leave.
-    If the user leaves the current html snippet/template then, this function will notice that and trigger the function "emptyyCarrierArray" */
-     $scope.$on("$destroy", function(){
-         carrierService.emptyCarrierArray();
-    });
+    //
+    // Start of $scope
+    //
 
-    /* this functions created the dygraph  from a data source and applies options to them*/
+    // Fill the drop down menus with the items of the array.
+    // The number of checkboxes depend on the amount of carriers in the database
+    $scope.arrayCarrier = arrayCarrier;
+
+    // This function is called, when a change is made in the checkbox field.
+    $scope.changeCarrierToCompare = function(event) {
+        //if the carrier is already inside the comparison array, then it will be removed.
+        if(!carrierService.addCarrier(event.target.id)) {
+            carrierService.deleteCarrier(event.target.id);
+            document.getElementById(event.target.id).checked = false;
+        } else {
+            document.getElementById(event.target.id).checked = true;
+        }
+    }
+
+    // This function is called, when a change is made in the checkbox field.
+    $scope.changeIterationToCompare = function(event) {
+        //if the carrier is already inside the comparison array, then it will be removed.
+        if(!iterationService.addIteration(event.target.id)) {
+            iterationService.deleteIteration(event.target.id);
+            document.getElementById(event.target.id).checked = false;
+        } else {
+            document.getElementById(event.target.id).checked = true;
+        }
+    }
+
+    $scope.dimensions = [
+        {name : "Energy Consumption", id: 'energyConsumption'},
+        {name : "Position", id: 'positionAbsolute'},
+	    {name : "Speed", id: 'speed'},
+	    {name : "Acceleration", id: 'acceleration'},
+	    {name : "drive", id : 'drive'},
+    ]
+
+    // Creates the dygraph from a data source and applies options to them
     $scope.createCompareGraph = function() {
-        graph = new Dygraph(
-	       document.getElementById("compareGraph"), 'sections/compareCarrier/dummy.csv', {title: "Carrier's energy consumption of the latest iteration",
-	                                                                                      ylabel: 'Energy Consumption in (mA)',
-	                                                                                      xlabel: 'Time in (ms)',
-	                                                                                      labelsSeparateLines: true,
-	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
-	                                                                                      visibility: visibilityArray,
-	                                                                                      });
 
+        //ensure that the variable is empty, before saving the new request path into it
+        carriersRequested = "";
+        iterationsRequested = "";
         /* these loops have the purpose to see what carriers the user wants to compare
-        and change the visibility of the carriers in the dygraph to true */
+        and change request String path for the database. It will also set all checkboxes to true, which are corresponding to the carriers
+        in the compare array */
+
         if(carrierCompareList.length != 0) {
             for (var i = 0; i < carrierCompareList.length; i++) {
-                for (var carrier = 0; carrier < carrierMax; carrier++) {
+                for (var carrier = 1; carrier <= amountOfCarriers; carrier++) {
                     if (carrierCompareList[i].carrierNumber == carrier) {
-                        visibilityArray[carrier] = true;
+                        if(carriersRequested === "") {
+                            carriersRequested+=carrier;
+                        } else {
+                            carriersRequested+= ","+carrier+"";
+                        }
                         break;
+                    } else {
                     }
                 }
             }
         } else {
             alert("You did not chose any Carriers to compare")
         }
+
+        if(iterationCompareList.length != 0) {
+            for (var i = 0; i < iterationCompareList.length; i++) {
+                for (var iteration = 1; carrier <= amountOfIterations; iteration++) {
+                    if (iterationCompareList[i].iteraionNumber == iteration) {
+                        if(iterationsRequested === "") {
+                            iterationsRequested+=iteration;
+                        } else {
+                            iterationsRequested+= ","+iteration+"";
+                        }
+                        break;
+                    } else {
+                    }
+                }
+            }
+        } else {
+            alert("You did not chose any Iterations to compare")
+        }
+
+
+
+        graph = new Dygraph(
+	        document.getElementById("compareGraph"),'django/dataInterface/continuousEnergyConsumption.csv?session' + session + '&carriers=' + carriersRequested + '&iterations' + iterationsRequested + '&dimension=' + selectedDimension+'',
+	            {title: yAxisLabels[selectedDimension],
+	            ylabel: yAxisLabels[selectedDimension]+' in '+units[selectedDimension],
+	            xlabel: 'Iteration',
+	            labelsSeparateLines: true,
+	            highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
+	            });
+
+
+        graph = new Dygraph(
+	       document.getElementById("AverageEnergyConsumptionChart"), 'django/dataInterface/averageEnergyConsumption.csv?session='+session+'&carriers='+carriersRequested+'&dimension='+selectedDimension+'',
+	                                                                                     {title: yAxisLabels[selectedDimension],
+	                                                                                      ylabel: yAxisLabels[selectedDimension]+' in '+units[selectedDimension],
+	                                                                                      xlabel: 'Iteration',
+	                                                                                      labelsSeparateLines: true,
+	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
+	                                                                                      });
     }
+
+    $scope.changeDimension = function() {
+	    selectedDimension = $scope.selectedDimension;
+	 }
+
+	// This function empties the carriers in the comparison on page leave.
+    // If the user leaves the current html snippet/template then,
+    // this function will notice that and trigger the function "emptyCarrierArray"
+    $scope.$on("$destroy", function() {
+        carrierService.emptyCarrierArray();
+    });
+
+    //
+    // Start of funciton
+    //
+
+    function uncheckAllCheckboxes() {
+        var checkboxElements = document.getElementsByTagName('input');
+        for (var i = 0; i < checkboxElements.length; i++) {
+            if(checkboxElements[i].type == 'checkbox') {
+                 checkboxElements[i].checked = false;
+            }
+        }
+    }
+
+
+
 })
 
 
@@ -181,7 +335,7 @@ which kind of data he wants to see. The default value is average energy consumpt
             carrierService.deleteCarrier(event.target.id);
             document.getElementById(event.target.id).checked = false;
         } else {
-             document.getElementById(event.target.id).checked = true;
+            document.getElementById(event.target.id).checked = true;
         }
     }
 
@@ -196,9 +350,9 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 
      // This function receives the changes from the dropDown menu "dimensions" and changes the yAxis name of the graph and requests the needed data by changing the string name.
-        $scope.changeDimension = function() {
+     $scope.changeDimension = function() {
 	    selectedDimension = $scope.selectedDimension;
-	}
+	 }
 
     /* this functions creates the dygraph  from a data source and applies options to them*/
 
@@ -253,15 +407,14 @@ which kind of data he wants to see. The default value is average energy consumpt
                  checkboxElements[i].checked = false;
             }
         }
-
     }
 
 
      /* This function empties the carriers in the comparison on page leave.
-    If the user leaves the current html snippet/template then, this function will notice that and trigger the function "emptyyCarrierArray" */
+     If the user leaves the current html snippet/template then, this function will notice that and trigger the function "emptyyCarrierArray" */
      $scope.$on("$destroy", function(){
          carrierService.emptyCarrierArray();
-    });
+     });
 
 })
    
