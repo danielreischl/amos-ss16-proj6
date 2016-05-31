@@ -74,13 +74,10 @@ angular.module('app')
 })
 
 /* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/
-.controller('compareCircleGraph', function($scope, carrierService, iterationService) {
+.controller('compareCircleGraph', function($scope, carrierService) {
 
     // Get the array with the carriers that were selected from the carrierService
     var carrierCompareList = carrierService.getCarrier();
-
-     // Get the array with the iterations that were selected from the carrierService
-    var iterationCompareList = iterationService.getIteration();
 
     // y-Axis labels for the dimensions
     var yAxisLabels = {'energyConsumption': 'Energy Consumption in W',
@@ -98,6 +95,9 @@ angular.module('app')
     // default value for the dimension and yAxislabel
     var selectedDimension = "energyConsumption";
     var yAxisLabel = yAxisLabels[selectedDimension];
+
+    // default value for the selected Iterations
+    var selectedIteration = "lastTen";
 
     // the session requested from the database. For now it is fixed.
     var session = 1;
@@ -125,29 +125,6 @@ angular.module('app')
         idCounter++;
     }
 
-    //create an array depending on the amount of iterations. The items of the array will be used to initialize the checkboxes.
-    var arrayIteration = [];
-    idCounter = 1;
-    while(arrayIteration.length < amountOfIterations) {
-        arrayIteration.push(idCounter);
-        idCounter++;
-    }
-
-    // Commented out, this was in the original controller method and is not used in the chart anymore
-    //var visibilityArray = [false, false, false, false, false, false, false, false, false, false]; //this needs to be dynamic later if we have connection to the database! 1ßx booleans because of 2 extra comas in the csv.
-
-    // Changes the visibility from true to false and vice versa, depending on the selected checkboxes.
-    // Also commented out
-    /*
-    $scope.change = function(event) {
-        if(visibilityArray[event.target.id]) {
-            visibilityArray[event.target.id] = false;
-        } else {
-            visibilityArray[event.target.id] = true;
-        }
-    }
-    */
-
     //
     // Start of $scope
     //
@@ -167,23 +144,17 @@ angular.module('app')
         }
     }
 
-    // This function is called, when a change is made in the checkbox field.
-    $scope.changeIterationToCompare = function(event) {
-        //if the carrier is already inside the comparison array, then it will be removed.
-        if(!iterationService.addIteration(event.target.id)) {
-            iterationService.deleteIteration(event.target.id);
-            document.getElementById(event.target.id).checked = false;
-        } else {
-            document.getElementById(event.target.id).checked = true;
-        }
-    }
-
     $scope.dimensions = [
         {name : "Energy Consumption", id: 'energyConsumption'},
         {name : "Position", id: 'positionAbsolute'},
 	    {name : "Speed", id: 'speed'},
 	    {name : "Acceleration", id: 'acceleration'},
 	    {name : "drive", id : 'drive'},
+    ]
+
+    $scope.iterationDimensions = [
+        {name : "Last 10", id: 'lastTen'},
+        {name : "All", id: 'all'}
     ]
 
     // Creates the dygraph from a data source and applies options to them
@@ -214,25 +185,7 @@ angular.module('app')
             alert("You did not chose any Carriers to compare")
         }
 
-        if(iterationCompareList.length != 0) {
-            for (var i = 0; i < iterationCompareList.length; i++) {
-                for (var iteration = 1; carrier <= amountOfIterations; iteration++) {
-                    if (iterationCompareList[i].iteraionNumber == iteration) {
-                        if(iterationsRequested === "") {
-                            iterationsRequested+=iteration;
-                        } else {
-                            iterationsRequested+= ","+iteration+"";
-                        }
-                        break;
-                    } else {
-                    }
-                }
-            }
-        } else {
-            alert("You did not chose any Iterations to compare")
-        }
-
-
+        var iterationsRequested = getSelectedIterationsString()
 
         graph = new Dygraph(
 	        document.getElementById("compareGraph"),'django/dataInterface/continuousEnergyConsumption.csv?session' + session + '&carriers=' + carriersRequested + '&iterations' + iterationsRequested + '&dimension=' + selectedDimension+'',
@@ -243,20 +196,18 @@ angular.module('app')
 	            highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
 	            });
 
-
-        graph = new Dygraph(
-	       document.getElementById("AverageEnergyConsumptionChart"), 'django/dataInterface/averageEnergyConsumption.csv?session='+session+'&carriers='+carriersRequested+'&dimension='+selectedDimension+'',
-	                                                                                     {title: yAxisLabels[selectedDimension],
-	                                                                                      ylabel: yAxisLabels[selectedDimension]+' in '+units[selectedDimension],
-	                                                                                      xlabel: 'Iteration',
-	                                                                                      labelsSeparateLines: true,
-	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
-	                                                                                      });
+	    // After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
+        carrierService.emptyCarrierArray();
+        uncheckAllCheckboxes();
     }
 
     $scope.changeDimension = function() {
 	    selectedDimension = $scope.selectedDimension;
-	 }
+	}
+
+	$scope.changeIteration = function() {
+	    selectedIteration = $scope.selectedIteration;
+	}
 
 	// This function empties the carriers in the comparison on page leave.
     // If the user leaves the current html snippet/template then,
@@ -268,6 +219,33 @@ angular.module('app')
     //
     // Start of funciton
     //
+
+    function getSelectedIterationsString() {
+        var selectedIterationsString = "";
+        var iter = 1;
+
+        if(amountOfIterations <= 0) {
+            return selectedIterationsString;
+        }
+
+        if(selectedIteration === "lastTen") {
+            iter = amountOfIterations - 10;
+        }
+
+        if(iter < 1) {
+            iter = 1;
+        }
+
+        while(iter <= amountOfIterations) {
+            selectedIterationsString += iter;
+            if(iter != amountOfIterations) {
+                selectedIterationsString += ",";
+            }
+            iter += 1;
+        }
+
+        return selectedIterationsString;
+    }
 
     function uncheckAllCheckboxes() {
         var checkboxElements = document.getElementsByTagName('input');

@@ -29,11 +29,10 @@
             </li>
         </ul>
 
-         <ul>
-            <li ng-repeat="iteration in arrayIteration" style=" color: black;  list-style-type: none; font-size: 20px;">
-                <input type="checkbox" id = "{{iteration}}" ng-click="changeIterationToCompare($event)"> Iteration {{iteration}}
-            </li>
-         </ul>
+         <select ng-model="selectedIteration" ng-change = "changeIteration()">
+            <option selected disabled  value="">Chose Iteration</option>
+	        <option ng-repeat="x in iterationDimensions" value="{{x.id}}">{{x.name}}</option>
+        </select>
 
         <select ng-model="selectedDimension" ng-change = "changeDimension()">
             <option selected disabled  value="">Chose Dimension</option>
