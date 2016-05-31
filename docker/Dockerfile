@@ -56,10 +56,6 @@ RUN pip install Django==1.9.5 gunicorn==19.3.0 SQLAlchemy
 # Exposes port 80
 EXPOSE 80
 
-# Copies entrypoint script into the image
-WORKDIR $DOCKYARD_SRVPROJ
-COPY ./docker-entrypoint.sh /
-
 # Sets up Django
 # Migrates app dataInterface
 RUN python manage.py makemigrations dataInterface
@@ -68,6 +64,20 @@ RUN python manage.py migrate --noinput
 # Collects static files
 RUN python manage.py collectstatic --noinput
 
+# Prepare log files and start outputting logs to stdout
+RUN touch /srv/logs/gunicorn.log
+RUN touch /srv/logs/access.log
+RUN touch /srv/logs/nginx-access.log
+RUN touch /srv/logs/nginx-error.log
+
+# Creates gunicorn Sock file
+RUN touch /srv/run/gunicorn.sock
+
+# Copies entrypoint script into the image
+WORKDIR $DOCKYARD_SRVPROJ
+COPY ./docker-entrypoint.sh /
+
+# Sets up Entrypoint
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 # Switches User to root
