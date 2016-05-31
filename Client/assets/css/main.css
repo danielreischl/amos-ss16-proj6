@@ -137,8 +137,20 @@ md-content {
 
 
 div continuousGraph {
-    width:90%;
-    height:70%;
+    width:100%;
+    height:100%;
+}
+
+div carrierSelection {
+    float: left;
+}
+
+div carrierSelection ul li{
+    color: black;
+    list-style-type: none;
+    font-size: 20px;
+    display: block;
+    float: left;
 }
 
 
