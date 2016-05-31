@@ -142,6 +142,7 @@ div continuousGraph {
 }
 
 div carrierSelection {
+    width : 40%;
     float: left;
 }
 
