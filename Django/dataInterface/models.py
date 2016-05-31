@@ -107,7 +107,7 @@ class iterationdata(models.Model):
     '''
 
     # Integer of the current session in which a carrier is in the system
-    session = models.IntegerField()
+    session = models.IntegerAField()
     # Integer that identifies the carrier
     carrier = models.IntegerField()
     # Integer of the current Iteration in which a carrier is in the system
