@@ -153,6 +153,7 @@ def continuousData(request):
         for iteration in requestedIterations:
             fieldNames.append('c'+ str(carrier) + 'i' + str(iteration))
     writer = csv.DictWriter(response, fieldnames = fieldNames)
+    writer.writeheader()
 
     result = timestampdata.objects.filter(session=requestedSession,carrier__in=requestedCarriers,iteration__in=requestedIterations).order_by('timeStamp')
     currentTimeStamp = None
