@@ -128,6 +128,50 @@ def db2csv(request):
     return response
 
 
+def continuousData(request):
+    # returns a csv File according to the parameters given in the URL
+    # I write the function from scratch for simplicity - later merge with db2csv seems reasonable
+    response = HttpResponse(content_type='text/csv')
+    # the name data.csv is just used by the browser when you query the file directly and want to download it
+    response['Content-Disposition'] = 'attachment; filename="data.csv"'
+
+    # extract parameters
+    # e.g. for carrier 1, 2 and 5 request position.csv?carrier=1,2,5
+    requestedCarriers = request.GET['carriers'].split(',')
+    requestedIterations = request.GET['iterations'].split(',')
+    requestedDimension = request.GET['dimension']
+
+    fieldNames = ['timeStamp']
+    # create field names for csv file
+    # example for carriers 1, 5 and iterations 9, 10
+    # timeStamp | c1i9 | c1i10 | c2i9 | c2i10
+    for carrier in requestedCarriers:
+        for iteration in requestedIterations:
+            fieldNames.append('c'+ carrier + 'i' + iteration)
+    writer = csv.DictWriter(response, fieldnames = fieldNames)
+
+    result = timestampdata.objects.filter(carrier__in=requestedCarriers,iteration__in=requestedIterations).order_by('timeStamp')
+    currentTimeStamp = None
+    csvRow = {}
+    for row in result:
+        if currentTimeStamp == None or currentTimeStamp != row.timeStamp:
+            if currentTimeStamp != None:
+                writer.writerow(csv.row)
+            # (re-) set csv-row
+            csvRow = {'timeStamp': row.timeStamp}
+            
+        carrier = row.carrier
+        iteration = row.iteration
+        key = 'c' + str(carrier) + 'i' + str(iteration)
+        csvRow[key] = row.positionAbsolute
+        
+    # write last row
+    writer.writerow(csvRow)
+    return response
+
+    
+
+
 def rawData(request):
     # returns a csv File of the raw database tables 
     # parameter table, possible values: timestampdata, iterationdata 
