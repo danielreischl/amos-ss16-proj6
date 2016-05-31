@@ -7,14 +7,6 @@ SOCKFILE=/srv/run/gunicorn.sock
 # Sets up Django
 echo apply django migrations
 
-# For test commented out
-# Migrates app dataInterface
-# python manage.py makemigrations dataInterface
-# Applies database migrations
-# python manage.py migrate --noinput
-# Collects static files
-# python manage.py collectstatic --noinput
-
 # Copy files that are not on GitHub from persistent directory to directory where the initScript is looking for them
 cp /persistent/*.csv /srv/DataProcessing/InitialData/
 

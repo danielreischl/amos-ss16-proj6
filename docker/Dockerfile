@@ -60,7 +60,7 @@ EXPOSE 80
 WORKDIR $DOCKYARD_SRVPROJ
 COPY ./docker-entrypoint.sh /
 
-# TEST: SetUp Django
+# Sets up Django
 # Migrates app dataInterface
 RUN python manage.py makemigrations dataInterface
 # Applies database migrations
