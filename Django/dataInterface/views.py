@@ -172,13 +172,13 @@ def continuousData(request):
         carrier = row.carrier
         iteration = row.iteration
         key = 'c' + str(carrier) + 'i' + str(iteration)
-        if requestedDimension == positionAbsolute:
+        if requestedDimension == "positionAbsolute":
             csvRow[key] = row.positionAbsolute
-        elif requestedDimension == speed:
+        elif requestedDimension == "speed":
             csvRow[key] = row.speed
-        elif requestedDimension == acceleration:
+        elif requestedDimension == "acceleration":
             csvRow[key] = row.acceleration
-        elif requestedDimension == energyConsumption:
+        elif requestedDimension == "energyConsumption":
             csvRow[key] = row.energyConsumption
         
     # write last row
