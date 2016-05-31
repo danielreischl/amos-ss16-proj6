@@ -185,11 +185,10 @@ angular.module('app')
             alert("You did not chose any Carriers to compare")
         }
 
-        var iterationsRequested = getSelectedIterationsString()
-        var a =
+        var iterationsRequested = getSelectedIterationsString();
 
         graph = new Dygraph(
-	        document.getElementById("compareGraph"),'django/dataInterface/continuousData.csv?carriers='+carriersRequested + '&iteration=' + iterationsRequested + '&selectedDimension=' + selectedDimension+'',
+	        document.getElementById("compareGraph"),'django/dataInterface/continuousData.csv?carriers='+carriersRequested + '&iterations=' + iterationsRequested + '&dimension=' + selectedDimension + '&session=1',
 	            {title: yAxisLabels[selectedDimension],
 	            ylabel: yAxisLabels[selectedDimension]+' in '+units[selectedDimension],
 	            xlabel: 'time in ms',
