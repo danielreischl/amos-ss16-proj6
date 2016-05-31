@@ -58,11 +58,11 @@ EXPOSE 80
 
 # Sets up Django
 # Migrates app dataInterface
-RUN python manage.py makemigrations dataInterface
+RUN python /srv/django/manage.py makemigrations dataInterface
 # Applies database migrations
-RUN python manage.py migrate --noinput
+RUN python /srv/django/manage.py migrate --noinput
 # Collects static files
-RUN python manage.py collectstatic --noinput
+RUN python /srv/django/manage.py collectstatic --noinput
 
 # Prepare log files and start outputting logs to stdout
 RUN touch /srv/logs/gunicorn.log
@@ -74,7 +74,6 @@ RUN touch /srv/logs/nginx-error.log
 RUN touch /srv/run/gunicorn.sock
 
 # Copies entrypoint script into the image
-WORKDIR $DOCKYARD_SRVPROJ
 COPY ./docker-entrypoint.sh /
 
 # Sets up Entrypoint
