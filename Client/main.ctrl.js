@@ -154,6 +154,7 @@ angular.module('app')
 
     $scope.iterationDimensions = [
         {name : "Last 10", id: 'lastTen'},
+	{name : 'Last', id : 'last'},
         {name : "All", id: 'all'}
     ]
 
@@ -196,9 +197,10 @@ angular.module('app')
 	            highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
 	            });
 
-	    // After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
-        carrierService.emptyCarrierArray();
-        uncheckAllCheckboxes();
+	// After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
+	// disable for now
+        // carrierService.emptyCarrierArray();
+        // uncheckAllCheckboxes();
     }
 
     $scope.changeDimension = function() {
@@ -228,22 +230,26 @@ angular.module('app')
             return selectedIterationsString;
         }
 
-        if(selectedIteration === "lastTen") {
+
+	if (selectedIteration === "last") {
+	    iter = amountOfIterations;
+	}
+	else if(selectedIteration === "lastTen") {
             iter = amountOfIterations - 10;
-        }
 
-        if(iter < 1) {
-            iter = 1;
-        }
-
-        while(iter <= amountOfIterations) {
-            selectedIterationsString += iter;
-            if(iter != amountOfIterations) {
-                selectedIterationsString += ",";
+            if(iter < 1) {
+		iter = 1;
             }
-            iter += 1;
-        }
 
+            while(iter <= amountOfIterations) {
+		selectedIterationsString += iter;
+		if(iter != amountOfIterations) {
+                    selectedIterationsString += ",";
+		}
+		iter += 1;
+            }
+	}
+	
         return selectedIterationsString;
     }
 
