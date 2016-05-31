@@ -232,15 +232,15 @@ angular.module('app')
 
 
 	if (selectedIteration === "last") {
-	    iter = amountOfIterations;
+	    selectedIterationString += amountOfIterations;
 	}
-	else if(selectedIteration === "lastTen") {
-            iter = amountOfIterations - 10;
-
-            if(iter < 1) {
-		iter = 1;
-            }
-
+	else {
+	    if(selectedIteration === "lastTen") {
+		iter = amountOfIterations - 10;
+		if(iter < 1) {
+		    iter = 1;
+		}
+	    }
             while(iter <= amountOfIterations) {
 		selectedIterationsString += iter;
 		if(iter != amountOfIterations) {
