@@ -163,9 +163,10 @@ def continuousData(request):
         # Once we get a row with a different timeStamp we write the row to the csv file and reset the row
         if currentTimeStamp == None or currentTimeStamp != row.timeStamp:
             if currentTimeStamp != None:
-                writer.writerow(csv.row)
+                writer.writerow(csvRow)
             # (re-) set csv-row
-            csvRow = {'timeStamp': row.timeStamp}
+            currentTimeStamp = row.timeStamp
+            csvRow = {'timeStamp': currentTimeStamp}
             
         carrier = row.carrier
         iteration = row.iteration
