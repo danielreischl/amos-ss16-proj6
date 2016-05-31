@@ -162,7 +162,7 @@ def continuousData(request):
             
         carrier = row.carrier
         iteration = row.iteration
-        key = 'c' + carrier + 'i' + iteration
+        key = 'c' + str(carrier) + 'i' + str(iteration)
         csvRow[key] = row.positionAbsolute
         
     # write last row
