@@ -139,7 +139,9 @@ def continuousData(request):
     # e.g. for carrier 1, 2 and 5 request position.csv?carrier=1,2,5
     requestedCarriers = request.GET['carriers'].split(',')
     requestedIterations = request.GET['iterations'].split(',')
+    requestedSession = request.GET['session']
     requestedDimension = request.GET['dimension']
+
 
     fieldNames = ['timeStamp']
     # create field names for csv file
@@ -154,6 +156,9 @@ def continuousData(request):
     currentTimeStamp = None
     csvRow = {}
     for row in result:
+        # we requested data ordered by timestamp, so rows come in blocks with identical timestamp.
+        # We iterate through these to fill a the row with this timestamp
+        # Once we get a row with a different timeStamp we write the row to the csv file and reset the row
         if currentTimeStamp == None or currentTimeStamp != row.timeStamp:
             if currentTimeStamp != None:
                 writer.writerow(csv.row)
