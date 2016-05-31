@@ -150,7 +150,8 @@ div carrierSelection ul li{
     color: black;
     list-style-type: none;
     font-size: 20px;
-    display: inline;
+    float: left;
+    padding: 5px;
 }
 
 
