@@ -27,27 +27,43 @@
 
 <div ng-controller="AverageEnergyConsumptionChart">
 
-    <md-button class="md-raised md-cornered"  ng-click="toggle()">Carriers</md-button>
-    <div ng-show="showCheckBoxes">
-        <ul>
-            <li ng-repeat="carrier in arrayCarrier" style=" color: black;  list-style-type: none; font-size: 20px;">
-                <input type="checkbox" id = "{{carrier}}" ng-click="changeCarrierToCompare($event)"> Carrier {{carrier}}
-            </li>
-        </ul>
-    </div>
+<!-- Dropdown selection menus and checkbxoes are put in a table layout.-->
+    <table>
+        <tr>
+            <td>
+                <md-button class="md-raised md-cornered"  ng-click="toggle()">Choose Carriers</md-button>
+            </td>
+            <td>
+                <!-- ng-change is empty right now. this has to change, when iterations can be selected from the database -->
+                <select ng-model="selectedIteration" ng-change = "">
+                    <option selected disabled  value="">Choose iteration</option>
+	                <option ng-repeat="x in iterations" value="{{x.id}}">{{x.name}}</option>
+                </select>
+            </td>
+            <td>
+                <select ng-model="selectedDimension" ng-change = "changeDimension()">
+                    <option selected disabled  value="">Choose Dimension</option>
+	                <option ng-repeat="x in dimensions" value="{{x.id}}">{{x.name}}</option>
+                    </select>
+            </td>
+            <td>
+                 <md-button class="md-raised md-cornered"  ng-click="createAverageEnergyConsumptionChart()">Refresh</md-button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div ng-show="showCheckBoxes">
+                    <ul>
+                        <li ng-repeat="carrier in arrayCarrier" style=" color: black;  list-style-type: none; font-size: 20px;">
+                            <input type="checkbox" id = "{{carrier}}" ng-click="changeCarrierToCompare($event)"> Carrier {{carrier}}
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
 
-    <!-- ng-change is empty right now. this has to change, when iterations can be selected from the database -->
-    <select ng-model="selectedIteration" ng-change = "">
-        <option selected disabled  value="">Chose iteration</option>
-	    <option ng-repeat="x in iterations" value="{{x.id}}">{{x.name}}</option>
-    </select>
-
-    <select ng-model="selectedDimension" ng-change = "changeDimension()">
-        <option selected disabled  value="">Chose Dimension</option>
-	    <option ng-repeat="x in dimensions" value="{{x.id}}">{{x.name}}</option>
-    </select>
-
-    <md-button class="md-raised md-cornered"  ng-click="createAverageEnergyConsumptionChart()">Refresh</md-button>
+    <!-- average energy consumption chart. -->
 
     <div ng-init ="createAverageEnergyConsumptionChart()" id="AverageEnergyConsumptionChart" style="width:1600px; height:600px;"></div>
  </div>
