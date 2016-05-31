@@ -236,7 +236,7 @@ angular.module('app')
 		// for testing
 		lastIteration = amountOfIterations - 1;
 	    }
-	    selectedIterationsString += amountOfIterations;
+	    selectedIterationsString += lastIteration;
 	}
 	else {
 	    if(selectedIteration === "lastTen") {
