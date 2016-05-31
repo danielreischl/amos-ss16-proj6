@@ -219,7 +219,7 @@ angular.module('app')
     });
 
     //
-    // Start of funciton
+    // Start of function
     //
 
     function getSelectedIterationsString() {
@@ -232,6 +232,10 @@ angular.module('app')
 
 
 	if (selectedIteration === "last") {
+	    if (amountOfIterations > 1) {
+		// for testing
+		lastIteration = amountOfIterations - 1;
+	    }
 	    selectedIterationsString += amountOfIterations;
 	}
 	else {
