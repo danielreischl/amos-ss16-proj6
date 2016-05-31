@@ -188,7 +188,7 @@ angular.module('app')
         var iterationsRequested = getSelectedIterationsString()
 
         graph = new Dygraph(
-	        document.getElementById("compareGraph"),'django/dataInterface/continuousEnergyConsumption.csv?session' + session + '&carriers=' + carriersRequested + '&iterations' + iterationsRequested + '&dimension=' + selectedDimension+'',
+	        document.getElementById("compareGraph"),'django/dataInterface/continuousData.csv?session' + session + '&carriers=' + carriersRequested + '&iterations' + iterationsRequested + '&dimension=' + selectedDimension+'',
 	            {title: yAxisLabels[selectedDimension],
 	            ylabel: yAxisLabels[selectedDimension]+' in '+units[selectedDimension],
 	            xlabel: 'Iteration',
