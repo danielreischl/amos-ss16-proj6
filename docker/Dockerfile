@@ -59,6 +59,15 @@ EXPOSE 80
 # Copies entrypoint script into the image
 WORKDIR $DOCKYARD_SRVPROJ
 COPY ./docker-entrypoint.sh /
+
+# TEST: SetUp Django
+# Migrates app dataInterface
+RUN python manage.py makemigrations dataInterface
+# Applies database migrations
+RUN python manage.py migrate --noinput
+# Collects static files
+RUN python manage.py collectstatic --noinput
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 # Switches User to root
