@@ -137,9 +137,11 @@ def continuousData(request):
 
     # extract parameters
     # e.g. for carrier 1, 2 and 5 request position.csv?carrier=1,2,5
-    requestedCarriers = request.GET['carriers'].split(',')
-    requestedIterations = request.GET['iterations'].split(',')
-    requestedSession = request.GET['session']
+    # first split at commata then convert to integers
+    # NB: there is no error handling, so make sure you only pass (comma-separated) integers to the function
+    requestedCarriers = map(int,request.GET['carriers'].split(','))
+    requestedIterations = map(int,request.GET['iterations'].split(','))
+    requestedSession = int(request.GET['session'])
     requestedDimension = request.GET['dimension']
 
 
@@ -149,7 +151,7 @@ def continuousData(request):
     # timeStamp | c1i9 | c1i10 | c2i9 | c2i10
     for carrier in requestedCarriers:
         for iteration in requestedIterations:
-            fieldNames.append('c'+ carrier + 'i' + iteration)
+            fieldNames.append('c'+ str(carrier) + 'i' + str(iteration))
     writer = csv.DictWriter(response, fieldnames = fieldNames)
 
     result = timestampdata.objects.filter(carrier__in=requestedCarriers,iteration__in=requestedIterations).order_by('timeStamp')
