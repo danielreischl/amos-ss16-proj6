@@ -186,12 +186,13 @@ angular.module('app')
         }
 
         var iterationsRequested = getSelectedIterationsString()
+        var a =
 
         graph = new Dygraph(
-	        document.getElementById("compareGraph"),'django/dataInterface/continuousData.csv?session=' + session + '&carriers=' + carriersRequested + '&iterations=' + iterationsRequested + '&dimension=' + selectedDimension+'',
+	        document.getElementById("compareGraph"),'django/dataInterface/continuousData.csv?carriers='+carriersRequested + '&iteration=' + iterationsRequested + '&selectedDimension=' + selectedDimension+'',
 	            {title: yAxisLabels[selectedDimension],
 	            ylabel: yAxisLabels[selectedDimension]+' in '+units[selectedDimension],
-	            xlabel: 'Iteration',
+	            xlabel: 'time in ms',
 	            labelsSeparateLines: true,
 	            highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
 	            });
