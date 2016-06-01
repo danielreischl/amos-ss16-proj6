@@ -154,7 +154,7 @@ angular.module('app')
 
     $scope.iterationDimensions = [
         {name : "Last 10", id: 'lastTen'},
-	{name : 'Last', id : 'last'},
+	    {name : 'Last', id : 'last'},
         {name : "All", id: 'all'}
     ]
 
@@ -231,30 +231,30 @@ angular.module('app')
         }
 
 
-	if (selectedIteration === "last") {
-	    if (amountOfIterations > 1) {
-		// for testing
-		lastIteration = amountOfIterations - 1;
-	    }
-	    selectedIterationsString += lastIteration;
-	}
-	else {
-	    if(selectedIteration === "lastTen") {
-		iter = amountOfIterations - 10;
-		if(iter < 1) {
-		    iter = 1;
-		}
-	    }
+	    if (selectedIteration === "last") {
+	        if (amountOfIterations > 1) {
+		        // for testing
+		        lastIteration = amountOfIterations - 1;
+	        } else {
+	            lastIteration = 1;
+	        }
+	        return selectedIterationsString += lastIteration;
+	    } else {
+	        if(selectedIteration === "lastTen") {
+		        iter = amountOfIterations - 10;
+		        if(iter < 1) {
+		            iter = 1;
+		        }
+	        }
             while(iter <= amountOfIterations) {
-		selectedIterationsString += iter;
-		if(iter != amountOfIterations) {
+		        selectedIterationsString += iter;
+		        if(iter != amountOfIterations) {
                     selectedIterationsString += ",";
-		}
-		iter += 1;
+		        }
+		        iter += 1;
             }
-	}
-	
-        return selectedIterationsString;
+	    }
+	    return selectedIterationsString;
     }
 
     function uncheckAllCheckboxes() {
