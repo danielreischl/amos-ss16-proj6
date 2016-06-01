@@ -142,23 +142,27 @@ div.continuousGraph {
 }
 
 div.carrierSelection {
-    width : 40%;
-    float: left;
+    /*width : 40%;
+    float: left;*/
 }
 
-ul.carrierSelection div {
+div.carrierBox {
     display: inline-block;
     width: 25px;
     height: 25px;
-    border: 1px solid rgba(0,0,0,0.5);
+    border: 2px solid rgba(0,0,0,0.5);
     background: rgb(200,200,200);
     margin-left: 5px;
 }
 
 
-ul.carrierSelection input:checked + div{
-    border: 1px solid rgba(0,0,0,1);
+label.carrierBox input:checked + div{
+    border: 2px solid rgba(0,0,0,1);
     font-weight: bold;
+}
+
+label.carrierBox input {
+    display: none;
 }
 
 ul.carrierSelection li{
