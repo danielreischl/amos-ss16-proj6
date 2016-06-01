@@ -97,7 +97,7 @@ angular.module('app')
     var yAxisLabel = yAxisLabels[selectedDimension];
 
     // default value for the selected Iterations
-    var selectedIteration = "lastTen";
+    var selectedIteration = "last";
 
     // the session requested from the database. For now it is fixed.
     var session = 1;
@@ -153,8 +153,8 @@ angular.module('app')
     ]
 
     $scope.iterationDimensions = [
+        {name : 'Last', id : 'last'},
         {name : "Last 10", id: 'lastTen'},
-	    {name : 'Last', id : 'last'},
         {name : "All", id: 'all'}
     ]
 
@@ -162,11 +162,15 @@ angular.module('app')
     $scope.createCompareGraph = function() {
 
         //ensure that the variable is empty, before saving the new request path into it
-        carriersRequested = "";
-        iterationsRequested = "";
+        var carriersRequested = "";
         /* these loops have the purpose to see what carriers the user wants to compare
         and change request String path for the database. It will also set all checkboxes to true, which are corresponding to the carriers
         in the compare array */
+
+        var iterationsRequested = getSelectedIterationsString();
+
+        alert("Iterations requested:" + iterationsRequested)
+
 
         if(carrierCompareList.length != 0) {
             for (var i = 0; i < carrierCompareList.length; i++) {
@@ -186,7 +190,6 @@ angular.module('app')
             alert("You did not chose any Carriers to compare")
         }
 
-        var iterationsRequested = getSelectedIterationsString();
 
         graph = new Dygraph(
 	        document.getElementById("compareGraph"),'django/dataInterface/continuousData.csv?carriers='+carriersRequested + '&iterations=' + iterationsRequested + '&dimension=' + selectedDimension + '&session=1',
@@ -232,7 +235,8 @@ angular.module('app')
 
 
 	    if (selectedIteration === "last") {
-	        return selectedIterationsString += amountOfIterations;
+	        selectedIterationsString += amountOfIterations;
+	        return selectedIterationsString;
 	    } else {
 	        if(selectedIteration === "lastTen") {
 		        iter = amountOfIterations - 10;
@@ -481,18 +485,18 @@ which kind of data he wants to see. The default value is average energy consumpt
 
         /* for every carrier in the database, create a new code fragment to be injected into the html file. Each fragment is the base for a circle */
         while (amountOfCarriers > 0) {
-        var circleId = "carrier " + idCounter;
-        var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="selectCarrier($event)"></canvas>';
-        var temp = $compile(fragmenthtml)($scope);
+            var circleId = "carrier " + idCounter;
+            var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="selectCarrier($event)"></canvas>';
+            var temp = $compile(fragmenthtml)($scope);
 
-        // get the element in the html page, on which the new fragment should be appended to
-        angular.element(document.getElementById('circleGraphs')).append(temp);
+            // get the element in the html page, on which the new fragment should be appended to
+            angular.element(document.getElementById('circleGraphs')).append(temp);
 
-        // call the circle drawing method to paint the circles. It will get the ID of the carrier, as well as the percentage data
-        createCircle(circleId, carrierPercentageData[idCounter - 1]);
+            // call the circle drawing method to paint the circles. It will get the ID of the carrier, as well as the percentage data
+            createCircle(circleId, carrierPercentageData[idCounter - 1]);
 
-        idCounter = idCounter+1;
-        amountOfCarriers = amountOfCarriers -1;
+            idCounter = idCounter+1;
+            amountOfCarriers = amountOfCarriers -1;
         }
     }
 
