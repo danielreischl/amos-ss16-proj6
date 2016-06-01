@@ -28,7 +28,7 @@ WAIT_TIME_IN_SECONDS_DPPY = 0.001
 #Session of the demonstrator setting
 SESSION = 1
 # WaitTime of writeCarrierDataToDataBase.py
-WAIT_TIME_IN_SECONDS_MPY = 5
+WAIT_TIME_IN_SECONDS_MPY = 30
 # Separator of the CSV-Files
 CSV_SEPARATOR = ";"
 
