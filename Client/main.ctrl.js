@@ -115,7 +115,7 @@ angular.module('app')
     var xmlHttp2 = new XMLHttpRequest();
     xmlHttp2.open( "GET", 'django/dataInterface/values.request?session='+session+'&carrier=1&iteration=1&value=lastIteration', false );
     xmlHttp2.send(null);
-    var amountOfIterations = xmlHttp.responseText;
+    var amountOfIterations = xmlHttp2.responseText;
 
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     var arrayCarrier = [];
