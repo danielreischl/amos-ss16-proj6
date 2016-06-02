@@ -20,14 +20,15 @@
 -->
 
 
-<div ng-controller="compareCircleGraph" layout = "column">
-    <div flex = "100" layout = "row">
+<div ng-controller="compareCircleGraph" layout = "column" layout-align="center center">
+    <div flex = "100" layout = "row" layout-align="center center">
         <div flex = "40" class = "carrierSelection">
             <ul layout-align="center center" class = "carrierSelection">
-                <li ng-repeat="(index, carrier) in arrayCarrier" ng-style = "getListStyle(index)">
-                    <label class = "carrierBox">
+                <li ng-repeat="carrier in arrayCarrier" ng-style = "getListStyle(index)">
+                    <!-- <div class="clearfix" ng-if="$index % 5 == 0"></div> -->
+                    <label class = "carrierBox" ng-style="getColorOfCarrier(carrier)">
                         <input type="checkbox" id = "{{carrier}}" ng-click="changeCarrierToCompare($event)"/>
-                        <div class = "carrierBox" ng-style="getColorOfCarrier(carrier)">
+                        <div class = "carrierBox">
                             {{carrier}}
                         </div>
                     </label>
@@ -37,13 +38,13 @@
 
         <div flex = "20" class = "iterationSelection">
             <select ng-model="selectedIteration" ng-change = "changeIteration()">
-                <option selected disabled  value="">Chose Iteration</option>
+                <option selected disabled value="">Chose Iteration</option>
                 <option ng-repeat="x in iterationDimensions" value="{{x.id}}">{{x.name}}</option>
             </select>
         </div>
         <div flex = "20" class = "dimensionSelection">
             <select ng-model="selectedDimension" ng-change = "changeDimension()">
-                <option selected disabled  value="">Chose Dimension</option>
+                <option selected disabled value="">Chose Diemnstion</option>
                 <option ng-repeat="x in dimensions" value="{{x.id}}">{{x.name}}</option>
             </select>
         </div>

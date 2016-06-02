@@ -26,20 +26,20 @@
 </center>
 
 
-<div ng-controller="chartMaker">
-    <!--<canvas id="mycanvas" class="chart chart-bar" data="chartParams.dataset" labels="chartParams.listOfCarriers" label ="chartParams.label" series="chartParams.series" colours="chartParams.colours" _saved="chartParams._saved" options="chartParams.options" width="502" height="301"></canvas>
-    <div id="chartjs-tooltip"></div>-->
+  <div ng-controller="chartMaker">
+    <canvas id="mycanvas" class="chart chart-bar" ></canvas>
+    <div id="chartjs-tooltip"></div>
 
-    <canvas id="mycanvas"></canvas>
 
-  </div>
+ </div>
 
-<!-- what does this do ? 
-<div ng-controller="barchartController">
+
+<!-- what does this do ? -->
+<!--<div ng-controller="barchartController">
 
 
 <div id="graph" style="..." ></div>
-</div> -->
+</div>-->
 <div class = "rawDownload">
   Download Database tables as csv: 
   <a href = "django/dataInterface/rawData.csv?table=iteration">Iteration table</a> |
