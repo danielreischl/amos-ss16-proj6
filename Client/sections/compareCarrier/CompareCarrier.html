@@ -38,13 +38,11 @@
 
         <div flex = "20" class = "iterationSelection">
             <select ng-model="selectedIteration" ng-change = "changeIteration()">
-                <option selected disabled  value="">Chose Iteration</option>
                 <option ng-repeat="x in iterationDimensions" value="{{x.id}}">{{x.name}}</option>
             </select>
         </div>
         <div flex = "20" class = "dimensionSelection">
             <select ng-model="selectedDimension" ng-change = "changeDimension()">
-                <option selected disabled  value="">Chose Dimension</option>
                 <option ng-repeat="x in dimensions" value="{{x.id}}">{{x.name}}</option>
             </select>
         </div>
