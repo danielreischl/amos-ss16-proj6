@@ -21,40 +21,39 @@
 
 
 <div ng-controller="compareCircleGraph" layout = "column">
-   <div flex = 20 layout = "row">
-     <div flex = "40" class = "carrierSelection">
-       <ul layout-align="center center" class = "carrierSelection">
-	 <li ng-repeat="(index, carrier) in arrayCarrier" style = "color: black;list-style-type:none;">
-           <label class = "carrierBox">
-	     <input type="checkbox" id = "{{carrier}}" ng-click="changeCarrierToCompare($event)"/>
-	     <div class = "carrierBox">
-	       {{carrier}}
-	     </div>
-	   </label>
-	   <br ng:show="(index+1)%5==0" />
-	 </li>
-     </ul>
-     </div>
-   
-     <div flex = "20" class = "iterationSelection">
-       <select ng-model="selectedIteration" ng-change = "changeIteration()">
-	 <option selected disabled  value="">Chose Iteration</option>
-	 <option ng-repeat="x in iterationDimensions" value="{{x.id}}">{{x.name}}</option>
-       </select>
-    </div>
-    <div flex = "20" class = "dimensionSelection"> 
-        <select ng-model="selectedDimension" ng-change = "changeDimension()">
-            <option selected disabled  value="">Chose Dimension</option>
-	    <option ng-repeat="x in dimensions" value="{{x.id}}">{{x.name}}</option>
-        </select>
-    </div>
+    <div flex = 20 layout = "row">
+        <div flex = "40" class = "carrierSelection">
+            <ul layout="column" layout-align="center center" class = "carrierSelection">
+                <li ng-repeat="(index, carrier) in arrayCarrier" style = "color: black;list-style-type:none;">
+                    <label class = "carrierBox">
+                        <input type="checkbox" id = "{{carrier}}" ng-click="changeCarrierToCompare($event)"/>
+                        <div class = "carrierBox">
+                            {{carrier}}
+                        </div>
+                    </label>
+                    <br ng:show="(index+1)%5==0" />
+                </li>
+            </ul>
+        </div>
 
-    <div flex = "20">
-      <md-button class="md-raised md-cornered" ng-click="createCompareGraph()">Refresh</md-button>
+        <div flex = "20" class = "iterationSelection">
+            <select ng-model="selectedIteration" ng-change = "changeIteration()">
+                <option selected disabled  value="">Chose Iteration</option>
+                <option ng-repeat="x in iterationDimensions" value="{{x.id}}">{{x.name}}</option>
+            </select>
+        </div>
+        <div flex = "20" class = "dimensionSelection">
+            <select ng-model="selectedDimension" ng-change = "changeDimension()">
+                <option selected disabled  value="">Chose Dimension</option>
+                <option ng-repeat="x in dimensions" value="{{x.id}}">{{x.name}}</option>
+            </select>
+        </div>
+
+        <div flex = "20">
+            <md-button class="md-raised md-cornered" ng-click="createCompareGraph()">Refresh</md-button>
+        </div>
     </div>
-    
-   </div>
-   <div flex = "100" ng-init ="createCompareGraph()" id="compareGraph" class = "continuousGraph"></div>
- </div>
+    <div flex = "100" ng-init ="createCompareGraph()" id="compareGraph" class = "continuousGraph"></div>
+</div>
 
 
