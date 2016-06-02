@@ -21,14 +21,14 @@
 
 
 <div ng-controller="compareCircleGraph" layout = "column" layout-align="center center">
-    <div flex = "100" layout = "row" layout-align="center center">
+    <div flex layout = "row" layout-align="center center">
         <div flex = "40" class = "carrierSelection">
             <ul layout-align="center center" class = "carrierSelection">
-                <li ng-repeat="carrier in arrayCarrier" ng-style = "getListStyle(index)">
+                <li ng-repeat="carrier in arrayCarrier" ng-style="getListStyle(carrier)">
                     <!-- <div class="clearfix" ng-if="$index % 5 == 0"></div> -->
-                    <label class = "carrierBox" ng-style="getColorOfCarrier(carrier)">
+                    <label class = "carrierBox">
                         <input type="checkbox" id = "{{carrier}}" ng-click="changeCarrierToCompare($event)"/>
-                        <div class = "carrierBox" ng-style = "getListStyle(index)">
+                        <div class = "carrierBox" ng-style = "getColorOfCarrier(carrier)">
                             {{carrier}}
                         </div>
                     </label>
@@ -44,7 +44,7 @@
         </div>
         <div flex = "20" class = "dimensionSelection">
             <select ng-model="selectedDimension" ng-change = "changeDimension()">
-                <option selected disabled value="">Chose Diemnstion</option>
+                <option selected disabled value="">Chose Diemnsion</option>
                 <option ng-repeat="x in dimensions" value="{{x.id}}">{{x.name}}</option>
             </select>
         </div>
@@ -53,7 +53,7 @@
             <md-button class="md-raised md-cornered" ng-click="createCompareGraph()">Refresh</md-button>
         </div>
     </div>
-    <div flex = "100" ng-init ="createCompareGraph()" id="compareGraph" class = "continuousGraph"></div>
+    <div flex ng-init ="createCompareGraph()" id="compareGraph"></div>
 </div>
 
 

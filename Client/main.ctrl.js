@@ -222,25 +222,25 @@ angular.module('app')
 	}
 
         $scope.getListStyle = function(index) {
-	    if (index % 5 == 0) {
-	        return "clear: left;"
+	    if (index % 5 == 1) {
+	        return {'clear': 'left'};
 	    }
 	    else {
-	        return "";
+	        return {};
 	    }
         }
     
     
 	$scope.getColorOfCarrier = function(carrier) {
 	    var percentageOfEnergy = carrierPercentageData[carrier - 1];
-	    var color = "{background-color: rgb(255,255,141);}";
+	    var color = {'background-color': 'rgb(255,255,141)'};
 
 	    if(percentageOfEnergy > 1.05) {
-            color = "{background-color : rgb(255,23,68);}";
+            color = {'background-color' : 'rgb(255,23,68)'};
         }
 
         if(percentageOfEnergy <= 1.025 ) {
-            color = "{background-color : rgb(0,191,165);}";
+            color = {'background-color' : 'rgb(0,191,165)'};
         }
 
         return color;
