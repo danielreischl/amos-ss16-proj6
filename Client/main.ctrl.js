@@ -169,9 +169,6 @@ angular.module('app')
 
         var iterationsRequested = getSelectedIterationsString();
 
-        alert("Iterations requested:" + iterationsRequested)
-
-
         if(carrierCompareList.length != 0) {
             for (var i = 0; i < carrierCompareList.length; i++) {
                 for (var carrier = 1; carrier <= amountOfCarriers; carrier++) {
