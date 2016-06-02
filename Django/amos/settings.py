@@ -92,19 +92,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'amos.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-
-# until postgresql is running, we use sqlite
+# Sets up SQLite DB in Django on Migration
+# SQLite DB is saved as db.sqlite3 in the django folder
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', #django.db.backends.postgresql_psycopg2',
-        'NAME':  os.path.join(BASE_DIR, 'db.sqlite3'), #'docker',
-        'USER': 'docker',
-        'PASSWORD': 'docker',
-        'HOST': 'localhost'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME':  os.path.join(BASE_DIR, 'db.sqlite3'),
 }
 }
 
