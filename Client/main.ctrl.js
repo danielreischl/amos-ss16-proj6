@@ -752,94 +752,111 @@ g = new Dygraph(document.getElementById("graph"),amountOfCarriers,carrierPercent
     
 .controller('chartMaker',function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
 
-var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
-    xmlHttp.send(null);
-    var amountOfCarriers = xmlHttp.responseText;
-    /* ID of first Carrier */
-    var idCounter = 1;
-    // the array variable where the converted content from the csv file will be.
-    var carrierPercentageData;
-    // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-    Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
-                                                                   dynamicTyping: true,
-                                                                   complete: function(results) {
-                                                                       carrierPercentageData =results.data[1];
-                                                                   }
-                                                                  }
-    )
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false);
+        xmlHttp.send(null);
+        var amountOfCarriers = xmlHttp.responseText;
+        /* ID of first Carrier */
+        var idCounter = 1;
+        // the array variable where the converted content from the csv file will be.
+        var carrierPercentageData;
+        // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
+        Papa.parse('django/dataInterface/percentages.csv?session=1', {
+                download: true,
+                dynamicTyping: true,
+                complete: function (results) {
+                    carrierPercentageData = results.data[1];
+                }
+            }
+        )
 
-    var barChartData = {
-    labels: amountOfCarriers,
-    datasets: [
-        {
-            yAxisLabel: "My Y Axis Label",
-            fillColor: "rgba(220,220,220,0.5)", 
-            strokeColor: "rgba(220,220,220,0.8)", 
-            highlightFill: "rgba(220,220,220,0.75)",
-            highlightStroke: "rgba(220,220,220,1)",
-            data: carrierPercentageData
-            
-          
+        createBar(carrierId, carrierPercentageData[idCounter - 1]);
+
+        idCounter = idCounter + 1;
+        amountOfCarriers = amountOfCarriers - 1;
+
+
+        function createBar(carrier, percentageOfEnergy) {
+
+            var barChartData = {
+                labels: amountOfCarriers,
+                percentageOfEnergyRounded: percentageOfEnergy.toFixed(2),
+                datasets: [
+                    {
+                        yAxisLabel: "My Y Axis Label",
+                        fillColor: "rgba(220,220,220,0.5)",
+                        strokeColor: "rgba(220,220,220,0.8)",
+                        highlightFill: "rgba(220,220,220,0.75)",
+                        highlightStroke: "rgba(220,220,220,1)",
+                        data: percentageOfEnergyRounded
+
+
+                    }
+                ],
+
+
+            };
+
+
+            var ctx = document.getElementById("mycanvas").getContext("2d");
+            window.myObjBar = new Chart(ctx).Bar(barChartData, {
+                responsive: true,
+                scaleLabel: "<%= value %> %",
+
+
+                showTooltips: false,
+                onAnimationComplete: function () {
+
+                    var ctx = this.chart.ctx;
+                    ctx.font = this.scale.font;
+                    ctx.fillStyle = this.scale.textColor
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "bottom";
+
+                    this.datasets.forEach(function (dataset) {
+                        dataset.bars.forEach(function (bar) {
+                            ctx.fillText(bar.value, bar.x, bar.y - 5);
+                        });
+                    })
+                }
+
+            });
+
+            var bars = myObjBar.datasets[0].bars;
+            for (i = 0; i < bars.length; i++) {
+                var color = "green";
+
+                if (bars[i].value <= 100) {
+                    color = "yellow";
+                }
+                else if (bars[i].value <= 150) {
+                    color = "green"
+
+
+                }
+                else if (bars[i].value <= 200) {
+                    color = "red"
+                }
+                else {
+                    color = "red"
+                }
+
+                bars[i].fillColor = color;
+                bars[i].highlightFill = color;
+
+            }
+            myObjBar.update(); //update the cahrt
+
+
         }
-    ],
+
         
 
-};
-
-
-    var ctx = document.getElementById("mycanvas").getContext("2d");
-    window.myObjBar = new Chart(ctx).Bar(barChartData, {
-          responsive : true,
-        scaleLabel: "<%= value %> %",
-
-
-        showTooltips: false,
-    onAnimationComplete: function () {
-
-        var ctx = this.chart.ctx;
-        ctx.font = this.scale.font;
-        ctx.fillStyle = this.scale.textColor
-        ctx.textAlign = "center";
-        ctx.textBaseline = "bottom";
-
-        this.datasets.forEach(function (dataset) {
-            dataset.bars.forEach(function (bar) {
-                ctx.fillText(bar.value, bar.x, bar.y - 5);
-            });
-        })
     }
 
-    });
 
-     var bars = myObjBar.datasets[0].bars;
-    for(i=0;i<bars.length;i++){
-       var color="green";
-       
-       if(bars[i].value<=100){
-       	color="yellow";
-       }
-       else if(bars[i].value<=150){
-       	color="green"
-          
-       
-       }
-       else if(bars[i].value<=200){
-       	color="red"
-       }
-       else{
-       	color="red"
-       }
-       
-       bars[i].fillColor = color;
-        bars[i].highlightFill = color;
-
-    }
-    myObjBar.update(); //update the cahrt
-
-
-}
 )
+
 
 
 
