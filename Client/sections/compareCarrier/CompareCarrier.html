@@ -20,14 +20,14 @@
 -->
 
 
-<div ng-controller="compareCircleGraph" layout = "column">
-    <div flex = 20 layout = "row">
+<div ng-controller="compareCircleGraph" layout = "column" layout-align="center center">
+    <div flex = 20 layout = "row" layout-align="center center">
         <div flex = "40" class = "carrierSelection">
             <ul layout-align="center center" class = "carrierSelection">
-                <li ng-repeat="(index, carrier) in arrayCarrier" style = "color: black;list-style-type:none;">
+                <li ng-repeat="(index, carrier) in arrayCarrier" style = "getColorOfCarrier(carrier); list-style-type: none;">
                     <label class = "carrierBox">
                         <input type="checkbox" id = "{{carrier}}" ng-click="changeCarrierToCompare($event)"/>
-                        <div class = "carrierBox" ng-style="getColorOfCarrier(carrier)">
+                        <div class = "carrierBox">
                             {{carrier}}
                         </div>
                     </label>
