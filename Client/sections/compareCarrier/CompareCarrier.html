@@ -23,11 +23,11 @@
 <div ng-controller="compareCircleGraph" layout = "column">
     <div flex = 20 layout = "row">
         <div flex = "40" class = "carrierSelection">
-            <ul layout="column" layout-align="center center" class = "carrierSelection">
+            <ul layout-align="center center" class = "carrierSelection">
                 <li ng-repeat="(index, carrier) in arrayCarrier" style = "color: black;list-style-type:none;">
                     <label class = "carrierBox">
                         <input type="checkbox" id = "{{carrier}}" ng-click="changeCarrierToCompare($event)"/>
-                        <div class = "carrierBox">
+                        <div class = "carrierBox" ng-style="getColorOfCarrier(carrier)">
                             {{carrier}}
                         </div>
                     </label>

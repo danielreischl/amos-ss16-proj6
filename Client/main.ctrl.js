@@ -125,6 +125,17 @@ angular.module('app')
         idCounter++;
     }
 
+    // the array variable where the converted content from the csv file will be.
+    var carrierPercentageData;
+    // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
+    Papa.parse('django/dataInterface/percentages.csv?session=1', {  download: true,
+                                                                    dynamicTyping: true,
+                                                                    complete: function(results) {
+                                                                        carrierPercentageData = results.data[1];
+                                                                    }
+                                                                  }
+    )
+
     //
     // Start of $scope
     //
@@ -209,6 +220,23 @@ angular.module('app')
 	$scope.changeIteration = function() {
 	    selectedIteration = $scope.selectedIteration;
 	}
+
+
+	$scope.getColorOfCarrier = function(carrier) {
+	    var percentageOfEnergy = carrierPercentageData[carrier - 1];
+	    var color = "#FFFF8D";
+
+	    if(percentageOfEnergy > 1.05) {
+            context.fillStyle = '#FF1744';
+        }
+
+        if(percentageOfEnergy <= 1.025 ) {
+            context.fillStyle = '#00BFA5';
+        }
+
+        return color;
+	}
+
 
 	// This function empties the carriers in the comparison on page leave.
     // If the user leaves the current html snippet/template then,
