@@ -224,14 +224,14 @@ angular.module('app')
 
 	$scope.getColorOfCarrier = function(carrier) {
 	    var percentageOfEnergy = carrierPercentageData[carrier - 1];
-	    var color = "color : #FFFF8D";
+	    var color = {color: #FFFF8D};
 
 	    if(percentageOfEnergy > 1.05) {
-            color = "color : #FF1744";
+            color = {color : #FF1744};
         }
 
         if(percentageOfEnergy <= 1.025 ) {
-            color = "color : #00BFA5";
+            color = {color : #00BFA5};
         }
 
         return color;
