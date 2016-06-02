@@ -221,7 +221,16 @@ angular.module('app')
 	    selectedIteration = $scope.selectedIteration;
 	}
 
-
+        $scope.getListStyle = function(index) {
+	    if (index % 5 == 0) {
+	        return "clear: left;"
+	    }
+	    else {
+	        return "";
+	    }
+        }
+    
+    
 	$scope.getColorOfCarrier = function(carrier) {
 	    var percentageOfEnergy = carrierPercentageData[carrier - 1];
 	    var color = "#FFFF8D";
