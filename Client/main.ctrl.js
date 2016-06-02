@@ -233,14 +233,14 @@ angular.module('app')
     
 	$scope.getColorOfCarrier = function(carrier) {
 	    var percentageOfEnergy = carrierPercentageData[carrier - 1];
-	    var color = {background-color: "#FFFF8D"};
+	    var color = "{background-color: rgb(255,255,141);}";
 
 	    if(percentageOfEnergy > 1.05) {
-            color = {background-color : "#FF1744"};
+            color = "{background-color : rgb(255,23,68);}";
         }
 
         if(percentageOfEnergy <= 1.025 ) {
-            color = {background-color : "#00BFA5"};
+            color = "{background-color : rgb(0,191,165);}";
         }
 
         return color;
