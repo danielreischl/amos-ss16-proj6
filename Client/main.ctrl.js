@@ -187,7 +187,6 @@ angular.module('app')
             alert("You did not chose any Carriers to compare")
         }
 
-
         graph = new Dygraph(
 	        document.getElementById("compareGraph"),'django/dataInterface/continuousData.csv?carriers='+carriersRequested + '&iterations=' + iterationsRequested + '&dimension=' + selectedDimension + '&session=1',
 	            {title: yAxisLabels[selectedDimension],
