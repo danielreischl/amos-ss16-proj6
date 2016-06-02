@@ -568,8 +568,24 @@ which kind of data he wants to see. The default value is average energy consumpt
 })
 
 
-/*.controller('barchartController',function () {
+.controller('barchartController',function ($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
 
+var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.send(null);
+    var amountOfCarriers = xmlHttp.responseText;
+    /* ID of first Carrier */
+    var idCounter = 1;
+    // the array variable where the converted content from the csv file will be.
+    var carrierPercentageData;
+    // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
+    Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
+                                                                   dynamicTyping: true,
+                                                                   complete: function(results) {
+                                                                       carrierPercentageData =results.data[1];
+                                                                   }
+                                                                  }
+    )
 
     function barChartPlotter(e) {
   var ctx = e.drawingContext;
@@ -589,16 +605,16 @@ which kind of data he wants to see. The default value is average energy consumpt
     ctx.strokeRect(center_x - bar_width / 2, p.canvasy, bar_width, y_bottom - p.canvasy);
   }
 }
- var data = "Carrier,Percentage%\n" +
-     "1,50\n" +
-     "2,70\n" +
-     "3,90\n" +
-     "4,100\n" +
-         "5,180\n" +
-    "6,200\n" +
-    "7,250\n" +
-     "8,150\n";
-g = new Dygraph(document.getElementById("graph"),data,
+ //var data = "Carrier,Percentage%\n" +
+    // "1,50\n" +
+   //  "2,70\n" +
+   //  "3,90\n" +
+    // "4,100\n" +
+      //   "5,180\n" +
+  //  "6,200\n" +
+  //  "7,250\n" +
+  //   "8,150\n";
+g = new Dygraph(document.getElementById("graph"),amountOfCarriers,carrierPercentageData,
 
 
                  {
@@ -703,7 +719,7 @@ g = new Dygraph(document.getElementById("graph"),data,
 
 })
 
-*/
+
 /*.controller('chartMaker',function($scope) {
 
         $scope.chartParams = {
@@ -734,10 +750,27 @@ g = new Dygraph(document.getElementById("graph"),data,
 
 )*/
     
-.controller('chartMaker',function($scope) {
+.controller('chartMaker',function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
+
+var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.send(null);
+    var amountOfCarriers = xmlHttp.responseText;
+    /* ID of first Carrier */
+    var idCounter = 1;
+    // the array variable where the converted content from the csv file will be.
+    var carrierPercentageData;
+    // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
+    Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
+                                                                   dynamicTyping: true,
+                                                                   complete: function(results) {
+                                                                       carrierPercentageData =results.data[1];
+                                                                   }
+                                                                  }
+    )
 
     var barChartData = {
-    labels: ["carrier1", "carrier2", "carrier3","carrier4","carrier5","carrier6","carrier7","carrier8"],
+    labels: amountOfCarriers,
     datasets: [
         {
             yAxisLabel: "My Y Axis Label",
@@ -745,7 +778,7 @@ g = new Dygraph(document.getElementById("graph"),data,
             strokeColor: "rgba(220,220,220,0.8)", 
             highlightFill: "rgba(220,220,220,0.75)",
             highlightStroke: "rgba(220,220,220,1)",
-            data: [100, 150, 200, 75, 250, 80, 130, 60]
+            data: carrierPercentageData
             
           
         }
