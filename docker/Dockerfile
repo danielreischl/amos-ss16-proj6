@@ -23,8 +23,8 @@ ENV SOCKFILE=/srv/run/gunicorn.sock
 RUN apt-get update && apt-get -y upgrade
 
 # Installs needed software:
-# python, python-pip, python-dev, python-pandas, nginx, sqlite3 libatlas-base-dev
-RUN apt-get install -y python python-pip python-dev python-pandas nginx sqlite3 libatlas-base-dev
+# python, python-pip, python-pandas, nginx, sqlite3 libatlas-base-dev
+RUN apt-get install -y python python-pip python-pandas nginx sqlite3 libatlas-base-dev
 
 # Creates application subdirectories
 WORKDIR $DOCKYARD_SRVHOME
