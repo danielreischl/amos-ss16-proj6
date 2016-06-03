@@ -10,3 +10,10 @@ cp -r ./Django ./docker/django
 
 # Starts build of docker container
 docker build --pull -t tobido/amos-ss16-proj6 docker/
+
+# clean up
+# this is irrelevant for online builds since Travis gets a fresh clone of the repository anyways
+# but for local builds it is quite helpful
+rm -r ./docker/Client
+rm -r ./docker/DataProcessing
+rm -r ./docker/django
