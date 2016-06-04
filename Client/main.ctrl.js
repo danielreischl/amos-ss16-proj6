@@ -198,8 +198,12 @@ angular.module('app')
             alert("You did not chose any Carriers to compare")
         }
 
+         // the url which should be requested wil be defined in requestedUrl
+        // to allow to export the csv file the variable is defined as a $scope variable
+        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+carriersRequested + '&iterations=' + iterationsRequested + '&dimension=' + selectedDimension + '&session=1'
+
         graph = new Dygraph(
-	        document.getElementById("compareGraph"),'django/dataInterface/continuousData.csv?carriers='+carriersRequested + '&iterations=' + iterationsRequested + '&dimension=' + selectedDimension + '&session=1',
+	        document.getElementById("compareGraph"),$scope.requestedUrl,
 	            {title: yAxisLabels[selectedDimension],
 	            ylabel: yAxisLabels[selectedDimension]+' in '+units[selectedDimension],
 	            xlabel: 'time in ms',

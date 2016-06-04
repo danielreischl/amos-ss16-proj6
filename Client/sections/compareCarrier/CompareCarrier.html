@@ -54,6 +54,14 @@
         </div>
     </div>
     <div ng-init="createCompareGraph()" id="compareGraph" style="height: 500px;"></div>
+    <!-- Container for the DataExport. Data export will request the same csv createCompareGraph requested and allows
+    the user to download the csv file. Layout is row and alignment is end (horizontal) start (vertical) to show
+    the link on the right side below the createCompareGraph -->
+    <div dataExport layout="row" layout-align="end start">
+        <!--Links to requestedUrl from createCompareGraph ()
+        requestedUrl is the defined value in createCompareGraph which is added within a href -->
+          <a href ="{{requestedUrl}}">Export Data</a>
+    </div>
 </div>
 
 
