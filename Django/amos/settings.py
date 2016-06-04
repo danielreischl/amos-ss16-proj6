@@ -153,6 +153,10 @@ STATICFILES_FINDERS = (
 )
 
 # Apps that should be installed by Bower
+# jquery, papa-parse, Chart.js, dygraphs
 BOWER_INSTALLED_APPS = (
     'jquery',
+    'papa-parse',
+    'Chart.js',
+    'dygraphs',
 )
