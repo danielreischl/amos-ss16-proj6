@@ -35,3 +35,11 @@ li {
     text-decoration: none;
 }
 
+.graphLegend {
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+    width: 150px;
+    background-color: white;
+}
+

@@ -213,6 +213,14 @@ angular.module('app')
 	            /*labelDiv looks for an element with the given id and puts the legend into this element.
 	            Therefore the legend will not bis displayed inside the graph */
 	            labelsDiv: document.getElementById("compareGraphLegend"),
+	            /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
+	            axes: {
+	                x: {
+                         valueFormatter: function(x) {
+                            return x + ' ms';
+                        },
+                    },
+                },
 	            });
 
 	// After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
@@ -436,6 +444,14 @@ which kind of data he wants to see. The default value is average energy consumpt
 	                                                                                      /*labelDiv looks for an element with the given id and puts the legend into this element.
 	                                                                                       Therefore the legend will not bis displayed inside the graph */
 	                                                                                      labelsDiv: document.getElementById("compareAverageEnergyConsumptionGraphLegend"),
+	                                                                                      /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
+	                                                                                      axes: {
+	                                                                                        x: {
+                                                                                                valueFormatter: function(x) {
+                                                                                                    return 'Iteration ' + x;
+                                                                                                },
+                                                                                            },
+                                                                                          }
 	                                                                                      });
 
 
