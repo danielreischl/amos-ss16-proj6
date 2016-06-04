@@ -50,8 +50,8 @@ RUN touch /srv/logs/nginx-error.log
 RUN touch $SOCKFILE
 
 # Installs Python dependencies
-# Django 1.9.5, Gunicorn 19.3.0, SQL Alchemy
-RUN pip install Django==1.9.5 gunicorn==19.3.0 SQLAlchemy
+# Django 1.9.5, Gunicorn 19.3.0, SQL Alchemy, django-bower
+RUN pip install Django==1.9.5 gunicorn==19.3.0 SQLAlchemy django-bower
 
 # Exposes port 80
 EXPOSE 80
@@ -65,6 +65,8 @@ COPY ./docker-entrypoint.sh /
 RUN python manage.py makemigrations dataInterface
 # Applies database migrations
 RUN python manage.py migrate --noinput
+# Installs bower libraries
+RUN python manage.py bower install
 # Collects static files
 RUN python manage.py collectstatic --noinput
 

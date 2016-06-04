@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djangobower',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -143,7 +144,15 @@ STATIC_URL = '/django_static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 STATIC_ROOT = '/srv/static/django_static'
 
+BOWER_COMPONENTS_ROOT = os.path.join(STATIC_ROOT, 'components')
 
+# Searches static files in the APP folder and in the bower folder
 STATICFILES_FINDERS = ( 
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'djangobower.finders.BowerFinder',
+)
+
+# Apps that should be installed by Bower
+BOWER_INSTALLED_APPS = (
+    'jquery',
 )
