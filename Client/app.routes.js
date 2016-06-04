@@ -44,7 +44,7 @@ angular
       })
 
       .when('/', {
-        templateUrl: 'sections/barCirclePage/HomePageIcons.html'
+        templateUrl: 'sections/landingPage/HomePageIcons.html'
       })
 
       .when('/CircleCarrier', {
