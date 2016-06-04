@@ -415,7 +415,6 @@ which kind of data he wants to see. The default value is average energy consumpt
         // create the graph with the parameters set. The request path for the database depends on 3 parameters: session, carrierRequested and selectedDimension
 
         graph = new Dygraph(
-	       document.getElementById("AverageEnergyConsumptionChart"), 'django/dataInterface/averageEnergyConsumption.csv?session='+session+'&carriers='+carriersRequested+'&dimension='+selectedDimension+'',
 	                                                                                     {title: yAxisLabels[selectedDimension],
 	                                                                                      ylabel: yAxisLabels[selectedDimension]+' in '+units[selectedDimension],
 	                                                                                      xlabel: 'Iteration',
