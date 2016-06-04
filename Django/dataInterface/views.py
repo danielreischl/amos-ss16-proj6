@@ -258,10 +258,12 @@ def deleteDatabaseValues (request):
 def averageEnergyConsumption (request):
 
     # Provides last 10 iterations  for the AverageEnergyConsumptionChart
-    # parameters: session, carriers, dimension
+    # parameters: session, carriers, dimension,  type
     requestedSession = request.GET['session']
     requestedCarriers = request.GET['carriers']
     requestedDimension = request.GET['dimension']
+    requestedType = request.GET['type']
+
 
     # Pharsing Carriers because the the different carriers are given comma seperated
     carriers = requestedCarriers.split(',')
@@ -278,13 +280,22 @@ def averageEnergyConsumption (request):
         if funcMaxIteration(requestedSession, carrier) > maxIterationOfAllCarriers:
             maxIterationOfAllCarriers = funcMaxIteration(requestedSession, carrier)
 
+    # TODO: Make last10 flexible. So if last3 are requested, return last 3
 
     # Determines the startIteration that should be provided in the .csv file
-    # currently just the last 10 iterations are provided to the frontend
-    if maxIterationOfAllCarriers > 10:
-        startIterationOfAllCarriers = maxIterationOfAllCarriers - 10
-    else:
+    if requestedType == "last10":
+        # If the last 10 iterations are requested, substract 10 from maxIterationOfAllCarriers if
+        # maxIterationOfAllCarriers is larger then 10, else startIteration is 1
+        if maxIterationOfAllCarriers > 10:
+            startIterationOfAllCarriers = maxIterationOfAllCarriers - 10
+        else:
+            startIterationOfAllCarriers = 1
+    elif requestedType == "all":
+        # If all iterations are requested iterating should start at 1
         startIterationOfAllCarriers = 1
+    else:
+        # If neither 'all' or 'last' return "Wrong Type Selected'
+        return HttpResponse('Wrong Type Selected')
 
     # write first row of iteration.
     # Iterations, Carrier 0, Carrier 1, Carrier X
