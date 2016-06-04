@@ -49,6 +49,9 @@ RUN touch /srv/logs/nginx-access.log
 RUN touch /srv/logs/nginx-error.log
 RUN touch $SOCKFILE
 
+# Installs Bower
+RUN npm install -g bower
+
 # Installs Python dependencies
 # Django 1.9.5, Gunicorn 19.3.0, SQL Alchemy, django-bower
 RUN pip install Django==1.9.5 gunicorn==19.3.0 SQLAlchemy django-bower
