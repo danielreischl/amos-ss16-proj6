@@ -26,7 +26,7 @@ the user can see different graphs -->
 
 
 <!DOCTYPE html >
-<html ng-app="app">
+<html ng-app="app" xmlns="http://www.w3.org/1999/html">
    <head>
       <title>Rogue Vision</title>
 
@@ -38,20 +38,19 @@ the user can see different graphs -->
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.3/Chart.bundle.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
-      <!-- local Scripts -->
-      <script src="django_static/papaparse/papaparse.min.js"></script>
-      <script src="sections/graphExample/dygraph-combined-dev.js"></script>
-      <script src="sections/barPage/Chart.js"></script>
-      <script src="sections/barPage/chart-angular.js"></script>
-      <script src="app.js"></script>
-      <script src="app.routes.js"></script>
-      <script src="main.ctrl.js"></script>
-      <script src="app.service.js"></script>
-      <script src="sections/dashboard/dashboard.ctrl.js"></script>
+       <!-- local Scripts -->
+       <script src="django_static/Chart.js/dist/Chart.bundle.js"></script>
+       <script src="django_static/jquery/dist/jquery.min.js"></script>
+       <script src="django_static/papaparse/papaparse.min.js"></script>
+       <script src="django_static/dygraphs/dygraph-combined.js"></script>
+       <script src="django_static/dist/Chart.min.js"></script>
+       <script src="sections/barPage/chart-angular.js"></script>
+       <script src="app.js"></script>
+       <script src="app.routes.js"></script>
+       <script src="main.ctrl.js"></script>
+       <script src="app.service.js"></script>
+       <script src="sections/dashboard/dashboard.ctrl.js"></script>
       <!-- circleCarrier.js does not exist please fix
         <script src="sections/circlePage/circleCarrier.js"></script>
       -->
