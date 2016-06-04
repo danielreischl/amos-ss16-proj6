@@ -144,7 +144,7 @@ STATIC_URL = '/django_static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 STATIC_ROOT = '/srv/static/django_static'
 
-BOWER_COMPONENTS_ROOT = os.path.join(STATIC_ROOT, 'components')
+BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
 
 # Searches static files in the APP folder and in the bower folder
 STATICFILES_FINDERS = ( 
