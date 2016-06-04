@@ -828,7 +828,7 @@ g = new Dygraph(document.getElementById("graph"),amountOfCarriers,carrierPercent
                         strokeColor: "rgba(220,220,220,0.8)",
                         highlightFill: "rgba(220,220,220,0.75)",
                         highlightStroke: "rgba(220,220,220,1)",
-                        data: percentageOfEnergyRounded
+                        data: carrierPercentageData
 
 
                     }
@@ -836,6 +836,14 @@ g = new Dygraph(document.getElementById("graph"),amountOfCarriers,carrierPercent
 
 
             };
+            var carrierPercentageData;
+Papa.parse('django/dataInterface/percentages.csv?session=1',{download:true,
+                                                                dynamicTyping:true,
+                                                                 complete:function(results){
+                                                                    carrierPercentageData=results.data[1];
+                                                                    }
+                                                                    }
+)
 
 
             var ctx = document.getElementById("mycanvas").getContext("2d");
