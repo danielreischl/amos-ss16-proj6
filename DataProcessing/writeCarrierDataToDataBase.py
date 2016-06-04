@@ -128,9 +128,19 @@ def load_to_database(data, tableName):
 
     logging.info("table name: " + tableName)
 
-    # Database connection
-    con = sqlite3.connect(setConstants.PATH_OF_SQLLITE_DB)
-    logging.info("Connection: " + str(con))
+    # Connects Script to DataBase
+    try:
+        # Opens connection to DataBsae
+        con = sqlite3.connect(setConstants.PATH_OF_SQLLITE_DB)
+        # Adds "DataBase Connection: Success" after successfully connecting to database
+        logging.info("DataBase Connection: Success")
+    except:
+        # Adds Error to Log if connection to DataBase failed
+        logging.error("DataBase Connection: Fail")
+        # Adds database Path to ease the debugging
+        logging.error("DataBase Path: " + setConstants.PATH_OF_SQLLITE_DB)
+        # Terminates the script with 0 and prints the message
+        sys.exit("DataBase Connection Failed")
 
     # Loads dataframe to database. Appends data or creates table and is not adding the index of the dataFrame.
     data.to_sql(name=tableName, con=con, if_exists='append', index=False)
