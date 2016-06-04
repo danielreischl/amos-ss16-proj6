@@ -413,8 +413,12 @@ which kind of data he wants to see. The default value is average energy consumpt
         }
 
         // create the graph with the parameters set. The request path for the database depends on 3 parameters: session, carrierRequested and selectedDimension
+        // the url which should be requested wil be defined in requestedUrl
+        // to allow to export the csv file the variable is defined as a $scope variable
+        $scope.requestedUrl = 'django/dataInterface/averageEnergyConsumption.csv?session='+session+'&carriers='+carriersRequested+'&dimension='+selectedDimension+''
 
         graph = new Dygraph(
+	       document.getElementById("AverageEnergyConsumptionChart"),$scope.requestedUrl ,
 	                                                                                     {title: yAxisLabels[selectedDimension],
 	                                                                                      ylabel: yAxisLabels[selectedDimension]+' in '+units[selectedDimension],
 	                                                                                      xlabel: 'Iteration',
