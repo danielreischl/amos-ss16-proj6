@@ -53,7 +53,20 @@
             <md-button class="md-raised md-cornered" ng-click="createCompareGraph()">Refresh</md-button>
         </div>
     </div>
-    <div ng-init="createCompareGraph()" id="compareGraph" style="height: 500px;"></div>
+
+    <!-- The graph and the legend will be displayed in a table layout.
+    Through this layout, the legend will be displayed right next to the graph-->
+   <table>
+       <tr>
+           <td>
+                <div ng-init="createCompareGraph()" id="compareGraph" style="height: 500px;"></div>
+           </td>
+           <td>
+               <div id ="compareGraphLegend"></div>
+           </td>
+       </tr>
+   </table>
+
     <!-- Container for the DataExport. Data export will request the same csv createCompareGraph requested and allows
     the user to download the csv file. Layout is row and alignment is end (horizontal) start (vertical) to show
     the link on the right side below the createCompareGraph -->

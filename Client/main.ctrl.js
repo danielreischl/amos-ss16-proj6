@@ -209,6 +209,10 @@ angular.module('app')
 	            xlabel: 'time in ms',
 	            labelsSeparateLines: true,
 	            highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
+	            legend: "always",
+	            /*labelDiv looks for an element with the given id and puts the legend into this element.
+	            Therefore the legend will not bis displayed inside the graph */
+	            labelsDiv: document.getElementById("compareGraphLegend"),
 	            });
 
 	// After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
@@ -428,6 +432,10 @@ which kind of data he wants to see. The default value is average energy consumpt
 	                                                                                      xlabel: 'Iteration',
 	                                                                                      labelsSeparateLines: true,
 	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
+	                                                                                      legend: "always",
+	                                                                                      /*labelDiv looks for an element with the given id and puts the legend into this element.
+	                                                                                       Therefore the legend will not bis displayed inside the graph */
+	                                                                                      labelsDiv: document.getElementById("compareAverageEnergyConsumptionGraphLegend"),
 	                                                                                      });
 
 
