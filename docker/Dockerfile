@@ -69,7 +69,7 @@ RUN python manage.py makemigrations dataInterface
 # Applies database migrations
 RUN python manage.py migrate --noinput
 # Installs bower libraries
-RUN python manage.py bower install --allow-root
+RUN python manage.py bower install -- --allow-root
 # Collects static files
 RUN python manage.py collectstatic --noinput
 
