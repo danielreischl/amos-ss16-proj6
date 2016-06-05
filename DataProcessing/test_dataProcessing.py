@@ -23,6 +23,7 @@
 import unittest
 import os
 
+
 # This class tests if all necessary folders exist
 class TestFolderExistence (unittest.TestCase):
 
