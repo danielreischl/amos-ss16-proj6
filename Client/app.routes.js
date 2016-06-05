@@ -39,10 +39,6 @@ angular
         templateUrl: 'sections/graphExample/GraphExample.html',
       })
 
-      .when('/Dashboard', {
-        templateUrl: 'sections/dashboard/dashboard.html'
-      })
-
       .when('/', {
         templateUrl: 'sections/landingPage/HomePageIcons.html'
       })
@@ -61,6 +57,22 @@ angular
 
       .when('/AverageEnergyConsumptionChart', {
         templateUrl: 'sections/AverageEnergyConsumptionChart/AverageEnergyConsumptionChart.html'
+      })
+
+       .when('/alertPage', {
+        templateUrl: 'sections/alertPage/alertPage.html'
+      })
+
+       .when('/simulation', {
+        templateUrl: 'sections/simulationPage/simulationPage.html'
+      })
+
+       .when('/settings', {
+        templateUrl: 'sections/settingsPage/settingsPage.html'
+      })
+
+       .when('/help', {
+        templateUrl: 'sections/helpPage/helpPage.html'
       })
 
       .otherwise({
