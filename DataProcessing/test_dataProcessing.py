@@ -22,30 +22,49 @@
 # This files includes all tests for dataProcessing
 import unittest
 import os
+import setConstants
 
 
 # This class tests if all necessary folders exist
-class TestFolderExistence (unittest.TestCase):
+class testFolderExistence (unittest.TestCase):
 
     # Folder InitialData
-    def testFolderInitialData(self):
+    def test_FolderInitialData(self):
         res = True
         self.assertEqual(res, os.path.isdir("srv/DataProcessing/InitialData"))
 
     # Folder InitialDataArchive
-    def testFolderInitialDataArchive(self):
+    def test_FolderInitialDataArchive(self):
         res = True
         self.assertEqual(res, os.path.isdir("srv/DataProcessing/InitialDataArchive"))
 
     # Folder CarrierData
-    def testFolderCarrierData(self):
+    def test_FolderCarrierData(self):
         res = True
         self.assertEqual(res, os.path.isdir("srv/DataProcessing/CarrierData"))
 
     # Folder CarrierDataArchive
-    def testFolderCarrierDataArchive(self):
+    def test_FolderCarrierDataArchive(self):
         res = True
         self.assertEqual(res, os.path.isdir('srv/DataProcessing/CarrierDataArchive'))
+
+class testFileExistence (unittest.TestCase):
+
+    def test_CompressIntitialData (self):
+        res = True
+        self.assertEqual (res, os.path.exists('compressInitialData.py'))
+
+    def test_WriteDataToDatabase(self):
+        res = True
+        self.assertEqual(res, os.path.exists('writeCarrierDataToDataBase.py'))
+
+    def test_SetConstants(self):
+        res = True
+        self.assertEqual(res, os.path.exists('setConstants.py'))
+
+    def test_DataBaseFile(self):
+        res = True
+        self.assertEqual(res, os.path.exists(setConstants.PATH_OF_SQLLITE_DB))
 
     if __name__ == '__main__':
         unittest.main()
