@@ -4,9 +4,11 @@ set -ue
 # Client -> docker/Client
 # DataProcesing -> docker/DataProcessing
 # Django -> docker/django
+# Tests -> docker/Tests
 cp -r ./Client ./docker/Client
 cp -r ./DataProcessing ./docker/DataProcessing
 cp -r ./Django ./docker/django
+cp -r ./Tests ./docker/Tests
 
 # Starts build of docker container
 docker build --pull -t tobido/amos-ss16-proj6 docker/
