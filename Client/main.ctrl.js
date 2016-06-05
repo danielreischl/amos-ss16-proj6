@@ -32,9 +32,58 @@ angular.module('app')
 /* The side navigation should appear on button click */
 
 .controller('sideNavController', function($scope, $mdSidenav) {
- $scope.openLeftMenu = function() {
-        $mdSidenav('menue').toggle();
-        };
+    // current state of the navigation. False means that the side navigation shows only the icons
+    var state = false;
+
+    /* Initializing butto ntext inside the navigation bar  */
+
+    $scope.home = "";
+    $scope.circleView = "";
+    $scope.barView = "";
+    $scope.alertView = "";
+    $scope.simulation = "";
+    $scope.settings = "";
+    $scope.help = "";
+
+    /* this scope will be triggered when the user wants to expand the navigation bar, The function inside will simply set the state to ture or false.
+       and also the string inside the variables.
+    */
+
+    $scope.toggleSidebar = function() {
+        if(state) {
+            $scope.home = "";
+            $scope.circleView = "";
+            $scope.barView = "";
+            $scope.alertView = "";
+            $scope.simulation ="";
+            $scope.settings = "";
+            $scope.help = "";
+            state = false;
+        } else {
+            $scope.home = "Home";
+            $scope.circleView = "Circle Chart View";
+            $scope.barView = "Bar Chart View";
+            $scope.alertView = "Alert";
+            $scope.simulation = "Simulation";
+            $scope.settings = "Settings";
+            $scope.help  = "Help";
+            state = true;
+        }
+    }
+
+    /* This scope will set the style, depending on the state variable. The style changes the width of the navigation sidebar */
+
+    $scope.sideNavStyle = function() {
+        var styleIcon = {"width": "3%", "height":"100%", "background-color": "#009688" }
+        var styleFull = {"width": "15%", "height":"100%", "background-color": "#009688"}
+
+        if(state) {
+            return styleFull;
+        } else {
+             return styleIcon;
+        }
+
+    }
 })
 
 /* controller for the graph example. This should show the files in the dropdown menue.

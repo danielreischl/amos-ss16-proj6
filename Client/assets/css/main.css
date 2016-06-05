@@ -42,13 +42,6 @@ p {
     padding-top: 25px;
 }
 
-
-md-sidenav {
-    width: 15%;
-    height:100%;
-    background-color: #009688;
-}
-
 md-toolbar.toolbar {
     background-color: #009688;
 }
