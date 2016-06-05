@@ -86,42 +86,6 @@ angular.module('app')
     }
 })
 
-/* controller for the graph example. This should show the files in the dropdown menue.
- The user is then able to chose from one, which will be displayed on the page*/
-.controller('visuController', function($scope) {
-    $scope.dimensions = [
-        {name : "Acceleration", id : "ACCELERATION", default: false},
-        {name : "Energy", id : "ENERGY", default: false},
-	{name : "Speed", id: "SPEED", default: false},
-	{name : "Position", id: "POSITION", default: true},
-    ];
-    $scope.carriers = [
-	{id : "1", name : "Carrier 1"},
-	{id : "2", name : "Carrier 2"},
-	{id : "3", name : "Carrier 3"},
-    ];
-    $scope.iterations = [
-	{id : "1"},
-	{id : "2"},
-    ];
-    $scope.selected =
-	{ carrier: "1", iteration: "1" };
-    $scope.paintGraph = function(file) {
-	    g2 = new Dygraph(
-	    document.getElementById("graphdiv2"), file, {});
-        
-         /*$scope.paintGraph = function(file) {
-             g3 = new Dygraph(
-                 document.getElementById("graphdiv3"), file, {});
-         }
-        */
-    }
-    $scope.paintGraphDynamic = function(carrier) {
-	    g2 = new Dygraph(
-	    document.getElementById("graphdiv2"), "django/dataInterface/data.csv?carrier="+$scope.selectedCarrier+"&iteration="+$scope.selectedIteration+"&dimension="+$scope.selectedDimension+"&type=PoC", {});
-    }
-})
-
 /* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/
 .controller('compareCircleGraph', function($scope, carrierService) {
 
