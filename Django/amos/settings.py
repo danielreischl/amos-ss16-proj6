@@ -164,6 +164,6 @@ BOWER_INSTALLED_APPS = (
     'angular-animate',
     'angular-aria',
     'angular-messages',
-    'angular-material',
+    'angular-material#master',
 
 )
