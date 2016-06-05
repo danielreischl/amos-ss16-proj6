@@ -28,7 +28,7 @@ RUN apt-get install -y python python-pip python-pandas nginx sqlite3 libatlas-ba
 
 # Creates application subdirectories
 WORKDIR $DOCKYARD_SRVHOME
-RUN mkdir media static logs run DataProcessing DataProcessing/InitialData DataProcessing/CarrierData DataProcessing/CarrierDataArchive DataProcessing/InitialDataArchive
+RUN mkdir media static Tests logs run DataProcessing DataProcessing/InitialData DataProcessing/CarrierData DataProcessing/CarrierDataArchive DataProcessing/InitialDataArchive
 VOLUME ["$DOCKYARD_SRVHOME/media/", "$DOCKYARD_SRVHOME/logs/"]
 
 # Copy application source code to SRCDIR
@@ -40,6 +40,8 @@ COPY ./nginx.conf /etc/nginx/
 COPY ./Client /srv/static/
 # Copies DataProcessing to srv/DataProcessing
 COPY ./DataProcessing /srv/DataProcessing
+# Copies Tests to /srv/Tests
+COPY ./Tests /srv/Tests
 
 # Turns daemon mode off, otherwise nginx quits and docker container also
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
@@ -73,8 +75,9 @@ RUN python manage.py bower_install -- --allow-root  --no-input
 # Collects static files
 RUN python manage.py collectstatic --noinput
 
-# Runs DataProcessing UnitTests
+# Runs UnitTests
 RUN python /srv/DataProcessing/test_dataProcessing.py -v
+RUN python /srv/Tests/test_JavaScriptLibraries.py -v
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
