@@ -159,4 +159,11 @@ BOWER_INSTALLED_APPS = (
     'papa-parse',
     'Chart.js',
     'dygraphs',
+    'angular',
+    'angular-route',
+    'angular-animate',
+    'angular-aria',
+    'angular-messages',
+    'angular-material',
+
 )
