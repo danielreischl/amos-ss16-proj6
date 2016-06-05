@@ -32,44 +32,57 @@ angular.module('app')
 /* The side navigation should appear on button click */
 
 .controller('sideNavController', function($scope, $mdSidenav) {
- $scope.openLeftMenu = function() {
-        $mdSidenav('menue').toggle();
-        };
-})
+    // current state of the navigation. False means that the side navigation shows only the icons
+    var state = false;
 
-/* controller for the graph example. This should show the files in the dropdown menue.
- The user is then able to chose from one, which will be displayed on the page*/
-.controller('visuController', function($scope) {
-    $scope.dimensions = [
-        {name : "Acceleration", id : "ACCELERATION", default: false},
-        {name : "Energy", id : "ENERGY", default: false},
-	{name : "Speed", id: "SPEED", default: false},
-	{name : "Position", id: "POSITION", default: true},
-    ];
-    $scope.carriers = [
-	{id : "1", name : "Carrier 1"},
-	{id : "2", name : "Carrier 2"},
-	{id : "3", name : "Carrier 3"},
-    ];
-    $scope.iterations = [
-	{id : "1"},
-	{id : "2"},
-    ];
-    $scope.selected =
-	{ carrier: "1", iteration: "1" };
-    $scope.paintGraph = function(file) {
-	    g2 = new Dygraph(
-	    document.getElementById("graphdiv2"), file, {});
-        
-         /*$scope.paintGraph = function(file) {
-             g3 = new Dygraph(
-                 document.getElementById("graphdiv3"), file, {});
-         }
-        */
+    /* Initializing butto ntext inside the navigation bar  */
+
+    $scope.home = "";
+    $scope.circleView = "";
+    $scope.barView = "";
+    $scope.alertView = "";
+    $scope.simulation = "";
+    $scope.settings = "";
+    $scope.help = "";
+
+    /* this scope will be triggered when the user wants to expand the navigation bar, The function inside will simply set the state to ture or false.
+       and also the string inside the variables.
+    */
+
+    $scope.toggleSidebar = function() {
+        if(state) {
+            $scope.home = "";
+            $scope.circleView = "";
+            $scope.barView = "";
+            $scope.alertView = "";
+            $scope.simulation ="";
+            $scope.settings = "";
+            $scope.help = "";
+            state = false;
+        } else {
+            $scope.home = "Home";
+            $scope.circleView = "Circle Chart View";
+            $scope.barView = "Bar Chart View";
+            $scope.alertView = "Alert";
+            $scope.simulation = "Simulation";
+            $scope.settings = "Settings";
+            $scope.help  = "Help";
+            state = true;
+        }
     }
-    $scope.paintGraphDynamic = function(carrier) {
-	    g2 = new Dygraph(
-	    document.getElementById("graphdiv2"), "django/dataInterface/data.csv?carrier="+$scope.selectedCarrier+"&iteration="+$scope.selectedIteration+"&dimension="+$scope.selectedDimension+"&type=PoC", {});
+
+    /* This scope will set the style, depending on the state variable. The style changes the width of the navigation sidebar */
+
+    $scope.sideNavStyle = function() {
+        var styleIcon = {"width": "3%", "height":"100%", "background-color": "#009688" }
+        var styleFull = {"width": "15%", "height":"100%", "background-color": "#009688"}
+
+        if(state) {
+            return styleFull;
+        } else {
+             return styleIcon;
+        }
+
     }
 })
 

@@ -84,26 +84,26 @@ the user can see different graphs -->
 
    <!--- This section is the content part of the layout. It includes the side navigation and ng-view for the html snippets from the different views -->
 
-   <section layout ="row" class = "mainLayout">
+   <section layout ="row" class = "mainLayout" ng-controller="sideNavController">
     <!-- Side Navigation-->
-        <md-sidenav md-component-id="menue" layout="column" class="md-sidenav-left" md-is-locked-open ="true">
+        <md-sidenav md-component-id="menue" layout="column" class="md-sidenav-left" md-is-locked-open ="true" ng-style = "sideNavStyle()" >
             <md-toolbar class ="toolbar">
-                 <md-button class="md-icon-button">
+                 <md-button class="md-icon-button" ng-click ="toggleSidebar()">
                     <md-icon md-svg-src="assets/images/ic_menu_white_36px.svg"></md-icon>
                  </md-button>
             </md-toolbar>
 
-            <md-button class ="navButton" Onclick="location.href='#/'"><md-icon md-svg-src="assets/images/ic_home_white_36px.svg"></md-icon> Home</md-button>
-            <md-button class ="navButton" Onclick="location.href='#CircleCarrier'"><md-icon md-svg-src="assets/images/ic_donut_small_white_36px.svg"></md-icon> Circle Chart View</md-button>
-            <md-button class ="navButton" Onclick="location.href='#BarCarrier'"><md-icon md-svg-src="assets/images/ic_equalizer_white_36px.svg"></md-icon> Bar Chart View</md-button>
-            <md-button class ="navButton" Onclick=""><md-icon md-svg-src="assets/images/ic_alarm_white_36px.svg"></md-icon> Alerts</md-button>
-            <md-button class ="navButton" Onclick=""><md-icon md-svg-src="assets/images/ic_play_circle_outline_white_36px.svg"></md-icon> Simulation</md-button>
-            <md-button class ="navButton" Onclick=""> <md-icon md-svg-src="assets/images/ic_build_white_36px.svg"></md-icon>Settings</md-button>
-            <md-button class ="navButton" Onclick="location.href='#Documentation'"> <md-icon md-svg-src="assets/images/ic_help_white_36px.svg"></md-icon> Help</md-button>
+            <md-button class ="navButton" Onclick="location.href='#/'"><md-icon md-svg-src="assets/images/ic_home_white_36px.svg"></md-icon> <span ng-bind="home"></span></md-button>
+            <md-button class ="navButton" Onclick="location.href='#CircleCarrier'"><md-icon md-svg-src="assets/images/ic_donut_small_white_36px.svg"></md-icon>{{circleView}}</md-button>
+            <md-button class ="navButton" Onclick="location.href='#BarCarrier'"><md-icon md-svg-src="assets/images/ic_equalizer_white_36px.svg"></md-icon>{{barView}}</md-button>
+            <md-button class ="navButton" Onclick=""><md-icon md-svg-src="assets/images/ic_alarm_white_36px.svg"></md-icon>{{alertView}}</md-button>
+            <md-button class ="navButton" Onclick=""><md-icon md-svg-src="assets/images/ic_play_circle_outline_white_36px.svg"></md-icon>{{simulation}}</md-button>
+            <md-button class ="navButton" Onclick=""> <md-icon md-svg-src="assets/images/ic_build_white_36px.svg"></md-icon>{{settings}}</md-button>
+            <md-button class ="navButton" Onclick="location.href='#Documentation'"> <md-icon md-svg-src="assets/images/ic_help_white_36px.svg"></md-icon>{{help}}</md-button>
         </md-sidenav>
 
         <!-- Content for the different views-->
-        <md-content flex layout="column" ng-controller="sideNavController as ctrl">
+        <md-content flex layout="column">
              <!-- ng-view should show the html snippet, if a user clicks on a navigation button
          also I defined this part as "mainFrame". For now it should indicate the position of the main
          objects as well as give a link to the potential styles.     -->
