@@ -29,22 +29,22 @@ class TestFolderExistence (unittest.TestCase):
     # Folder InitialData
     def testFolderInitialData(self):
         res = True
-        self.assertEqual(res, os.path.isdir("InitialData"))
+        self.assertEqual(res, os.path.isdir("srv/DataProcessing/InitialData"))
 
     # Folder InitialDataArchive
     def testFolderInitialDataArchive(self):
         res = True
-        self.assertEqual(res, os.path.isdir("InitialDataArchive"))
+        self.assertEqual(res, os.path.isdir("srv/DataProcessing/InitialDataArchive"))
 
     # Folder CarrierData
     def testFolderCarrierData(self):
         res = True
-        self.assertEqual(res, os.path.isdir("CarrierData"))
+        self.assertEqual(res, os.path.isdir("srv/DataProcessing/CarrierData"))
 
     # Folder CarrierDataArchive
-    def testFolderCarrierDataArchuve(self):
+    def testFolderCarrierDataArchive(self):
         res = True
-        self.assertEqual(res, os.path.isdir("TestNameForTesting"))
+        self.assertEqual(res, os.path.isdir('srv/DataProcessing/CarrierDataArchive'))
 
     if __name__ == '__main__':
         unittest.main()
