@@ -209,6 +209,18 @@ angular.module('app')
 	            xlabel: 'time in ms',
 	            labelsSeparateLines: true,
 	            highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
+	            legend: "always",
+	            /*labelDiv looks for an element with the given id and puts the legend into this element.
+	            Therefore the legend will not bis displayed inside the graph */
+	            labelsDiv: document.getElementById("compareGraphLegend"),
+	            /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
+	            axes: {
+	                x: {
+                         valueFormatter: function(x) {
+                            return x + ' ms';
+                        },
+                    },
+                },
 	            });
 
 	// After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
@@ -428,6 +440,18 @@ which kind of data he wants to see. The default value is average energy consumpt
 	                                                                                      xlabel: 'Iteration',
 	                                                                                      labelsSeparateLines: true,
 	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
+	                                                                                      legend: "always",
+	                                                                                      /*labelDiv looks for an element with the given id and puts the legend into this element.
+	                                                                                       Therefore the legend will not bis displayed inside the graph */
+	                                                                                      labelsDiv: document.getElementById("compareAverageEnergyConsumptionGraphLegend"),
+	                                                                                      /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
+	                                                                                      axes: {
+	                                                                                        x: {
+                                                                                                valueFormatter: function(x) {
+                                                                                                    return 'Iteration ' + x;
+                                                                                                },
+                                                                                            },
+                                                                                          }
 	                                                                                      });
 
 
@@ -804,7 +828,7 @@ g = new Dygraph(document.getElementById("graph"),amountOfCarriers,carrierPercent
                         strokeColor: "rgba(220,220,220,0.8)",
                         highlightFill: "rgba(220,220,220,0.75)",
                         highlightStroke: "rgba(220,220,220,1)",
-                        data: percentageOfEnergyRounded
+                        data: carrierPercentageData
 
 
                     }
@@ -812,6 +836,14 @@ g = new Dygraph(document.getElementById("graph"),amountOfCarriers,carrierPercent
 
 
             };
+            var carrierPercentageData;
+Papa.parse('django/dataInterface/percentages.csv?session=1',{download:true,
+                                                                dynamicTyping:true,
+                                                                 complete:function(results){
+                                                                    carrierPercentageData=results.data[1];
+                                                                    }
+                                                                    }
+)
 
 
             var ctx = document.getElementById("mycanvas").getContext("2d");
