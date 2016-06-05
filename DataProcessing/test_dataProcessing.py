@@ -31,41 +31,45 @@ class testFolderExistence (unittest.TestCase):
     # Folder InitialData
     def test_FolderInitialData(self):
         res = True
-        self.assertEqual(res, os.path.isdir("InitialData"))
+        self.assertEqual(res, os.path.isdir("/srv/DataProcessing/InitialData"))
 
     # Folder InitialDataArchive
     def test_FolderInitialDataArchive(self):
         res = True
-        self.assertEqual(res, os.path.isdir("InitialDataArchive"))
+        self.assertEqual(res, os.path.isdir("/srv/DataProcessing/InitialDataArchive"))
 
     # Folder CarrierData
     def test_FolderCarrierData(self):
         res = True
-        self.assertEqual(res, os.path.isdir("CarrierData"))
+        self.assertEqual(res, os.path.isdir("/srv/DataProcessing/CarrierData"))
 
     # Folder CarrierDataArchive
     def test_FolderCarrierDataArchive(self):
         res = True
-        self.assertEqual(res, os.path.isdir('CarrierDataArchive'))
+        self.assertEqual(res, os.path.isdir('/srv/DataProcessing/CarrierDataArchive'))
 
-
+# Checks if all files are existing
 class testFileExistence (unittest.TestCase):
 
+    # compressInitialData.py
     def test_CompressIntitialData (self):
         res = True
-        self.assertEqual (res, os.path.exists('compressInitialData.py'))
+        self.assertEqual (res, os.path.exists('/srv/DataProcessing/compressInitialData.py'))
 
+    # writeCarrierDataToDataBase
     def test_WriteDataToDatabase(self):
         res = True
-        self.assertEqual(res, os.path.exists('writeCarrierDataToDataBase.py'))
+        self.assertEqual(res, os.path.exists('/srv/DataProcessing/writeCarrierDataToDataBase.py'))
 
+    # setConstants.py
     def test_SetConstants(self):
         res = True
-        self.assertEqual(res, os.path.exists('setConstants.py'))
+        self.assertEqual(res, os.path.exists('/srv/DataProcessing/setConstants.py'))
 
+    # sqliteDB
     def test_DataBaseFile(self):
         res = True
         self.assertEqual(res, os.path.exists(setConstants.PATH_OF_SQLLITE_DB))
 
-    if __name__ == '__main__':
-        unittest.main()
+if __name__ == '__main__':
+    unittest.main()
