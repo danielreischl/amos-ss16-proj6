@@ -1,12 +1,9 @@
 sudo: required
 
-language: python
-
-python:
-  - 2.7
-
 services:
   - docker
+
+# language: python
 
 script:
   - docker/build
@@ -15,9 +12,9 @@ branches:
   only:
     - master
 
+
 script:
   - docker/build
-  - python DataProcessing/dataProcessingTests.py
 
   # Log in to Docker Hub and push the image we've just build
   - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
