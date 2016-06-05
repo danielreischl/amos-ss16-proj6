@@ -41,9 +41,6 @@ COPY ./Client /srv/static/
 # Copies DataProcessing to srv/DataProcessing
 COPY ./DataProcessing /srv/DataProcessing
 
-# Runs DataProcessing UnitTests
-RUN python /srv/DataProcessing/test_dataProcessing.py -v
-
 # Turns daemon mode off, otherwise nginx quits and docker container also
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
@@ -75,6 +72,9 @@ RUN python manage.py migrate --noinput
 RUN python manage.py bower_install -- --allow-root  --no-input
 # Collects static files
 RUN python manage.py collectstatic --noinput
+
+# Runs DataProcessing UnitTests
+RUN python /srv/DataProcessing/test_dataProcessing.py -v
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
