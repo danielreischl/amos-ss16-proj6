@@ -38,13 +38,14 @@ the user can see different graphs -->
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
        <!-- local Scripts -->
-       <script src="django_static/Chart.js/dist/Chart.bundle.js"></script>
-       <script src="django_static/jquery/dist/jquery.min.js"></script>
-       <script src="django_static/papaparse/papaparse.min.js"></script>
-       <script src="django_static/dygraphs/dygraph-combined.js"></script>
-       <script src="django_static/Chart.js/dist/Chart.min.js"></script>
+       <script src="django_static/Chart.bundle.js"></script>
+       <script src="django_static/jquery.min.js"></script>
+       <script src="django_static/papaparse.min.js"></script>
+       <script src="django_static/dygraph-combined.js"></script>
+       <script src="django_static/Chart.js"></script>
        <script src="sections/barPage/chart-angular.js"></script>
        <script src="app.js"></script>
        <script src="app.routes.js"></script>
@@ -63,9 +64,11 @@ the user can see different graphs -->
       <link rel="stylesheet" href="assets/css/graphs.css">
       <!-- End of Stylesheets-->
    </head>
-   <body layout = "column" layout-align ="space around" ng-controller="MainController as main" ng-cloak >
+   <body ng-controller="MainController as main" ng-cloak >
 
 
+   <!--- This section is the top part of the layout. The header is inside this section -->
+   <section layout = "row">
          <!-- Header of the website template. This will be displayed on every site-->
          <header>
              <section layout = "row" layout-align ="start start" layout-margin>
@@ -78,29 +81,38 @@ the user can see different graphs -->
                  <h2> {{main.title}} <br>Data Analytics Application </h2>
              </section>
          </header>
+   </section>
 
+   <!--- This section is the content part of the layout. It includes the side navigation and ng-view for the html snippets from the different views -->
 
-        <!-- Content Layout, including header, main part for html snippets and sidenavigation -->
+   <section layout ="row" class = "mainLayout">
+    <!-- Side Navigation-->
+        <md-sidenav md-component-id="menue" layout="column" class="md-sidenav-left" md-is-locked-open ="true">
+            <md-toolbar class ="toolbar">
+                 <md-button class="md-icon-button">
+                    <md-icon md-svg-src="assets/images/ic_menu_white_36px.svg"></md-icon>
+                 </md-button>
+            </md-toolbar>
 
+            <md-button class ="navButton" Onclick="location.href='#/'"><md-icon md-svg-src="assets/images/ic_home_white_36px.svg"></md-icon> Home</md-button>
+            <md-button class ="navButton" Onclick="location.href='#CircleCarrier'"><md-icon md-svg-src="assets/images/ic_donut_small_white_36px.svg"></md-icon> Circle Chart View</md-button>
+            <md-button class ="navButton" Onclick="location.href='#BarCarrier'"><md-icon md-svg-src="assets/images/ic_equalizer_white_36px.svg"></md-icon> Bar Chart View</md-button>
+            <md-button class ="navButton" Onclick=""><md-icon md-svg-src="assets/images/ic_alarm_white_36px.svg"></md-icon> Alerts</md-button>
+            <md-button class ="navButton" Onclick=""><md-icon md-svg-src="assets/images/ic_play_circle_outline_white_36px.svg"></md-icon> Simulation</md-button>
+            <md-button class ="navButton" Onclick=""> <md-icon md-svg-src="assets/images/ic_build_white_36px.svg"></md-icon>Settings</md-button>
+            <md-button class ="navButton" Onclick="location.href='#Documentation'"> <md-icon md-svg-src="assets/images/ic_help_white_36px.svg"></md-icon> Help</md-button>
+        </md-sidenav>
+
+        <!-- Content for the different views-->
         <md-content flex layout="column" ng-controller="sideNavController as ctrl">
-
-             <!-- Side Navigation-->
-            <md-sidenav md-component-id="menue" layout="column" class="md-sidenav-left" >
-                <div id="sidenavTOP"></div>
-                <md-button class ="navButton" Onclick="location.href='#/'">Introduction Page</md-button>
-                <md-button class ="navButton" Onclick="location.href='#Dashboard'">Dashboard</md-button>
-                <md-button class ="navButton" Onclick="location.href='#Graph'">Graph</md-button>
-                <md-button class ="navButton" Onclick="location.href='#Documentation'">Documentation</md-button>
-            </md-sidenav>
-
-
              <!-- ng-view should show the html snippet, if a user clicks on a navigation button
          also I defined this part as "mainFrame". For now it should indicate the position of the main
          objects as well as give a link to the potential styles.     -->
-
-            <section  layout = "column" layout-align="none center">
+            <section  layout = "column" layout-align="center center">
                  <div ng-view> </div>
             </section>
         </md-content>
+   </section>
+
    </body>
 </html>
