@@ -41,9 +41,6 @@ COPY ./Client /srv/static/
 # Copies DataProcessing to srv/DataProcessing
 COPY ./DataProcessing /srv/DataProcessing
 
-# Runs DataProcessing UnitTests
-RUN python /srv/DataProcessing/dataProcessingTests.py
-
 # Turns daemon mode off, otherwise nginx quits and docker container also
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
