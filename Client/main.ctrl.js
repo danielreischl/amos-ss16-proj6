@@ -803,7 +803,7 @@ g = new Dygraph(document.getElementById("graph"),amountOfCarriers,carrierPercent
 
 )*/
     
-.controller('chartMaker',function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
+/*.controller('chartMaker',function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
 
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open("GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false);
@@ -917,7 +917,7 @@ Papa.parse('django/dataInterface/percentages.csv?session=1',{download:true,
 
 
 )
-
+*/
 
 
 
