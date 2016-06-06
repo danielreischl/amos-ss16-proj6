@@ -802,181 +802,122 @@ g = new Dygraph(document.getElementById("graph"),amountOfCarriers,carrierPercent
 
 
 )*/
-  Ext.application({
-    name: 'Fiddle',
+    
+/*.controller('chartMaker',function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
 
-    launch: function() {
-        Ext.define('Ext.chart.theme.custom', {
-            extend: 'Ext.chart.theme.Base',
-            constructor: function(config) {
-                this.callParent([Ext.apply({
-                    axis: {
-                        stroke: '#ffffff'
-                    },
-                    axisLabelLeft: {
-                        fill: '#ffffff'
-                    },
-                    axisLabelBottom: {
-                        fill: '#ffffff'
-                    },
-                    axisTitleLeft: {
-                        fill: '#ffffff'
-                    },
-                    axisTitleBottom: {
-                        fill: '#ffffff'
-                    },
-                }, config)]);
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false);
+        xmlHttp.send(null);
+        var amountOfCarriers = xmlHttp.responseText;
+        /* ID of first Carrier */
+        var idCounter = 1;
+        // the array variable where the converted content from the csv file will be.
+        var carrierPercentageData;
+        // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
+        Papa.parse('django/dataInterface/percentages.csv?session=1', {
+                download: true,
+                dynamicTyping: true,
+                complete: function (results) {
+                    carrierPercentageData = results.data[1];
+                }
             }
-        });
-        // sample static data for the store
-        var myData = [
-            ['C1', 103],
-            ['C2', 100],
-            ['C3', 99],
-            ['C4', 94],
-            ['C5', 103],
-            ['C6', 105],
-            ['C7', 107],
-            ['C8', 101],
-            ['C9', 102],
-            ['C10', 102],
-            ['C11', 102],
-            ['C12', 102],
-            ['C13', 102],
-            ['C14', 104],
-            ['C15', 101],
-            
-        ];
-        
-        for (var i = 0, l = myData.length; i < l; i++) {
-            var data = myData[i];
+        )
+
+        createBar(carrierId, carrierPercentageData[idCounter - 1]);
+
+        idCounter = idCounter + 1;
+        amountOfCarriers = amountOfCarriers - 1;
+
+
+        function createBar(carrier, percentageOfEnergy) {
+
+            var barChartData = {
+                labels: amountOfCarriers,
+                percentageOfEnergyRounded: percentageOfEnergy.toFixed(2),
+                datasets: [
+                    {
+                        yAxisLabel: "My Y Axis Label",
+                        fillColor: "rgba(220,220,220,0.5)",
+                        strokeColor: "rgba(220,220,220,0.8)",
+                        highlightFill: "rgba(220,220,220,0.75)",
+                        highlightStroke: "rgba(220,220,220,1)",
+                        data: carrierPercentageData
+
+
+                    }
+                ],
+
+
+            };
+            var carrierPercentageData;
+Papa.parse('django/dataInterface/percentages.csv?session=1',{download:true,
+                                                                dynamicTyping:true,
+                                                                 complete:function(results){
+                                                                    carrierPercentageData=results.data[1];
+                                                                    }
+                                                                    }
+)
+
+
+            var ctx = document.getElementById("mycanvas").getContext("2d");
+            window.myObjBar = new Chart(ctx).Bar(barChartData, {
+                responsive: true,
+                scaleLabel: "<%= value %> %",
+
+
+                showTooltips: false,
+                onAnimationComplete: function () {
+
+                    var ctx = this.chart.ctx;
+                    ctx.font = this.scale.font;
+                    ctx.fillStyle = this.scale.textColor
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "bottom";
+
+                    this.datasets.forEach(function (dataset) {
+                        dataset.bars.forEach(function (bar) {
+                            ctx.fillText(bar.value, bar.x, bar.y - 5);
+                        });
+                    })
+                }
+
+            });
+
+            var bars = myObjBar.datasets[0].bars;
+            for (i = 0; i < bars.length; i++) {
+                var color = "green";
+
+                if (bars[i].value <= 100) {
+                    color = "yellow";
+                }
+                else if (bars[i].value <= 150) {
+                    color = "green"
+
+
+                }
+                else if (bars[i].value <= 200) {
+                    color = "red"
+                }
+                else {
+                    color = "red"
+                }
+
+                bars[i].fillColor = color;
+                bars[i].highlightFill = color;
+
+            }
+            myObjBar.update(); //update the cahrt
+
+
         }
 
-
-        //create data store to be shared among the grid and bar series.
-        var ds = Ext.create('Ext.data.ArrayStore', {
-            fields: [{
-                name: 'companyName'
-            }, {
-                name: 'mtrTransport %',
-                type: 'float'
-            }, ],
-            data: myData,
-        });
-
-
-        //create a bar series to be at the top of the panel.
-        var chartMtr = Ext.create('Ext.chart.Chart', {
-            style: 'background:#000000',
-            height:500,
-            width: 600,
-            animate: true,
-            theme: 'custom',
-            store: ds,
-            
-            shadow: false,
-            legend: {
-                position: 'bottom'
-            },
-            axes: [{
-                type: 'Numeric',
-                position: 'left',
-                fields: ['mtrTransport %', 'mtrTransportAvg %', 'mtrEnabled'],
-                title: 'Percent',
-                minimum: 0,
-                adjustMinimumByMajorUnit: 0
-            }, {
-                type: 'Category',
-                position: 'bottom',
-                fields: ['companyName'],
-                showInLegend: true,
-                title: 'Carriers',
-                grid: true,
-                label: {
-                    rotate: {
-                        degrees: 270
-                    },
-                    color: '#ffffff'
-                }
-            }],
-            series: [{
-                type: 'column',
-                xField: 'companyName',
-                yField: 'mtrTransport %',
-                axis: 'left',
-                showInLegend: false,
-                showMarkers: true,
-                listeners: {
-                    itemclick: function(item) {
-                        var name = item.value[0],
-                            series = chartMtr.series.get(0),
-                            series2 = chartMtr.series.get(1),
-                            i, items, l, average, cnt = 0,
-                            sum = 0;
-
-                        series.highlight = true;
-                        item.highlighted = !item.highlighted;
-                        series.unHighlightItem(item);
-                        Ext.each(series.items, function(col) {
-                            if (col.highlighted) {
-                                series.highlightItem(col);
-                            }
-                        });
-                        series.highlight = false;
-
-                        /*series.highlight = true;
-                        series.unHighlightItem();
-                        series.cleanHighlights();
-                        for (i = 0, items = series.items, l = items.length; i < l; i++) {
-                            if (name == items[i].storeItem['data']['companyName']) {
-                                if (items[i].storeItem['data']['mtrEnabled'] == false) {
-                                    items[i].storeItem['data']['mtrEnabled'] = true;
-                                } else {
-                                    items[i].storeItem['data']['mtrEnabled'] = false;
-                                }
-                                break;
-                            }
-                        }
-                        for (i = 0, items = series.items, l = items.length; i < l; i++) {
-                            if (items[i].storeItem['data']['mtrEnabled'] == false) {
-                                series.highlightItem(items[i]);
-                            }
-                        }
-                        series.highlight = false;*/
-                    }
-                },
-                style: {
-                    opacity: 0.93,
-                    'stroke-width': 2
-                }
-            }]
-        });
-        /*
-         * Here is where we create the main Panel
-         */
         
-        Ext.create('Ext.panel.Panel', {
-            title: 'BarChart',
-            frame: true,
-            bodyPadding: 5,
-            width: 600,
-            height: 500,
-            position: 'center',
 
-
-            fieldDefaults: {
-                labelAlign: 'center',
-                msgTarget: 'side'
-            },
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            },
-            items: [chartMtr],
-            renderTo: Ext.getBody()
-        });
     }
-});
+
+
+)
+*/
 
 
 
