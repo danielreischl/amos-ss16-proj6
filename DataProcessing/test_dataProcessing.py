@@ -23,7 +23,7 @@
 import unittest
 import os
 import setConstants
-
+import dataProcessingFunctions
 
 # This class tests if all necessary folders exist
 class testFolderExistence (unittest.TestCase):
@@ -70,6 +70,20 @@ class testFileExistence (unittest.TestCase):
     def test_DataBaseFile(self):
         res = True
         self.assertEqual(res, os.path.exists(setConstants.PATH_OF_SQLLITE_DB))
+
+class testRunningFile (unittest.TestCase):
+
+    # Tests if Running.txt is created
+    def test_CreationOfRunningFile(self):
+        res = True
+        dataProcessingFunctions.createRunningFile()
+        self.assertEqual(res, os.path.exists('Running.txt'))
+
+    # Tests if Running.txt is deleted
+    def test_DeleteOfRunningFile(self):
+        res = False
+        dataProcessingFunctions.deleteRunningFile()
+        self.assertEqual(res, os.path.exists('Running.txt'))
 
 if __name__ == '__main__':
     unittest.main()
