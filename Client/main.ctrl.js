@@ -300,11 +300,11 @@ angular.module('app')
         }
 
 
-	    if (selectedIteration === "last") {
+	    if ($scope.selectedIteration === "last") {
 	        selectedIterationsString += amountOfIterations;
 	        return selectedIterationsString;
 	    } else {
-	        if(selectedIteration === "lastTen") {
+	        if($scope.selectedIteration === "lastTen") {
 		        iter = amountOfIterations - 10;
 		        if(iter < 1) {
 		            iter = 1;

@@ -137,11 +137,6 @@ md-content {
     text-align: left;
 }
 
-div.carrierSelection {
-    /*width : 40%;
-    float: left;*/
-}
-
 div.carrierBox {
     display: inline-block;
     width: 25px;
@@ -150,13 +145,23 @@ div.carrierBox {
     margin-left: 5px;
 }
 
+label.iterationBox div{
+    border: 2px solid rgba(0,0,0,1);
+    font-weight: bold;
+    margin-bottom: 3px;
+    padding: 2px;
+}
+
+label.iterationBox input:checked + div {
+    border: 2px solid rgb(240,0,0);
+}
 
 label.carrierBox input:checked + div{
     border: 2px solid rgba(0,0,0,1);
     font-weight: bold;
 }
 
-label.carrierBox input {
+label.carrierBox input, label.iterationBox input {
     display: none;
 }
 
