@@ -30,10 +30,6 @@
 import os
 # Imports sys to let the script die
 import sys
-# Imports glob to enable the script to search for all csv files in a particular folder
-import glob
-# Imports SQLAlchemy to Load pandas DataFrame to SQLITEDB
-from sqlalchemy import create_engine
 # Imports logging for logs
 import logging
 # Imports sleep for sleeping
@@ -43,22 +39,8 @@ import pandas as pd
 # Imports setConstants to import the Constants
 import setConstants
 import sqlite3
-
-
-# Function that checks if new csv files are in the folder
-def check_folder():
-    for files in glob.glob("CarrierData/*.csv"):
-        # Adds each file to the list dataFileNames
-        dataFileNames.append(files)
-
-    # Returns False or True depending on whether or not files are stored in dataFileNames
-    if not dataFileNames:
-        logging.info("No new files found")
-        return False
-    else:
-        logging.info(str(len(dataFileNames)) + " Files found")
-        return True
-
+# Imports dataProcessingFunctions.py
+import dataProcessingFunctions
 
 # Function to process each file
 def process_file(fileName):
@@ -164,17 +146,20 @@ def moveFileToFolder(fileName, folderName):
 logging.basicConfig(filename='dataProcessing.log',level=logging.INFO,format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 # Putting Script a sleep for 0.5 sec to ensure that Running.txt is already created
-logging.info("compressInitialData.py goes a sleep for 0.5 sec")
-sleep(60)
+logging.info("compressInitialData.py goes a sleep for 1 sec")
+sleep(1)
 
 # Initialize dataFileNames as list. (List has to be available for all functions thats why it's declared global
 dataFileNames = []
 
 # Check if Running.txt exist.
 while os.path.isfile("Running.txt"):
+    # Calls function dataProcessingFunctions.checkForCSVFilesInFolder to get back all csv Files saved in CarrierData
+    dataFileNames = dataProcessingFunctions.checkForCSVFilesInFolder("CarrierData")
+
     # Running.txt exists -> Check if there are already files distributed by compressInitialData.py
     logging.info("compressInitialData.py is still running")
-    if check_folder():
+    if dataProcessingFunctions.check_folder(dataFileNames):
         # If there are files which are not processed yet, call for each file process_file
         for fileName in dataFileNames:
             process_file(str(fileName))
@@ -190,10 +175,12 @@ while os.path.isfile("Running.txt"):
     sleep(setConstants.WAIT_TIME_IN_SECONDS_MPY)
 
 else:
+    # Calls function dataProcessingFunctions.checkForCSVFilesInFolder to get back all csv Files saved in CarrierData
+    dataFileNames = dataProcessingFunctions.checkForCSVFilesInFolder("CarrierData")
 
     # Running.txt does not exist. -> Check if the folder has files which hasn't been processed yet.
     logging.info("compressInitialData.py is not running")
-    if check_folder():
+    if dataProcessingFunctions.check_folder(dataFileNames):
         # If there are files which are not processed yet, call for each file process_file
         for fileName in dataFileNames:
             process_file(fileName)

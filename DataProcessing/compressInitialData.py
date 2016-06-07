@@ -44,8 +44,6 @@ import numpy as np
 from time import sleep
 # Imports setConstants to maintain all constants on one place
 import setConstants
-# Import glob to enable the search in a folder
-import glob
 # Imports sys to terminate the function
 import sys
 # Imports Csv to Manipulate Initial CSV-File
@@ -471,13 +469,11 @@ logging.basicConfig(filename='dataProcessing.log', level=logging.INFO, format='%
 # Calls Function to create Running.txt
 dataProcessingFunctions.createRunningFile()
 
-# Write all DATA_FILE_NAMES in an Array
-for files in glob.glob("InitialData/*.csv"):
-    DATA_FILE_NAMES.append(files)
-logging.info("Found " + str(len(DATA_FILE_NAMES)) + " new files.")
+# Calls function dataProcessingFunctions.checkForCSVFilesInFolder to get back all csv Files saved in InitialData
+DATA_FILE_NAMES = dataProcessingFunctions.checkForCSVFilesInFolder("InitialData")
 
 # Checks if a File is added to DATA_FILE_NAMES. If not it is terminating the script
-if not DATA_FILE_NAMES:
+if not dataProcessingFunctions.check_folder(DATA_FILE_NAMES):
     print('No Files in Folder')
     # Calls funtion to remove running file
     dataProcessingFunctions.deleteRunningFile()
