@@ -33,6 +33,11 @@ who need the data.
 .service('carrierService', function() {
     var carriersForComparison = [];
 
+
+    this.hasCarrier = function(carrierId) {
+	return carriersForComparison.some(function(carrier){return carrier.carrierNumber == carrierId;});
+    }
+    
     // function adds a carrier with a given ID
     this.addCarrier = function(newCarrier) {
         for(var i = 0; i < carriersForComparison.length; i++) {

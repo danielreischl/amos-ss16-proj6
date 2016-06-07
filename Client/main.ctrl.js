@@ -133,12 +133,8 @@ angular.module('app')
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     $scope.carriers = [];
     for (var idCounter = 1; idCounter <= amountOfCarriers;idCounter++) {
-	var currentSelected;
-	if (idCounter <= 2) {
-	    currentSelected = true;
-	}
-	currentSelected = false;
-        $scope.carriers.push({id:idCounter, selected:false});
+	var currentSelected = carrierService.hasCarrier(idCounter);
+        $scope.carriers.push({id:idCounter, selected:currentSelected});
     }
 
     // the array variable where the converted content from the csv file will be.
