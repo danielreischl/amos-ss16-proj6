@@ -232,7 +232,7 @@ def compressData(carrier):
     global carrierData
     global currentPositionAtCarrierData
     logging.info("Compressing data of carrier: " + str(carrier))
-    print ("Compressing data of carrier: " + str(carrier))
+    print("Compressing data of carrier: " + str(carrier))
 
     # Select first and relevant timestamp, so the timestamps before can be deleted
     firstRow = findFirstRowInCarrierData(carrier)
@@ -253,35 +253,40 @@ def compressData(carrier):
     # Add the values to this point in the carrierData array
     saveTo = 0
 
+    # Change the
+    # carrierData[carrier - 1][0][saveTo] = carrierData[carrier - 1][0][saveTo] - firstTimeStamp
+
     for i in range(0, int(currentPositionAtCarrierData[carrier - 1])):
         # If the current value has been found this time stamp is kept and
         if (carrierData[carrier - 1][0][i] - firstTimeStamp) == nextTimeStampValue:
+
             # Change the place where the next energy consumption is being saved to
             saveTo = int(nextTimeStampValue / KEEP_EVERY_X_ROW)
-            # Increase the next value that is being searched for
-            nextTimeStampValue += KEEP_EVERY_X_ROW
 
             # Transfer the values to the position
             carrierData[carrier - 1][0][saveTo] = nextTimeStampValue
             carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][i]
             carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][i]
             carrierData[carrier - 1][3][saveTo] = carrierData[carrier - 1][3][i]
-        # If the current value cannot be found because the timestamp was not recorded for that carrier
-        # The position
-        elif (carrierData[carrier - 1][0][i] - firstTimeStamp) >= nextTimeStampValue:
-            # Change the place where the next energy consumption is being saved to
-            saveTo = int(nextTimeStampValue / KEEP_EVERY_X_ROW)
+
             # Increase the next value that is being searched for
             nextTimeStampValue += KEEP_EVERY_X_ROW
 
+            # If the current value cannot be found because the timestamp was not recorded for that carrier
+            # The position has to be interpolated
+        elif (carrierData[carrier - 1][0][i] - firstTimeStamp) >= nextTimeStampValue:
+
+            # Change the place where the next energy consumption is being saved to
+            saveTo = int(nextTimeStampValue / KEEP_EVERY_X_ROW)
+
             # All values necessary for interpolation
-            time1 = carrierData[carrier - 1][0][i-1]
-            time2 = carrierData[carrier - 1][0][i]
-            pos1 = carrierData[carrier - 1][1][i-1]
+            time1 = carrierData[carrier - 1][0][i - 1] - firstTimeStamp
+            time2 = carrierData[carrier - 1][0][i] - firstTimeStamp
+            pos1 = carrierData[carrier - 1][1][i - 1]
             pos2 = carrierData[carrier - 1][1][i]
 
             # Linear interpolation of the position that the carrier was at at the missing time stamp
-            posInter = pos1 + ((pos2-pos1)/(time2-time1)) * (nextTimeStampValue-time1)
+            posInter = pos1 + ((pos2 - pos1) * ((nextTimeStampValue - time1) / (time2 - time1)))
 
             # Because 1: The energy consumption is the total that was consumed during the last time stamp
             # and 2: The algorithm will continue with the next time stamp in the next iteration cicle
@@ -298,16 +303,29 @@ def compressData(carrier):
             carrierData[carrier - 1][1][saveTo] = posInter
             carrierData[carrier - 1][2][saveTo] = energyInter
             carrierData[carrier - 1][3][saveTo] = driveInter
+
+            # Increase the next value that is being searched for
+            nextTimeStampValue += KEEP_EVERY_X_ROW
+
         else:
             # Add the energy consumption to the current entry
             carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][i]
 
-        # if the current row is bigger than what the last row will be after compression, delete it
-        if i >= 1 + int((currentPositionAtCarrierData[carrier - 1] - 1) / float(KEEP_EVERY_X_ROW)):
+        # Delete the last row (not the current because it may be needed for interpolation) if it is at a position
+        # In the array that will be deleted
+        if i >= 1 and i - 1 >= 1 + int((currentPositionAtCarrierData[carrier - 1] - 1) / float(KEEP_EVERY_X_ROW)):
+            carrierData[carrier - 1][0][i - 1] = 0
+            carrierData[carrier - 1][1][i - 1] = 0
+            carrierData[carrier - 1][2][i - 1] = 0
+            carrierData[carrier - 1][3][i - 1] = 0
+
+        # If the current row is the last one of the array and it is not needed after compression, delete it
+        if i == int(currentPositionAtCarrierData[carrier - 1]) - 1 and KEEP_EVERY_X_ROW > 1:
             carrierData[carrier - 1][0][i] = 0
             carrierData[carrier - 1][1][i] = 0
             carrierData[carrier - 1][2][i] = 0
             carrierData[carrier - 1][3][i] = 0
+
 
 # Exports the table of the carrier to a CSV file in the form time; posAbsolute; posOnDrive; energy
 def exportCSV(carrier):
@@ -326,7 +344,7 @@ def exportCSV(carrier):
 
     # Only selects the relevant sub selection from carrier data (without position == 0) to export to csv
     # Commented out for testing
-    export = np.transpose(carrierData[carrier - 1][:, firstRow:lastRow])
+    export = np.transpose(carrierData[carrier - 1][:, firstRow:lastRow + 1])
 
     # Export carrier data with file name to csv file
     np.savetxt(fileName, export, fmt='%0.5f', delimiter=DATA_SEPARATOR, newline='\n',
@@ -335,6 +353,7 @@ def exportCSV(carrier):
     # Write the filename to the console and the log file
     print("Exported: " + str(fileName))
     logging.info("Exported: " + str(fileName))
+
 
 # Finds the first row of the array that will be exported as CSV, where pos and energy consumption != 0
 def findFirstRowInCarrierData(carrier):
@@ -453,8 +472,9 @@ def modifyCSVFile(filename):
         # Returns amountOfDrives
         return amountOfDrives
 
+
 def moveFileToFolder(fileName, folderName):
-    print ("Moving: " + fileName + " to " + os.path.join(folderName, os.path.basename(fileName)))
+    print("Moving: " + fileName + " to " + os.path.join(folderName, os.path.basename(fileName)))
     logging.info("Moving: " + fileName + " to " + os.path.join(folderName, os.path.basename(fileName)))
     os.rename(fileName, os.path.abspath(os.path.join(folderName, os.path.basename(fileName))))
 
@@ -484,7 +504,7 @@ if not DATA_FILE_NAMES:
     # Terminates the script
     sys.exit()
 
-print (DATA_FILE_NAMES)
+print(DATA_FILE_NAMES)
 
 for fileName in DATA_FILE_NAMES:
 
@@ -544,4 +564,3 @@ for fileName in DATA_FILE_NAMES:
 
 # Calls Funcion to remove RunningFile
 dataProcessingFunctions.deleteRunningFile()
-
