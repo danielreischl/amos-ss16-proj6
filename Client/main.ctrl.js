@@ -131,20 +131,23 @@ angular.module('app')
     var amountOfIterations = xmlHttp2.responseText;
 
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
-    var arrayCarrier = [];
-    var idCounter = 1;
-    while(arrayCarrier.length < amountOfCarriers) {
-        arrayCarrier.push(idCounter);
-        idCounter++;
+    $scope.carriers = [];
+    for (var idCounter = 1; idCounter <= amountOfCarriers;idCounter++) {
+	var currentSelected;
+	if (idCounter <= 2) {
+	    currentSelected = true;
+	}
+	currentSelected = false;
+        $scope.carriers.push({id:idCounter, selected:false});
     }
 
     // the array variable where the converted content from the csv file will be.
-    var carrierPercentageData;
+    //$scope.carrierPercentageData = [];
     // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
     Papa.parse('django/dataInterface/percentages.csv?session=1', {  download: true,
                                                                     dynamicTyping: true,
                                                                     complete: function(results) {
-                                                                        carrierPercentageData = results.data[1];
+                                                                        $scope.carrierPercentageData = results.data[1];
                                                                     }
                                                                   }
     )
@@ -153,20 +156,16 @@ angular.module('app')
     // Start of $scope
     //
 
-    // Fill the drop down menus with the items of the array.
-    // The number of checkboxes depend on the amount of carriers in the database
-    $scope.arrayCarrier = arrayCarrier;
-
     // This function is called, when a change is made in the checkbox field.
-    $scope.changeCarrierToCompare = function(event) {
+    //$scope.changeCarrierToCompare = function(event) {
         //if the carrier is already inside the comparison array, then it will be removed.
-        if(!carrierService.addCarrier(event.target.id)) {
-            carrierService.deleteCarrier(event.target.id);
-            document.getElementById(event.target.id).checked = false;
-        } else {
-            document.getElementById(event.target.id).checked = true;
-        }
-    }
+        //if(!carrierService.addCarrier(event.target.id)) {
+        //    carrierService.deleteCarrier(event.target.id);
+        //    document.getElementById(event.target.id).checked = false;
+        //} else {
+        //    document.getElementById(event.target.id).checked = true;
+        //}
+    //}
 
     $scope.dimensions = [
         {name : "Energy Consumption", id: 'energyConsumption'},
@@ -191,29 +190,38 @@ angular.module('app')
         and change request String path for the database. It will also set all checkboxes to true, which are corresponding to the carriers
         in the compare array */
 
-        var iterationsRequested = getSelectedIterationsString();
+        //var iterationsRequested = getSelectedIterationsString();
 
-        if(carrierCompareList.length != 0) {
-            for (var i = 0; i < carrierCompareList.length; i++) {
-                for (var carrier = 1; carrier <= amountOfCarriers; carrier++) {
-                    if (carrierCompareList[i].carrierNumber == carrier) {
-                        if(carriersRequested === "") {
-                            carriersRequested+=carrier;
-                        } else {
-                            carriersRequested+= ","+carrier+"";
-                        }
-                        break;
-                    } else {
-                    }
-                }
-            }
-        } else {
-            alert("You did not chose any Carriers to compare")
-        }
+        //if(carrierCompareList.length != 0) {
+        //    for (var i = 0; i < carrierCompareList.length; i++) {
+        //        for (var carrier = 1; carrier <= amountOfCarriers; carrier++) {
+        //            if (carrierCompareList[i].carrierNumber == carrier) {
+        //                if(carriersRequested === "") {
+        //                    carriersRequested+=carrier;
+        //                } else {
+        //                    carriersRequested+= ","+carrier+"";
+        //                }
+        //                break;
+        //            } else {
+        //            }
+        //        }
+        //    }
+        //} else {
+        //    alert("You did not chose any Carriers to compare")
+        //}
 
-         // the url which should be requested wil be defined in requestedUrl
+	$scope.carriersRequested = function() {
+	    // filter for the selected carriers
+	    var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
+
+	    //join them with commas
+	    
+	    return selected.map(function(carrier){return carrier.id.toString();}).join();
+	}
+
+         // the url which should be requested will be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
-        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+carriersRequested + '&iterations=' + iterationsRequested + '&dimension=' + selectedDimension + '&session=1'
+        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + selectedDimension + '&session=1'
 
         graph = new Dygraph(
 	        document.getElementById("compareGraph"),$scope.requestedUrl,
@@ -238,8 +246,8 @@ angular.module('app')
 
 	// After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
 	// disable for now
-        carrierService.emptyCarrierArray();
-        uncheckAllCheckboxes();
+        //carrierService.emptyCarrierArray();
+        //uncheckAllCheckboxes();
     }
 
     $scope.changeDimension = function() {
@@ -261,7 +269,7 @@ angular.module('app')
     
     
 	$scope.getColorOfCarrier = function(carrier) {
-	    var percentageOfEnergy = carrierPercentageData[carrier - 1];
+	    var percentageOfEnergy = $scope.carrierPercentageData[carrier - 1];
 	    var color = {'background-color': 'rgb(255,255,141)'};
 
 	    if(percentageOfEnergy > 1.05) {
@@ -287,7 +295,7 @@ angular.module('app')
     // Start of function
     //
 
-    function getSelectedIterationsString() {
+    $scope.getSelectedIterationsString = function() {
         var selectedIterationsString = "";
         var iter = 1;
 

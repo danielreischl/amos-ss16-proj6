@@ -23,13 +23,13 @@
 <div ng-controller="compareCircleGraph">
     <div flex="100" layout = "row">
         <div flex="40" class = "carrierSelection">
-            <ul layout-align="center center" class = "carrierSelection">
-                <li ng-repeat="carrier in arrayCarrier" ng-style="getListStyle(carrier)">
+            <ul layout-align="center center" class = "carrierSelection" ng-init="createCompareGraph()">
+                <li ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
                     <!-- <div class="clearfix" ng-if="$index % 5 == 0"></div> -->
                     <label class = "carrierBox">
-                        <input type="checkbox" id = "{{carrier}}" ng-click="changeCarrierToCompare($event)"/>
-                        <div class = "carrierBox" ng-style = "getColorOfCarrier(carrier)">
-                            {{carrier}}
+                        <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
+                        <div class = "carrierBox" ng-style = "getColorOfCarrier(carrier.id)">
+                            {{carrier.id}}
                         </div>
                     </label>
                 </li>
