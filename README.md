@@ -35,7 +35,7 @@ If you want to build the container yourself (because you want to make changes th
 
 ###Running the Docker container:
 
-The basic comman is docker run \<container-name\>. There are plenty of command line options that you might want to use. Minimally you need the following:
+The basic command is docker run \<container-name\>. There are plenty of command line options that you might want to use. Minimally you need the following:
 
 --publish=\<port-on-host\>:80
 
