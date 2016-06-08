@@ -237,7 +237,7 @@ angular.module('app')
                             return x + ' ms';
                         },
                     },
-                },
+                }
 	            });
 
 	// After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
