@@ -217,12 +217,12 @@ angular.module('app')
 
          // the url which should be requested will be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
-        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + selectedDimension + '&session=1'
+        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + $scope.selectedDimension + '&session=1'
 
         graph = new Dygraph(
 	        document.getElementById("compareGraph"),$scope.requestedUrl,
-	            {title: yAxisLabels[selectedDimension],
-	            ylabel: yAxisLabels[selectedDimension]+' in '+units[selectedDimension],
+	            {title: yAxisLabels[$scope.selectedDimension],
+	            ylabel: yAxisLabels[$scope.selectedDimension]+' in '+units[$scope.selectedDimension],
 	            xlabel: 'time in ms',
 	            labelsSeparateLines: true,
 	            highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
