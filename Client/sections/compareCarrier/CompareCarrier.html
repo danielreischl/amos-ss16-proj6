@@ -22,7 +22,7 @@
 
 <div ng-controller="compareCircleGraph">
     <div flex="100" layout = "row">
-        <div flex="40" class = "carrierSelection">
+        <div flex class = "carrierSelection">
             <ul layout-align="center center" class = "carrierSelection" ng-init="createCompareGraph()">
                 <li ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
                     <!-- <div class="clearfix" ng-if="$index % 5 == 0"></div> -->
@@ -36,7 +36,7 @@
             </ul>
         </div>
 
-        <div flex = "20" class = "iterationSelection">
+        <div flex class = "iterationSelection">
 	   <form name = "iterationSelection">
              <label class = "iterationBox" ng-repeat="iterOption in iterationDimensions">
                <input type="radio" name = "iterOption" ng-value="iterOption.id" ng-model="$parent.selectedIteration"/>
@@ -45,19 +45,23 @@
                </div>
              </label>
            </form>
-            <!--<select ng-model="selectedIteration" ng-change = "changeIteration()">
-                <option selected disabled value="">Chose Iteration</option>
-                <option ng-repeat="x in iterationDimensions" value="{{x.id}}">{{x.name}}</option>
-            </select>-->
         </div>
-        <div flex = "20" class = "dimensionSelection">
-            <select ng-model="selectedDimension" ng-change = "changeDimension()">
+	
+        <div flex class = "dimensionSelection">
+             <label class = "iterationBox" ng-repeat="dimension in dimensions">
+               <input type="radio" name = "dimension" ng-value="dimension.id" ng-model="$parent.selectedDimension"/>
+               <div>
+		 {{dimension.name}}
+               </div>
+             </label>
+           
+            <!-- <select ng-model="selectedDimension" ng-change = "changeDimension()">
                 <option selected disabled value="">Chose Dimension</option>
                 <option ng-repeat="x in dimensions" value="{{x.id}}">{{x.name}}</option>
-            </select>
+            </select> -->
         </div>
 
-        <div flex = "20">
+        <div flex>
             <md-button class="md-raised md-cornered" ng-click="createCompareGraph()">Refresh</md-button>
         </div>
     </div>
