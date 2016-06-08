@@ -106,11 +106,13 @@ angular.module('app')
 		       'drive': 'Drive'};
 
     // default value for the dimension and yAxislabel
-    var selectedDimension = "energyConsumption";
+    var selectedDimension = "energyConsumption"; // remove this later
+    $scope.selectedDimension = "energyConsumption";
     var yAxisLabel = yAxisLabels[selectedDimension];
 
     // default value for the selected Iterations
-    var selectedIteration = "last";
+    var selectedIteration = "last"; // remove this later
+    $scope.selectedIteration = "last";
 
     // the session requested from the database. For now it is fixed.
     var session = 1;
@@ -173,6 +175,7 @@ angular.module('app')
 
     $scope.iterationDimensions = [
         {name : 'Last', id : 'last'},
+	{name : 'Last 3', id : 'lastThree'},
         {name : "Last 10", id: 'lastTen'},
         {name : "All", id: 'all'}
     ]
@@ -281,7 +284,7 @@ angular.module('app')
 	}
 
 
-	// This function empties the carriers in the comparison on page leave.
+    // This function empties the carriers in the comparison on page leave.
     // If the user leaves the current html snippet/template then,
     // this function will notice that and trigger the function "emptyCarrierArray"
     $scope.$on("$destroy", function() {
@@ -306,11 +309,15 @@ angular.module('app')
 	        return selectedIterationsString;
 	    } else {
 	        if($scope.selectedIteration === "lastTen") {
-		        iter = amountOfIterations - 10;
-		        if(iter < 1) {
-		            iter = 1;
-		        }
-	        }
+		    iter = amountOfIterations - 10;
+		}
+		else if ($scope.selectedIteration === "lastThree") {
+		    iter = amountOfIterations - 3;
+		}
+		if(iter < 1) {
+		    iter = 1;
+		}
+	    }
             while(iter <= amountOfIterations) {
 		        selectedIterationsString += iter;
 		        if(iter != amountOfIterations) {
@@ -318,7 +325,6 @@ angular.module('app')
 		        }
 		        iter += 1;
             }
-	    }
 	    return selectedIterationsString;
     }
 
