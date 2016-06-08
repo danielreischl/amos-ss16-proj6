@@ -25,10 +25,41 @@
 
 angular.module('app')
 
+    .service('percentageService', function() {
+	/* 
+	   Provides percantage data of carriers
+	*/
+	var percentageData = [];
+	function getFromDB() {
+	    /* 
+	       Fetches data from backend
+	       So far this is called each time when getAll is called, but this is probably not necessary
+	    */
+	    Papa.parse('django/dataInterface/percentages.csv?session=1', {  download: true,
+									    dynamicTyping: true,
+									    complete: function(results) {
+										percentageData = results.data[1];
+									    }
+									 }
+		      );
+	}
+	
+	this.getAll = function() {
+	    getFromDB();
+	    return percentageData;
+	}
+	
+	return {
+	    getAll: this.getAll
+	};
+    });
+
 /* The carrierService, proved carrier data to all controllers
 For now it is used to saves the carriers for comparison, chosen by the user and proved them to all controller
 who need the data.
 */
+
+angular.module('app')
 
 .service('carrierService', function() {
     var carriersForComparison = [];
