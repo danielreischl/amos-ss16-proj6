@@ -87,7 +87,7 @@ angular.module('app')
 })
 
 /* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/
-.controller('compareCircleGraph', function($scope, carrierService) {
+.controller('compareCircleGraph', function($scope, carrierService, percentageService) {
 
     // Get the array with the carriers that were selected from the carrierService
     var carrierCompareList = carrierService.getCarrier();
@@ -140,13 +140,13 @@ angular.module('app')
     // the array variable where the converted content from the csv file will be.
     //$scope.carrierPercentageData = [];
     // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-    Papa.parse('django/dataInterface/percentages.csv?session=1', {  download: true,
-                                                                    dynamicTyping: true,
-                                                                    complete: function(results) {
-                                                                        $scope.carrierPercentageData = results.data[1];
-                                                                    }
-                                                                  }
-    )
+    //Papa.parse('django/dataInterface/percentages.csv?session=1', {  download: true,
+    //                                                                dynamicTyping: true,
+    //                                                                complete: function(results) {
+    //                                                                    $scope.carrierPercentageData = results.data[1];
+    //                                                                }
+    //                                                              }
+    //)
 
     //
     // Start of $scope
@@ -264,8 +264,9 @@ angular.module('app')
         }
     
     
-	$scope.getColorOfCarrier = function(carrier) {
-	    var percentageOfEnergy = $scope.carrierPercentageData[carrier - 1];
+       $scope.getColorOfCarrier = function(carrier) {
+	    var carrierPercentageData = percentageService.getAll();
+	    var percentageOfEnergy = carrierPercentageData[carrier - 1];
 	    var color = {'background-color': 'rgb(255,255,141)'};
 
 	    if(percentageOfEnergy > 1.05) {
