@@ -237,8 +237,7 @@ angular.module('app')
                             return x + ' ms';
                         },
                     },
-                },
-                rollPeriod: 7
+                }
 	            });
 
 	// After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
@@ -469,8 +468,7 @@ which kind of data he wants to see. The default value is average energy consumpt
                                                                                                     return 'Iteration ' + x;
                                                                                                 },
                                                                                             },
-                                                                                          },
-                                                                                          rollPeriod: 7
+                                                                                          }
 	                                                                                      });
 
 
