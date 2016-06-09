@@ -274,36 +274,40 @@ def compressData(carrier):
             # The position has to be interpolated
         elif (carrierData[carrier - 1][0][i] - firstTimeStamp) >= nextTimeStampValue:
 
-            # Change the place where the next energy consumption is being saved to
-            saveTo = int(nextTimeStampValue / KEEP_EVERY_X_ROW)
+            # This while loop iterates as long as all the values in the gap were interpolated
+            # This is for the case that multiple time stamp values were missed in one gap
+            while(carrierData[carrier - 1][0][i] - firstTimeStamp) >= nextTimeStampValue:
 
-            # All values necessary for interpolation
-            time1 = carrierData[carrier - 1][0][i - 1] - firstTimeStamp
-            time2 = carrierData[carrier - 1][0][i] - firstTimeStamp
-            pos1 = carrierData[carrier - 1][1][i - 1]
-            pos2 = carrierData[carrier - 1][1][i]
+                # Change the place where the next energy consumption is being saved to
+                saveTo = int(nextTimeStampValue / KEEP_EVERY_X_ROW)
 
-            # Linear interpolation of the position that the carrier was at at the missing time stamp
-            posInter = pos1 + ((pos2 - pos1) * ((nextTimeStampValue - time1) / (time2 - time1)))
+                # All values necessary for interpolation
+                time1 = carrierData[carrier - 1][0][i - 1] - firstTimeStamp
+                time2 = carrierData[carrier - 1][0][i] - firstTimeStamp
+                pos1 = carrierData[carrier - 1][1][i - 1]
+                pos2 = carrierData[carrier - 1][1][i]
 
-            # Because 1: The energy consumption is the total that was consumed during the last time stamp
-            # and 2: The algorithm will continue with the next time stamp in the next iteration cicle
-            # therefore: The energy consumption has to be the last energy consumption
-            # otherwise energy consumption is lost during the interpolation.
-            energyInter = carrierData[carrier - 1][2][i]
+                # Linear interpolation of the position that the carrier was at at the missing time stamp
+                posInter = pos1 + ((pos2 - pos1) * ((nextTimeStampValue - time1) / (time2 - time1)))
 
-            # The interpolated drive is always the 2nd drive because this error only occurs when the drive
-            # that the carrier wants to move to is not free.
-            driveInter = carrierData[carrier - 1][3][i]
+                # Because 1: The energy consumption is the total that was consumed during the last time stamp
+                # and 2: The algorithm will continue with the next time stamp in the next iteration cicle
+                # therefore: The energy consumption has to be the last energy consumption
+                # otherwise energy consumption is lost during the interpolation.
+                energyInter = carrierData[carrier - 1][2][i]
 
-            # Transfer the values to the position
-            carrierData[carrier - 1][0][saveTo] = nextTimeStampValue
-            carrierData[carrier - 1][1][saveTo] = posInter
-            carrierData[carrier - 1][2][saveTo] = energyInter
-            carrierData[carrier - 1][3][saveTo] = driveInter
+                # The interpolated drive is always the 2nd drive because this error only occurs when the drive
+                # that the carrier wants to move to is not free.
+                driveInter = carrierData[carrier - 1][3][i]
 
-            # Increase the next value that is being searched for
-            nextTimeStampValue += KEEP_EVERY_X_ROW
+                # Transfer the values to the position
+                carrierData[carrier - 1][0][saveTo] = nextTimeStampValue
+                carrierData[carrier - 1][1][saveTo] = posInter
+                carrierData[carrier - 1][2][saveTo] = energyInter
+                carrierData[carrier - 1][3][saveTo] = driveInter
+
+                # Increase the next value that is being searched for
+                nextTimeStampValue += KEEP_EVERY_X_ROW
 
         else:
             # Add the energy consumption to the current entry

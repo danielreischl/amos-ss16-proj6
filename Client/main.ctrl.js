@@ -87,7 +87,7 @@ angular.module('app')
 })
 
 /* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/
-.controller('compareCircleGraph', function($scope, carrierService) {
+.controller('compareCircleGraph', function($scope, carrierService, percentageService) {
 
     // Get the array with the carriers that were selected from the carrierService
     var carrierCompareList = carrierService.getCarrier();
@@ -106,11 +106,13 @@ angular.module('app')
 		       'drive': 'Drive'};
 
     // default value for the dimension and yAxislabel
-    var selectedDimension = "energyConsumption";
+    var selectedDimension = "energyConsumption"; // remove this later
+    $scope.selectedDimension = "energyConsumption";
     var yAxisLabel = yAxisLabels[selectedDimension];
 
     // default value for the selected Iterations
-    var selectedIteration = "last";
+    var selectedIteration = "last"; // remove this later
+    $scope.selectedIteration = "last";
 
     // the session requested from the database. For now it is fixed.
     var session = 1;
@@ -140,13 +142,13 @@ angular.module('app')
     // the array variable where the converted content from the csv file will be.
     //$scope.carrierPercentageData = [];
     // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-    Papa.parse('django/dataInterface/percentages.csv?session=1', {  download: true,
-                                                                    dynamicTyping: true,
-                                                                    complete: function(results) {
-                                                                        $scope.carrierPercentageData = results.data[1];
-                                                                    }
-                                                                  }
-    )
+    //Papa.parse('django/dataInterface/percentages.csv?session=1', {  download: true,
+    //                                                                dynamicTyping: true,
+    //                                                                complete: function(results) {
+    //                                                                    $scope.carrierPercentageData = results.data[1];
+    //                                                                }
+    //                                                              }
+    //)
 
     //
     // Start of $scope
@@ -173,6 +175,7 @@ angular.module('app')
 
     $scope.iterationDimensions = [
         {name : 'Last', id : 'last'},
+	{name : 'Last 3', id : 'lastThree'},
         {name : "Last 10", id: 'lastTen'},
         {name : "All", id: 'all'}
     ]
@@ -217,12 +220,12 @@ angular.module('app')
 
          // the url which should be requested will be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
-        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + selectedDimension + '&session=1'
+        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + $scope.selectedDimension + '&session=1'
 
         graph = new Dygraph(
 	        document.getElementById("compareGraph"),$scope.requestedUrl,
-	            {title: yAxisLabels[selectedDimension],
-	            ylabel: yAxisLabels[selectedDimension]+' in '+units[selectedDimension],
+	            {title: yAxisLabels[$scope.selectedDimension],
+	            ylabel: yAxisLabels[$scope.selectedDimension]+' in '+units[$scope.selectedDimension],
 	            xlabel: 'time in ms',
 	            labelsSeparateLines: true,
 	            highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
@@ -237,7 +240,7 @@ angular.module('app')
                             return x + ' ms';
                         },
                     },
-                },
+                }
 	            });
 
 	// After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
@@ -264,8 +267,9 @@ angular.module('app')
         }
     
     
-	$scope.getColorOfCarrier = function(carrier) {
-	    var percentageOfEnergy = $scope.carrierPercentageData[carrier - 1];
+       $scope.getColorOfCarrier = function(carrier) {
+	    var carrierPercentageData = percentageService.getAll();
+	    var percentageOfEnergy = carrierPercentageData[carrier - 1];
 	    var color = {'background-color': 'rgb(255,255,141)'};
 
 	    if(percentageOfEnergy > 1.05) {
@@ -280,7 +284,7 @@ angular.module('app')
 	}
 
 
-	// This function empties the carriers in the comparison on page leave.
+    // This function empties the carriers in the comparison on page leave.
     // If the user leaves the current html snippet/template then,
     // this function will notice that and trigger the function "emptyCarrierArray"
     $scope.$on("$destroy", function() {
@@ -305,11 +309,15 @@ angular.module('app')
 	        return selectedIterationsString;
 	    } else {
 	        if($scope.selectedIteration === "lastTen") {
-		        iter = amountOfIterations - 10;
-		        if(iter < 1) {
-		            iter = 1;
-		        }
-	        }
+		    iter = amountOfIterations - 10;
+		}
+		else if ($scope.selectedIteration === "lastThree") {
+		    iter = amountOfIterations - 3;
+		}
+		if(iter < 1) {
+		    iter = 1;
+		}
+	    }
             while(iter <= amountOfIterations) {
 		        selectedIterationsString += iter;
 		        if(iter != amountOfIterations) {
@@ -317,7 +325,6 @@ angular.module('app')
 		        }
 		        iter += 1;
             }
-	    }
 	    return selectedIterationsString;
     }
 
