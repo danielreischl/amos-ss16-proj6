@@ -57,6 +57,15 @@ config.set('Simulation', 'WaitTime_First_DataLoad', 30)
 config.set('Simulation', 'WaitTime_Data_Reload', 30)
 # Adds Parameter for Session
 config.set('Simulation', 'Session', 1)
+# Adds CSV-Sperator
+config.set('Simulation', 'csv_seperator', ';')
+
+# Adds database parameters
+config.add_section("database_tables")
+# Adds average table
+config.set('database_tables', 'average', 'dataInterface_iterationdata')
+# Adds continuous table
+config.set('database_tables', 'continuous', 'dataInterface_timestampdata')
 
 # Writes configuration as settings.cfg
 with open('settings.cfg', 'wb') as configfile:

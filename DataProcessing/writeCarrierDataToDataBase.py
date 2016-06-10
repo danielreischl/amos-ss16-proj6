@@ -36,11 +36,12 @@ import logging
 from time import sleep
 # Imports Pandas for Data handling
 import pandas as pd
-# Imports setConstants to import the Constants
-import setConstants
+# Imports SQLITE3
 import sqlite3
 # Imports dataProcessingFunctions.py
 import dataProcessingFunctions
+# Imports ConfigParser
+import ConfigParser
 
 # Function to process each file
 def process_file(fileName):
@@ -48,7 +49,7 @@ def process_file(fileName):
     # Loading Path of the file
     filePath = os.path.abspath(fileName)
     # Loading data into a dataFrame
-    data = pd.read_csv(filePath, setConstants.CSV_SEPARATOR)
+    data = pd.read_csv(filePath, config.get('simulation','csv_seperator'))
     # Change name of Columns to fit DataBaseModel
     data.columns = ['timeStamp', 'positionAbsolute', 'energyConsumption', 'drive']
     # Reads out session of file name and adds column to DataFrame after Casting from str to int
@@ -74,7 +75,7 @@ def process_file(fileName):
     data = data[cols]
 
     # calls function to load the data into the database
-    load_to_database(data, setConstants.NAME_TABLE_PROCESSED_DATA)
+    load_to_database(data, config.get('database','dataInterface_timestampdata'))
 
     # Creating DataFrame for the commulated Data
     # Calculating Measures
@@ -98,7 +99,7 @@ def process_file(fileName):
          'energyConsumptionAverage': averageEnergyConsumption})
 
     # calls function to load the processed data into the database
-    load_to_database(cumulatedData, setConstants.NAME_TABLE_COM_DATA)
+    load_to_database(cumulatedData, config.get('database','dataInterface_iterationdata'))
 
 
 
@@ -113,14 +114,14 @@ def load_to_database(data, tableName):
     # Connects Script to DataBase
     try:
         # Opens connection to DataBsae
-        con = sqlite3.connect(setConstants.PATH_OF_SQLLITE_DB)
+        con = sqlite3.connect(config.get('Paths', 'database'))
         # Adds "DataBase Connection: Success" after successfully connecting to database
         logging.info("DataBase Connection: Success")
     except:
         # Adds Error to Log if connection to DataBase failed
         logging.error("DataBase Connection: Fail")
         # Adds database Path to ease the debugging
-        logging.error("DataBase Path: " + setConstants.PATH_OF_SQLLITE_DB)
+        logging.error("DataBase Path: " + config.get('Paths', 'database'))
         # Terminates the script with 0 and prints the message
         sys.exit("DataBase Connection Failed")
 
@@ -145,9 +146,14 @@ def moveFileToFolder(fileName, folderName):
 # Format of LogFile: mm/dd/yyyy hh:mm:ss PM LogMessage
 logging.basicConfig(filename='dataProcessing.log',level=logging.INFO,format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
-# Putting Script a sleep for 0.5 sec to ensure that Running.txt is already created
-logging.info("compressInitialData.py goes a sleep for 1 sec")
-sleep(1)
+# Reads ConfigFile
+config = ConfigParser.ConfigParser()
+config.read('settings.cfg')
+
+
+# Putting Script a sleep the defined amount of time in the config file
+logging.info("writeCarrierDataToDatabase.py goes a sleep for % sec" % config.getfloat('Simulation','waittime_first_dataload'))
+sleep(config.getfloat('Simulation','waittime_first_dataload'))
 
 # Initialize dataFileNames as list. (List has to be available for all functions thats why it's declared global
 dataFileNames = []
@@ -170,9 +176,9 @@ while os.path.isfile("Running.txt"):
         # Clears dataFileNames
         dataFileNames = []
 
-    # put the script a sleep for setConstants.WAIT_TIME_IN_SECONDS_MPY before it checks the folder again for new files
-    logging.info("writeCarrierDataToDataBase.py goes asleep for " + str(setConstants.WAIT_TIME_IN_SECONDS_MPY) + "Sec")
-    sleep(setConstants.WAIT_TIME_IN_SECONDS_MPY)
+    # put the script a sleep for in config defined time before it checks the folder again for new files
+    logging.info("writeCarrierDataToDatabase.py goes a sleep for % sec" % config.getfloat('Simulation', 'waittime_data_reload'))
+    sleep(config.getfloat('Simulation', 'waittime_data_reload'))
 
 else:
     # Calls function dataProcessingFunctions.checkForCSVFilesInFolder to get back all csv Files saved in CarrierData
