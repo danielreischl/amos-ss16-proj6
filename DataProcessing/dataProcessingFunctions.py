@@ -21,10 +21,18 @@
 
 # Imports os
 import os
+# Imports logging
 import logging
 # Imports glob
 import glob
-
+# Import Configparser
+import ConfigParser
+# Imports Sys
+import sys
+# Imports SqLite
+import sqlite3
+# Imports ConfigParser
+import ConfigParser
 
 # Creates a TextFile "Running.txt" on Start to let writeCarrierDataToDataBase.py know that the script is still running
 def createRunningFile():
@@ -56,3 +64,42 @@ def check_folder(dataFileNames):
     else:
         logging.info(str(len(dataFileNames)) + " Files found")
         return True
+
+def updated_config(section, sectionValue, value):
+    # Reads ConfigFile
+    config = ConfigParser.ConfigParser()
+    config.read('settings.cfg')
+
+# Writes a Pandas DataFrame to the Database
+def write_dataframe_to_database (data, tableName):
+    # Reads ConfigFile
+    config = ConfigParser.ConfigParser()
+    config.read('settings.cfg')
+
+    logging.info("Loading DataFrame into Database...")
+
+    data = data.fillna(0)
+
+    logging.info("table name: " + tableName)
+
+    # Connects Script to DataBase
+    try:
+        # Opens connection to DataBsae
+        con = sqlite3.connect(config.get('Paths', 'database'))
+        # Adds "DataBase Connection: Success" after successfully connecting to database
+        logging.info("DataBase Connection: Success")
+    except:
+        # Adds Error to Log if connection to DataBase failed
+        logging.error("DataBase Connection: Fail")
+        # Adds database Path to ease the debugging
+        logging.error("DataBase Path: " + config.get('Paths', 'database'))
+        # Terminates the script with 0 and prints the message
+        sys.exit("DataBase Connection Failed")
+
+    # Loads dataframe to database. Appends data or creates table and is not adding the index of the dataFrame.
+    data.to_sql(name=tableName, con=con, if_exists='append', index=False)
+    print "pushed!"
+
+    logging.info("Data loaded into Database")
+
+
