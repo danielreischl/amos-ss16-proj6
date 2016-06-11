@@ -49,7 +49,7 @@ def process_file(fileName):
     # Loading Path of the file
     filePath = os.path.abspath(fileName)
     # Loading data into a dataFrame
-    data = pd.read_csv(filePath, config.get('simulation','csv_seperator'))
+    data = pd.read_csv(filePath, config.get('Simulation','csv_seperator'))
     # Change name of Columns to fit DataBaseModel
     data.columns = ['timeStamp', 'positionAbsolute', 'energyConsumption', 'drive']
     # Reads out session of file name and adds column to DataFrame after Casting from str to int
