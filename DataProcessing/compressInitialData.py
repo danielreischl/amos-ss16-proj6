@@ -575,6 +575,7 @@ for fileName in DATA_FILE_NAMES:
 
     # Counts up session for each filename
     session = session + 1
+    dataProcessingFunctions.updated_config('Simulation', 'session', session)
 
 # Calls Funcion to remove RunningFile
 dataProcessingFunctions.deleteRunningFile()
