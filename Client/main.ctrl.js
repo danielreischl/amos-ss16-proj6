@@ -296,36 +296,28 @@ angular.module('app')
     //
 
     $scope.getSelectedIterationsString = function() {
-        var selectedIterationsString = "";
-        var iter = 1;
-
-        if(amountOfIterations <= 0) {
-            return selectedIterationsString;
-        }
-
-
-	    if ($scope.selectedIteration === "last") {
-	        selectedIterationsString += amountOfIterations;
-	        return selectedIterationsString;
-	    } else {
-	        if($scope.selectedIteration === "lastTen") {
-		    iter = amountOfIterations - 10;
-		}
-		else if ($scope.selectedIteration === "lastThree") {
-		    iter = amountOfIterations - 3;
-		}
-		if(iter < 1) {
-		    iter = 1;
-		}
-	    }
-            while(iter <= amountOfIterations) {
-		        selectedIterationsString += iter;
-		        if(iter != amountOfIterations) {
-                    selectedIterationsString += ",";
-		        }
-		        iter += 1;
-            }
-	    return selectedIterationsString;
+        var selectedIterations = [];
+	var selectedNumber;
+	// TODO: add the possibility to select individual iterations
+	switch ($scope.selectedIteration) {
+	case "last":
+	    selectedNumber = 1;
+	    break;
+	case "lastThree":
+	    selectedNumber = 3;
+	    break;
+	case "lastTen":
+	    selectedNumber = 10;
+	    break;
+	default:
+	    selectedNumber = 1;
+	}
+	
+	for (var i = amountOfIterations; i > amountOfIterations - selectedNumber && i >= 1; i--) {
+	    selectedIterations.push(i);
+	}
+	// join with comma and return
+	return selectedIterations.join();
     }
 
     function uncheckAllCheckboxes() {
