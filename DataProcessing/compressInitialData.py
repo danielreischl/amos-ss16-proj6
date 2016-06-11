@@ -42,8 +42,6 @@ import os
 import numpy as np
 # Imports sleep for sleeping
 from time import sleep
-# Imports setConstants to maintain all constants on one place
-import setConstants
 # Imports sys to terminate the function
 import sys
 # Imports Csv to Manipulate Initial CSV-File
@@ -52,21 +50,8 @@ import csv
 import logging
 # Imports DataProcessingFunctions
 import dataProcessingFunctions
-
-# CONSTANTS
-# WAIT_TIME_IN_SECONDS: Time the script should wait until it calls the function again (in seconds)
-WAIT_TIME_IN_SECONDS = setConstants.WAIT_TIME_IN_SECONDS_DPPY
-# Input file names of data here
-DATA_FILE_NAMES = []
-# AMOUNT_OF_CARRIERS: How many Carriers are in the system
-AMOUNT_OF_CARRIERS = setConstants.AMOUNT_OF_CARRIERS
-# DATA_SEPARATOR: Separator of the CSV-File
-DATA_SEPARATOR = setConstants.CSV_SEPARATOR
-# Every X th row of the data is kept when compressing the data
-KEEP_EVERY_X_ROW = 100
-# Current Session
-session = setConstants.SESSION
-
+# Imports ConfigParser
+import ConfigParser
 
 # Main data processing script. Gets input data of drives and maps it to the carries and saves them as CSV files once
 # an iteration is complete
@@ -426,8 +411,8 @@ def modifyCSVFile(filename):
     # Opens File
     with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
         # defines reading file and writing file
-        r = csv.reader(inFile, delimiter=setConstants.CSV_SEPARATOR)
-        w = csv.writer(outfile, delimiter=setConstants.CSV_SEPARATOR)
+        r = csv.reader(inFile, delimiter=DATA_SEPARATOR)
+        w = csv.writer(outfile, delimiter=DATA_SEPARATOR)
 
         # Copys first row
         first_row = next(r)
@@ -493,6 +478,25 @@ logging.basicConfig(filename='dataProcessing.log', level=logging.INFO, format='%
 # Calls Function to create Running.txt
 dataProcessingFunctions.createRunningFile()
 
+# Reads ConfigFile
+config = ConfigParser.ConfigParser()
+config.read('settings.cfg')
+
+# CONSTANTS
+# WAIT_TIME_IN_SECONDS: Time the script should wait until it calls the function again (in seconds)
+WAIT_TIME_IN_SECONDS = config.getfloat('Simulation','waittime_compression')
+# Input file names of data here
+DATA_FILE_NAMES = []
+# AMOUNT_OF_CARRIERS: How many Carriers are in the system
+AMOUNT_OF_CARRIERS = config.getint('Simulation','amount_of_carriers')
+# DATA_SEPARATOR: Separator of the CSV-File
+DATA_SEPARATOR = config.get('Simulation','csv_seperator')
+# Every X th row of the data is kept when compressing the data
+KEEP_EVERY_X_ROW = config.getint('Simulation','keep_every_x_rows')
+# Current Session
+session = config.getint('Simulation','session')
+
+
 # Calls function dataProcessingFunctions.checkForCSVFilesInFolder to get back all csv Files saved in InitialData
 DATA_FILE_NAMES = dataProcessingFunctions.checkForCSVFilesInFolder("InitialData")
 
@@ -551,7 +555,7 @@ for fileName in DATA_FILE_NAMES:
             position = float(str(row['position' + str(drive)]).replace(',', '.'))
             energy = float(str(row['energy' + str(drive)]).replace(',', '.'))
             processData(time, drive + 1, position, energy)
-            # sleep(WAIT_TIME_IN_SECONDS)
+            sleep(WAIT_TIME_IN_SECONDS)
 
     # Moves the processed data files to InitialDataArchive
     moveFileToFolder(fileName, "InitialDataArchive")

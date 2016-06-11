@@ -59,6 +59,8 @@ config.set('Simulation', 'WaitTime_Data_Reload', 30)
 config.set('Simulation', 'Session', 1)
 # Adds CSV-Sperator
 config.set('Simulation', 'csv_seperator', ';')
+# Adds Keep Every X Rows
+config.set('Simulation', 'keep_every_x_rows', 100)
 
 # Adds database parameters
 config.add_section("database_tables")
