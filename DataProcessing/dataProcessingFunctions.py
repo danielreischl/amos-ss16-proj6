@@ -76,7 +76,7 @@ def updated_config(section, sectionValue, value):
     config.set(section, sectionValue, value)
 
     # Wirtes the new ConfigFile
-    with open('settings.cfg', 'wb') as configfile:
+    with open('/srv/DataProcessing/settings.cfg', 'wb') as configfile:
         config.write(configfile)
 
     logging.info("Changing Settings File")
