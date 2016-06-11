@@ -38,7 +38,7 @@ from __future__ import print_function
 import pandas as pd
 # Imports OS for Operating System independent absolute file paths
 import os
-# Imports Pandas for Data handling
+# Imports numpy for Data handling
 import numpy as np
 # Imports sleep for sleeping
 from time import sleep
@@ -562,6 +562,16 @@ for fileName in DATA_FILE_NAMES:
 
     # Delete the "_modified" csv file
     os.remove(os.path.splitext(fileName)[0] + "_modified.csv")
+
+    # Inizialize DataFrame sessiondata columns based
+    sessiondata = pd.DataFrame(
+        columns=['session', 'fileName', 'amountOfCarriers', 'status'], index=['1'])
+    # Adding previous extracted and calculated values to DataFrame
+    sessiondata.loc['1'] = pd.Series(
+        {'session': session, 'fileName': os.path.splitext(fileName)[0], 'amountOfCarriers': amountOfDrives, 'status': True,})
+
+    # calls function to load the sessiondata data into the database
+    dataProcessingFunctions.write_dataframe_to_database(sessiondata, config.get('database_tables', 'sessiondata'))
 
     # Counts up session for each filename
     session = session + 1

@@ -50,7 +50,7 @@ config.add_section('Simulation')
 # Adds Parameter for AmountOfCarriers
 config.set('Simulation', 'Amount_Of_Carriers', 15)
 # Adds Parameter for WaitTimeCompression
-config.set('Simulation', 'WaitTime_Compression', 0.001)
+config.set('Simulation', 'WaitTime_Compression', 0)
 # Adds Parameter for WaitTime_First_DataLoad
 config.set('Simulation', 'WaitTime_First_DataLoad', 30)
 # Adds Parameter for WaitTime_Data_Reload
@@ -68,6 +68,8 @@ config.add_section("database_tables")
 config.set('database_tables', 'average', 'dataInterface_iterationdata')
 # Adds continuous table
 config.set('database_tables', 'continuous', 'dataInterface_timestampdata')
+# Adds continuous table
+config.set('database_tables', 'sessiondata', 'dataInterface_sessiondata')
 
 # Writes configuration as settings.cfg
 with open('settings.cfg', 'wb') as configfile:

@@ -36,8 +36,6 @@ import logging
 from time import sleep
 # Imports Pandas for Data handling
 import pandas as pd
-# Imports SQLITE3
-import sqlite3
 # Imports dataProcessingFunctions.py
 import dataProcessingFunctions
 # Imports ConfigParser
