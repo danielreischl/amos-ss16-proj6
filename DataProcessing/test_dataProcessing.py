@@ -62,9 +62,14 @@ class testFileExistence (unittest.TestCase):
         self.assertEqual(res, os.path.exists('/srv/DataProcessing/writeCarrierDataToDataBase.py'))
 
     # setConstants.py
-    def test_SetConstants(self):
+    def test_configFile(self):
         res = True
-        self.assertEqual(res, os.path.exists('/srv/DataProcessing/setConstants.py'))
+        self.assertEqual(res, os.path.exists('/srv/DataProcessing/settings.cfg'))
+
+    # dataProcessingFunctions.py
+    def test_dataProcessingFunctions(self):
+        res = True
+        self.assertEqual(res, os.path.exists('/srv/DataProcessing/dataProcessingFunctions.py'))
 
     # sqliteDB
     def test_DataBaseFile(self):
