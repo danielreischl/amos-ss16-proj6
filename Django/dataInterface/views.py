@@ -207,12 +207,19 @@ def rawData(request):
         for row in result:
             writer.writerow([row.session, row.carrier, row.iteration, row.timeStamp, row.drive, row.positionAbsolute, row.speed, row.acceleration, row.energyConsumption])
 
-    # Returns all daata of iteration table
+    # Returns all data of iteration table
     # session, carrier, iteration, sppedAverage, accelerationAverage, energyConsumptionTotal, energyConsumptionAverage
     elif requestedTable == "iteration":
         result = iterationdata.objects.all()
         for row in result:
             writer.writerow([row.session, row.carrier, row.iteration, row.speedAverage, row.accelerationAverage, row.energyConsumptionTotal, row.energyConsumptionAverage])
+
+    # Returns all data of session table
+    # Session, FileName, AmountOfCarriers, Status
+    elif requestedTable == "sessiondata":
+        result = iterationdata.objects.all()
+        for row in result:
+            writer.writerow([row.session, row.fileName, row.amountOfCarriers, row.status])
             
     return response
 
