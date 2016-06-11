@@ -22,7 +22,6 @@
 # This files includes all tests for dataProcessing
 import unittest
 import os
-import setConstants
 import dataProcessingFunctions
 
 # This class tests if all necessary folders exist
@@ -70,11 +69,6 @@ class testFileExistence (unittest.TestCase):
     def test_dataProcessingFunctions(self):
         res = True
         self.assertEqual(res, os.path.exists('/srv/DataProcessing/dataProcessingFunctions.py'))
-
-    # sqliteDB
-    def test_DataBaseFile(self):
-        res = True
-        self.assertEqual(res, os.path.exists(setConstants.PATH_OF_SQLLITE_DB))
 
 class testRunningFile (unittest.TestCase):
 
