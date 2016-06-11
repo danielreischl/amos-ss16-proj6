@@ -68,18 +68,16 @@ def check_folder(dataFileNames):
 # Updates the Config File
 # Input: Section of ConfigFile, sectionValue, value
 def updated_config(section, sectionValue, value):
-    # Reads ConfigFile
+    # Reads ConfigFile from the absolute Filepath
     config = ConfigParser.ConfigParser()
-    config.read('settings.cfg')
+    config.read('/srv/DataProcessing/settings.cfg')
 
     # Sets the value of a particular section, sectionValue combination
     config.set(section, sectionValue, value)
 
-    # Wirtes the new ConfigFile
+    # Wirtes the new ConfigFile with the absolute FilePath
     with open('/srv/DataProcessing/settings.cfg', 'wb') as configfile:
         config.write(configfile)
-
-    logging.info("Changing Settings File")
 
 # Writes a Pandas DataFrame to the Database
 # Input PandasDataFrame, TableName
