@@ -22,6 +22,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from dataInterface.models import timestampdata
 from dataInterface.models import iterationdata
+from dataInterface.models import sessiondata
 from django.db.models import Max
 
 # Retunrs last iteration of a carrier at a session
@@ -245,10 +246,15 @@ def deleteDatabaseValues (request):
     elif requestedTable == 'timestamp':
         timestampdata.objects.all().delete()
         return HttpResponse('OK')
-    # paramaeter 'all' deletes all values in iterationdata and timestampdata and returns OK
+    # parameter 'sessiondata' deletes all values in sessiondata and returns OK
+    elif requestedTable == 'sessiondata':
+        sessiondata.objects.all().delete()
+        return HttpResponse('OK')
+    # paramaeter 'all' deletes all values in sessiondata, iterationdata and timestampdata and returns OK
     elif requestedTable == 'all':
         iterationdata.objects.all().delete()
         timestampdata.objects.all().delete()
+        sessiondata.objects.all().delete()
         return HttpResponse('OK')
     else:
         # Any Other parameter returns 'FAIL'
