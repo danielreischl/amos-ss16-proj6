@@ -24,6 +24,10 @@ from dataInterface.models import timestampdata
 from dataInterface.models import iterationdata
 from dataInterface.models import sessiondata
 from django.db.models import Max
+import sys
+# Adds DataProcessing Path to Sys
+sys.path.append('/srv/DataProcessing')
+import dataProcessingFunctions
 
 # Retunrs last iteration of a carrier at a session
 def funcMaxIteration(session, carrier):
@@ -266,6 +270,20 @@ def deleteDatabaseValues (request):
     else:
         # Any Other parameter returns 'FAIL'
         return HttpResponse('FAIL')
+
+def resetSimulation (request):
+    # Deletes all DatabaseValues and sets the Session in the cofigFile to Zero
+
+    # Deletes all Values from iterationdata
+    iterationdata.objects.all().delete()
+    # Deletes all Values from timestampdata
+    timestampdata.objects.all().delete()
+    # Deletes all Values from sessiondata
+    sessiondata.objects.all().delete()
+
+    dataProcessingFunctions.updated_config('Simulation', 'session', 1)
+
+    return HttpResponse('OK')
 
 
 def averageEnergyConsumption (request):

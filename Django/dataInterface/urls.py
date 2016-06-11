@@ -39,6 +39,8 @@ urlpatterns = [
     url (r'^averageEnergyConsumption.csv', views.averageEnergyConsumption, name ='averageEnergyConsumption'),
     # URL that provides the percanteges for the Circle View and Bar Chart
     url (r'^percentages.csv', views.percentageForCircleAndBarChart, name = 'percentageForCircleAndBarChart'),
+    # URL that resets the simulation
+    url(r'^simulation.reset', views.resetSimulation(), name='simulationReset'),
 
 
 ]
