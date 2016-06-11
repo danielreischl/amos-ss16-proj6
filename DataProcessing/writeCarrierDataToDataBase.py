@@ -75,7 +75,7 @@ def process_file(fileName):
     data = data[cols]
 
     # calls function to load the data into the database
-    load_to_database(data, config.get('database','dataInterface_timestampdata'))
+    load_to_database(data, config.get('database_tables','continuous'))
 
     # Creating DataFrame for the commulated Data
     # Calculating Measures
@@ -99,7 +99,7 @@ def process_file(fileName):
          'energyConsumptionAverage': averageEnergyConsumption})
 
     # calls function to load the processed data into the database
-    load_to_database(cumulatedData, config.get('database','dataInterface_iterationdata'))
+    load_to_database(cumulatedData, config.get('database_tables','average'))
 
 
 
