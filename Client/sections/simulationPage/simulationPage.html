@@ -20,3 +20,30 @@
 -->
 
 <h1>This is the simulation page</h1>
+
+<style>
+table, th , td  {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table tr:nth-child(odd) {
+  background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style>
+
+<div ng-app="myApp" ng-controller="customersCtrl">
+
+<table>
+  <tr ng-repeat="x in names">
+    <td>{{ x.session }}</td>
+    <td>{{ x.fileName }}</td>
+    <td>{{ x.amountOfCarriers }}</td>
+    <td>{{ x.status }}</td>
+  </tr>
+</table>
+
+</div>
