@@ -24,6 +24,7 @@ from dataInterface.models import timestampdata
 from dataInterface.models import iterationdata
 from dataInterface.models import sessiondata
 from django.db.models import Max
+from django.core import serializers
 import sys
 # Adds DataProcessing Path to Sys
 sys.path.append('/srv/DataProcessing')
@@ -221,12 +222,31 @@ def rawData(request):
     # Returns all data of session table
     # Session, FileName, AmountOfCarriers, Status
     elif requestedTable == "sessiondata":
-        result = iterationdata.objects.all()
+        result = sessiondata.objects.all()
         for row in result:
             writer.writerow([row.session, row.fileName, row.amountOfCarriers, row.status])
             
     return response
 
+def rawDataJson (request):
+
+    # Parameter: Table
+    requestedTable = request.GET['table']
+
+    # Defines which table should be returned: SessionData, Iterationdata or TimeStampData
+    if requestedTable == "sessiondata":
+        data = sessiondata.objects.all()
+    elif requestedTable == "iteration":
+        data = iterationdata.objects.all()
+    elif requestedTable == "timestamp":
+        data = timestampdata.objects.all()
+    else:
+        return HttpResponse("Table doesn't exist")
+
+    # Transpose data to JSON
+    json_data = serializers.serialize('json', data)
+    # Returns JSON
+    return HttpResponse(json_data, mimetype='application/json')
 
 def logs(request):
     # Returns a log file

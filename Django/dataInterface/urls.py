@@ -41,6 +41,7 @@ urlpatterns = [
     url (r'^percentages.csv', views.percentageForCircleAndBarChart, name = 'percentageForCircleAndBarChart'),
     # URL that resets the simulation
     url(r'^simulation.reset', views.resetSimulation, name='simulationReset'),
-
+    # URL that provides rawData as JSON
+    url (r'^rawData.json', views.rawDataJson, name='rawDataJSON'),
 
 ]
