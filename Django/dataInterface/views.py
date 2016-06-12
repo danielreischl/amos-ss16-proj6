@@ -246,7 +246,7 @@ def rawDataJson (request):
     # Transpose data to JSON
     json_data = serializers.serialize('json', data)
     # Returns JSON
-    return HttpResponse(json_data, mimetype='application/json')
+    return HttpResponse(json_data, content_type='application/json')
 
 def logs(request):
     # Returns a log file
