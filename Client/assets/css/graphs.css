@@ -41,12 +41,16 @@ li {
     border-color: black;
     width: 150px;
     background-color: white;
+    position: absolute;
+    top: 160px;
+    right: 0px;
 }
 
-#AverageEnergyConsumptionChart {
+.graphSize {
     position: absolute;
-    left: 20px;
-    top: 20px;
-    right: 20px;
+    left: 10px;
+    top: 160px;
+    right: 180px;
     bottom: 20px;
 }
+
