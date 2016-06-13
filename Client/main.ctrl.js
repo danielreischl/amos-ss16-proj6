@@ -695,7 +695,10 @@ g = new Dygraph(document.getElementById("graph"),amountOfCarriers,carrierPercent
 
 })
 
-
+.controller('sessionDataTable', function($scope, $http) {
+    $http.get("django/dataInterface/rawData.json?table=sessiondata")
+    .then(function (response) {$scope.names = response.data.records;});
+})
 /*.controller('chartMaker',function($scope) {
 
         $scope.chartParams = {

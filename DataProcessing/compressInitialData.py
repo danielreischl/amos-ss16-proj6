@@ -568,7 +568,7 @@ for fileName in DATA_FILE_NAMES:
         columns=['session', 'fileName', 'amountOfCarriers', 'status'], index=['1'])
     # Adding previous extracted and calculated values to DataFrame
     sessiondata.loc['1'] = pd.Series(
-        {'session': session, 'fileName': os.path.splitext(fileName)[0], 'amountOfCarriers': amountOfDrives, 'status': True,})
+        {'session': session, 'fileName': os.path.splitext(fileName)[0], 'amountOfCarriers': AMOUNT_OF_CARRIERS, 'status': True,})
 
     # calls function to load the sessiondata data into the database
     dataProcessingFunctions.write_dataframe_to_database(sessiondata, config.get('database_tables', 'sessiondata'))
