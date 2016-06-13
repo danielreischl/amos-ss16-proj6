@@ -48,9 +48,26 @@ angular.module('app')
 	    getFromDB();
 	    return percentageData;
 	}
+
+	this.getColorOfCarrier = function(carrier) {
+	    getFromDB();
+	    var percentageOfEnergy = percentageData[carrier - 1];
+	    var color = {'background-color': 'rgb(255,255,141)'};
+
+	    if(percentageOfEnergy > 1.05) {
+		color = {'background-color' : 'rgb(255,23,68)'};
+            }
+
+            if(percentageOfEnergy <= 1.025 ) {
+		color = {'background-color' : 'rgb(0,191,165)'};
+            }
+
+            return color;
+	}
 	
 	return {
-	    getAll: this.getAll
+	    getAll: this.getAll,
+	    getColorOfCarrier: this.getColorOfCarrier
 	};
     });
 
@@ -101,7 +118,7 @@ angular.module('app')
         carriersForComparison.splice(0,carriersForComparison.length);
     }
 
-     // this service returns 4 functions to the caller, which he can use.
+    // this service returns 5 functions to the caller, which he can use.
     return {
         hasCarrier: this.hasCarrier,
         addCarrier: this.addCarrier,

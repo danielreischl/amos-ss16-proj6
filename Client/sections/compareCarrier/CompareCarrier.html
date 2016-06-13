@@ -28,7 +28,7 @@
                     <!-- <div class="clearfix" ng-if="$index % 5 == 0"></div> -->
                     <label class = "carrierBox">
                         <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
-                        <div class = "carrierBox" ng-style = "getColorOfCarrier(carrier.id)">
+                        <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
                             {{carrier.id}}
                         </div>
                     </label>
@@ -53,12 +53,7 @@
                <div>
 		 {{dimension.name}}
                </div>
-             </label>
-           
-            <!-- <select ng-model="selectedDimension" ng-change = "changeDimension()">
-                <option selected disabled value="">Chose Dimension</option>
-                <option ng-repeat="x in dimensions" value="{{x.id}}">{{x.name}}</option>
-            </select> -->
+             </label>           
         </div>
 
         <div flex>

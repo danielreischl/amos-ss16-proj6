@@ -105,6 +105,10 @@ angular.module('app')
 		       'acceleration': 'm/s*s',
 		       'drive': 'Drive'};
 
+    // make percentage service available in html-view
+    // not very nice, try to refactor if possible
+    $scope.percentageService = percentageService;
+    
     // default value for the dimension and yAxislabel
     var selectedDimension = "energyConsumption"; // remove this later
     $scope.selectedDimension = "energyConsumption";
@@ -173,7 +177,7 @@ angular.module('app')
 	    return selected.map(function(carrier){return carrier.id.toString();}).join();
 	}
 
-         // the url which should be requested will be defined in requestedUrl
+        // the url which should be requested will be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
         $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + $scope.selectedDimension + '&session=1'
 
@@ -200,39 +204,15 @@ angular.module('app')
 
     }
 
-    $scope.changeDimension = function() {
-	    selectedDimension = $scope.selectedDimension;
+    $scope.getListStyle = function(index) {
+	if (index % 5 == 1) {
+            return {'clear': 'left'};
 	}
-
-	$scope.changeIteration = function() {
-	    selectedIteration = $scope.selectedIteration;
+	else {
+            return {};
 	}
-
-        $scope.getListStyle = function(index) {
-	    if (index % 5 == 1) {
-	        return {'clear': 'left'};
-	    }
-	    else {
-	        return {};
-	    }
-        }
+    }
     
-    
-       $scope.getColorOfCarrier = function(carrier) {
-	    var carrierPercentageData = percentageService.getAll();
-	    var percentageOfEnergy = carrierPercentageData[carrier - 1];
-	    var color = {'background-color': 'rgb(255,255,141)'};
-
-	    if(percentageOfEnergy > 1.05) {
-            color = {'background-color' : 'rgb(255,23,68)'};
-        }
-
-        if(percentageOfEnergy <= 1.025 ) {
-            color = {'background-color' : 'rgb(0,191,165)'};
-        }
-
-        return color;
-	}
 
 
     // This function empties the carriers in the comparison on page leave.
