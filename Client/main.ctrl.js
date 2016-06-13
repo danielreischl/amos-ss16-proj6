@@ -537,7 +537,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         context.lineStyle = "#212121";
         context.font = "15px sans-serif";
         // textAllign center will allign the text relative to the borders of the canvas
-        context.textAlign = 'center';le
+        context.textAlign = 'center';
         context.fillText(carrier, centerX, centerY - 7);
         context.fillText(percentageOfEnergyRounded*100 + "%", centerX, centerY + 12);
     }
