@@ -28,7 +28,10 @@ from django.core import serializers
 import sys
 # Adds DataProcessing Path to Sys
 sys.path.append('/srv/DataProcessing')
+# imports dataProcessingFunctions
 import dataProcessingFunctions
+# imports subprocess to call shell
+import subprocess
 
 # Retunrs last iteration of a carrier at a session
 def funcMaxIteration(session, carrier):
@@ -304,6 +307,28 @@ def resetSimulation (request):
     dataProcessingFunctions.updated_config('Simulation', 'session', 1)
 
     return HttpResponse('OK')
+
+def startSimulation (request):
+    # Starts the Simulation
+
+    # Requested Parameters:
+    # Waittime, FileName
+    requestedwtSimulation = request.GET['wtSimulation']
+    requestedwtFirstDataLoad = request.GET['wtFirstDataload']
+    requestedwtDataReload = request.GET['wtDataReload']
+    requestedAmountOfCarriers = request.GET['requestedAmountOfCarriers']
+    requestedfileName = request.GET['fileName']
+
+    # Sets Values in ConfigFile
+    dataProcessingFunctions.updated_config('Simulation', 'amount_of_carriers', requestedAmountOfCarriers)
+    dataProcessingFunctions.updated_config('Simulation', 'waittime_compression', requestedwtSimulation)
+    dataProcessingFunctions.updated_config('Simulation', 'waittime_first_dataload', requestedwtFirstDataLoad)
+    dataProcessingFunctions.updated_config('Simulation', 'waittime_data_reload', requestedwtDataReload)
+    dataProcessingFunctions.updated_config('Simulation', 'name_of_imported_file', requestedfileName)
+
+    process = subprocess.Popen('srv/DataProcessing/initDataProcessingSimulation.sh', shell=True, stdout=subprocess.PIPE)
+    process.wait()
+    HttpResponse(process.returncode)
 
 
 def averageEnergyConsumption (request):
