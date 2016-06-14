@@ -541,7 +541,6 @@ which kind of data he wants to see. The default value is average energy consumpt
         var centerX = canvas.width / 2;
         var centerY = canvas.height / 2;
         var radius = 60;
-        var percentageOfEnergy = percentageOfEnergy * 100;
 
         context.beginPath();
         context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -556,9 +555,9 @@ which kind of data he wants to see. The default value is average energy consumpt
            Any value between is coded yellow, because it should warn the user, that the energy
            is higher than the very first iteration.
          */
-        if(percentageOfEnergy > 105) {
+        if(percentageOfEnergy > 1.05) {
             context.fillStyle = '#FF1744';
-        } else if(percentageOfEnergy <= 102.5 ) {
+        } else if(percentageOfEnergy <= 1.025 ) {
             context.fillStyle = '#00BFA5';
         } else {
             context.fillStyle = "#FFFF8D";
@@ -573,7 +572,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         // textAllign center will allign the text relative to the borders of the canvas
         context.textAlign = 'center';
         context.fillText(carrier, centerX, centerY - 7);
-        context.fillText(percentageOfEnergy.toFixed() + "%", centerX, centerY + 12);
+        context.fillText((percentageOfEnergy*100).toFixed() + "%", centerX, centerY + 12);
     }
 }
 
@@ -588,6 +587,8 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 .controller('barGraphController',function($scope,$timeout, carrierService) {
     $scope.barGraph = function() {
+
+
         // Requesting the number of carriers from the REST API
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
@@ -615,7 +616,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         var idCounter = 1;
 
         // timer is set to 1 second. this wait time is needed to fetch all data from the database
-        $timeout(createBarChartView, 1000);
+        $timeout(createBarChartView, 1300);
 
         function createBarChartView() {
             // This while loop will fill the carrierArray with carrier names for the chart label
@@ -630,10 +631,10 @@ which kind of data he wants to see. The default value is average energy consumpt
                 the carrier. E.g. green is up to 102,5% , yellow is up 102,5 to 105% and everything above is red
             */
             for(i = 0; i < carrierPercentageData.length; i++) {
-                if(carrierPercentageData[i] > 105) {
+                if(carrierPercentageData[i] > 1.05) {
                     carrierColorArray.push('rgba(255,23,68, 0.8)')
                     carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
-                } else if(carrierPercentageData[i] <= 102.5 ) {
+                } else if(carrierPercentageData[i] <= 1.025 ) {
                     carrierColorArray.push('rgba(0,191,165, 0.8)')
                     carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
                 } else {
@@ -665,7 +666,7 @@ which kind of data he wants to see. The default value is average energy consumpt
                                 beginAtZero:true
                             }
                         }]
-                    }
+                    },
                 }
             });
         }
