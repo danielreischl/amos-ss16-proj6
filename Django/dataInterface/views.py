@@ -307,7 +307,7 @@ def simulationFiles (request):
         fileNamesAsString = fileNamesAsString + file + ','
 
     # returns the string
-    return HttpResponse (fileNamesAsString[0, len(fileNamesAsString-1)])
+    return HttpResponse (fileNamesAsString[0, len(fileNamesAsString)-1])
 
 
 def resetSimulation (request):
