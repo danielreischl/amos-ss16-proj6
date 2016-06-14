@@ -25,7 +25,13 @@ html, body {
 }
 
 .mainLayout {
- height: 90.5%;
+    height: 90.5%;
+}
+
+.ngViewContent {
+    position: absolute;
+    width: 100%;
+    text-align: center;
 }
 
 header {
