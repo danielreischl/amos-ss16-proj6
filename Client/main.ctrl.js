@@ -586,7 +586,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 /* bar chart View controller */
 
-.controller('barGraphController',function($scope, carrierService) {
+.controller('barGraphController',function($scope,$timeout, carrierService) {
     $scope.barGraph = function() {
         // Requesting the number of carriers from the REST API
         var xmlHttp = new XMLHttpRequest();
