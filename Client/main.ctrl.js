@@ -541,7 +541,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         var centerX = canvas.width / 2;
         var centerY = canvas.height / 2;
         var radius = 60;
-        var percentageOfEnergyRounded = percentageOfEnergy.toFixed(2);
+        var percentageOfEnergy = percentageOfEnergy * 100;
 
         context.beginPath();
         context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -573,161 +573,9 @@ which kind of data he wants to see. The default value is average energy consumpt
         // textAllign center will allign the text relative to the borders of the canvas
         context.textAlign = 'center';
         context.fillText(carrier, centerX, centerY - 7);
-        context.fillText(percentageOfEnergyRounded*100 + "%", centerX, centerY + 12);
+        context.fillText(percentageOfEnergyRounded.toFixed() + "%", centerX, centerY + 12);
     }
 }
-
-})
-
-
-.controller('barchartController',function ($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
-
-var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
-    xmlHttp.send(null);
-    var amountOfCarriers = xmlHttp.responseText;
-    /* ID of first Carrier */
-    var idCounter = 1;
-    // the array variable where the converted content from the csv file will be.
-    var carrierPercentageData;
-    // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-    Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
-                                                                   dynamicTyping: true,
-                                                                   complete: function(results) {
-                                                                       carrierPercentageData =results.data[1];
-                                                                   }
-                                                                  }
-    )
-
-    function barChartPlotter(e) {
-  var ctx = e.drawingContext;
-  var points = e.points;
-  var y_bottom = e.dygraph.toDomYCoord(0);  // see <a href="http://dygraphs.com/jsdoc/symbols/Dygraph.html#toDomYCoord">jsdoc</a>
-
-  // This should really be based on the minimum gap
-  var bar_width = 2/3 * (points[1].canvasx - points[0].canvasx);
-  ctx.fillStyle = e.color;  // a lighter shade might be more aesthetically pleasing
-
-  // Do the actual plotting.
-  for (var i = 0; i < points.length; i++) {
-    var p = points[i];
-    var center_x = p.canvasx;  // center of the bar
-
-    ctx.fillRect(center_x - bar_width / 2, p.canvasy, bar_width, y_bottom - p.canvasy);
-    ctx.strokeRect(center_x - bar_width / 2, p.canvasy, bar_width, y_bottom - p.canvasy);
-  }
-}
- //var data = "Carrier,Percentage%\n" +
-    // "1,50\n" +
-   //  "2,70\n" +
-   //  "3,90\n" +
-    // "4,100\n" +
-      //   "5,180\n" +
-  //  "6,200\n" +
-  //  "7,250\n" +
-  //   "8,150\n";
-g = new Dygraph(document.getElementById("graph"),amountOfCarriers,carrierPercentageData,
-
-
-                 {
-                         drawlineCallback: function (g, seriesName, ctx, cx, cy, seriesColor, pointSize, row) {
-                             var col = g.indexFromSetName(seriesName);
-                             var val = g.getValue(row, col);
-                             var color = '';
-                             if (val >= 0 && val <= 50) {
-                                 color = 'green';
-                             } else if (val > 50 && val <= 80) {
-                                 color = 'yellow';
-                             } else if (val > 80) {
-                                 color = 'red';
-                             }
-                             if (color) {
-                                
-                        ctx.fillStyle = color;
-                            
-                             }
-                         },
-
-                     // options go here. See http://dygraphs.com/options.html
-                     legend: 'always',
-                     animatedZooms: true,
-                     plotter: barChartPlotter,
-                     
-
-
-
-
-
-
-                     
-                     axes: {
-                            x: {
-                                valueFormatter: function(x) {
-                                    var ret;
-                                    switch (x){
-                                        case 1:
-                                           ret = 'carrier1';                
-                                           break;
-                                        case 2:
-                                           ret = 'carrier2';                
-                                           break;
-                                        case 3:
-                                           ret = 'carrier3';                
-                                           break;
-                                        case 4:
-                                           ret = 'carrier4';                
-                                           break;
-                                        case 5:
-                                           ret = 'carrier5';                
-                                           break;
-                                        case 6:
-                                           ret = 'carrier6';                
-                                           break;
-                                        case 7:
-                                           ret = 'carrier7';                
-                                           break;
-                                        case 8:
-                                           ret = 'carrier8';                
-                                           break;                                            
-                                    }
-                                    return ret;
-                                },
-                                axisLabelFormatter: function(x) {
-                                    var ret;
-                                    switch (x){
-                                        case 1:
-                                           ret = 'carrier1';                
-                                           break;
-                                        case 2:
-                                           ret = 'carrier2';                
-                                           break;
-                                        case 3:
-                                           ret = 'carrier3';                
-                                           break;
-                                        case 4:
-                                           ret = 'carrier4';                
-                                           break;
-                                        case 5:
-                                           ret = 'carrier5';                
-                                           break;
-                                        case 6:
-                                           ret = 'carrier6';                
-                                           break;
-                                        case 7:
-                                           ret = 'carrier7';                
-                                           break;
-                                        case 8:
-                                           ret = 'carrier8';                
-                                           break;                                            
-                                    }
-                                    return ret;
-                                }         
-                            }                
-                    },
-                 });
-                 
-
-
 
 })
 
@@ -735,152 +583,85 @@ g = new Dygraph(document.getElementById("graph"),amountOfCarriers,carrierPercent
     $http.get("django/dataInterface/rawData.json?table=sessiondata")
     .then(function (response) {$scope.names = response.data.records;});
 })
-/*.controller('chartMaker',function($scope) {
 
-        $scope.chartParams = {
-            listOfCarriers: ['carrier1', 'carrier2', 'carrier3', 'carrier4', 'carrier5', 'carrier6', 'carrier7', 'carrier8', 'carrier9', 'carrier10', 'carrier11', 'carrier12', 'carrier13', 'carrier14', 'carrier15'],
-            dataset: [[80, 100, 60, 90, 150, 200, 100, 170, 100, 75, 120, 250, 170, 300, 280]],
-            series: ["energy consumption"],
-            label: 'percentage',
-            colours: [{fillColor: ["#FF0000", "#00FF00", "#FF0000", "##FFFF00", "#FFFF00", "#FF0000", "#FF0000", "#00FF00", "#FFFF00", "#00FF00", "#FF0000", "#FF0000", "#FF0000", "#FF0000", "#FF0000"]}],
-          
-            options: {barShowStroke: false},
-            options: {
-                // String - Template string for single tooltips
-                tooltipTemplate: "<%if (label){%><%=label %>: <%}%><%= value + '%' %>",
+/* bar chart View controller */
 
-
-                scaleLabel: "<%= value + '%' %>",
-            },
-
-            /* ctx : document.getElementById("locationBar").getContext("2d")
-
-
-
-            }
-
-        }
-
-
-
-)*/
-    
-.controller('chartMaker',function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
-
+.controller('barGraphController',function($scope, carrierService) {
+    $scope.barGraph = function() {
+        // Requesting the number of carriers from the REST API
         var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false);
+        xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
         xmlHttp.send(null);
+        // the variable where the amount of carriers is saved to
         var amountOfCarriers = xmlHttp.responseText;
-        /* ID of first Carrier */
-        var idCounter = 1;
         // the array variable where the converted content from the csv file will be.
         var carrierPercentageData;
         // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-        Papa.parse('django/dataInterface/percentages.csv?session=1', {
-                download: true,
-                dynamicTyping: true,
-                complete: function (results) {
-                    carrierPercentageData = results.data[1];
-                }
-            }
+        Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
+                                                                       dynamicTyping: true,
+                                                                       complete: function(results) {
+                                                                           carrierPercentageData =results.data[1];
+                                                                       }
+                                                                      }
         )
 
-        createBar(carrierId, carrierPercentageData[idCounter - 1]);
-
-        idCounter = idCounter + 1;
-        amountOfCarriers = amountOfCarriers - 1;
-
-
-        function createBar(carrier, percentageOfEnergy) {
-
-            var barChartData = {
-                labels: amountOfCarriers,
-                percentageOfEnergyRounded: percentageOfEnergy.toFixed(2),
-                datasets: [
-                    {
-                        yAxisLabel: "My Y Axis Label",
-                        fillColor: "rgba(220,220,220,0.5)",
-                        strokeColor: "rgba(220,220,220,0.8)",
-                        highlightFill: "rgba(220,220,220,0.75)",
-                        highlightStroke: "rgba(220,220,220,1)",
-                        data: carrierPercentageData
-
-
-                    }
-                ],
-
-
-            };
-            var carrierPercentageData;
-Papa.parse('django/dataInterface/percentages.csv?session=1',{download:true,
-                                                                dynamicTyping:true,
-                                                                 complete:function(results){
-                                                                    carrierPercentageData=results.data[1];
-                                                                    }
-                                                                    }
-)
-
-
-            var ctx = document.getElementById("mycanvas").getContext("2d");
-            window.myObjBar = new Chart(ctx).Bar(barChartData, {
-                responsive: true,
-                scaleLabel: "<%= value %> %",
-
-
-                showTooltips: false,
-                onAnimationComplete: function () {
-
-                    var ctx = this.chart.ctx;
-                    ctx.font = this.scale.font;
-                    ctx.fillStyle = this.scale.textColor
-                    ctx.textAlign = "center";
-                    ctx.textBaseline = "bottom";
-
-                    this.datasets.forEach(function (dataset) {
-                        dataset.bars.forEach(function (bar) {
-                            ctx.fillText(bar.value, bar.x, bar.y - 5);
-                        });
-                    })
-                }
-
-            });
-
-            var bars = myObjBar.datasets[0].bars;
-            for (i = 0; i < bars.length; i++) {
-                var color = "green";
-
-                if (bars[i].value <= 100) {
-                    color = "yellow";
-                }
-                else if (bars[i].value <= 150) {
-                    color = "green"
-
-
-                }
-                else if (bars[i].value <= 200) {
-                    color = "red"
-                }
-                else {
-                    color = "red"
-                }
-
-                bars[i].fillColor = color;
-                bars[i].highlightFill = color;
-
-            }
-            myObjBar.update(); //update the cahrt
-
-
+        // this array saves the percentage of each bar column/carrier
+        var carrierPercentageDataRounded = [];
+        // this array saves the color of each bar column/carrier
+        var carrierColorArray = [];
+        // this array saves the names of each bar column/carrier
+        var carrierArray = [];
+        /* ID of first Carrier */
+        var idCounter = 1;
+        // This while loop will fill the carrierArray with carrier names for the chart label
+        while (amountOfCarriers > 0) {
+            carrierArray.push("carrier " + idCounter)
+            idCounter = idCounter+1;
+            amountOfCarriers = amountOfCarriers -1;
         }
 
-        
+        /*  This for loop will round the percentage data and save it into a new array.
+            It will also fill the color array with the color, corresponding to the percentage of
+            the carrier. E.g. green is up to 102,5% , yellow is up 102,5 to 105% and everything above is red
+        */
+        for(i = 0; i < carrierPercentageData.length; i++) {
+            if(carrierPercentageData[i] > 1.05) {
+                carrierColorArray.push('rgba(255,23,68, 0.8)')
+                carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
+            } else if(carrierPercentageData[i] <= 1.025 ) {
+                carrierColorArray.push('rgba(0,191,165, 0.8)')
+                carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
+            } else {
+                carrierColorArray.push('rgba(255,255,141, 0.8)')
+                carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
+            }
+        }
 
+        /*  get the element where the bar chart should be displayed and
+            create the chart with different parameters.
+        */
+        var ctx = document.getElementById("barChart");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: carrierArray,
+                    datasets: [{
+                        label: 'Energy Consumption in %',
+                        data: carrierPercentageDataRounded,
+                        backgroundColor: carrierColorArray,
+                        borderColor: '(31,27,28, 0.8)',
+                        borderWidth: 1,
+                    }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
     }
-
-
-)
-
-
-
-
-
+})
