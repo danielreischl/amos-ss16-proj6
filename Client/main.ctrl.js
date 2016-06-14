@@ -417,7 +417,14 @@ which kind of data he wants to see. The default value is average energy consumpt
                                                                                           }
 	                                                                                      });
 
-
+	$scope.getListStyle = function(index) {
+	    if (index % 5 == 1) {
+		return {'clear': 'left'};
+	    }
+	    else {
+		return {};
+	    }
+	}
         // After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
         //carrierService.emptyCarrierArray();
         //uncheckAllCheckboxes();

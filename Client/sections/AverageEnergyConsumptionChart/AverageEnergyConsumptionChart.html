@@ -31,13 +31,20 @@
     <table>
         <tr>
             <td>
-                <md-button class="md-raised md-cornered"  ng-click="toggle()">Choose Carriers</md-button>
+                <div flex class = "carrierSelection">
+                  <label class = "carrierBox" ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
+                    <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
+                    <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
+                      {{carrier.id}}
+                    </div>
+                  </label>
+                </div>
             </td>
             <td>
                 <!-- ng-change is empty right now. this has to change, when iterations can be selected from the database -->
                 <select ng-model="selectedIteration" ng-change = "">
                     <option selected disabled  value="">Choose iteration</option>
-	                <option ng-repeat="x in iterations" value="{{x.id}}">{{x.name}}</option>
+	                <option ng-repeat="x in iterationDimensions" value="{{x.id}}">{{x.name}}</option>
                 </select>
             </td>
             <td>
