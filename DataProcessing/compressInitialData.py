@@ -527,15 +527,6 @@ iterationNumber = 0
 # The amount of carriers who entered drive 1 (Therefore starting with carrier 1) in the current run
 carriersThroughTheSystem = 1
 
-# DATA_PATH creates an OS independent file path to the data files that were input as string names
-# Initialize empty DATA_PATH array
-DATA_PATH = ["" for x in range(DATA_FILE_NAMES.__sizeof__())]
-
-# Set first data path
-# This is needed when the data is in a subfolder
-# DATA_PATH[0] = os.path.abspath(os.path.join("data", DATA_FILE_NAMES[0]))
-DATA_PATH[0] = os.path.abspath(DATA_FILE_NAMES[0])
-
 # First row of data frames
 initialData = pd.read_csv(os.path.splitext(fileName)[0] + "_modified.csv", DATA_SEPARATOR, low_memory=False,
                               header=0)
