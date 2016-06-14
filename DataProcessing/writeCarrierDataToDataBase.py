@@ -113,7 +113,7 @@ def moveFileToFolder(fileName, folderName):
 # Initialize Log-File
 # Creates or loads Log DataProcessing.log
 # Format of LogFile: mm/dd/yyyy hh:mm:ss PM LogMessage
-logging.basicConfig(filename='dataProcessing.log',level=logging.INFO,format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+logging.basicConfig(filename='/srv/DataProcessing/dataProcessing.log',level=logging.INFO,format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 # Reads ConfigFile
 config = ConfigParser.ConfigParser()

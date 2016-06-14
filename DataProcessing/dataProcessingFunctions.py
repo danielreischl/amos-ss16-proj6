@@ -36,14 +36,14 @@ import ConfigParser
 
 # Creates a TextFile "Running.txt" on Start to let writeCarrierDataToDataBase.py know that the script is still running
 def createRunningFile():
-    with open("Running.txt", "w") as text_file:
+    with open("/srv/DataProcessing/Running.txt", "w") as text_file:
         text_file.write("Running")
         logging.info("compressInitialData.py now running. 'Running.txt' created.")
 
 
 # Removes the status.txt file after the end of the simulation and writes its status to log file
 def deleteRunningFile():
-    os.remove("Running.txt")
+    os.remove("/srv/DataProcessing/Running.txt")
     logging.info("Terminating compressInitialData.py. 'Running.txt removed.")
 
 # Checks for .csv Files in particular folder and returns a list
