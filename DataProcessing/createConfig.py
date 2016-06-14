@@ -61,6 +61,7 @@ config.set('Simulation', 'Session', 1)
 config.set('Simulation', 'csv_seperator', ';')
 # Adds Keep Every X Rows
 config.set('Simulation', 'keep_every_x_rows', 100)
+# Adds name of File that should be loaded
 
 # Adds database parameters
 config.add_section("database_tables")

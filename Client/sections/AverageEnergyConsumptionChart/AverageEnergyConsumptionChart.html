@@ -64,14 +64,13 @@
     </table>
     <!-- average energy consumption chart. -->
 
-      <!-- The graph and the legend will be displayed in a table layout.
-    Through this layout, the legend will be displayed right next to the graph-->
+      <!-- The graph and the legend are displayed in a table layout.
+            The div class graphSize will make the display the graph dynamically, according to the window size of the browser
+            The div class graphLegend will display the legend of the graph right next to it-->
    <table >
        <tr>
            <td>
-               <!-- <div ng-init ="createAverageEnergyConsumptionChart()" id="AverageEnergyConsumptionChart" style="width:1400px; height:400px;"></div>-->
-                <div ng-init ="createAverageEnergyConsumptionChart()" id="AverageEnergyConsumptionChart"
-                     style="position: absolute; left: 20px; top: 20px; right: 20px; bottom: 20px;"></div>
+                <div class = "graphSize" ng-init ="createAverageEnergyConsumptionChart()" id="AverageEnergyConsumptionChart"></div>
            </td>
            <td>
                <div class = "graphLegend" id ="compareAverageEnergyConsumptionGraphLegend"></div>
