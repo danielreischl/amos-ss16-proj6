@@ -76,13 +76,13 @@ class testRunningFile (unittest.TestCase):
     def test_CreationOfRunningFile(self):
         res = True
         dataProcessingFunctions.createRunningFile()
-        self.assertEqual(res, os.path.exists('Running.txt'))
+        self.assertEqual(res, os.path.exists('/srv/DataProcessing/Running.txt'))
 
     # Tests if Running.txt is deleted
     def test_DeleteOfRunningFile(self):
         res = False
         dataProcessingFunctions.deleteRunningFile()
-        self.assertEqual(res, os.path.exists('Running.txt'))
+        self.assertEqual(res, os.path.exists('/srv/DataProcessing/Running.txt'))
 
 if __name__ == '__main__':
     unittest.main()
