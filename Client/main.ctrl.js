@@ -150,9 +150,9 @@ angular.module('app')
     $scope.dimensions = [
         {name : "Energy Consumption", id: 'energyConsumption'},
         {name : "Position", id: 'positionAbsolute'},
-	    {name : "Speed", id: 'speed'},
-	    {name : "Acceleration", id: 'acceleration'},
-	    {name : "drive", id : 'drive'},
+	{name : "Speed", id: 'speed'},
+	{name : "Acceleration", id: 'acceleration'},
+	{name : "drive", id : 'drive'},
     ]
 
     $scope.iterationDimensions = [
@@ -166,7 +166,7 @@ angular.module('app')
     $scope.createCompareGraph = function() {
 
         //ensure that the variable is empty, before saving the new request path into it
-        var carriersRequested = "";
+        //var carriersRequested = "";
 
 	$scope.carriersRequested = function() {
 	    // filter for the selected carriers
@@ -179,7 +179,7 @@ angular.module('app')
 
         // the url which should be requested will be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
-        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + $scope.selectedDimension + '&session=1'
+        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + $scope.selectedDimension + '&session=1';
 
         graph = new Dygraph(
 	        document.getElementById("compareGraph"),$scope.requestedUrl,
@@ -256,7 +256,7 @@ angular.module('app')
 
 /* controller for the AverageEnergyConsumption Chart. This chart will display the data over iterations. The user can select
 which kind of data he wants to see. The default value is average energy consumption.*/
-.controller('AverageEnergyConsumptionChart', function($scope, carrierService) {
+    .controller('AverageEnergyConsumptionChart', function($scope, carrierService, percentageService) {
 
     // get the array with the carriers the user wants to see in the graph.
     var carrierCompareList = carrierService.getCarrier();
@@ -273,8 +273,10 @@ which kind of data he wants to see. The default value is average energy consumpt
 		 'energyConsumptionTotal': 'W' };
 
     // default value for the dimension and yAxislabel
-    var selectedDimension = "energyConsumptionAverage";
-    var yAxisLabel = yAxisLabels[selectedDimension];
+    $scope.selectedDimension = "energyConsumptionAverage";
+    
+
+    $scope.selectedIteration = "lastTen";
 
     // the session requested from the database. For now it is fixed.
     var session = 1;
@@ -289,24 +291,35 @@ which kind of data he wants to see. The default value is average energy consumpt
     var amountOfCarriers = xmlHttp.responseText;
 
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
+    $scope.carriers = [];
+    for (var idCounter = 1; idCounter <= amountOfCarriers;idCounter++) {
+	var currentSelected = carrierService.hasCarrier(idCounter);
+        $scope.carriers.push({id:idCounter, selected:currentSelected});
+    }
+    
+    /**
     var arrayCarrier = [];
     var idCounter = 1;
     while(arrayCarrier.length < amountOfCarriers ) {
         arrayCarrier.push(idCounter);
         idCounter++;
     }
+    */
+    
     /* Filling the Dropdown menues with the items of the array. The number of checkboxes depend on the amount of carriers in the database*/
-    $scope.arrayCarrier = arrayCarrier;
+    //$scope.arrayCarrier = arrayCarrier;
 
     // showCheckBoxes is at startup false, because the checkboxes should be hidden.
-    $scope.showCheckBoxes = false;
+    //$scope.showCheckBoxes = false;
 
     // When the user clicks on the Button, showCheckBoxes changes to true/false, depending on the previous state.
-    $scope.toggle = function(){
-        $scope.showCheckBoxes = !$scope.showCheckBoxes;
-    }
+    //$scope.toggle = function(){
+    //    $scope.showCheckBoxes = !$scope.showCheckBoxes;
+    //}
 
     // This function is called, when a change is made in the checkbox field.
+
+    /*
     $scope.changeCarrierToCompare = function(event) {
         //if the carrier is already inside the comparison array, then it will be removed.
         if(!carrierService.addCarrier(event.target.id)) {
@@ -316,9 +329,10 @@ which kind of data he wants to see. The default value is average energy consumpt
             document.getElementById(event.target.id).checked = true;
         }
     }
+    */
 
     // create the dropdown menu for iterations. the id is corresponding to the key word used in the database to extract the dimension.
-    $scope.iterations = [
+    $scope.iterationDimensions = [
         {name : "Last 10 Iterations", id : 'lastTen'},
     ]
 
@@ -326,26 +340,29 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.dimensions = [
         {name : "Average Energy Consumption", id : 'energyConsumptionAverage'},
         {name : "Average Acceleration", id : 'accelerationAverage'},
-	    {name : "Average Speed", id: 'speedAverage'},
-	    {name : "Total Energy Consumption", id: 'energyConsumptionTotal'}
+	{name : "Average Speed", id: 'speedAverage'},
+	{name : "Total Energy Consumption", id: 'energyConsumptionTotal'}
     ]
 
+    // make percentage service available in html-view
+    // not very nice, try to refactor if possible
+    $scope.percentageService = percentageService;
 
      // This function receives the changes from the dropDown menu "dimensions" and changes the yAxis name of the graph and requests the needed data by changing the string name.
-     $scope.changeDimension = function() {
-	    selectedDimension = $scope.selectedDimension;
-	 }
+    // $scope.changeDimension = function() {
+    //	    selectedDimension = $scope.selectedDimension;
+    //	 }
 
     /* this functions creates the dygraph  from a data source and applies options to them*/
 
     $scope.createAverageEnergyConsumptionChart = function() {
 
         //ensure that the variable is empty, before saving the new request path into it
-        carriersRequested = "";
+        //carriersRequested = "";
         /* these loops have the purpose to see what carriers the user wants to compare
         and change request String path for the database. It will also set all checkboxes to true, which are corresponding to the carriers
         in the compare array */
-
+	/*
         if(carrierCompareList.length != 0) {
             for (var i = 0; i < carrierCompareList.length; i++) {
                 for (var carrier = 1; carrier <= amountOfCarriers; carrier++) {
@@ -363,16 +380,26 @@ which kind of data he wants to see. The default value is average energy consumpt
         } else {
             alert("You did not chose any Carriers to compare")
         }
+	*/
 
+	$scope.carriersRequested = function() {
+	    // filter for the selected carriers
+	    var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
+
+	    //join them with commas
+	    
+	    return selected.map(function(carrier){return carrier.id.toString();}).join();
+	}
+	
         // create the graph with the parameters set. The request path for the database depends on 3 parameters: session, carrierRequested, selectedDimension and type
         // the url which should be requested wil be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
-        $scope.requestedUrl = 'django/dataInterface/averageEnergyConsumption.csv?session='+session+'&carriers='+carriersRequested+'&dimension='+selectedDimension+''+'&type=last10'
+        $scope.requestedUrl = 'django/dataInterface/averageEnergyConsumption.csv?session='+session+'&carriers='+$scope.carriersRequested()+'&dimension='+$scope.selectedDimension+'&type=last10';
 
         graph = new Dygraph(
 	       document.getElementById("AverageEnergyConsumptionChart"),$scope.requestedUrl ,
-	                                                                                     {title: yAxisLabels[selectedDimension],
-	                                                                                      ylabel: yAxisLabels[selectedDimension]+' in '+units[selectedDimension],
+	                                                                                     {title: yAxisLabels[$scope.selectedDimension],
+	                                                                                      ylabel: yAxisLabels[$scope.selectedDimension]+' in '+units[$scope.selectedDimension],
 	                                                                                      xlabel: 'Iteration',
 	                                                                                      labelsSeparateLines: true,
 	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
@@ -392,11 +419,11 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 
         // After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
-        carrierService.emptyCarrierArray();
-        uncheckAllCheckboxes();
+        //carrierService.emptyCarrierArray();
+        //uncheckAllCheckboxes();
     }
 
-
+    /*
     function uncheckAllCheckboxes() {
         var checkboxElements = document.getElementsByTagName('input');
         for (var i = 0; i < checkboxElements.length; i++) {
@@ -405,10 +432,10 @@ which kind of data he wants to see. The default value is average energy consumpt
             }
         }
     }
-
+    */
      /* This function empties the carriers in the comparison on page leave.
      If the user leaves the current html snippet/template then, this function will notice that and trigger the function "emptyyCarrierArray" */
-     $scope.$on("$destroy", function(){
+    $scope.$on("$destroy", function(){
          carrierService.emptyCarrierArray();
      });
 
