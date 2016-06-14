@@ -556,9 +556,9 @@ which kind of data he wants to see. The default value is average energy consumpt
            Any value between is coded yellow, because it should warn the user, that the energy
            is higher than the very first iteration.
          */
-        if(percentageOfEnergy > 1.05) {
+        if(percentageOfEnergy > 105) {
             context.fillStyle = '#FF1744';
-        } else if(percentageOfEnergy <= 1.025 ) {
+        } else if(percentageOfEnergy <= 102.5 ) {
             context.fillStyle = '#00BFA5';
         } else {
             context.fillStyle = "#FFFF8D";
@@ -630,10 +630,10 @@ which kind of data he wants to see. The default value is average energy consumpt
                 the carrier. E.g. green is up to 102,5% , yellow is up 102,5 to 105% and everything above is red
             */
             for(i = 0; i < carrierPercentageData.length; i++) {
-                if(carrierPercentageData[i] > 1.05) {
+                if(carrierPercentageData[i] > 105) {
                     carrierColorArray.push('rgba(255,23,68, 0.8)')
                     carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
-                } else if(carrierPercentageData[i] <= 1.025 ) {
+                } else if(carrierPercentageData[i] <= 102.5 ) {
                     carrierColorArray.push('rgba(0,191,165, 0.8)')
                     carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
                 } else {
