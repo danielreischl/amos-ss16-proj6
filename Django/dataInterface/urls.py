@@ -44,6 +44,8 @@ urlpatterns = [
     # URL that provides rawData as JSON
     url (r'^rawData.json', views.rawDataJson, name='rawDataJSON'),
     # URL that starts the simulation
-    url (r'^simulation.start', views.startSimulation, name = 'startSimulation')
+    url (r'^simulation.start', views.startSimulation, name = 'startSimulation'),
+    # URL that returns all files as a string
+    url(r'^simulation.files', views.simulationFiles, name='simulationFiles'),
 
 ]

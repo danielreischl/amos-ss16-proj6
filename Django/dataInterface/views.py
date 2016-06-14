@@ -294,6 +294,22 @@ def deleteDatabaseValues (request):
         # Any Other parameter returns 'FAIL'
         return HttpResponse('FAIL')
 
+def simulationFiles (request):
+
+    # reads out all files in the InitialData - Folder
+    files = dataProcessingFunctions.checkForCSVFilesInFolder('/srv/DataProcessing/InitialData')
+
+    # Defines FileNamesAsString
+    fileNamesAsString = ""
+
+    # Adds all filenames to the string
+    for file in files:
+        fileNamesAsString = fileNamesAsString + file + ','
+
+    # returns the string
+    return HttpResponse (fileNamesAsString[0, len(fileNamesAsString-1)])
+
+
 def resetSimulation (request):
     # Deletes all DatabaseValues and sets the Session in the cofigFile to Zero
 
@@ -328,7 +344,7 @@ def startSimulation (request):
 
     process = subprocess.Popen('srv/DataProcessing/initDataProcessingSimulation.sh', shell=True, stdout=subprocess.PIPE)
     process.wait()
-    HttpResponse(process.returncode)
+    return HttpResponse(process.returncode)
 
 
 def averageEnergyConsumption (request):
