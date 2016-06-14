@@ -613,55 +613,61 @@ which kind of data he wants to see. The default value is average energy consumpt
         var carrierArray = [];
         /* ID of first Carrier */
         var idCounter = 1;
-        // This while loop will fill the carrierArray with carrier names for the chart label
-        while (amountOfCarriers > 0) {
-            carrierArray.push("carrier " + idCounter)
-            idCounter = idCounter+1;
-            amountOfCarriers = amountOfCarriers -1;
-        }
 
-        /*  This for loop will round the percentage data and save it into a new array.
-            It will also fill the color array with the color, corresponding to the percentage of
-            the carrier. E.g. green is up to 102,5% , yellow is up 102,5 to 105% and everything above is red
-        */
-        for(i = 0; i < carrierPercentageData.length; i++) {
-            if(carrierPercentageData[i] > 1.05) {
-                carrierColorArray.push('rgba(255,23,68, 0.8)')
-                carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
-            } else if(carrierPercentageData[i] <= 1.025 ) {
-                carrierColorArray.push('rgba(0,191,165, 0.8)')
-                carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
-            } else {
-                carrierColorArray.push('rgba(255,255,141, 0.8)')
-                carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
+        // timer is set to 1 second. this wait time is needed to fetch all data from the database
+        $timeout(createBarChartView, 1000);
+
+        function createBarChartView() {
+            // This while loop will fill the carrierArray with carrier names for the chart label
+            while (amountOfCarriers > 0) {
+                carrierArray.push("carrier " + idCounter)
+                idCounter = idCounter+1;
+                amountOfCarriers = amountOfCarriers -1;
             }
-        }
 
-        /*  get the element where the bar chart should be displayed and
-            create the chart with different parameters.
-        */
-        var ctx = document.getElementById("barChart");
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: carrierArray,
-                    datasets: [{
-                        label: 'Energy Consumption in %',
-                        data: carrierPercentageDataRounded,
-                        backgroundColor: carrierColorArray,
-                        borderColor: '(31,27,28, 0.8)',
-                        borderWidth: 1,
-                    }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero:true
-                        }
-                    }]
+            /*  This for loop will round the percentage data and save it into a new array.
+                It will also fill the color array with the color, corresponding to the percentage of
+                the carrier. E.g. green is up to 102,5% , yellow is up 102,5 to 105% and everything above is red
+            */
+            for(i = 0; i < carrierPercentageData.length; i++) {
+                if(carrierPercentageData[i] > 1.05) {
+                    carrierColorArray.push('rgba(255,23,68, 0.8)')
+                    carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
+                } else if(carrierPercentageData[i] <= 1.025 ) {
+                    carrierColorArray.push('rgba(0,191,165, 0.8)')
+                    carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
+                } else {
+                    carrierColorArray.push('rgba(255,255,141, 0.8)')
+                    carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
                 }
             }
-        });
+
+            /*  get the element where the bar chart should be displayed and
+                create the chart with different parameters.
+            */
+            var ctx = document.getElementById("barChart");
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: carrierArray,
+                        datasets: [{
+                            label: 'Energy Consumption in %',
+                            data: carrierPercentageDataRounded,
+                            backgroundColor: carrierColorArray,
+                            borderColor: '(31,27,28, 0.8)',
+                            borderWidth: 1,
+                        }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+        }
     }
 })
