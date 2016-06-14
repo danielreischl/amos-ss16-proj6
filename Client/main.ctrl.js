@@ -541,7 +541,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         var centerX = canvas.width / 2;
         var centerY = canvas.height / 2;
         var radius = 60;
-        var percentageOfEnergyRounded = percentageOfEnergy.toFixed(2);
+        var percentageOfEnergy = percentageOfEnergy * 100;
 
         context.beginPath();
         context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -573,7 +573,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         // textAllign center will allign the text relative to the borders of the canvas
         context.textAlign = 'center';
         context.fillText(carrier, centerX, centerY - 7);
-        context.fillText(percentageOfEnergyRounded*100 + "%", centerX, centerY + 12);
+        context.fillText(percentageOfEnergyRounded.toFixed() + "%", centerX, centerY + 12);
     }
 }
 
