@@ -495,87 +495,78 @@ DATA_SEPARATOR = config.get('Simulation','csv_seperator')
 KEEP_EVERY_X_ROW = config.getint('Simulation','keep_every_x_rows')
 # Current Session
 session = config.getint('Simulation','session')
-
-
-# Calls function dataProcessingFunctions.checkForCSVFilesInFolder to get back all csv Files saved in InitialData
-DATA_FILE_NAMES = dataProcessingFunctions.checkForCSVFilesInFolder("InitialData")
+# FileName that should be imported
+fileName = config.get('Simulation', 'name_of_imported_file')
 
 # Checks if a File is added to DATA_FILE_NAMES. If not it is terminating the script
-if not dataProcessingFunctions.check_folder(DATA_FILE_NAMES):
-    print('No Files in Folder')
+if fileName == '':
+    print('No File selected')
     # Calls funtion to remove running file
     dataProcessingFunctions.deleteRunningFile()
     # Terminates the script
     sys.exit()
 
-print(DATA_FILE_NAMES)
+# Calls modifyCSVFile function
+amountOfDrives = modifyCSVFile(fileName)
 
-for fileName in DATA_FILE_NAMES:
+# Variables
+# Array that saves for every drive which carrier is on it
+driveXHasCarrier = np.zeros(amountOfDrives)
+# This is where all the data goes before exporting to CSV
+# carrierData[carrier number][time = 0, pos = 1, energy consumption = 2][position of array]
+carrierData = np.zeros((AMOUNT_OF_CARRIERS, 4, 100))
+# Here is stored in which row the last entry of carrier data was made for every carrier
+# (This could also be calculated by why not store it, since its used frequently)
+currentPositionAtCarrierData = np.zeros(AMOUNT_OF_CARRIERS)
+# Saves the last position on the drive of every carrier
+lastPositionOfCarrier = np.zeros(AMOUNT_OF_CARRIERS)
+# Number of complete runs through the system
+driveXHasCarrierWaiting = np.zeros(amountOfDrives)
+# Number of Iterations
+iterationNumber = 0
+# The amount of carriers who entered drive 1 (Therefore starting with carrier 1) in the current run
+carriersThroughTheSystem = 1
 
-    # Calls modifyCSVFile function
-    amountOfDrives = modifyCSVFile(fileName)
+# DATA_PATH creates an OS independent file path to the data files that were input as string names
+# Initialize empty DATA_PATH array
+DATA_PATH = ["" for x in range(DATA_FILE_NAMES.__sizeof__())]
 
-    # Variables
-    # Array that saves for every drive which carrier is on it
-    driveXHasCarrier = np.zeros(amountOfDrives)
-    # This is where all the data goes before exporting to CSV
-    # carrierData[carrier number][time = 0, pos = 1, energy consumption = 2][position of array]
-    carrierData = np.zeros((AMOUNT_OF_CARRIERS, 4, 100))
-    # Here is stored in which row the last entry of carrier data was made for every carrier
-    # (This could also be calculated by why not store it, since its used frequently)
-    currentPositionAtCarrierData = np.zeros(AMOUNT_OF_CARRIERS)
-    # Saves the last position on the drive of every carrier
-    lastPositionOfCarrier = np.zeros(AMOUNT_OF_CARRIERS)
-    # Number of complete runs through the system
-    driveXHasCarrierWaiting = np.zeros(amountOfDrives)
-    #
-    iterationNumber = 0
-    # The amount of carriers who entered drive 1 (Therefore starting with carrier 1) in the current run
-    carriersThroughTheSystem = 1
+# Set first data path
+# This is needed when the data is in a subfolder
+# DATA_PATH[0] = os.path.abspath(os.path.join("data", DATA_FILE_NAMES[0]))
+DATA_PATH[0] = os.path.abspath(DATA_FILE_NAMES[0])
 
-    # DATA_PATH creates an OS independent file path to the data files that were input as string names
-    # Initialize empty DATA_PATH array
-    DATA_PATH = ["" for x in range(DATA_FILE_NAMES.__sizeof__())]
-
-    # Set first data path
-    # This is needed when the data is in a subfolder
-    # DATA_PATH[0] = os.path.abspath(os.path.join("data", DATA_FILE_NAMES[0]))
-    DATA_PATH[0] = os.path.abspath(DATA_FILE_NAMES[0])
-
-    # First row of data frames
-    initialData = pd.read_csv(os.path.splitext(fileName)[0] + "_modified.csv", DATA_SEPARATOR, low_memory=False,
+# First row of data frames
+initialData = pd.read_csv(os.path.splitext(fileName)[0] + "_modified.csv", DATA_SEPARATOR, low_memory=False,
                               header=0)
-    #    Extracting the DriveNo of the first loaded File in DATA_PATH
-    # Iterates each row and afterwards each drive
-    #  Calls compressData with a pd.Series. The values are:
-    # ms, No. of Drive, Energy Consmption, Position
-    for index, row in initialData.iterrows():
-        for drive in range(0, amountOfDrives):
-            time = int(float(str(row['ms']).replace(',', '.')))
-            position = float(str(row['position' + str(drive)]).replace(',', '.'))
-            energy = float(str(row['energy' + str(drive)]).replace(',', '.'))
-            processData(time, drive + 1, position, energy)
-            sleep(WAIT_TIME_IN_SECONDS)
+#    Extracting the DriveNo of the first loaded File in DATA_PATH
+# Iterates each row and afterwards each drive
+#  Calls compressData with a pd.Series. The values are:
+# ms, No. of Drive, Energy Consmption, Position
+for index, row in initialData.iterrows():
+    for drive in range(0, amountOfDrives):
+        time = int(float(str(row['ms']).replace(',', '.')))
+        position = float(str(row['position' + str(drive)]).replace(',', '.'))
+        energy = float(str(row['energy' + str(drive)]).replace(',', '.'))
+        processData(time, drive + 1, position, energy)
+        sleep(WAIT_TIME_IN_SECONDS)
 
-    # Moves the processed data files to InitialDataArchive
-    moveFileToFolder(fileName, "InitialDataArchive")
+# Delete the "_modified" csv file
+os.remove(os.path.splitext(fileName)[0] + "_modified.csv")
 
-    # Delete the "_modified" csv file
-    os.remove(os.path.splitext(fileName)[0] + "_modified.csv")
+# Inizialize DataFrame sessiondata columns based
+sessiondata = pd.DataFrame(
+    columns=['session', 'fileName', 'amountOfCarriers', 'status'], index=['1'])
+# Adding previous extracted and calculated values to DataFrame
+sessiondata.loc['1'] = pd.Series(
+    {'session': session, 'fileName': os.path.splitext(fileName)[0], 'amountOfCarriers': AMOUNT_OF_CARRIERS, 'status': True,})
 
-    # Inizialize DataFrame sessiondata columns based
-    sessiondata = pd.DataFrame(
-        columns=['session', 'fileName', 'amountOfCarriers', 'status'], index=['1'])
-    # Adding previous extracted and calculated values to DataFrame
-    sessiondata.loc['1'] = pd.Series(
-        {'session': session, 'fileName': os.path.splitext(fileName)[0], 'amountOfCarriers': AMOUNT_OF_CARRIERS, 'status': True,})
+# calls function to load the sessiondata data into the database
+dataProcessingFunctions.write_dataframe_to_database(sessiondata, config.get('database_tables', 'sessiondata'))
 
-    # calls function to load the sessiondata data into the database
-    dataProcessingFunctions.write_dataframe_to_database(sessiondata, config.get('database_tables', 'sessiondata'))
-
-    # Counts up session for each filename
-    session = session + 1
-    dataProcessingFunctions.updated_config('Simulation', 'session', session)
+# Counts up session for each filename
+session = session + 1
+dataProcessingFunctions.updated_config('Simulation', 'session', session)
 
 # Calls Funcion to remove RunningFile
 dataProcessingFunctions.deleteRunningFile()
