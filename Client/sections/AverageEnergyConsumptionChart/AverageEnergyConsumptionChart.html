@@ -41,31 +41,28 @@
                 </div>
             </td>
             <td>
-                <!-- ng-change is empty right now. this has to change, when iterations can be selected from the database -->
-                <select ng-model="selectedIteration" ng-change = "">
-                    <option selected disabled  value="">Choose iteration</option>
-	                <option ng-repeat="x in iterationDimensions" value="{{x.id}}">{{x.name}}</option>
-                </select>
+              <!-- ng-change is empty right now. this has to change, when iterations can be selected from the database -->
+	      <div class = "iterationSelection">
+		<label class = "iterationBox" ng-repeat="iterOption in iterationDimensions">
+		  <input type="radio" name = "iterOption" ng-value="iterOption.id" ng-model="$parent.selectedIteration"/>
+		  <div>
+		    {{iterOption.name}}
+		  </div>
+		</label>
+              </div>
             </td>
             <td>
-                <select ng-model="selectedDimension" ng-change = "changeDimension()">
-                    <option selected disabled  value="">Choose Dimension</option>
-	                <option ng-repeat="x in dimensions" value="{{x.id}}">{{x.name}}</option>
-                    </select>
+	      <div class = "dimensionSelection">
+		<label class = "iterationBox" ng-repeat="dimension in dimensions">
+		  <input type="radio" name = "dimension" ng-value="dimension.id" ng-model="$parent.selectedDimension"/>
+		  <div>
+		    {{dimension.name}}
+		  </div>
+		</label>           
+              </div>
             </td>
             <td>
                  <md-button class="md-raised md-cornered"  ng-click="createAverageEnergyConsumptionChart()">Refresh</md-button>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div ng-show="showCheckBoxes">
-                    <ul>
-                        <li ng-repeat="carrier in arrayCarrier" style=" color: black;  list-style-type: none; font-size: 20px;">
-                            <input type="checkbox" id = "{{carrier}}" ng-click="changeCarrierToCompare($event)"> Carrier {{carrier}}
-                        </li>
-                    </ul>
-                </div>
             </td>
         </tr>
     </table>
