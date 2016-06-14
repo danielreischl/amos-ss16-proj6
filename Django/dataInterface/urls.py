@@ -43,5 +43,7 @@ urlpatterns = [
     url(r'^simulation.reset', views.resetSimulation, name='simulationReset'),
     # URL that provides rawData as JSON
     url (r'^rawData.json', views.rawDataJson, name='rawDataJSON'),
+    # URL that starts the simulation
+    url (r'^simulation.start', views.startSimulation, name = 'startSimulation')
 
 ]
