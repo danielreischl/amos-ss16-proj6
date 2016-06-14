@@ -307,7 +307,7 @@ def simulationFiles (request):
         fileNamesAsString = fileNamesAsString + file + ','
 
     # returns the string
-    return HttpResponse (fileNamesAsString[0, len(fileNamesAsString)-1])
+    return HttpResponse (fileNamesAsString[0: len(fileNamesAsString)-1])
 
 
 def resetSimulation (request):
@@ -342,9 +342,10 @@ def startSimulation (request):
     dataProcessingFunctions.updated_config('Simulation', 'waittime_data_reload', requestedwtDataReload)
     dataProcessingFunctions.updated_config('Simulation', 'name_of_imported_file', requestedfileName)
 
-    process = subprocess.Popen('srv/DataProcessing/initDataProcessingSimulation.sh', shell=True, stdout=subprocess.PIPE)
-    process.wait()
-    return HttpResponse(process.returncode)
+    # Starts both DataProcessing Scripts in the backround
+    subprocess.Popen(["python", "srv/DataProcessing/compressInitialData.py"])
+    subprocess.Popen(["python", "srv/DataProcessing/writeCarrierDataToDataBase.py"])
+    return HttpResponse('Running')
 
 
 def averageEnergyConsumption (request):
