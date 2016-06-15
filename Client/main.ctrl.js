@@ -703,7 +703,7 @@ which kind of data he wants to see. The default value is average energy consumpt
        var compareResult =  $scope.currentDataFileRunning.localeCompare("Stopped");
 
        if (compareResult == 0) {
-           var urlString = '/django/dataInterface/simulation.start?wtSimulation=' + $scope.waitForCompression + '&wtFirstDataload=' + $scope.waitForFirstDataLoad + '&wtDataReload=' + $scope.waitForDataReload + '&requestedAmountOfCarriers=' + $scope.amountOfCarriers + '&fileName=InitialData/' + $scope.selectedDataFile
+           var urlString = 'django/dataInterface/simulation.start?wtSimulation=' + $scope.waitForCompression + '&wtFirstDataload=' + $scope.waitForFirstDataLoad + '&wtDataReload=' + $scope.waitForDataReload + '&requestedAmountOfCarriers=' + $scope.amountOfCarriers + '&fileName=InitialData/' + $scope.selectedDataFile
            var xmlHttp = new XMLHttpRequest();
            xmlHttp.open( "GET", urlString, false);
            xmlHttp.send(null);
