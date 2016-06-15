@@ -345,8 +345,8 @@ def startSimulation (request):
     dataProcessingFunctions.updated_config('Simulation', 'name_of_imported_file', requestedfileName)
 
     # Starts both DataProcessing Scripts in the backround
-    subprocess.Popen(["python", "srv/DataProcessing/compressInitialData.py"], cwd='srv/DataProcessing')
-    subprocess.Popen(["python", "srv/DataProcessing/writeCarrierDataToDataBase.py"],cwd='srv/DataProcessing')
+    subprocess.Popen(["python", "srv/DataProcessing/compressInitialData.py"], cwd='/srv/DataProcessing')
+    subprocess.Popen(["python", "srv/DataProcessing/writeCarrierDataToDataBase.py"],cwd='/srv/DataProcessing')
     return HttpResponse('Running')
 
 
