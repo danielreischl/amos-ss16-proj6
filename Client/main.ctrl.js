@@ -205,6 +205,8 @@ angular.module('app')
                 }
 	            });
         AverageEnergyConsumptionChart
+        $scope.ts = new Date();
+
     }
 
     $scope.getListStyle = function(index) {
