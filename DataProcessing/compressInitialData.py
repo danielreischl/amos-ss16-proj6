@@ -271,9 +271,13 @@ def compressData(carrier):
                 time2 = carrierData[carrier - 1][0][i] - firstTimeStamp
                 pos1 = carrierData[carrier - 1][1][i - 1]
                 pos2 = carrierData[carrier - 1][1][i]
+                print ("")
+                print (str(pos1))
+                print (str(pos2))
 
                 # Linear interpolation of the position that the carrier was at at the missing time stamp
                 posInter = pos1 + ((pos2 - pos1) * ((nextTimeStampValue - time1) / (time2 - time1)))
+                print (str(posInter))
 
                 # Because 1: The energy consumption is the total that was consumed during the last time stamp
                 # and 2: The algorithm will continue with the next time stamp in the next iteration cicle

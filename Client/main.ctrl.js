@@ -89,6 +89,7 @@ angular.module('app')
 /* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/
 .controller('compareCircleGraph', function($scope, carrierService, percentageService) {
 
+
     // Get the array with the carriers that were selected from the carrierService
     var carrierCompareList = carrierService.getCarrier();
 
@@ -146,6 +147,8 @@ angular.module('app')
     //
     // Start of $scope
     //
+    //Updates the current timestamp
+    $scope.ts = new Date();
 
     $scope.dimensions = [
         {name : "Energy Consumption", id: 'energyConsumption'},
@@ -201,7 +204,7 @@ angular.module('app')
                     },
                 }
 	            });
-
+        AverageEnergyConsumptionChart
     }
 
     $scope.getListStyle = function(index) {
@@ -271,6 +274,9 @@ which kind of data he wants to see. The default value is average energy consumpt
 		 'accelerationAverage' : '?',
 		 'speedAverage': '?',
 		 'energyConsumptionTotal': 'W' };
+
+    // Sets the initial time for the time stamp
+    $scope.ts = new Date();
 
     // default value for the dimension and yAxislabel
     $scope.selectedDimension = "energyConsumptionAverage";
@@ -428,6 +434,9 @@ which kind of data he wants to see. The default value is average energy consumpt
         // After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
         //carrierService.emptyCarrierArray();
         //uncheckAllCheckboxes();
+
+        // Updates the  time for the time stamp
+        $scope.ts = new Date();
     }
 
     /*
@@ -453,7 +462,7 @@ which kind of data he wants to see. The default value is average energy consumpt
  and upon receiving an event, it should trigger the update circle button*/
 .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
     // Initializes time stamp
-    $scope.timeStamp = new Date();
+    $scope.ts = new Date();
 /* This function will highlight the carrier and save the id of the carrier inside the comaprison arrary in app.service.js*/
     $scope.selectCarrier = function(event) {
         // id = carrier x
@@ -490,7 +499,8 @@ which kind of data he wants to see. The default value is average energy consumpt
     }
 
     $scope.refresh = function() {
-        $scope.$apply();
+        // TODO refresh circles also
+        $scope.ts = new Date();
     }
 
 /* create the circle page upon page load. */
