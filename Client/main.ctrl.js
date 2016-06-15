@@ -574,6 +574,9 @@ which kind of data he wants to see. The default value is average energy consumpt
         context.fillText(carrier, centerX, centerY - 7);
         context.fillText((percentageOfEnergy*100).toFixed() + "%", centerX, centerY + 12);
     }
+
+    // Refreshes the time of last data load
+    $scope.timeStamp = new Date();
 }
 
 })
