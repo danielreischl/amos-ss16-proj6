@@ -452,8 +452,8 @@ which kind of data he wants to see. The default value is average energy consumpt
 /* Refresh the circle Page. The purpose of this controller is listen to the Button
  and upon receiving an event, it should trigger the update circle button*/
 .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
-
-
+    // Initializes time stamp
+    $scope.timeStamp = new Date();
 /* This function will highlight the carrier and save the id of the carrier inside the comaprison arrary in app.service.js*/
     $scope.selectCarrier = function(event) {
         // id = carrier x
@@ -487,6 +487,10 @@ which kind of data he wants to see. The default value is average energy consumpt
             context.strokeStyle = "#003300";
             context.stroke();
         }
+    }
+
+    $scope.refresh = function() {
+        $scope.$apply();
     }
 
 /* create the circle page upon page load. */
@@ -574,9 +578,6 @@ which kind of data he wants to see. The default value is average energy consumpt
         context.fillText(carrier, centerX, centerY - 7);
         context.fillText((percentageOfEnergy*100).toFixed() + "%", centerX, centerY + 12);
     }
-
-    // Refreshes the time of last data load
-    $scope.timeStamp = new Date();
 }
 
 })
