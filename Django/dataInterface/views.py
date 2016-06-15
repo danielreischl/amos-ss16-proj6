@@ -55,7 +55,7 @@ def funcAmountOfCarriers(session):
     return timestampdata.objects.filter(session=session).aggregate(Max('carrier')).get('carrier__max')
 # Returns the most recent session
 def funcRecentSession():
-    return timestampdata.objects.aggregate(Max('session')).get('session__max')
+    return timestampdata.objects.all().aggregate(Max('session')).get('session__max')
 # Returns one percent value for CarrierView & BarchartView
 def funcPecentageOfConsumption (session, carrier):
     # Consumption at first iteration
