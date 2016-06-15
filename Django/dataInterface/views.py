@@ -55,7 +55,7 @@ def funcAmountOfCarriers(session):
     return timestampdata.objects.filter(session=session).aggregate(Max('carrier')).get('carrier__max')
 # Returns the most recent session
 def funcRecentSession():
-    return timestampdata.objects.aggregate(Max('session')).get('session__max')
+    return timestampdata.objects.all().aggregate(Max('session')).get('session__max')
 # Returns one percent value for CarrierView & BarchartView
 def funcPecentageOfConsumption (session, carrier):
     # Consumption at first iteration
@@ -345,8 +345,8 @@ def startSimulation (request):
     dataProcessingFunctions.updated_config('Simulation', 'name_of_imported_file', requestedfileName)
 
     # Starts both DataProcessing Scripts in the backround
-    subprocess.Popen(["python", "srv/DataProcessing/compressInitialData.py"], cwd='/srv/DataProcessing')
-    subprocess.Popen(["python", "srv/DataProcessing/writeCarrierDataToDataBase.py"],cwd='/srv/DataProcessing')
+    subprocess.Popen(["python", "/srv/DataProcessing/compressInitialData.py"], cwd='/srv/DataProcessing')
+    subprocess.Popen(["python", "/srv/DataProcessing/writeCarrierDataToDataBase.py"],cwd='/srv/DataProcessing')
     return HttpResponse('Running')
 
 
@@ -381,8 +381,13 @@ def averageEnergyConsumption (request):
     if requestedType == "last10":
         # If the last 10 iterations are requested, substract 10 from maxIterationOfAllCarriers if
         # maxIterationOfAllCarriers is larger then 10, else startIteration is 1
-        if maxIterationOfAllCarriers > 10:
-            startIterationOfAllCarriers = maxIterationOfAllCarriers - 10
+        if maxIterationOfAllCarriers > 9:
+            startIterationOfAllCarriers = maxIterationOfAllCarriers - 9
+        else:
+            startIterationOfAllCarriers = 1
+    elif requestedType == "last3":
+        if maxIterationOfAllCarriers > 2:
+            startIterationOfAllCarriers = maxIterationOfAllCarriers - 2
         else:
             startIterationOfAllCarriers = 1
     elif requestedType == "all":
@@ -458,5 +463,13 @@ def percentageForCircleAndBarChart(request):
 
     # Returns CSV-File
     return response
+
+def fileUpload(request):
+    fileName = request['fileName']
+    file = request.FILES['file']
+    with open('/srv/DataProcessing/InitialData/' + fileName, 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
+    return HttpResponse('Success')
 
 

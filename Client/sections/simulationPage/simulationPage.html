@@ -95,4 +95,13 @@
         <button ng-click="stopSimulation()">Stop Simulation</button>
     </body>
 
+    <div class = "fileUpload">
+      <form action="django/dataInterface/fileUpload.html" method="post" enctype="multipart/form-data">
+	<p> Choose csv - File: <br/>
+	  <input name="fileName" id="fileName">
+	  <input name="file" type="file" accept="text/csv"/>
+	</p>
+	<button type="button">Upload</button> </form>
+    </div>
+
 </div>
