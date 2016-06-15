@@ -464,4 +464,12 @@ def percentageForCircleAndBarChart(request):
     # Returns CSV-File
     return response
 
+def fileUpload(request):
+    fileName = request['fileName']
+    file = request.FILES['file']
+    with open('/srv/DataProcessing/InitialData/' + fileName, 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
+    return HttpResponse('Success')
+
 
