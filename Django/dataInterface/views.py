@@ -381,8 +381,13 @@ def averageEnergyConsumption (request):
     if requestedType == "last10":
         # If the last 10 iterations are requested, substract 10 from maxIterationOfAllCarriers if
         # maxIterationOfAllCarriers is larger then 10, else startIteration is 1
-        if maxIterationOfAllCarriers > 10:
-            startIterationOfAllCarriers = maxIterationOfAllCarriers - 10
+        if maxIterationOfAllCarriers > 9:
+            startIterationOfAllCarriers = maxIterationOfAllCarriers - 9
+        else:
+            startIterationOfAllCarriers = 1
+    elif requestedType == "last3":
+        if maxIterationOfAllCarriers > 2:
+            startIterationOfAllCarriers = maxIterationOfAllCarriers - 2
         else:
             startIterationOfAllCarriers = 1
     elif requestedType == "all":

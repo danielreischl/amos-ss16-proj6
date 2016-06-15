@@ -282,7 +282,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.selectedDimension = "energyConsumptionAverage";
     
 
-    $scope.selectedIteration = "lastTen";
+    $scope.selectedIteration = "last10";
 
     // the session requested from the database. For now it is fixed.
     var session = 1;
@@ -339,7 +339,9 @@ which kind of data he wants to see. The default value is average energy consumpt
 
     // create the dropdown menu for iterations. the id is corresponding to the key word used in the database to extract the dimension.
     $scope.iterationDimensions = [
-        {name : "Last 10 Iterations", id : 'lastTen'},
+        {name : "Last 10 Iterations", id : 'last10'},
+        {name : "Last 3 Iterations", id : 'last3'},
+        {name : "All", id : 'all'}
     ]
 
     // create the dropdown menu for dimensions. the id is corresponding to the key word used in the database to extract the dimension.
