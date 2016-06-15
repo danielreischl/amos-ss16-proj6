@@ -672,3 +672,91 @@ which kind of data he wants to see. The default value is average energy consumpt
         }
     }
 })
+
+.controller('simulationPageController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
+
+
+   // Displays the currently selected Data File
+    // TODO dynamically obtain from backend
+    $scope.currentDataFile = getCurrentDataFileName();
+    $scope.selectedDataFile = getCurrentDataFileName();
+
+    // States if the simulation process is still running or has already ended
+    // TODO dynamically obtain from backend
+    $scope.currentDataFileRunning = "Running";
+
+    // This saves all Data File Names that are stored on the server
+    $scope.dataFileNames = getArrayOfDataFiles();
+
+    // Values for starting up the new simulation
+    $scope.amountOfCarriers = 15;
+    $scope.waitForCompression = 0;
+    $scope.waitForFirstDataLoad = 30;
+    $scope.waitForDataReload = 30;
+    // Example value for handling invalid inputs in the number fileds
+    //$scope.example = 12;
+    //$scope.onlyNumbers = /^\i+$/;
+
+    //Starts the simulation by calling the website link
+    $scope.startSimulation = function() {
+
+       var compareResult =  $scope.currentDataFileRunning.localeCompare("Stopped");
+
+       if (compareResult == 0) {
+           var urlString = '/django/dataInterface/simulation.start?wtSimulation=' + $scope.waitForCompression + '&wtFirstDataload=' + $scope.waitForFirstDataLoad + '&wtDataReload=' + $scope.waitForDataReload + '&requestedAmountOfCarriers=' + $scope.amountOfCarriers + '&fileName=InitialData/' + $scope.selectedDataFile
+           var xmlHttp = new XMLHttpRequest();
+           xmlHttp.open( "GET", urlString, false);
+           xmlHttp.send(null);
+           var returnString  = xmlHttp.responseText;
+           $scope.currentDataFileRunning = returnString;
+           $scope.currentDataFile = $scope.selectedDataFile;
+       } else {
+           alert("Stop simulation before starting!");
+       }
+    };
+
+    //Starts the simulation by calling the website link
+    $scope.stopSimulation = function() {
+
+       var compareResult =  $scope.currentDataFileRunning.localeCompare("Running");
+
+       if (compareResult == 0) {
+           carrierService.emptyCarrierArray();
+           $scope.currentDataFileRunning = "Stopped";
+           $scope.currentDataFile = "None";
+       } else {
+
+       }
+    };
+
+    //Returns the current data file name
+    // TODO dynamic
+    function getCurrentDataFileName() {
+        return "Trace_SV.csv";
+    }
+
+    // This gets all Data File Names that are stored on the server
+    function getArrayOfDataFiles() {
+
+        // Gets the full string of all datapaths of all data files on the server
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", '/django/dataInterface/simulation.files', false);
+        xmlHttp.send(null);
+        var string  = xmlHttp.responseText;
+
+        // Comment in for static values
+        // String of data files for testing
+        // var string = "/srv/DataProcessing/InitialData/Trace_SV.csv,/srv/DataProcessing/InitialData/Trace_PE.csv";
+
+        // Seperates the comma seperated data files string to an array
+        var arraySimulationFileNames = string.split(',');
+
+        // Delets the file path for every file name so that only the file name is displayed
+        for (var i = 0; i < arraySimulationFileNames.length; i++) {
+            arraySimulationFileNames[i] = arraySimulationFileNames[i].substring(32);
+        }
+
+        return arraySimulationFileNames;
+
+    }
+})
