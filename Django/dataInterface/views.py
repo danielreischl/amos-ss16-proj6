@@ -32,6 +32,8 @@ sys.path.append('/srv/DataProcessing')
 import dataProcessingFunctions
 # imports subprocess to call shell
 import subprocess
+# imports os
+import os
 
 # Retunrs last iteration of a carrier at a session
 def funcMaxIteration(session, carrier):
@@ -343,8 +345,8 @@ def startSimulation (request):
     dataProcessingFunctions.updated_config('Simulation', 'name_of_imported_file', requestedfileName)
 
     # Starts both DataProcessing Scripts in the backround
-    subprocess.Popen(["python", "srv/DataProcessing/compressInitialData.py"])
-    subprocess.Popen(["python", "srv/DataProcessing/writeCarrierDataToDataBase.py"])
+    subprocess.Popen(["python", "srv/DataProcessing/compressInitialData.py"], cwd='srv/DataProcessing')
+    subprocess.Popen(["python", "srv/DataProcessing/writeCarrierDataToDataBase.py"],cwd='srv/DataProcessing')
     return HttpResponse('Running')
 
 

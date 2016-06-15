@@ -22,18 +22,13 @@
 
 <div ng-controller="compareCircleGraph">
     <div flex="100" layout = "row">
-        <div flex class = "carrierSelection">
-            <ul layout-align="center center" class = "carrierSelection" ng-init="createCompareGraph()">
-                <li ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
-                    <!-- <div class="clearfix" ng-if="$index % 5 == 0"></div> -->
-                    <label class = "carrierBox">
-                        <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
-                        <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
-                            {{carrier.id}}
-                        </div>
-                    </label>
-                </li>
-            </ul>
+        <div flex class = "carrierSelection" ng-init="createCompareGraph()">
+          <label class = "carrierBox" ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
+            <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
+            <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
+              {{carrier.id}}
+            </div>
+          </label>
         </div>
 
         <div flex class = "iterationSelection">

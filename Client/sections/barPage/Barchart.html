@@ -18,29 +18,20 @@
    You should have received a copy of the GNU Affero General Public License
    along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
 -->
-
-
+<!--Button to change to the circle chart view  -->
 <center>
         <br>
         <md-button class="md-raised md-cornered" Onclick="location.href='#CircleCarrier'">Change to Circle Chart View</md-button>
 </center>
 
-
-  <div ng-controller="chartMaker">
-    <canvas id="mycanvas" class="chart chart-bar" ></canvas>
-    <div id="chartjs-tooltip"></div>
-
-
- </div>
- <div ng-controller="circleGraphController">
-
-    <section layout="column" ng-init="circleGraph()">
-    </section>
-
-    <section layout="column" layout-align="center center">
+<!--Controller of the barChart View and the initial call  -->
+<div ng-controller="barGraphController">
+    <section layout="column" layout-align="center center" ng-init="barGraph()">
         <div>
-            <div id="circleGraphs"></div>
+            <!--place where the canvas will be displayed  -->
+            <canvas id="barChart" width="800" height="600"></canvas>
         </div>
+        <!--Buttons to move to the continious graph or average graph  -->
         <div layout="row" layout-align="center center">
             <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#CompareCarrier'">Continuous Consumption Graph</md-button>
             <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#AverageEnergyConsumptionChart'">Average Consumption Graph</md-button>
@@ -48,19 +39,12 @@
     </section>
 </div>
 
-
-<!-- what does this do ? -->
-<!--<div ng-controller="barchartController">
-
-
-<div id="graph" style="..." ></div>
-</div>-->
+<!--Download options-->
 <div class = "rawDownload">
-  Download Database tables as csv: 
+  Download Database tables as csv:
   <a href = "django/dataInterface/rawData.csv?table=iteration">Iteration table</a> |
   <a href = "django/dataInterface/rawData.csv?table=timestamp">Timestamp table</a>
 </div>
-
 
 
 
