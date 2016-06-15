@@ -510,14 +510,8 @@ which kind of data he wants to see. The default value is average energy consumpt
     /* open connection to the REST API from the middleware and get the amount of carriers.
        After receiving the data, the integer variable will be saved inside of amountOfCarriers
     */
-
-    var xmlHttp3 = new XMLHttpRequest()
-    xmlHttp3.open ( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=currentSession', false );
-    xmlHttp3.send(null);
-    var session = xmlHttp3.responseText;
-
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=' + session + '&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
     xmlHttp.send(null);
     var amountOfCarriers = xmlHttp.responseText;
     /* ID of first Carrier */
@@ -525,7 +519,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     // the array variable where the converted content from the csv file will be.
     var carrierPercentageData;
     // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-    Papa.parse('django/dataInterface/percentages.csv?session='+session+'', { download: true,
+    Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
                                                                    dynamicTyping: true,
                                                                    complete: function(results) {
                                                                        carrierPercentageData =results.data[1];
