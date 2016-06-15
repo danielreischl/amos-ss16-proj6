@@ -740,7 +740,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
         // Gets the full string of all datapaths of all data files on the server
         var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open( "GET", '/django/dataInterface/simulation.files', false);
+        xmlHttp.open( "GET", 'django/dataInterface/simulation.files', false);
         xmlHttp.send(null);
         var string  = xmlHttp.responseText;
 
