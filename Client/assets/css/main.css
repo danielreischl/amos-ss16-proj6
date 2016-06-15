@@ -48,6 +48,10 @@ p {
     padding-top: 25px;
 }
 
+.timestamp {
+    font-size: 10px;
+}
+
 md-toolbar.toolbar {
     background-color: #009688;
 }
