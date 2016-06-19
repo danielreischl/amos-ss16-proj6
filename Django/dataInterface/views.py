@@ -324,11 +324,9 @@ def startSimulation (request):
     requestedwtSimulation = request.GET['wtSimulation']
     requestedwtFirstDataLoad = request.GET['wtFirstDataload']
     requestedwtDataReload = request.GET['wtDataReload']
-    requestedAmountOfCarriers = request.GET['requestedAmountOfCarriers']
+    requestedAmountOfCarriers = request.GET['amountOfCarriers']
     requestedfileName = request.GET['fileName']
-    requestedKeepEveryxRows = request.GET['KeepEveryXRows']
-
-
+    requestedKeepEveryxRows = request.GET['keepEveryXRows']
 
     # Sets Values in ConfigFile in DataProcessingFolder
     # AmountOfCarriers
