@@ -35,7 +35,7 @@ import subprocess
 # imports os
 import os
 
-# Retunrs last iteration of a carrier at a session
+# Returns last iteration of a carrier at a session
 def funcMaxIteration(session, carrier):
     return timestampdata.objects.filter(session=session, carrier=carrier).aggregate(Max('iteration')).get('iteration__max')
 # Returns total energy consumption of a carrier in a paticular session and iteration
@@ -64,6 +64,10 @@ def funcPecentageOfConsumption (session, carrier):
     lastConsumption = funcTotalEnergyConsumption(session, carrier, funcMaxIteration(session, carrier))
     # Divides last Consumption by First Consumption and retunrs it
     return (lastConsumption/initialConsumption)
+
+###############################################
+############ URL: values.request ##############
+###############################################
 
 # Funtion to return values instead of csv - Files
 def db2values (request):
@@ -100,44 +104,9 @@ def db2values (request):
     else:
         return HttpResponse ("Value not defined")
 
-
-def db2csv(request):
-    # returns a csv File according to the parameters given in the URL
-    # possible parameters: carrier, timeSpan, iterations etc
-    # exact functionality to be specified, at the moment this is just a proof of concept
-    response = HttpResponse(content_type='text/csv')
-    # the name data.csv is just used by the browser when you query the file directly and want to download it
-    response['Content-Disposition'] = 'attachment; filename="data.csv"'
-
-    # extract parameters
-    # e.g. for first carrier request position.csv?carrier=1
-    requestedCarrier = request.GET['carrier']
-    requestedIteration = request.GET['iteration']
-    requestedDimension = request.GET['dimension']
-    requestedExtractionType = request.GET['type']
-
-    writer = csv.writer(response)
-
-    if requestedExtractionType == "PoC":
-        result = timestampdata.objects.filter(carrier=requestedCarrier,iteration=requestedIteration)
-
-        # case analysis by the selected dimension: there must be a nicer way to do this
-    
-        if requestedDimension == "POSITION":
-            for row in result:
-                writer.writerow([row.timeStamp, row.positionAbsolute])
-        elif requestedDimension == "ACCELERATION":
-            for row in result:
-                writer.writerow([row.timeStamp, row.acceleration])
-        elif requestedDimension == "SPEED":
-            for row in result:
-                writer.writerow([row.timeStamp, row.speed])
-        elif requestedDimension == "ENERGY":
-            for row in result:
-                writer.writerow([row.timeStamp, row.energyConsumption])
-            
-    return response
-
+###############################################
+######### URL: continuousData.csv #############
+###############################################
 
 def continuousData(request):
     # returns a csv File according to the parameters given in the URL
@@ -196,8 +165,9 @@ def continuousData(request):
     writer.writerow(csvRow)
     return response
 
-    
-
+###############################################
+############ URL: rawData.csv #################
+###############################################
 
 def rawData(request):
     # returns a csv File of the raw database tables 
@@ -233,6 +203,10 @@ def rawData(request):
             
     return response
 
+###############################################
+############ URL: rawData.json ################
+###############################################
+
 def rawDataJson (request):
 
     # Parameter: Table
@@ -252,6 +226,10 @@ def rawDataJson (request):
     json_data = serializers.serialize('json', data)
     # Returns JSON
     return HttpResponse(json_data, content_type='application/json')
+
+###############################################
+################# URL: log.txt ################
+###############################################
 
 def logs(request):
     # Returns a log file
@@ -296,6 +274,10 @@ def deleteDatabaseValues (request):
         # Any Other parameter returns 'FAIL'
         return HttpResponse('FAIL')
 
+###############################################
+######## URL: simulation.files ################
+###############################################
+
 def simulationFiles (request):
 
     # reads out all files in the InitialData - Folder
@@ -312,6 +294,10 @@ def simulationFiles (request):
     return HttpResponse (fileNamesAsString[0: len(fileNamesAsString)-1])
 
 
+###############################################
+######## URL: simulation.reset ################
+###############################################
+
 def resetSimulation (request):
     # Deletes all DatabaseValues and sets the Session in the cofigFile to Zero
 
@@ -325,6 +311,10 @@ def resetSimulation (request):
     dataProcessingFunctions.updated_config('Simulation', 'session', 1)
 
     return HttpResponse('OK')
+
+###############################################
+######## URL: simulation.start ################
+###############################################
 
 def startSimulation (request):
     # Sets all values that are needed to start the simulation and starts the simulation
@@ -361,6 +351,9 @@ def startSimulation (request):
     # Returns Running after Success
     return HttpResponse('Running')
 
+###############################################
+#### URL: saverageEnergyConsumption.csv #######
+###############################################
 
 def averageEnergyConsumption (request):
 
@@ -445,6 +438,10 @@ def averageEnergyConsumption (request):
     # Retunrs csv file
     return response
 
+###############################################
+######### URL: percentages.csv ################
+###############################################
+
 def percentageForCircleAndBarChart(request):
     # Provides a csv file of percent energy consumption from first to last iteration
     # parameter requested Session
@@ -475,6 +472,10 @@ def percentageForCircleAndBarChart(request):
 
     # Returns CSV-File
     return response
+
+###############################################
+######### URL: fileUpload.html ################
+###############################################
 
 def fileUpload(request):
     fileName = request['fileName']

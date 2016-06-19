@@ -22,8 +22,6 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    # this returns a csv-file of the requested data - for details see views.py 
-    url(r'^data.csv', views.db2csv, name='data'),
     # this returns a csv-file of the requested data for multiple carriers and/or iterations- for details see views.py 
     url(r'^continuousData.csv', views.continuousData, name='data'),
     # this returns a csv-file of raw database tables - for details see views.py 
