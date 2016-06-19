@@ -83,7 +83,7 @@ def db2values (request):
     elif requestedValue=='amountOfCarriers':
         return HttpResponse(funcAmountOfCarriers(requestedSession))
     # returns current session
-    elif requestedValue=='currentSession':
+    elif requestedValue == 'currentSession':
         return HttpResponse(funcRecentSession)
     # returns Average Energy Consumption of a specific carrier in a specific iteration and session
     elif requestedValue=='energyConsumptionAverage':
@@ -327,26 +327,38 @@ def resetSimulation (request):
     return HttpResponse('OK')
 
 def startSimulation (request):
-    # Starts the Simulation
+    # Sets all values that are needed to start the simulation and starts the simulation
 
     # Requested Parameters:
-    # Waittime, FileName
+    # Waittimes, FileName, KeepEveryXRows, AmountOfCarriers
     requestedwtSimulation = request.GET['wtSimulation']
     requestedwtFirstDataLoad = request.GET['wtFirstDataload']
     requestedwtDataReload = request.GET['wtDataReload']
     requestedAmountOfCarriers = request.GET['requestedAmountOfCarriers']
     requestedfileName = request.GET['fileName']
+    requestedKeepEveryxRows = request.GET['KeepEveryXRows']
 
-    # Sets Values in ConfigFile
+
+
+    # Sets Values in ConfigFile in DataProcessingFolder
+    # AmountOfCarriers
     dataProcessingFunctions.updated_config('Simulation', 'amount_of_carriers', requestedAmountOfCarriers)
-    dataProcessingFunctions.updated_config('Simulation', 'waittime_compression', requestedwtSimulation)
+    # Waittime in the Compression and divides the value by 1000 because it are ms not s
+    dataProcessingFunctions.updated_config('Simulation', 'waittime_compression', int(requestedwtSimulation)/1000)
+    # Waittime for the first dataload of WriteCarrierDataToDataBase
     dataProcessingFunctions.updated_config('Simulation', 'waittime_first_dataload', requestedwtFirstDataLoad)
+    # Waittime for the data reload of WriteCarrierDataToDataBase
     dataProcessingFunctions.updated_config('Simulation', 'waittime_data_reload', requestedwtDataReload)
+    # FileName that should be imported
     dataProcessingFunctions.updated_config('Simulation', 'name_of_imported_file', requestedfileName)
+    # KeepEveryXRows to determine the compressionRate
+    dataProcessingFunctions.updated_config('Simulation', 'keep_every_x_rows', requestedKeepEveryxRows)
 
-    # Starts both DataProcessing Scripts in the backround
+    # Starts both DataProcessing Scripts in the background
     subprocess.Popen(["python", "/srv/DataProcessing/compressInitialData.py"], cwd='/srv/DataProcessing')
     subprocess.Popen(["python", "/srv/DataProcessing/writeCarrierDataToDataBase.py"],cwd='/srv/DataProcessing')
+
+    # Returns Running after Success
     return HttpResponse('Running')
 
 
