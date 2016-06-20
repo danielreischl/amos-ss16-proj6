@@ -132,16 +132,15 @@ angular.module('app')
 angular.module('app')
 
     .service('sessionService', function() {
-	var numberOfSessions;
+	var numberOfSessions = 0;
 	var currentSession = 1;
 
 	function update () {
 	    var xmlHttp = new XMLHttpRequest();
 	    // so far session, carrier and iteration have to be set - they are disregarded however
-	    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&requestedValue=currentSession', false );
+	    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=currentSession', false );
 	    xmlHttp.send(null);
-	    var numberOfSessionsFunction = xmlHttp.responseText;
-	    numberOfSessions = numberOfSessionsFunction();
+	    numberOfSessions = xmlHttp.responseText;
 
 	    // reset session number, if necessary
 	    if (currentSession < numberOfSessions) {

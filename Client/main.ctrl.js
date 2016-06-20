@@ -87,7 +87,7 @@ angular.module('app')
 })
 
 /* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/
-.controller('compareCircleGraph', function($scope, carrierService, percentageService) {
+.controller('compareCircleGraph', function($scope, carrierService, percentageService, sessionService) {
 
 
     // Get the array with the carriers that were selected from the carrierService
@@ -119,7 +119,13 @@ angular.module('app')
     var selectedIteration = "last"; // remove this later
     $scope.selectedIteration = "last";
 
+    $scope.sessions = [];
+    for (var i = 1; i <= sessionService.getNumberOfSessions(); i++) {
+	$scope.sessions.push(i);
+    }
+	
     // the session requested from the database. For now it is fixed.
+    $scope.currentSession = sessionService.getCurrentSession();
     var session = 1;
 
     //a string, which tells the database how many carrier the user is requesting.
@@ -127,13 +133,13 @@ angular.module('app')
 
     // Get the maxAmount of Carriers from the database and save it in a variable called amountOfCarriers
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+session+'&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=amountOfCarriers', false );
     xmlHttp.send(null);
     var amountOfCarriers = xmlHttp.responseText;
 
     // Get the last iteration database and save it
     var xmlHttp2 = new XMLHttpRequest();
-    xmlHttp2.open( "GET", 'django/dataInterface/values.request?session='+session+'&carrier=1&iteration=1&value=lastIteration', false );
+    xmlHttp2.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=lastIteration', false );
     xmlHttp2.send(null);
     var amountOfIterations = xmlHttp2.responseText;
 
@@ -168,7 +174,9 @@ angular.module('app')
     // Creates the dygraph from a data source and applies options to them
     $scope.createCompareGraph = function() {
 
-        //ensure that the variable is empty, before saving the new request path into it
+	sessionService.setCurrentSession($scope.currentSession);
+	
+	//ensure that the variable is empty, before saving the new request path into it
         //var carriersRequested = "";
 
 	$scope.carriersRequested = function() {
@@ -182,7 +190,7 @@ angular.module('app')
 
         // the url which should be requested will be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
-        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + $scope.selectedDimension + '&session=1';
+        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + $scope.selectedDimension + '&session='+$scope.currentSession;
 
         graph = new Dygraph(
 	        document.getElementById("compareGraph"),$scope.requestedUrl,
@@ -204,7 +212,6 @@ angular.module('app')
                     },
                 }
 	            });
-        AverageEnergyConsumptionChart
     }
 
     $scope.getListStyle = function(index) {
