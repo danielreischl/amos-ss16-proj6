@@ -156,14 +156,14 @@ angular.module('app')
     $scope.dimensions = [
         {name : "Energy Consumption", id: 'energyConsumption'},
         {name : "Position", id: 'positionAbsolute'},
-	{name : "Speed", id: 'speed'},
-	{name : "Acceleration", id: 'acceleration'},
-	{name : "drive", id : 'drive'},
+	    {name : "Speed", id: 'speed'},
+	    {name : "Acceleration", id: 'acceleration'},
+	    {name : "drive", id : 'drive'},
     ]
 
     $scope.iterationDimensions = [
         {name : 'Last', id : 'last'},
-	{name : 'Last 3', id : 'lastThree'},
+	    {name : 'Last 3', id : 'lastThree'},
         {name : "Last 10", id: 'lastTen'},
         {name : "All", id: 'all'}
     ]
@@ -174,14 +174,13 @@ angular.module('app')
         //ensure that the variable is empty, before saving the new request path into it
         //var carriersRequested = "";
 
-	$scope.carriersRequested = function() {
-	    // filter for the selected carriers
-	    var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
+	    $scope.carriersRequested = function() {
+	        // filter for the selected carriers
+	        var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
 
-	    //join them with commas
-	    
-	    return selected.map(function(carrier){return carrier.id.toString();}).join();
-	}
+	        //join them with commas
+	        return selected.map(function(carrier){return carrier.id.toString();}).join();
+	    }
 
         // the url which should be requested will be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
@@ -209,7 +208,6 @@ angular.module('app')
 	            });
 
         $scope.ts = new Date();
-
     }
 
     $scope.getListStyle = function(index) {
@@ -507,9 +505,49 @@ which kind of data he wants to see. The default value is average energy consumpt
 
     $scope.refresh = function() {
         // Redraw circles
-        $scope.circleGraph();
+        $scope.circleGraphRedraw();
         //Update the timestamp
         $scope.ts = new Date();
+    }
+
+    $scope.circleGraphRedraw = function() {
+
+        // Get the amount of carriers
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
+        xmlHttp.send(null);
+        var amountOfCarriers = xmlHttp.responseText;
+
+        // ID of first carrier
+        var idCounter = 1;
+
+        // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
+        var carrierPercentageData;
+        Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
+                                                                   dynamicTyping: true,
+                                                                   complete: function(results) {
+                                                                       carrierPercentageData = results.data[1];
+                                                                   }
+                                                                  }
+        )
+
+        //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
+        $timeout(drawCarriers, 1000);
+
+        // Calls a function to draw each circle
+        function drawCarriers() {
+
+            // draw the circle for every carrier in the database
+            while (amountOfCarriers > 0) {
+                var circleId = "carrier " + idCounter;
+
+                // call the circle drawing method to paint the circles. It will get the ID of the carrier, as well as the percentage data
+                createCircle(circleId, carrierPercentageData[idCounter - 1]);
+
+                idCounter = idCounter + 1;
+                amountOfCarriers = amountOfCarriers - 1;
+            }
+        }
     }
 
 /* create the circle page upon page load. */
@@ -641,12 +679,11 @@ which kind of data he wants to see. The default value is average energy consumpt
         $scope.ts = new Date();
 
         $scope.refresh = function() {
-            // Redraw circles
-            $scope.createBarChartView();
+            // Redraw bar chart view
+            createBarChartView();
             //Update the timestamp
             $scope.ts = new Date();
         }
-
 
         // timer is set to 1 second. this wait time is needed to fetch all data from the database
         $timeout(createBarChartView, 1300);
