@@ -84,7 +84,7 @@ def db2values (request):
         return HttpResponse(funcAmountOfCarriers(requestedSession))
     # returns current session
     elif requestedValue=='currentSession':
-        return HttpResponse(funcRecentSession)
+        return HttpResponse(funcRecentSession())
     # returns Average Energy Consumption of a specific carrier in a specific iteration and session
     elif requestedValue=='energyConsumptionAverage':
         return HttpResponse(funcSpeedAverage(requestedSession,requestedCarrier,requestedIteration))
