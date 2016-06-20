@@ -29,7 +29,7 @@
 
 <div ng-controller="simulationPageController" layout="column" layout-align="start start">
 
-    <!-- Headline of the page -->
+    <!-- Headline for starting a new simulation -->
     <h1>Select Parameters to start Simulation</h1>
 
     <!--
@@ -76,13 +76,22 @@
         </table>
      </form>
 
+    <!-- Headline for upload -->
+    <h1>Upload a new CSV - file</h1>
+
     <div class = "fileUpload">
         <form action="django/dataInterface/fileUpload.html" method="post" enctype="multipart/form-data">
-	        <p> Choose csv - File: <br/>
-	            <input name="fileName" id="fileName">
-	            <input name="file" type="file" accept="text/csv"/>
-	        </p>
-	    <button type="button">Upload</button> </form>
+            <table>
+                <tr>
+                    <p class="uploadText"> Choose CSV - file: <br/>
+	                <input name="fileName" id="fileName">
+	                <input name="file" type="file" accept="text/csv"/>
+	                </p>
+                </tr>
+                <tr>
+                    <button type="button">Upload</button> </form>
+                </tr>
+            </table>
     </div>
 
 </div>

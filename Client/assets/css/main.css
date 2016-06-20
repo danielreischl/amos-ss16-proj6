@@ -52,6 +52,10 @@ p {
     font-size: 10px;
 }
 
+.uploadText {
+    font-size: 10px;
+}
+
 md-toolbar.toolbar {
     background-color: #009688;
 }
