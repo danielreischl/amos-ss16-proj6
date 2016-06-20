@@ -54,6 +54,8 @@ class timestampdata(models.Model):
     acceleration = models.FloatField()
     # The total amount of energy consumed by the carrier since the last timeStamp (in W)
     energyConsumption = models.FloatField()
+    # The absolute time
+    timeAbsolute = models.integerField()
 
     # Display the session, carrier and iteration and time stamp number of this database entry
     def __unicode__(self):  # in python 3.3 this is __str__(self):
