@@ -524,7 +524,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     // the array variable where the converted content from the csv file will be.
     var carrierPercentageData;
     // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-    Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
+    Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
                                                                    dynamicTyping: true,
                                                                    complete: function(results) {
                                                                        carrierPercentageData =results.data[1];
@@ -619,7 +619,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         // the array variable where the converted content from the csv file will be.
         var carrierPercentageData;
         // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-        Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
+        Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
                                                                        dynamicTyping: true,
                                                                        complete: function(results) {
                                                                            carrierPercentageData =results.data[1];
