@@ -314,40 +314,6 @@ which kind of data he wants to see. The default value is average energy consumpt
         $scope.carriers.push({id:idCounter, selected:currentSelected});
     }
     
-    /**
-    var arrayCarrier = [];
-    var idCounter = 1;
-    while(arrayCarrier.length < amountOfCarriers ) {
-        arrayCarrier.push(idCounter);
-        idCounter++;
-    }
-    */
-    
-    /* Filling the Dropdown menues with the items of the array. The number of checkboxes depend on the amount of carriers in the database*/
-    //$scope.arrayCarrier = arrayCarrier;
-
-    // showCheckBoxes is at startup false, because the checkboxes should be hidden.
-    //$scope.showCheckBoxes = false;
-
-    // When the user clicks on the Button, showCheckBoxes changes to true/false, depending on the previous state.
-    //$scope.toggle = function(){
-    //    $scope.showCheckBoxes = !$scope.showCheckBoxes;
-    //}
-
-    // This function is called, when a change is made in the checkbox field.
-
-    /*
-    $scope.changeCarrierToCompare = function(event) {
-        //if the carrier is already inside the comparison array, then it will be removed.
-        if(!carrierService.addCarrier(event.target.id)) {
-            carrierService.deleteCarrier(event.target.id);
-            document.getElementById(event.target.id).checked = false;
-        } else {
-            document.getElementById(event.target.id).checked = true;
-        }
-    }
-    */
-
     // create the dropdown menu for iterations. the id is corresponding to the key word used in the database to extract the dimension.
     $scope.iterationDimensions = [
         {name : "Last 10 Iterations", id : 'last10'},
@@ -375,31 +341,6 @@ which kind of data he wants to see. The default value is average energy consumpt
     /* this functions creates the dygraph  from a data source and applies options to them*/
 
     $scope.createAverageEnergyConsumptionChart = function() {
-
-        //ensure that the variable is empty, before saving the new request path into it
-        //carriersRequested = "";
-        /* these loops have the purpose to see what carriers the user wants to compare
-        and change request String path for the database. It will also set all checkboxes to true, which are corresponding to the carriers
-        in the compare array */
-	/*
-        if(carrierCompareList.length != 0) {
-            for (var i = 0; i < carrierCompareList.length; i++) {
-                for (var carrier = 1; carrier <= amountOfCarriers; carrier++) {
-                    if (carrierCompareList[i].carrierNumber == carrier) {
-                        if(carriersRequested === "") {
-                            carriersRequested+=carrier;
-                        } else {
-                            carriersRequested+= ","+carrier+"";
-                        }
-                        break;
-                    } else {
-                    }
-                }
-            }
-        } else {
-            alert("You did not chose any Carriers to compare")
-        }
-	*/
 
 	$scope.carriersRequested = function() {
 	    // filter for the selected carriers
@@ -444,29 +385,10 @@ which kind of data he wants to see. The default value is average energy consumpt
 		return {};
 	    }
 	}
-        // After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
-        //carrierService.emptyCarrierArray();
-        //uncheckAllCheckboxes();
 
         // Updates the  time for the time stamp
         $scope.ts = new Date();
     }
-
-    /*
-    function uncheckAllCheckboxes() {
-        var checkboxElements = document.getElementsByTagName('input');
-        for (var i = 0; i < checkboxElements.length; i++) {
-            if(checkboxElements[i].type == 'checkbox') {
-                 checkboxElements[i].checked = false;
-            }
-        }
-    }
-    */
-     /* This function empties the carriers in the comparison on page leave.
-     If the user leaves the current html snippet/template then, this function will notice that and trigger the function "emptyyCarrierArray" */
-    $scope.$on("$destroy", function(){
-         carrierService.emptyCarrierArray();
-     });
 
 })
    
