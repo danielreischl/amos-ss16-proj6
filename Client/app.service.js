@@ -25,7 +25,7 @@
 
 angular.module('app')
 
-    .service('percentageService', function() {
+    .service('percentageService', function(sessionService) {
 	/* 
 	   Provides percantage data of carriers
 	*/
@@ -35,12 +35,12 @@ angular.module('app')
 	       Fetches data from backend
 	       So far this is called each time when getAll is called, but this is probably not necessary
 	    */
-	    Papa.parse('django/dataInterface/percentages.csv?session=1', {  download: true,
-									    dynamicTyping: true,
-									    complete: function(results) {
-										percentageData = results.data[1];
-									    }
-									 }
+	    Papa.parse('django/dataInterface/percentages.csv?session=' +sessionService.getCurrentSession(), {  download: true,
+													       dynamicTyping: true,
+													       complete: function(results) {
+														   percentageData = results.data[1];
+													       }
+													    }
 		      );
 	}
 	
@@ -78,7 +78,7 @@ who need the data.
 
 angular.module('app')
 
-.service('carrierService', function() {
+.service('carrierService', function(sessionService) {
     var carriersForComparison = [];
 
 
@@ -126,4 +126,49 @@ angular.module('app')
         deleteCarrier: this.deleteCarrier,
         emptyCarrierArray: this.emptyCarrierArray,
     };
+});
+
+
+angular.module('app')
+
+    .service('sessionService', function() {
+	var numberOfSessions;
+	var currentSession = 1;
+
+	function update () {
+	    var xmlHttp = new XMLHttpRequest();
+	    // so far session, carrier and iteration have to be set - they are disregarded however
+	    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&requestedValue=currentSession', false );
+	    xmlHttp.send(null);
+	    var numberOfSessionsFunction = xmlHttp.responseText;
+	    numberOfSessions = numberOfSessionsFunction();
+
+	    // reset session number, if necessary
+	    if (currentSession < numberOfSessions) {
+		currentSession = 1;
+	    }
+	}
+
+	this.getNumberOfSessions = function() {
+	    update();
+	    return numberOfSessions;
+	}
+
+	this.getCurrentSession = function() {
+	    update();
+	    return currentSession;
+	}
+
+	this.setCurrentSession = function(newSession) {
+	    if (newSession <= currentSession) {
+		currentSession = newSession;
+	    }
+	}
+
+	return {
+            getNumberOfSessions: this.getNumberOfSessions,
+            getCurrentSession: this.getCurrentSession,
+            setCurrentSession: this.setCurrentSession,
+	};
+	
 });
