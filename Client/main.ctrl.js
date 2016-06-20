@@ -162,14 +162,14 @@ angular.module('app')
     $scope.dimensions = [
         {name : "Energy Consumption", id: 'energyConsumption'},
         {name : "Position", id: 'positionAbsolute'},
-	{name : "Speed", id: 'speed'},
-	{name : "Acceleration", id: 'acceleration'},
-	{name : "drive", id : 'drive'},
+	    {name : "Speed", id: 'speed'},
+	    {name : "Acceleration", id: 'acceleration'},
+	    {name : "drive", id : 'drive'},
     ]
 
     $scope.iterationDimensions = [
         {name : 'Last', id : 'last'},
-	{name : 'Last 3', id : 'lastThree'},
+	    {name : 'Last 3', id : 'lastThree'},
         {name : "Last 10", id: 'lastTen'},
         {name : "All", id: 'all'}
     ]
@@ -182,14 +182,13 @@ angular.module('app')
 	//ensure that the variable is empty, before saving the new request path into it
         //var carriersRequested = "";
 
-	$scope.carriersRequested = function() {
-	    // filter for the selected carriers
-	    var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
+	    $scope.carriersRequested = function() {
+	        // filter for the selected carriers
+	        var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
 
-	    //join them with commas
-	    
-	    return selected.map(function(carrier){return carrier.id.toString();}).join();
-	}
+	        //join them with commas
+	        return selected.map(function(carrier){return carrier.id.toString();}).join();
+	    }
 
         // the url which should be requested will be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
@@ -217,7 +216,6 @@ angular.module('app')
 	            });
 
         $scope.ts = new Date();
-
     }
 
     $scope.getListStyle = function(index) {
@@ -515,9 +513,90 @@ which kind of data he wants to see. The default value is average energy consumpt
 
     $scope.refresh = function() {
         // Redraw circles
-        $scope.circleGraph();
+        $scope.circleGraphRedraw();
         //Update the timestamp
         $scope.ts = new Date();
+    }
+
+    $scope.circleGraphRedraw = function() {
+
+        // Get the amount of carriers
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
+        xmlHttp.send(null);
+        var amountOfCarriers = xmlHttp.responseText;
+
+        // ID of first carrier
+        var idCounter = 1;
+
+        // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
+        var carrierPercentageData;
+        Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
+                                                                   dynamicTyping: true,
+                                                                   complete: function(results) {
+                                                                       carrierPercentageData = results.data[1];
+                                                                   }
+                                                                  }
+        )
+
+        //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
+        $timeout(drawCarriers, 1000);
+
+        // Calls a function to draw each circle
+        function drawCarriers() {
+
+            // draw the circle for every carrier in the database
+            while (amountOfCarriers > 0) {
+                var circleId = "carrier " + idCounter;
+
+                // call the circle drawing method to paint the circles. It will get the ID of the carrier, as well as the percentage data
+                createCircle(circleId, carrierPercentageData[idCounter - 1]);
+
+                idCounter = idCounter + 1;
+                amountOfCarriers = amountOfCarriers - 1;
+            }
+        }
+
+        /*  This function will create the circles, depending on the input parameters from the database*/
+        function createCircle(carrier, percentageOfEnergy) {
+            var canvas = document.getElementById(carrier);
+            var context = canvas.getContext('2d');
+            var centerX = canvas.width / 2;
+            var centerY = canvas.height / 2;
+            var radius = 60;
+
+            context.beginPath();
+            context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+            context.lineWidth = 2;
+            context.strokeStyle = '#003300';
+            context.stroke();
+
+            /* Logic of the color: if the percentage of a carrier is above 1.05 it will be coded red,
+           because the energy consumption of the last iteration is too high in comparison to the
+           first iteration. If the value is < 1.025, then the color will be green, because the energy
+           consumption is not really increasing much.
+           Any value between is coded yellow, because it should warn the user, that the energy
+           is higher than the very first iteration.
+            */
+            if(percentageOfEnergy > 1.05) {
+                context.fillStyle = '#FF1744';
+            } else if(percentageOfEnergy <= 1.025 ) {
+                context.fillStyle = '#00BFA5';
+            } else {
+                context.fillStyle = "#FFFF8D";
+            }
+
+            context.fill();
+            context.lineWidth = 5;
+            context.lineWidth = 1;
+            context.fillStyle = "#212121";
+            context.lineStyle = "#212121";
+            context.font = "15px sans-serif";
+            // textAllign center will allign the text relative to the borders of the canvas
+            context.textAlign = 'center';
+            context.fillText(carrier, centerX, centerY - 7);
+            context.fillText((percentageOfEnergy*100).toFixed() + "%", centerX, centerY + 12);
+        }
     }
 
 /* create the circle page upon page load. */
@@ -617,6 +696,16 @@ which kind of data he wants to see. The default value is average energy consumpt
 /* bar chart View controller */
 
 .controller('barGraphController',function($scope,$timeout, carrierService) {
+
+    $scope.ts = new Date();
+
+    $scope.refresh = function() {
+        // Redraw bar chart view
+        $scope.barGraph();
+        //Update the timestamp
+        $scope.ts = new Date();
+    }
+
     $scope.barGraph = function() {
 
 
@@ -646,14 +735,6 @@ which kind of data he wants to see. The default value is average energy consumpt
         /* ID of first Carrier */
         var idCounter = 1;
 
-        $scope.ts = new Date();
-
-        $scope.refresh = function() {
-            // Redraw circles
-            $scope.createBarChartView();
-            //Update the timestamp
-            $scope.ts = new Date();
-        }
 
 
         // timer is set to 1 second. this wait time is needed to fetch all data from the database
