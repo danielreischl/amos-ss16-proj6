@@ -56,11 +56,11 @@ angular.module('app')
 	    var color = {'background-color': 'rgb(255,255,141)'};
 
 	    if(percentageOfEnergy > 1.05) {
-		color = {'background-color' : 'rgb(255,23,68)'};
+		color = {'background-color' : 'rgb(201, 24, 38)'};
             }
 
             if(percentageOfEnergy <= 1.025 ) {
-		color = {'background-color' : 'rgb(0,191,165)'};
+		color = {'background-color' : 'rgb(115,173,33)'};
             }
 
             return color;
