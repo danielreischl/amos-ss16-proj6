@@ -160,7 +160,7 @@ angular.module('app')
 	}
 
 	this.setCurrentSession = function(newSession) {
-	    if (newSession <= currentSession) {
+	    if (newSession <= numberOfSessions) {
 		currentSession = newSession;
 	    }
 	}
