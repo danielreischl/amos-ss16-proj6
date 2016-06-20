@@ -56,14 +56,36 @@ def funcAmountOfCarriers(session):
 # Returns the most recent session
 def funcRecentSession():
     return timestampdata.objects.all().aggregate(Max('session')).get('session__max')
-# Returns one percent value for CarrierView & BarchartView
-def funcPecentageOfConsumption (session, carrier):
-    # Consumption at first iteration
-    initialConsumption =  funcTotalEnergyConsumption(session, carrier, 1)
-    # Consumption at current iteration
-    lastConsumption = funcTotalEnergyConsumption(session, carrier, funcMaxIteration(session, carrier))
-    # Divides last Consumption by First Consumption and retunrs it
-    return (lastConsumption/initialConsumption)
+# Returns one percent value for CarrierView & BarchartView calculated for creeping Contamination
+def funcPercentCreeping (session, carrier):
+    #TODO: Change to new Calculation
+    # If there are less then 10 iterations
+    if funcMaxIteration(session, carrier) < 10:
+        # Consumption at first iteration
+        initialConsumption = funcTotalEnergyConsumption(session, carrier, 1)
+        # Consumption at current iteration
+        lastConsumption = funcTotalEnergyConsumption(session, carrier, funcMaxIteration(session, carrier))
+        # Divides last Consumption by First Consumption and retunrs it
+        return (lastConsumption / initialConsumption)
+    # If more then 10 iterations
+    else:
+        # Calculate first 10 percent of Iterations and Cast it to an int
+        countOfIterations = int(funcMaxIteration(session, carrier)/10)
+        sumOfEnergy = 0
+        # Sums up all energy consumptions
+        for i in range (1,countOfIterations):
+            sumOfEnergy = sumOfEnergy + funcTotalEnergyConsumption(session, carrier, i)
+        # Consumption of current iteration
+        lastConsumption = funcTotalEnergyConsumption(session, carrier, funcMaxIteration(session, carrier))
+        # Calculates average consumption of first 10% of iterations
+        initialConsumption = sumOfEnergy/countOfIterations
+        # Divides current consumption by the average of the first 10 percents
+        return (lastConsumption / initialConsumption)
+
+# Returns one percent value for CarrierView & BarchartView calculated for continuous Contamination
+def funcPercentCont(requestedSession, carrier):
+    # TODO: Implement Calculation
+    return 0
 
 ###############################################
 ############ URL: values.request ##############
@@ -438,10 +460,10 @@ def averageEnergyConsumption (request):
     return response
 
 ###############################################
-######### URL: percentages.csv ################
+##### URL: percentages_creeping.csv ###########
 ###############################################
 
-def percentageForCircleAndBarChart(request):
+def percentage_creeping(request):
     # Provides a csv file of percent energy consumption from first to last iteration
     # parameter requested Session
     requestedSession = request.GET['session']
@@ -463,7 +485,42 @@ def percentageForCircleAndBarChart(request):
         # Appends Carrier + No to the first row
         firstRow.append ('Carrier' + str(carrier))
         # Appends the percentage for each carrier (EnergyConsumption last iteration/energyConsumption first iteration)
-        secondRow.append(funcPecentageOfConsumption(requestedSession, carrier))
+        secondRow.append(funcPercentCreeping(requestedSession, carrier))
+
+    # Wirtes CSV - File
+    writer.writerow (firstRow)
+    writer.writerow (secondRow)
+
+    # Returns CSV-File
+    return response
+
+###############################################
+######### URL: percentages_cont.csv ###########
+###############################################
+
+def percentage_cont(request):
+    # Provides a csv file of percent energy consumption from first to last iteration
+    # parameter requested Session
+    requestedSession = request.GET['session']
+
+    # Creating response with attachment as data.csv
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="data.csv"'
+    # Dygraph can just handle , - seperated csv files
+    writer = csv.writer(response, delimiter=',')
+
+    # Reads out amountOfCarriers for requested Session
+    amountOfCarriers = funcAmountOfCarriers(requestedSession)
+
+    # Initializes list for first and second row
+    firstRow = []
+    secondRow = []
+
+    for carrier in range(1, amountOfCarriers + 1):
+        # Appends Carrier + No to the first row
+        firstRow.append ('Carrier' + str(carrier))
+        # Appends the percentage for each carrier (EnergyConsumption last iteration/energyConsumption first iteration)
+        secondRow.append(funcPercentCont(requestedSession, carrier))
 
     # Wirtes CSV - File
     writer.writerow (firstRow)
