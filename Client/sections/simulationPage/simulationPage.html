@@ -40,7 +40,7 @@
     KeepEveryXRows as Compression rate
     -->
 
-    <form name="carriersForm">
+    <form name="carriersForm" ng-submit="startSimulation()">
         <table>
             <tr>
                 <td align=right>Datafile:</td>
@@ -71,7 +71,6 @@
                 <td align=left><input type="number" name="keepEveryXRows" ng-model="keepEveryXRows"  min="0" max="999" required /></td>
             </tr>
             <tr>
-                <td><button ng-click="startSimulation()">Start Simulation</button></td>
             </tr>
         </table>
      </form>
