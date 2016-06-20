@@ -314,40 +314,6 @@ which kind of data he wants to see. The default value is average energy consumpt
         $scope.carriers.push({id:idCounter, selected:currentSelected});
     }
     
-    /**
-    var arrayCarrier = [];
-    var idCounter = 1;
-    while(arrayCarrier.length < amountOfCarriers ) {
-        arrayCarrier.push(idCounter);
-        idCounter++;
-    }
-    */
-    
-    /* Filling the Dropdown menues with the items of the array. The number of checkboxes depend on the amount of carriers in the database*/
-    //$scope.arrayCarrier = arrayCarrier;
-
-    // showCheckBoxes is at startup false, because the checkboxes should be hidden.
-    //$scope.showCheckBoxes = false;
-
-    // When the user clicks on the Button, showCheckBoxes changes to true/false, depending on the previous state.
-    //$scope.toggle = function(){
-    //    $scope.showCheckBoxes = !$scope.showCheckBoxes;
-    //}
-
-    // This function is called, when a change is made in the checkbox field.
-
-    /*
-    $scope.changeCarrierToCompare = function(event) {
-        //if the carrier is already inside the comparison array, then it will be removed.
-        if(!carrierService.addCarrier(event.target.id)) {
-            carrierService.deleteCarrier(event.target.id);
-            document.getElementById(event.target.id).checked = false;
-        } else {
-            document.getElementById(event.target.id).checked = true;
-        }
-    }
-    */
-
     // create the dropdown menu for iterations. the id is corresponding to the key word used in the database to extract the dimension.
     $scope.iterationDimensions = [
         {name : "Last 10 Iterations", id : 'last10'},
@@ -375,31 +341,6 @@ which kind of data he wants to see. The default value is average energy consumpt
     /* this functions creates the dygraph  from a data source and applies options to them*/
 
     $scope.createAverageEnergyConsumptionChart = function() {
-
-        //ensure that the variable is empty, before saving the new request path into it
-        //carriersRequested = "";
-        /* these loops have the purpose to see what carriers the user wants to compare
-        and change request String path for the database. It will also set all checkboxes to true, which are corresponding to the carriers
-        in the compare array */
-	/*
-        if(carrierCompareList.length != 0) {
-            for (var i = 0; i < carrierCompareList.length; i++) {
-                for (var carrier = 1; carrier <= amountOfCarriers; carrier++) {
-                    if (carrierCompareList[i].carrierNumber == carrier) {
-                        if(carriersRequested === "") {
-                            carriersRequested+=carrier;
-                        } else {
-                            carriersRequested+= ","+carrier+"";
-                        }
-                        break;
-                    } else {
-                    }
-                }
-            }
-        } else {
-            alert("You did not chose any Carriers to compare")
-        }
-	*/
 
 	$scope.carriersRequested = function() {
 	    // filter for the selected carriers
@@ -444,29 +385,10 @@ which kind of data he wants to see. The default value is average energy consumpt
 		return {};
 	    }
 	}
-        // After the graph has been plotted, the compareCarrier Array will be emptied and the checkboxes reseted.
-        //carrierService.emptyCarrierArray();
-        //uncheckAllCheckboxes();
 
         // Updates the  time for the time stamp
         $scope.ts = new Date();
     }
-
-    /*
-    function uncheckAllCheckboxes() {
-        var checkboxElements = document.getElementsByTagName('input');
-        for (var i = 0; i < checkboxElements.length; i++) {
-            if(checkboxElements[i].type == 'checkbox') {
-                 checkboxElements[i].checked = false;
-            }
-        }
-    }
-    */
-     /* This function empties the carriers in the comparison on page leave.
-     If the user leaves the current html snippet/template then, this function will notice that and trigger the function "emptyyCarrierArray" */
-    $scope.$on("$destroy", function(){
-         carrierService.emptyCarrierArray();
-     });
 
 })
    
@@ -555,6 +477,47 @@ which kind of data he wants to see. The default value is average energy consumpt
                 idCounter = idCounter + 1;
                 amountOfCarriers = amountOfCarriers - 1;
             }
+        }
+
+        /*  This function will create the circles, depending on the input parameters from the database*/
+        function createCircle(carrier, percentageOfEnergy) {
+            var canvas = document.getElementById(carrier);
+            var context = canvas.getContext('2d');
+            var centerX = canvas.width / 2;
+            var centerY = canvas.height / 2;
+            var radius = 60;
+
+            context.beginPath();
+            context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+            context.lineWidth = 2;
+            context.strokeStyle = '#003300';
+            context.stroke();
+
+            /* Logic of the color: if the percentage of a carrier is above 1.05 it will be coded red,
+           because the energy consumption of the last iteration is too high in comparison to the
+           first iteration. If the value is < 1.025, then the color will be green, because the energy
+           consumption is not really increasing much.
+           Any value between is coded yellow, because it should warn the user, that the energy
+           is higher than the very first iteration.
+            */
+            if(percentageOfEnergy > 1.05) {
+                context.fillStyle = '#FF1744';
+            } else if(percentageOfEnergy <= 1.025 ) {
+                context.fillStyle = '#00BFA5';
+            } else {
+                context.fillStyle = "#FFFF8D";
+            }
+
+            context.fill();
+            context.lineWidth = 5;
+            context.lineWidth = 1;
+            context.fillStyle = "#212121";
+            context.lineStyle = "#212121";
+            context.font = "15px sans-serif";
+            // textAllign center will allign the text relative to the borders of the canvas
+            context.textAlign = 'center';
+            context.fillText(carrier, centerX, centerY - 7);
+            context.fillText((percentageOfEnergy*100).toFixed() + "%", centerX, centerY + 12);
         }
     }
 
@@ -655,6 +618,16 @@ which kind of data he wants to see. The default value is average energy consumpt
 /* bar chart View controller */
 
 .controller('barGraphController',function($scope,$timeout, carrierService) {
+
+    $scope.ts = new Date();
+
+    $scope.refresh = function() {
+        // Redraw bar chart view
+        $scope.barGraph();
+        //Update the timestamp
+        $scope.ts = new Date();
+    }
+
     $scope.barGraph = function() {
 
 
@@ -684,14 +657,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         /* ID of first Carrier */
         var idCounter = 1;
 
-        $scope.ts = new Date();
 
-        $scope.refresh = function() {
-            // Redraw bar chart view
-            createBarChartView();
-            //Update the timestamp
-            $scope.ts = new Date();
-        }
 
         // timer is set to 1 second. this wait time is needed to fetch all data from the database
         $timeout(createBarChartView, 1300);
