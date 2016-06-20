@@ -506,7 +506,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     }
 
     $scope.refresh = function() {
-        // Redraw circle Graph
+        // Redraw circles
         circleGraph();
         //Update the timestamp
         $scope.ts = new Date();
