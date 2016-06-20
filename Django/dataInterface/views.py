@@ -286,9 +286,10 @@ def simulationFiles (request):
     # Defines FileNamesAsString
     fileNamesAsString = ""
 
-    # Adds all filenames to the string
+    # Adds all filenames to the string if it is isn't a modified file that is created during a simulation run.
     for file in files:
-        fileNamesAsString = fileNamesAsString + file + ','
+        if not '_modified.csv' in file:
+            fileNamesAsString = fileNamesAsString + file + ','
 
     # returns the string
     return HttpResponse (fileNamesAsString[0: len(fileNamesAsString)-1])
