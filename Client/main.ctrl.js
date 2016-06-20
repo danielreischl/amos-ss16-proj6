@@ -44,6 +44,7 @@ angular.module('app')
     $scope.simulation = "";
     $scope.settings = "";
     $scope.help = "";
+    $scope.flexView ="";
 
     /* this scope will be triggered when the user wants to expand the navigation bar, The function inside will simply set the state to ture or false.
        and also the string inside the variables.
@@ -58,6 +59,7 @@ angular.module('app')
             $scope.simulation ="";
             $scope.settings = "";
             $scope.help = "";
+            $scope.flexView = "";
             state = false;
         } else {
             $scope.home = "Home";
@@ -67,6 +69,7 @@ angular.module('app')
             $scope.simulation = "Simulation";
             $scope.settings = "Settings";
             $scope.help  = "Help";
+            $scope.flexView = "Flexibility View";
             state = true;
         }
     }
