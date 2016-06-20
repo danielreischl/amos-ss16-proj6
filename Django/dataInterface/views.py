@@ -55,7 +55,6 @@ def funcAmountOfCarriers(session):
     return timestampdata.objects.filter(session=session).aggregate(Max('carrier')).get('carrier__max')
 # Returns the most recent session
 def funcRecentSession():
-<<<<<<< HEAD
     return timestampdata.objects.all().aggregate(Max('session')).get('session__max')
 # Returns one percent value for CarrierView & BarchartView calculated for creeping Contamination
 def funcPercentCreeping (session, carrier):
@@ -87,8 +86,6 @@ def funcPercentCreeping (session, carrier):
 def funcPercentCont(requestedSession, carrier):
     # TODO: Implement Calculation
     return 0
-=======
-    return sessiondata.objects.all().aggregate(Max('session')).get('session__max')
 # Returns one percent value for CarrierView & BarchartView
 def funcPecentageOfConsumption (session, carrier):
     # Consumption at first iteration
@@ -97,7 +94,6 @@ def funcPecentageOfConsumption (session, carrier):
     lastConsumption = funcTotalEnergyConsumption(session, carrier, funcMaxIteration(session, carrier))
     # Divides last Consumption by First Consumption and retunrs it
     return (lastConsumption/initialConsumption)
->>>>>>> ea0f249dc2b70d3cdfcfc72e0c3a5a8d2f68d4cc
 
 ###############################################
 ############ URL: values.request ##############
