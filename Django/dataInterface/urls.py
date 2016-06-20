@@ -46,7 +46,7 @@ urlpatterns = [
     # URL that returns all files as a string
     url(r'^simulation.files', views.simulationFiles, name='simulationFiles'),
     # URL that True or False depending on if the Simulation is still running
-    url(r'^simulation.running', views.simulationRuns(), name='SimulationRunning'),
+    url(r'^simulation.running', views.simulationRuns, name='SimulationRunning'),
     # URL for file upload
     # disabled until we are sure that everything works
     # url(r'^fileUpload.html', views.fileUpload, name='fileUpload'),
