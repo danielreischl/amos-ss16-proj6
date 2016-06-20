@@ -270,7 +270,7 @@ angular.module('app')
 
 /* controller for the AverageEnergyConsumption Chart. This chart will display the data over iterations. The user can select
 which kind of data he wants to see. The default value is average energy consumption.*/
-    .controller('AverageEnergyConsumptionChart', function($scope, carrierService, percentageService) {
+    .controller('AverageEnergyConsumptionChart', function($scope, carrierService, percentageService, sessionService) {
 
     // get the array with the carriers the user wants to see in the graph.
     var carrierCompareList = carrierService.getCarrier();
@@ -295,15 +295,20 @@ which kind of data he wants to see. The default value is average energy consumpt
 
     $scope.selectedIteration = "last10";
 
+    $scope.sessions = [];
+    for (var i = 1; i <= sessionService.getNumberOfSessions(); i++) {
+	$scope.sessions.push(i);
+    }
+	
     // the session requested from the database. For now it is fixed.
-    var session = 1;
+    $scope.currentSession = sessionService.getCurrentSession();
 
     //a string, which tells the database how many carrier the user is requesting.
     var carriersRequested = "";
 
     // Get the maxAmount of Carriers from the database and save it in a variable called amountOfCarriers
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+session+'&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=amountOfCarriers', false );
     xmlHttp.send(null);
     var amountOfCarriers = xmlHttp.responseText;
 
@@ -350,11 +355,13 @@ which kind of data he wants to see. The default value is average energy consumpt
 	    
 	    return selected.map(function(carrier){return carrier.id.toString();}).join();
 	}
+
+	sessionService.setCurrentSession($scope.currentSession);
 	
         // create the graph with the parameters set. The request path for the database depends on 3 parameters: session, carrierRequested, selectedDimension and type
         // the url which should be requested wil be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
-        $scope.requestedUrl = 'django/dataInterface/averageEnergyConsumption.csv?session='+session+'&carriers='+$scope.carriersRequested()+'&dimension='+$scope.selectedDimension+'&type=last10';
+        $scope.requestedUrl = 'django/dataInterface/averageEnergyConsumption.csv?session='+$scope.currentSession+'&carriers='+$scope.carriersRequested()+'&dimension='+$scope.selectedDimension+'&type=last10';
 
         graph = new Dygraph(
 	       document.getElementById("AverageEnergyConsumptionChart"),$scope.requestedUrl ,
