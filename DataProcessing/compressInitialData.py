@@ -53,6 +53,7 @@ import dataProcessingFunctions
 # Imports ConfigParser
 import ConfigParser
 
+
 # Main data processing script. Gets input data of drives and maps it to the carries and saves them as CSV files once
 # an iteration is complete
 # Input: (time: int, drive: int, position: float, energy: float)
@@ -261,8 +262,7 @@ def compressData(carrier):
 
             # This while loop iterates as long as all the values in the gap were interpolated
             # This is for the case that multiple time stamp values were missed in one gap
-            while(carrierData[carrier - 1][0][i] - firstTimeStamp) >= nextTimeStampValue:
-
+            while (carrierData[carrier - 1][0][i] - firstTimeStamp) >= nextTimeStampValue:
                 # Change the place where the next energy consumption is being saved to
                 saveTo = int(nextTimeStampValue / KEEP_EVERY_X_ROW)
 
@@ -271,13 +271,13 @@ def compressData(carrier):
                 time2 = carrierData[carrier - 1][0][i] - firstTimeStamp
                 pos1 = carrierData[carrier - 1][1][i - 1]
                 pos2 = carrierData[carrier - 1][1][i]
-                print ("")
-                print (str(pos1))
-                print (str(pos2))
+                print("")
+                print(str(pos1))
+                print(str(pos2))
 
                 # Linear interpolation of the position that the carrier was at at the missing time stamp
                 posInter = pos1 + ((pos2 - pos1) * ((nextTimeStampValue - time1) / (time2 - time1)))
-                print (str(posInter))
+                print(str(posInter))
 
                 # Because 1: The energy consumption is the total that was consumed during the last time stamp
                 # and 2: The algorithm will continue with the next time stamp in the next iteration cicle
@@ -476,7 +476,8 @@ def moveFileToFolder(fileName, folderName):
 # Initialize Log-File
 # Creates or loads Log DataProcessing.log
 # Format of LogFile: mm/dd/yyyy hh:mm:ss PM LogMessage
-logging.basicConfig(filename='/srv/DataProcessing/dataProcessing.log', level=logging.INFO, format='%(asctime)s %(message)s',
+logging.basicConfig(filename='/srv/DataProcessing/dataProcessing.log', level=logging.INFO,
+                    format='%(asctime)s %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p')
 
 # Calls Function to create Running.txt
@@ -488,24 +489,24 @@ config.read('settings.cfg')
 
 # CONSTANTS
 # WAIT_TIME_IN_SECONDS: Time the script should wait until it calls the function again (in seconds)
-WAIT_TIME_IN_SECONDS = config.getfloat('Simulation','waittime_compression')
+WAIT_TIME_IN_SECONDS = config.getfloat('Simulation', 'waittime_compression')
 # Input file names of data here
 DATA_FILE_NAMES = []
 # AMOUNT_OF_CARRIERS: How many Carriers are in the system
-AMOUNT_OF_CARRIERS = config.getint('Simulation','amount_of_carriers')
+AMOUNT_OF_CARRIERS = config.getint('Simulation', 'amount_of_carriers')
 # DATA_SEPARATOR: Separator of the CSV-File
-DATA_SEPARATOR = config.get('Simulation','csv_seperator')
+DATA_SEPARATOR = config.get('Simulation', 'csv_seperator')
 # Every X th row of the data is kept when compressing the data
-KEEP_EVERY_X_ROW = config.getint('Simulation','keep_every_x_rows')
+KEEP_EVERY_X_ROW = config.getint('Simulation', 'keep_every_x_rows')
 # Current Session
-session = config.getint('Simulation','session')
+session = config.getint('Simulation', 'session')
 # FileName that should be imported
 fileName = config.get('Simulation', 'name_of_imported_file')
 
 # Checks if a File is added to DATA_FILE_NAMES. If not it is terminating the script
 if fileName == '':
     print('No File selected')
-    # Calls funtion to remove running file
+    # Calls function to remove running file
     dataProcessingFunctions.deleteRunningFile()
     # Terminates the script
     sys.exit()
@@ -533,7 +534,7 @@ carriersThroughTheSystem = 1
 
 # First row of data frames
 initialData = pd.read_csv(os.path.splitext(fileName)[0] + "_modified.csv", DATA_SEPARATOR, low_memory=False,
-                              header=0)
+                          header=0)
 #    Extracting the DriveNo of the first loaded File in DATA_PATH
 # Iterates each row and afterwards each drive
 #  Calls compressData with a pd.Series. The values are:
@@ -554,13 +555,14 @@ sessiondata = pd.DataFrame(
     columns=['session', 'fileName', 'amountOfCarriers', 'status'], index=['1'])
 # Adding previous extracted and calculated values to DataFrame
 sessiondata.loc['1'] = pd.Series(
-    {'session': session, 'fileName': os.path.splitext(fileName)[0], 'amountOfCarriers': AMOUNT_OF_CARRIERS, 'status': True,})
+    {'session': session, 'fileName': os.path.splitext(fileName)[0], 'amountOfCarriers': AMOUNT_OF_CARRIERS,
+     'status': True,})
 
 # calls function to load the sessiondata data into the database
 dataProcessingFunctions.write_dataframe_to_database(sessiondata, config.get('database_tables', 'sessiondata'))
 
 # Counts up session for each filename
-session = session + 1
+session += 1
 dataProcessingFunctions.updated_config('Simulation', 'session', session)
 
 # Calls Funcion to remove RunningFile
