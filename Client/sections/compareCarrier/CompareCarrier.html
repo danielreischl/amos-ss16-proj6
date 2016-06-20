@@ -51,6 +51,15 @@
              </label>           
         </div>
 
+	<div flex class = "sessionSelection">
+             <label class = "iterationBox" ng-repeat="session in sessions">
+               <input type="radio" name = "session" ng-value="session" ng-model="$parent.currentSession"/>
+               <div>
+		 {{session}}
+               </div>
+             </label>           
+        </div>
+
         <div flex>
             <md-button class="md-raised md-cornered" ng-click="createCompareGraph()">Refresh</md-button>
             <p class = "timestamp">Time of last refresh = {{ ts | date : "HH:mm:ss.sss" }}</p>

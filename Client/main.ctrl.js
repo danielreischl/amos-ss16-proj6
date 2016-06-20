@@ -90,7 +90,7 @@ angular.module('app')
 })
 
 /* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/
-.controller('compareCircleGraph', function($scope, carrierService, percentageService) {
+.controller('compareCircleGraph', function($scope, carrierService, percentageService, sessionService) {
 
 
     // Get the array with the carriers that were selected from the carrierService
@@ -122,7 +122,13 @@ angular.module('app')
     var selectedIteration = "last"; // remove this later
     $scope.selectedIteration = "last";
 
+    $scope.sessions = [];
+    for (var i = 1; i <= sessionService.getNumberOfSessions(); i++) {
+	$scope.sessions.push(i);
+    }
+	
     // the session requested from the database. For now it is fixed.
+    $scope.currentSession = sessionService.getCurrentSession();
     var session = 1;
 
     //a string, which tells the database how many carrier the user is requesting.
@@ -130,13 +136,13 @@ angular.module('app')
 
     // Get the maxAmount of Carriers from the database and save it in a variable called amountOfCarriers
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+session+'&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=amountOfCarriers', false );
     xmlHttp.send(null);
     var amountOfCarriers = xmlHttp.responseText;
 
     // Get the last iteration database and save it
     var xmlHttp2 = new XMLHttpRequest();
-    xmlHttp2.open( "GET", 'django/dataInterface/values.request?session='+session+'&carrier=1&iteration=1&value=lastIteration', false );
+    xmlHttp2.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=lastIteration', false );
     xmlHttp2.send(null);
     var amountOfIterations = xmlHttp2.responseText;
 
@@ -171,7 +177,9 @@ angular.module('app')
     // Creates the dygraph from a data source and applies options to them
     $scope.createCompareGraph = function() {
 
-        //ensure that the variable is empty, before saving the new request path into it
+	sessionService.setCurrentSession($scope.currentSession);
+	
+	//ensure that the variable is empty, before saving the new request path into it
         //var carriersRequested = "";
 
 	    $scope.carriersRequested = function() {
@@ -184,7 +192,7 @@ angular.module('app')
 
         // the url which should be requested will be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
-        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + $scope.selectedDimension + '&session=1';
+        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + $scope.selectedDimension + '&session='+$scope.currentSession;
 
         graph = new Dygraph(
 	        document.getElementById("compareGraph"),$scope.requestedUrl,
@@ -753,18 +761,28 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.waitForCompression = 0;
     $scope.waitForFirstDataLoad = 30;
     $scope.waitForDataReload = 30;
-    $scope.keepEveryXRows = 100
+    $scope.keepEveryXRows = 100;
+
 
     //Starts the simulation by calling the website link
     $scope.startSimulation = function() {
-           var urlString = 'django/dataInterface/simulation.start?wtSimulation=' + $scope.waitForCompression + '&wtFirstDataload=' + $scope.waitForFirstDataLoad + '&wtDataReload=' + $scope.waitForDataReload + '&amountOfCarriers=' + $scope.amountOfCarriers + '&fileName=InitialData/' + $scope.selectedDataFile  + '&keepEveryXRows=' + $scope.keepEveryXRows
-           var xmlHttp = new XMLHttpRequest();
-           xmlHttp.open( "GET", urlString, false);
-           xmlHttp.send(null);
-           var returnString  = xmlHttp.responseText;
 
-           alert("Simulation started!");
-
+        // checks if Simulation is still running. Calls simulation.running for that
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", 'django/dataInterface/simulation.running', false);
+        xmlHttp.send(null);
+        // If simulation isn't running, starts simulation and prompts an alert with the message "Simulation started"
+        if (xmlHttp.responseText == 'False'){
+            var urlString = 'django/dataInterface/simulation.start?wtSimulation=' + $scope.waitForCompression + '&wtFirstDataload=' + $scope.waitForFirstDataLoad + '&wtDataReload=' + $scope.waitForDataReload + '&amountOfCarriers=' + $scope.amountOfCarriers + '&fileName=InitialData/' + $scope.selectedDataFile  + '&keepEveryXRows=' + $scope.keepEveryXRows
+            xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", urlString, false);
+            xmlHttp.send(null);
+            var returnString  = xmlHttp.responseText;
+            alert("Simulation Started");
+         // If Simulation is running, prompts message "Other Simulation still running")
+        } else {
+            alert ("other Simulation Still Running");
+            };
     };
 
     // This gets all Data File Names that are stored on the server
