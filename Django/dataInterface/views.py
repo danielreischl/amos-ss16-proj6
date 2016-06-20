@@ -484,4 +484,20 @@ def fileUpload(request):
             destination.write(chunk)
     return HttpResponse('Success')
 
+###############################################
+######### URL: simulation.running #############
+###############################################
 
+def simulationRuns (request):
+    # Depending on if a modified csv file is in the the InitialData Folder it returns true for running or not
+
+    # reads out all files in the InitialData - Folder
+    files = dataProcessingFunctions.checkForCSVFilesInFolder('/srv/DataProcessing/InitialData')
+
+    # Return true if a modified csv file is found
+    for file in files:
+        if '_modified.csv' in file:
+            return HttpResponse(True)
+
+    # else returns false
+    return HttpResponse (False)
