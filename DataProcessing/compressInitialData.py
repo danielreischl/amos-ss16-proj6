@@ -30,8 +30,6 @@
 # Output: CSV file for each carrier in each iteration with the following structure (time; posAbsolute; energy; drive)
 # and the following name Session_X_Carrier_X_Iteration_X.csv
 
-# TODO: Now that we have the real data some kind of measure for flexibility can be implemented and calculated here!
-
 # IMPORTS
 # Imports Pandas for Data handling
 from __future__ import print_function
@@ -483,14 +481,11 @@ def moveFileToFolder(fileName, folderName):
 # Initialize Log-File
 # Creates or loads Log DataProcessing.log
 # Format of LogFile: mm/dd/yyyy hh:mm:ss PM LogMessage
-# TODO uncomment
-#logging.basicConfig(filename='/srv/DataProcessing/dataProcessing.log', level=logging.INFO,
-#                    format='%(asctime)s %(message)s',
-#                    datefmt='%m/%d/%Y %I:%M:%S %p')
+logging.basicConfig(filename='/srv/DataProcessing/dataProcessing.log', level=logging.INFO,
+                    format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 # Calls Function to create Running.txt
-#  TODO uncomment
-#dataProcessingFunctions.createRunningFile()
+dataProcessingFunctions.createRunningFile()
 
 # Reads ConfigFile
 config = ConfigParser.ConfigParser()
@@ -498,40 +493,19 @@ config.read('settings.cfg')
 
 # CONSTANTS
 # WAIT_TIME_IN_SECONDS: Time the script should wait until it calls the function again (in seconds)
-# TODO uncomment
-# WAIT_TIME_IN_SECONDS = config.getfloat('Simulation', 'waittime_compression')
-# TODO delete
-WAIT_TIME_IN_SECONDS = 0
+WAIT_TIME_IN_SECONDS = config.getfloat('Simulation', 'waittime_compression')
 # Input file names of data here
-# TODO uncomment
-# DATA_FILE_NAMES = []
-# TODO delete
-DATA_FILE_NAMES = ['/Users/Robax/amos-ss16-proj6/amos-ss16-proj6/DataProcessing/InitialData/Trace_NB.CSV']
+DATA_FILE_NAMES = []
 # AMOUNT_OF_CARRIERS: How many Carriers are in the system
-# TODO uncomment
-#AMOUNT_OF_CARRIERS = config.getint('Simulation', 'amount_of_carriers')
-# TODO delete
-AMOUNT_OF_CARRIERS = 15
+AMOUNT_OF_CARRIERS = config.getint('Simulation', 'amount_of_carriers')
 # DATA_SEPARATOR: Separator of the CSV-File
-# TODO uncomment
-#DATA_SEPARATOR = config.get('Simulation', 'csv_seperator')
-# TODO delete
-DATA_SEPARATOR = ';'
+DATA_SEPARATOR = config.get('Simulation', 'csv_seperator')
 # Every X th row of the data is kept when compressing the data
-# TODO uncomment
 KEEP_EVERY_X_ROW = config.getint('Simulation', 'keep_every_x_rows')
-# TODO delete
-KEEP_EVERY_X_ROW = 100
 # Current Session
-# TODO uncomment
-#session = config.getint('Simulation', 'session')
-# TODO delete
-session = 1
+session = config.getint('Simulation', 'session')
 # FileName that should be imported
-# TODO uncomment
-#fileName = config.get('Simulation', 'name_of_imported_file')
-# TODO delete
-fileName = '/Users/Robax/amos-ss16-proj6/amos-ss16-proj6/DataProcessing/InitialData/Trace_NB.CSV'
+fileName = config.get('Simulation', 'name_of_imported_file')
 
 # Checks if a File is added to DATA_FILE_NAMES. If not it is terminating the script
 if fileName == '':
@@ -591,15 +565,12 @@ sessionData.loc['1'] = pd.Series(
      'status': True,})
 
 # calls function to load the sessiondata data into the database
-# TODO uncomment
-#dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'))
+dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'))
 
 # Counts up session for each filename
 session += 1
 
-# TODO uncomment
-#dataProcessingFunctions.updated_config('Simulation', 'session', session)
+dataProcessingFunctions.updated_config('Simulation', 'session', session)
 
 # Calls Funcion to remove RunningFile
-# TODO uncomment
-#dataProcessingFunctions.deleteRunningFile()
+dataProcessingFunctions.deleteRunningFile()
