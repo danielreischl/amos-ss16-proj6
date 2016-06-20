@@ -75,8 +75,8 @@ angular
         templateUrl: 'sections/helpPage/helpPage.html'
       })
        .when('/flexibilityPage', {
-        templateUrl:
-        })
+        templateUrl: 'sections/flexibilityPage/flexibilityPage.html'
+      })
 
       .otherwise({
         redirectTo: '/',
