@@ -38,7 +38,7 @@
             <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#CompareCarrier'">Continuous Consumption Graph</md-button>
             <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#AverageEnergyConsumptionChart'">Average Consumption Graph</md-button>
             <md-button class="md-raised md-cornered" ng-click="refresh()">Refresh</md-button>
-            <p class="md-caption"> Last Refresh = {{ ts | date : "HH:mm:ss.sss" }}</p>
+            <p class="timestamp"> Time of last refresh = {{ ts | date : "HH:mm:ss.sss" }}</p>
         </div>
     </section>
 </div>

@@ -21,87 +21,77 @@
 
 <!-- This html fragment displays the Simulation Page of the system
      From here the following things can be done
-     1: See which data files are on the server and which is currently running
-     2: Stop the current running session and reset the database
-     3: Set the settings for the next simulation
-     4: Start the new simulation
-     5: Upload a data file
+     1: See which data files are on the server
+     2: Set the settings for the next simulation
+     3: Start the new simulation
+     4: Upload a data file
 -->
 
 <div ng-controller="simulationPageController" layout="column" layout-align="start start">
 
-    <!-- This displays which data file is currently being simulated and if the simulation is running or is stopped-->
-    <simulationInformation layout="row" layout-align="start center">
-        <p>Current Data File: "{{currentDataFile}}" - {{currentDataFileRunning}}</p>
-    </simulationInformation>
+    <!-- Headline for starting a new simulation -->
+    <h1>Select parameters to start the simulation</h1>
 
-    <!-- Create a Dropdown for the different data files and preselects the current file if it can find it in the array -->
-    <selectDataFile layout="row" layout-align="start center"> Select data file:
-        <select ng-model="selectedDataFile">
-            <option ng-repeat="x in dataFileNames">{{x}}</option>
-        </select>
-    </selectDataFile>
-    <!-- In these four forms the user types in the amount of carriers and the three different wait times for the simulation
-    label is displaying the text
-    input is handling the input information and saving it to the controller in the variable of ng-model
-    div is for displaying the error text if the text is not entered correctly
-   -->
-    <form name="carriersForm">
-        <label>Amount of carriers:
-            <input type="number" name="input" ng-model="amountOfCarriers" min="1" max="999" required></input>
-        </label>
+    <!--
+    Generates a table with the following values and input fields:
+    Available Datafiles as drop down
+    Wait times of the dataProcessing scripts as input filed: Compression, FirstDataLoad, DataReload
+    Amount Of Carriers as input field
+    KeepEveryXRows as Compression rate
+    -->
 
-        <div role="alert">
-            <span class="error" ng-show="simulationInformations.input.$error.required"> Required!</span>
-            <span class="error" ng-show="simulationInformations.input.$error.number"> Not valid number!</span>
-        </div>
-    </form>
-    <form name="timeForm1">
-        <label>Wait time compression (in s):
-           <input type="number" name="input" ng-model="waitForCompression" ng-model="example" min="0" max="999" required ></input>
-        </label>
+    <form name="carriersForm" ng-submit="startSimulation()">
+        <table>
+            <tr>
+                <td align=right>Datafile:</td>
+                <td align=left>
+                    <select  ng-model="selectedDataFile" required>
+                        <option ng-repeat="x in dataFileNames">{{x}}</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td align=right> Amount of Carriers: </td>
+                <td align=left> <input type="number" name="amountOfCarriers" ng-model="amountOfCarriers" min="0" max="999" required /></td>
+            </tr>
+            <tr>
+                <td align=right> Wait time compression (in ms): </td>
+                <td align=left> <input type="number" name="waitForCompression" ng-model="waitForCompression" min="0" max="999" required /></td>
+            </tr>
+            <tr>
+                <td align=right>Wait time for first data load (in s): </td>
+                <td align=left><input type="number" name="waitForFirstDataLoad" ng-model="waitForFirstDataLoad" min="0" max="999" required /></td>
+            </tr>
+            <tr>
+                <td align=right>Wait time for  data reload (ins s): </td>
+                <td align=left><input type="number" name="waitForDataReload" ng-model="waitForDataReload" min="0" max="999" required /></td>
+            </tr>
+            <tr>
+                <td align=right>Keep Every X Rows: </td>
+                <td align=left><input type="number" name="keepEveryXRows" ng-model="keepEveryXRows"  min="0" max="999" required /></td>
+            </tr>
+            <tr>
+                <td><button type="submit" ng-disabled="carriersForm.$invalid">Start Simulation</button></td>
+            </tr>
+        </table>
+     </form>
 
-        <div role="alert">
-            <span class="error" ng-show="timeForm1.input.$error.required"> Required!</span>
-            <span class="error" ng-show="timeForm1.input.$error.number"> Not valid number!</span>
-        </div>
-    </form>
-
-    <form name="timeForm2">
-        <label>Wait time for first data load (in s):
-           <input type="number" name="input" ng-model="waitForFirstDataLoad" ng-model="example" min="0" max="999" required ></input>
-        </label>
-
-        <div role="alert">
-            <span class="error" ng-show="timeForm2.input.$error.required"> Required!</span>
-            <span class="error" ng-show="timeForm2.input.$error.number"> Not valid number!</span>
-        </div>
-    </form>
-
-    <form name="timeForm3">
-        <label>Wait time for data reload (in s):
-           <input type="number" name="input" ng-model="waitForDataReload" ng-model="example" min="0" max="999" required ></input>
-        </label>
-
-        <div role="alert">
-            <span class="error" ng-show="timeForm3.input.$error.required"> Required!</span>
-            <span class="error" ng-show="timeForm3.input.$error.number"> Not valid number!</span>
-        </div>
-    </form>
-
-    <!-- Two buttons for starting and stopping the simulation -->
-    <body layout="row" layout-align="center center">
-        <button ng-click="startSimulation()">Start Simulation</button>
-        <button ng-click="stopSimulation()">Stop Simulation</button>
-    </body>
+    <!-- Headline for upload -->
+    <h1>Upload a new CSV - file</h1>
 
     <div class = "fileUpload">
-      <form action="django/dataInterface/fileUpload.html" method="post" enctype="multipart/form-data">
-	<p> Choose csv - File: <br/>
-	  <input name="fileName" id="fileName">
-	  <input name="file" type="file" accept="text/csv"/>
-	</p>
-	<button type="button">Upload</button> </form>
+        <form action="django/dataInterface/fileUpload.html" method="post" enctype="multipart/form-data">
+            <table>
+                <tr>
+                    <p class="uploadText"> Choose CSV - file:<br/>
+	                <input hidden name="fileName" id="fileName">
+	                <input name="file" type="file" accept="text/csv"/>
+	                </p>
+                </tr>
+                <tr>
+                    <button type="button">Upload</button> </form>
+                </tr>
+            </table>
     </div>
 
 </div>

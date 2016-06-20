@@ -35,7 +35,7 @@ import subprocess
 # imports os
 import os
 
-# Retunrs last iteration of a carrier at a session
+# Returns last iteration of a carrier at a session
 def funcMaxIteration(session, carrier):
     return timestampdata.objects.filter(session=session, carrier=carrier).aggregate(Max('iteration')).get('iteration__max')
 # Returns total energy consumption of a carrier in a paticular session and iteration
@@ -55,7 +55,7 @@ def funcAmountOfCarriers(session):
     return timestampdata.objects.filter(session=session).aggregate(Max('carrier')).get('carrier__max')
 # Returns the most recent session
 def funcRecentSession():
-    return timestampdata.objects.aggregate(Max('session')).get('session__max')
+    return timestampdata.objects.all().aggregate(Max('session')).get('session__max')
 # Returns one percent value for CarrierView & BarchartView
 def funcPecentageOfConsumption (session, carrier):
     # Consumption at first iteration
@@ -64,6 +64,10 @@ def funcPecentageOfConsumption (session, carrier):
     lastConsumption = funcTotalEnergyConsumption(session, carrier, funcMaxIteration(session, carrier))
     # Divides last Consumption by First Consumption and retunrs it
     return (lastConsumption/initialConsumption)
+
+###############################################
+############ URL: values.request ##############
+###############################################
 
 # Funtion to return values instead of csv - Files
 def db2values (request):
@@ -83,7 +87,7 @@ def db2values (request):
     elif requestedValue=='amountOfCarriers':
         return HttpResponse(funcAmountOfCarriers(requestedSession))
     # returns current session
-    elif requestedValue=='currentSession':
+    elif requestedValue == 'currentSession':
         return HttpResponse(funcRecentSession())
     # returns Average Energy Consumption of a specific carrier in a specific iteration and session
     elif requestedValue=='energyConsumptionAverage':
@@ -100,44 +104,9 @@ def db2values (request):
     else:
         return HttpResponse ("Value not defined")
 
-
-def db2csv(request):
-    # returns a csv File according to the parameters given in the URL
-    # possible parameters: carrier, timeSpan, iterations etc
-    # exact functionality to be specified, at the moment this is just a proof of concept
-    response = HttpResponse(content_type='text/csv')
-    # the name data.csv is just used by the browser when you query the file directly and want to download it
-    response['Content-Disposition'] = 'attachment; filename="data.csv"'
-
-    # extract parameters
-    # e.g. for first carrier request position.csv?carrier=1
-    requestedCarrier = request.GET['carrier']
-    requestedIteration = request.GET['iteration']
-    requestedDimension = request.GET['dimension']
-    requestedExtractionType = request.GET['type']
-
-    writer = csv.writer(response)
-
-    if requestedExtractionType == "PoC":
-        result = timestampdata.objects.filter(carrier=requestedCarrier,iteration=requestedIteration)
-
-        # case analysis by the selected dimension: there must be a nicer way to do this
-    
-        if requestedDimension == "POSITION":
-            for row in result:
-                writer.writerow([row.timeStamp, row.positionAbsolute])
-        elif requestedDimension == "ACCELERATION":
-            for row in result:
-                writer.writerow([row.timeStamp, row.acceleration])
-        elif requestedDimension == "SPEED":
-            for row in result:
-                writer.writerow([row.timeStamp, row.speed])
-        elif requestedDimension == "ENERGY":
-            for row in result:
-                writer.writerow([row.timeStamp, row.energyConsumption])
-            
-    return response
-
+###############################################
+######### URL: continuousData.csv #############
+###############################################
 
 def continuousData(request):
     # returns a csv File according to the parameters given in the URL
@@ -196,8 +165,9 @@ def continuousData(request):
     writer.writerow(csvRow)
     return response
 
-    
-
+###############################################
+############ URL: rawData.csv #################
+###############################################
 
 def rawData(request):
     # returns a csv File of the raw database tables 
@@ -233,6 +203,10 @@ def rawData(request):
             
     return response
 
+###############################################
+############ URL: rawData.json ################
+###############################################
+
 def rawDataJson (request):
 
     # Parameter: Table
@@ -252,6 +226,10 @@ def rawDataJson (request):
     json_data = serializers.serialize('json', data)
     # Returns JSON
     return HttpResponse(json_data, content_type='application/json')
+
+###############################################
+################# URL: log.txt ################
+###############################################
 
 def logs(request):
     # Returns a log file
@@ -296,6 +274,10 @@ def deleteDatabaseValues (request):
         # Any Other parameter returns 'FAIL'
         return HttpResponse('FAIL')
 
+###############################################
+######## URL: simulation.files ################
+###############################################
+
 def simulationFiles (request):
 
     # reads out all files in the InitialData - Folder
@@ -304,13 +286,18 @@ def simulationFiles (request):
     # Defines FileNamesAsString
     fileNamesAsString = ""
 
-    # Adds all filenames to the string
+    # Adds all filenames to the string if it is isn't a modified file that is created during a simulation run.
     for file in files:
-        fileNamesAsString = fileNamesAsString + file + ','
+        if not '_modified.csv' in file:
+            fileNamesAsString = fileNamesAsString + file + ','
 
     # returns the string
     return HttpResponse (fileNamesAsString[0: len(fileNamesAsString)-1])
 
+
+###############################################
+######## URL: simulation.reset ################
+###############################################
 
 def resetSimulation (request):
     # Deletes all DatabaseValues and sets the Session in the cofigFile to Zero
@@ -326,29 +313,46 @@ def resetSimulation (request):
 
     return HttpResponse('OK')
 
+###############################################
+######## URL: simulation.start ################
+###############################################
+
 def startSimulation (request):
-    # Starts the Simulation
+    # Sets all values that are needed to start the simulation and starts the simulation
 
     # Requested Parameters:
-    # Waittime, FileName
+    # Waittimes, FileName, KeepEveryXRows, AmountOfCarriers
     requestedwtSimulation = request.GET['wtSimulation']
     requestedwtFirstDataLoad = request.GET['wtFirstDataload']
     requestedwtDataReload = request.GET['wtDataReload']
-    requestedAmountOfCarriers = request.GET['requestedAmountOfCarriers']
+    requestedAmountOfCarriers = request.GET['amountOfCarriers']
     requestedfileName = request.GET['fileName']
+    requestedKeepEveryxRows = request.GET['keepEveryXRows']
 
-    # Sets Values in ConfigFile
+    # Sets Values in ConfigFile in DataProcessingFolder
+    # AmountOfCarriers
     dataProcessingFunctions.updated_config('Simulation', 'amount_of_carriers', requestedAmountOfCarriers)
-    dataProcessingFunctions.updated_config('Simulation', 'waittime_compression', requestedwtSimulation)
+    # Waittime in the Compression and divides the value by 1000 because it are ms not s
+    dataProcessingFunctions.updated_config('Simulation', 'waittime_compression', int(requestedwtSimulation)/1000)
+    # Waittime for the first dataload of WriteCarrierDataToDataBase
     dataProcessingFunctions.updated_config('Simulation', 'waittime_first_dataload', requestedwtFirstDataLoad)
+    # Waittime for the data reload of WriteCarrierDataToDataBase
     dataProcessingFunctions.updated_config('Simulation', 'waittime_data_reload', requestedwtDataReload)
+    # FileName that should be imported
     dataProcessingFunctions.updated_config('Simulation', 'name_of_imported_file', requestedfileName)
+    # KeepEveryXRows to determine the compressionRate
+    dataProcessingFunctions.updated_config('Simulation', 'keep_every_x_rows', requestedKeepEveryxRows)
 
-    # Starts both DataProcessing Scripts in the backround
+    # Starts both DataProcessing Scripts in the background
     subprocess.Popen(["python", "/srv/DataProcessing/compressInitialData.py"], cwd='/srv/DataProcessing')
     subprocess.Popen(["python", "/srv/DataProcessing/writeCarrierDataToDataBase.py"],cwd='/srv/DataProcessing')
+
+    # Returns Running after Success
     return HttpResponse('Running')
 
+###############################################
+#### URL: saverageEnergyConsumption.csv #######
+###############################################
 
 def averageEnergyConsumption (request):
 
@@ -433,6 +437,10 @@ def averageEnergyConsumption (request):
     # Retunrs csv file
     return response
 
+###############################################
+######### URL: percentages.csv ################
+###############################################
+
 def percentageForCircleAndBarChart(request):
     # Provides a csv file of percent energy consumption from first to last iteration
     # parameter requested Session
@@ -464,6 +472,10 @@ def percentageForCircleAndBarChart(request):
     # Returns CSV-File
     return response
 
+###############################################
+######### URL: fileUpload.html ################
+###############################################
+
 def fileUpload(request):
     fileName = request['fileName']
     file = request.FILES['file']
@@ -472,4 +484,20 @@ def fileUpload(request):
             destination.write(chunk)
     return HttpResponse('Success')
 
+###############################################
+######### URL: simulation.running #############
+###############################################
 
+def simulationRuns (request):
+    # Depending on if a modified csv file is in the the InitialData Folder it returns true for running or not
+
+    # reads out all files in the InitialData - Folder
+    files = dataProcessingFunctions.checkForCSVFilesInFolder('/srv/DataProcessing/InitialData')
+
+    # Return true if a modified csv file is found
+    for file in files:
+        if '_modified.csv' in file:
+            return HttpResponse(True)
+
+    # else returns false
+    return HttpResponse (False)

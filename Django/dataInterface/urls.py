@@ -22,8 +22,6 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    # this returns a csv-file of the requested data - for details see views.py 
-    url(r'^data.csv', views.db2csv, name='data'),
     # this returns a csv-file of the requested data for multiple carriers and/or iterations- for details see views.py 
     url(r'^continuousData.csv', views.continuousData, name='data'),
     # this returns a csv-file of raw database tables - for details see views.py 
@@ -38,7 +36,7 @@ urlpatterns = [
     # URL that provides data to the AverageEnergyConsumptionChart
     url (r'^averageEnergyConsumption.csv', views.averageEnergyConsumption, name ='averageEnergyConsumption'),
     # URL that provides the percanteges for the Circle View and Bar Chart
-    url (r'^percentages.csv', views.percentageForCircleAndBarChart, name = 'percentageForCircleAndBarChart'),
+    url (r'^percentages_creeping.csv', views.percentageForCircleAndBarChart, name = 'percentageForCircleAndBarChart'),
     # URL that resets the simulation
     url(r'^simulation.reset', views.resetSimulation, name='simulationReset'),
     # URL that provides rawData as JSON
@@ -47,6 +45,8 @@ urlpatterns = [
     url (r'^simulation.start', views.startSimulation, name = 'startSimulation'),
     # URL that returns all files as a string
     url(r'^simulation.files', views.simulationFiles, name='simulationFiles'),
+    # URL that True or False depending on if the Simulation is still running
+    url(r'^simulation.running', views.simulationRuns, name='SimulationRunning'),
     # URL for file upload
     # disabled until we are sure that everything works
     # url(r'^fileUpload.html', views.fileUpload, name='fileUpload'),

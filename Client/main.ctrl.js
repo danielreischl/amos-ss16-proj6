@@ -44,6 +44,7 @@ angular.module('app')
     $scope.simulation = "";
     $scope.settings = "";
     $scope.help = "";
+    $scope.flexView ="";
 
     /* this scope will be triggered when the user wants to expand the navigation bar, The function inside will simply set the state to ture or false.
        and also the string inside the variables.
@@ -58,6 +59,7 @@ angular.module('app')
             $scope.simulation ="";
             $scope.settings = "";
             $scope.help = "";
+            $scope.flexView = "";
             state = false;
         } else {
             $scope.home = "Home";
@@ -67,6 +69,7 @@ angular.module('app')
             $scope.simulation = "Simulation";
             $scope.settings = "Settings";
             $scope.help  = "Help";
+            $scope.flexView = "Flexibility View";
             state = true;
         }
     }
@@ -212,6 +215,9 @@ angular.module('app')
                     },
                 }
 	            });
+
+        $scope.ts = new Date();
+
     }
 
     $scope.getListStyle = function(index) {
@@ -508,7 +514,9 @@ which kind of data he wants to see. The default value is average energy consumpt
     }
 
     $scope.refresh = function() {
-        // TODO refresh circles also
+        // Redraw circles
+        $scope.circleGraph();
+        //Update the timestamp
         $scope.ts = new Date();
     }
 
@@ -526,7 +534,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     // the array variable where the converted content from the csv file will be.
     var carrierPercentageData;
     // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-    Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
+    Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
                                                                    dynamicTyping: true,
                                                                    complete: function(results) {
                                                                        carrierPercentageData =results.data[1];
@@ -621,7 +629,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         // the array variable where the converted content from the csv file will be.
         var carrierPercentageData;
         // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-        Papa.parse('django/dataInterface/percentages.csv?session=1', { download: true,
+        Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
                                                                        dynamicTyping: true,
                                                                        complete: function(results) {
                                                                            carrierPercentageData =results.data[1];
@@ -637,6 +645,16 @@ which kind of data he wants to see. The default value is average energy consumpt
         var carrierArray = [];
         /* ID of first Carrier */
         var idCounter = 1;
+
+        $scope.ts = new Date();
+
+        $scope.refresh = function() {
+            // Redraw circles
+            $scope.createBarChartView();
+            //Update the timestamp
+            $scope.ts = new Date();
+        }
+
 
         // timer is set to 1 second. this wait time is needed to fetch all data from the database
         $timeout(createBarChartView, 1300);
@@ -696,67 +714,29 @@ which kind of data he wants to see. The default value is average energy consumpt
     }
 })
 
-.controller('simulationPageController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
-
-
-   // Displays the currently selected Data File
-    // TODO dynamically obtain from backend
-    $scope.currentDataFile = getCurrentDataFileName();
-    $scope.selectedDataFile = getCurrentDataFileName();
-
-    // States if the simulation process is still running or has already ended
-    // TODO dynamically obtain from backend
-    $scope.currentDataFileRunning = "Running";
+.controller('simulationPageController', function($scope, $http) {
 
     // This saves all Data File Names that are stored on the server
     $scope.dataFileNames = getArrayOfDataFiles();
 
-    // Values for starting up the new simulation
+    // Standard Values
     $scope.amountOfCarriers = 15;
     $scope.waitForCompression = 0;
     $scope.waitForFirstDataLoad = 30;
     $scope.waitForDataReload = 30;
-    // Example value for handling invalid inputs in the number fileds
-    //$scope.example = 12;
-    //$scope.onlyNumbers = /^\i+$/;
+    $scope.keepEveryXRows = 100
 
     //Starts the simulation by calling the website link
     $scope.startSimulation = function() {
-
-       var compareResult =  $scope.currentDataFileRunning.localeCompare("Stopped");
-
-       if (compareResult == 0) {
-           var urlString = 'django/dataInterface/simulation.start?wtSimulation=' + $scope.waitForCompression + '&wtFirstDataload=' + $scope.waitForFirstDataLoad + '&wtDataReload=' + $scope.waitForDataReload + '&requestedAmountOfCarriers=' + $scope.amountOfCarriers + '&fileName=InitialData/' + $scope.selectedDataFile
+           var urlString = 'django/dataInterface/simulation.start?wtSimulation=' + $scope.waitForCompression + '&wtFirstDataload=' + $scope.waitForFirstDataLoad + '&wtDataReload=' + $scope.waitForDataReload + '&amountOfCarriers=' + $scope.amountOfCarriers + '&fileName=InitialData/' + $scope.selectedDataFile  + '&keepEveryXRows=' + $scope.keepEveryXRows
            var xmlHttp = new XMLHttpRequest();
            xmlHttp.open( "GET", urlString, false);
            xmlHttp.send(null);
            var returnString  = xmlHttp.responseText;
-           $scope.currentDataFileRunning = returnString;
-           $scope.currentDataFile = $scope.selectedDataFile;
-       } else {
-           alert("Stop simulation before starting!");
-       }
+
+           alert("Simulation started!");
+
     };
-
-    //Starts the simulation by calling the website link
-    $scope.stopSimulation = function() {
-
-       var compareResult =  $scope.currentDataFileRunning.localeCompare("Running");
-
-       if (compareResult == 0) {
-           carrierService.emptyCarrierArray();
-           $scope.currentDataFileRunning = "Stopped";
-           $scope.currentDataFile = "None";
-       } else {
-
-       }
-    };
-
-    //Returns the current data file name
-    // TODO dynamic
-    function getCurrentDataFileName() {
-        return "Trace_SV.csv";
-    }
 
     // This gets all Data File Names that are stored on the server
     function getArrayOfDataFiles() {
@@ -767,10 +747,6 @@ which kind of data he wants to see. The default value is average energy consumpt
         xmlHttp.send(null);
         var string  = xmlHttp.responseText;
 
-        // Comment in for static values
-        // String of data files for testing
-        // var string = "/srv/DataProcessing/InitialData/Trace_SV.csv,/srv/DataProcessing/InitialData/Trace_PE.csv";
-
         // Seperates the comma seperated data files string to an array
         var arraySimulationFileNames = string.split(',');
 
@@ -779,6 +755,7 @@ which kind of data he wants to see. The default value is average energy consumpt
             arraySimulationFileNames[i] = arraySimulationFileNames[i].substring(32);
         }
 
+        // returns an array with all FileNames
         return arraySimulationFileNames;
 
     }

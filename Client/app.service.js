@@ -35,7 +35,8 @@ angular.module('app')
 	       Fetches data from backend
 	       So far this is called each time when getAll is called, but this is probably not necessary
 	    */
-	    Papa.parse('django/dataInterface/percentages.csv?session=' +sessionService.getCurrentSession(), {  download: true,
+
+	    Papa.parse('django/dataInterface/percentages_creeping.csv?session=' +sessionService.getCurrentSession(), {  download: true,
 													       dynamicTyping: true,
 													       complete: function(results) {
 														   percentageData = results.data[1];
