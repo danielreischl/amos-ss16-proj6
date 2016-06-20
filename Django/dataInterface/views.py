@@ -109,7 +109,7 @@ def funcPecentageOfConsumption(session, carrier):
     initialConsumption = funcTotalEnergyConsumption(session, carrier, 1)
     # Consumption at current iteration
     lastConsumption = funcTotalEnergyConsumption(session, carrier, funcMaxIteration(session, carrier))
-    # Divides last Consumption by First Consumption and retunrs it
+    # Divides last Consumption by First Consumption and returns it
     return (lastConsumption / initialConsumption)
 
 
@@ -117,17 +117,17 @@ def funcPecentageOfConsumption(session, carrier):
 ############ URL: values.request ##############
 ###############################################
 
-# Funtion to return values instead of csv - Files
+# Function to return values instead of csv - Files
 def db2values(request):
-    # possible paramaters:
+    # possible parameters:
     # session, carrier, value (Which value should be returned)
     requestedSession = request.GET['session']
     requestedCarrier = request.GET['carrier']
     requestedIteration = request.GET['iteration']
     requestedValue = request.GET['value']
 
-    # If requested Value is LastItteration of a carrier:
-    # Returns the LastIterration of the called Carrier and Session, returns the max Value in the db
+    # If requested Value is LastIteration of a carrier:
+    # Returns the LastIteration of the called Carrier and Session, returns the max Value in the db
     # (Iterations are counted in the db)
     if requestedValue == 'lastIteration':
         return HttpResponse(funcMaxIteration(requestedSession, requestedCarrier))
@@ -166,7 +166,7 @@ def continuousData(request):
 
     # extract parameters
     # e.g. for carrier 1, 2 and 5 request position.csv?carrier=1,2,5
-    # first split at commata then convert to integers
+    # first split at commas then convert to integers
     # NB: there is no error handling, so make sure you only pass (comma-separated) integers to the function
     requestedCarriers = map(int, request.GET['carriers'].split(','))
     requestedIterations = map(int, request.GET['iterations'].split(','))
@@ -215,6 +215,71 @@ def continuousData(request):
     return response
 
 
+###########################################################
+######### URL: continuousDataAbsoluteTime.csv #############
+###########################################################
+
+# Return absolute time on the X axis and position, speed, acceleration or energy consumption on the y axis depending
+# on input parameters
+def continuousDataAbsoluteTime(request):
+    # returns a csv File according to the parameters given in the URL
+    response = HttpResponse(content_type='text/csv')
+    # the name data.csv is just used by the browser when you query the file directly and want to download it
+    response['Content-Disposition'] = 'attachment; filename="dataAbsoluteTime.csv"'
+
+    # extract parameters
+    # e.g. for carrier 1, 2 and 5 request position.csv?carrier=1,2,5
+    # first split at commas then convert to integers (not for dimension)
+    # NB: there is no error handling, so make sure you only pass (comma-separated) integers to the function
+    requestedCarriers = map(int, request.GET['carriers'].split(','))
+    requestedIterations = map(int, request.GET['iterations'].split(','))
+    requestedSession = int(request.GET['session'])
+    requestedDimension = request.GET['dimension']
+
+    fieldNames = ['timeAbsolute']
+    # create field names for csv file
+    # example for carriers 1, 5 and iterations 9, 10
+    # timeStamp | c1i9 | c1i10 | c2i9 | c2i10
+    for carrier in requestedCarriers:
+        for iteration in requestedIterations:
+            fieldNames.append('c' + str(carrier) + 'i' + str(iteration))
+    writer = csv.DictWriter(response, fieldnames=fieldNames)
+    writer.writeheader()
+
+    result = timestampdata.objects.filter(session=requestedSession, carrier__in=requestedCarriers,
+                                          iteration__in=requestedIterations).order_by('timeAbsolute')
+    currentTimeStamp = None
+    csvRow = {}
+
+    for row in result:
+        # we requested data ordered by timestamp, so rows come in blocks with identical timestamp.
+        # We iterate through these to fill a the row with this timestamp
+        # Once we get a row with a different timeStamp we write the row to the csv file and reset the row
+        if currentTimeStamp == None or currentTimeStamp != row.timeStamp:
+            if currentTimeStamp != None:
+                writer.writerow(csvRow)
+
+            # (re-) set csv-row
+            currentTimeStamp = row.timeStamp
+            csvRow = {'timeAbsolute': currentTimeStamp}
+
+        carrier = row.carrier
+        iteration = row.iteration
+        key = 'c' + str(carrier) + 'i' + str(iteration)
+        if requestedDimension == "positionAbsolute":
+            csvRow[key] = row.positionAbsolute
+        elif requestedDimension == "speed":
+            csvRow[key] = row.speed
+        elif requestedDimension == "acceleration":
+            csvRow[key] = row.acceleration
+        elif requestedDimension == "energyConsumption":
+            csvRow[key] = row.energyConsumption
+
+    # write last row
+    writer.writerow(csvRow)
+    return response
+
+
 ###############################################
 ############ URL: rawData.csv #################
 ###############################################
@@ -240,7 +305,7 @@ def rawData(request):
                  row.acceleration, row.energyConsumption])
 
     # Returns all data of iteration table
-    # session, carrier, iteration, sppedAverage, accelerationAverage, energyConsumptionTotal, energyConsumptionAverage
+    # session, carrier, iteration, speedAverage, accelerationAverage, energyConsumptionTotal, energyConsumptionAverage
     elif requestedTable == "iteration":
         result = iterationdata.objects.all()
         for row in result:
