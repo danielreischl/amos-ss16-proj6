@@ -507,7 +507,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
     $scope.refresh = function() {
         // Redraw circles
-        circleGraph();
+        $scope.circleGraph();
         //Update the timestamp
         $scope.ts = new Date();
     }
@@ -637,6 +637,16 @@ which kind of data he wants to see. The default value is average energy consumpt
         var carrierArray = [];
         /* ID of first Carrier */
         var idCounter = 1;
+
+        $scope.ts = new Date();
+
+        $scope.refresh = function() {
+            // Redraw circles
+            $scope.createBarChartView();
+            //Update the timestamp
+            $scope.ts = new Date();
+        }
+
 
         // timer is set to 1 second. this wait time is needed to fetch all data from the database
         $timeout(createBarChartView, 1300);
