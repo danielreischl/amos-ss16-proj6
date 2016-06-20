@@ -37,7 +37,7 @@ html, body {
 header {
     width:100%;
     top:0px;
-    background-color: #009688;
+    background-color: #00bcd4;
     color: #E0F2F1;
 }
 
@@ -57,11 +57,11 @@ p {
 }
 
 md-toolbar.toolbar {
-    background-color: #009688;
+    background-color: #00bcd4;
 }
 
 md-sidenav.md-toolbar {
-    background-color: #009688;
+    background-color: #00bcd4;
 }
 md-content {
 
@@ -75,7 +75,7 @@ md-content {
 }
 
 .md-button a:hover:not(.active) {
-    color: #E0F2F1;
+    color: #00bcd4;
 }
 
 .md-button.md-cornered {
@@ -87,7 +87,7 @@ md-content {
 }
 
 .topNav {
-    background-color: #009688;
+    background-color: #00bcd4;
 }
 
 #button {
