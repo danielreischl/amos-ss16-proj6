@@ -219,12 +219,12 @@ angular.module('app')
     }
 
     $scope.getListStyle = function(index) {
-	if (index % 5 == 1) {
-            return {'clear': 'left'};
-	}
-	else {
-            return {};
-	}
+        if (index % 5 == 1) {
+                return {'clear': 'left'};
+        }
+        else {
+                return {};
+        }
     }
     
 
@@ -242,27 +242,27 @@ angular.module('app')
 
     $scope.getSelectedIterationsString = function() {
         var selectedIterations = [];
-	var selectedNumber;
-	// TODO: add the possibility to select individual iterations
-	switch ($scope.selectedIteration) {
-	case "last":
-	    selectedNumber = 1;
-	    break;
-	case "lastThree":
-	    selectedNumber = 3;
-	    break;
-	case "lastTen":
-	    selectedNumber = 10;
-	    break;
-	default:
-	    selectedNumber = 1;
-	}
-	
-	for (var i = amountOfIterations; i > amountOfIterations - selectedNumber && i >= 1; i--) {
-	    selectedIterations.push(i);
-	}
-	// join with comma and return
-	return selectedIterations.join();
+        var selectedNumber;
+        // TODO: add the possibility to select individual iterations
+        switch ($scope.selectedIteration) {
+        case "last":
+            selectedNumber = 1;
+            break;
+        case "lastThree":
+            selectedNumber = 3;
+            break;
+        case "lastTen":
+            selectedNumber = 10;
+            break;
+        default:
+            selectedNumber = 1;
+        }
+
+        for (var i = amountOfIterations; i > amountOfIterations - selectedNumber && i >= 1; i--) {
+            selectedIterations.push(i);
+        }
+        // join with comma and return
+        return selectedIterations.join();
     }
 
 })
@@ -396,16 +396,15 @@ which kind of data he wants to see. The default value is average energy consumpt
         // Updates the  time for the time stamp
         $scope.ts = new Date();
     }
-
 })
    
 
 /* Refresh the circle Page. The purpose of this controller is listen to the Button
  and upon receiving an event, it should trigger the update circle button*/
-    .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService, percentageService) {
+.controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService, percentageService) {
     // Initializes time stamp
     $scope.ts = new Date();
-/* This function will highlight the carrier and save the id of the carrier inside the comaprison arrary in app.service.js*/
+    /* This function will highlight the carrier and save the id of the carrier inside the comaprison arrary in app.service.js*/
     $scope.selectCarrier = function(event) {
         // id = carrier x
         var id = event.target.id;
@@ -791,7 +790,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 /* controller for the Flexibility Chart. This chart will display the speed data of each carrier over absolute time. The user can select
 the session, iterations and carriers he wans to see. */
-    .controller('FlexibilityChartController', function($scope, carrierService, percentageService, sessionService) {
+.controller('FlexibilityChartController', function($scope, carrierService, percentageService, sessionService) {
 
     // get the array with the carriers the user wants to see in the graph.
     var carrierCompareList = carrierService.getCarrier();
@@ -827,12 +826,13 @@ the session, iterations and carriers he wans to see. */
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     $scope.carriers = [];
     for (var idCounter = 1; idCounter <= amountOfCarriers;idCounter++) {
-	var currentSelected = carrierService.hasCarrier(idCounter);
+	    var currentSelected = carrierService.hasCarrier(idCounter);
         $scope.carriers.push({id:idCounter, selected:currentSelected});
     }
 
     // create the dropdown menu for iterations. the array gets filled with the iteration numbers available in the database.
     $scope.iterationDimensions = [];
+
     for (var i = 1; i <= lastIteration;idCounter++) {
 	    $scope.iterationDimensions.push(i);
     }
@@ -842,19 +842,17 @@ the session, iterations and carriers he wans to see. */
     $scope.percentageService = percentageService;
 
     /* this functions creates the dygraph  from a data source and applies options to them*/
-
     $scope.createFlexibilityChart = function() {
 
-	$scope.carriersRequested = function() {
-	    // filter for the selected carriers
-	    var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
+    $scope.carriersRequested = function() {
+        // filter for the selected carriers
+        var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
 
-	    //join them with commas
+        //join them with commas
+        return selected.map(function(carrier){return carrier.id.toString();}).join();
+    }
 
-	    return selected.map(function(carrier){return carrier.id.toString();}).join();
-	}
-
-	sessionService.setCurrentSession($scope.currentSession);
+    sessionService.setCurrentSession($scope.currentSession);
 
         // create the graph with the parameters set. The request path for the database depends on 3 parameters: carrierRequested, selectedIteration and selectedSession
         // the url which should be requested wil be defined in requestedUrl
@@ -862,37 +860,35 @@ the session, iterations and carriers he wans to see. */
         $scope.requestedUrl = 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+$scope.carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession+'';
 
         graph = new Dygraph(
-	       document.getElementById("FlexibilityChart"),$scope.requestedUrl ,
-	                                                                                     {title: 'Flexibility Graph',
-	                                                                                      ylabel: 'Speed',
-	                                                                                      xlabel: 'Absolute Time in ms',
-	                                                                                      labelsSeparateLines: true,
-	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
-	                                                                                      legend: "always",
-	                                                                                      /*labelDiv looks for an element with the given id and puts the legend into this element.
-	                                                                                       Therefore the legend will not bis displayed inside the graph */
-	                                                                                      labelsDiv: document.getElementById("FlexibilityChartLegend"),
-	                                                                                      /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
-	                                                                                      axes: {
-	                                                                                        x: {
-                                                                                                valueFormatter: function(x) {
-                                                                                                    return 'Iteration ' + x;
-                                                                                                },
-                                                                                            },
-                                                                                          }
-	                                                                                      });
+            document.getElementById("FlexibilityChart"), $scope.requestedUrl,
+                {title: 'Flexibility Graph', ylabel: 'Speed', xlabel: 'Absolute Time in ms', labelsSeparateLines: true,
+                highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
+                legend: "always",
+                /*
+                labelDiv looks for an element with the given id and puts the legend into this element.
+                Therefore the legend will not bis displayed inside the graph
+                */
+                labelsDiv: document.getElementById("FlexibilityChartLegend"),
+                /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
+                axes: {
+                    x: {
+                        valueFormatter: function(x) {
+                            return 'Iteration ' + x;
+                        },
+                    },
+                }
+        });
 
-	$scope.getListStyle = function(index) {
-	    if (index % 5 == 1) {
-		return {'clear': 'left'};
-	    }
-	    else {
-		return {};
-	    }
-	}
+        $scope.getListStyle = function(index) {
+            if (index % 5 == 1) {
+                return {'clear': 'left'};
+            }
+            else {
+                return {};
+            }
+        }
 
         // Updates the  time for the time stamp
         $scope.ts = new Date();
     }
-
 })
