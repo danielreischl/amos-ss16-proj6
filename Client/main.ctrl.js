@@ -470,29 +470,13 @@ which kind of data he wants to see. The default value is average energy consumpt
     }
 
     $scope.circleGraphRedraw = function() {
-
-        // Get the amount of carriers
-        //var xmlHttp = new XMLHttpRequest();
-        //xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
-        //xmlHttp.send(null);
-        //var amountOfCarriers = xmlHttp.responseText;
-
         // ID of first carrier
         var idCounter = 1;
 
         // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
         var carrierPercentageData = percentageService.getAll(percentageDataType);
 	    var amountOfCarriers = carrierPercentageData.length;
-	    /*
-	    Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
-                                                                   dynamicTyping: true,
-                                                                   complete: function(results) {
-                                                                       carrierPercentageData = results.data[1];
-                                                                   }
-                                                                  }
-        )
-	    */
-	
+
         //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
         $timeout(drawCarriers, 1000);
 
@@ -555,31 +539,14 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 /* create the circle page upon page load. */
     $scope.circleGraph = function() {
-    /* open connection to the REST API from the middleware and get the amount of carriers.
-       After receiving the data, the integer variable will be saved inside of amountOfCarriers
-    */
-    //var xmlHttp = new XMLHttpRequest();
-    //xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
-    //xmlHttp.send(null);
-    //var amountOfCarriers = xmlHttp.responseText;
 
+  // data is called from a service and saved into a variable
     var carrierPercentageData = percentageService.getAll(percentageDataType);
     var amountOfCarriers = carrierPercentageData.length;
 	
     /* ID of first Carrier */
     var idCounter = 1;
-    // the array variable where the converted content from the csv file will be.
-    //var carrierPercentageData;
-    // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-    /*
-    Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
-                                                                   dynamicTyping: true,
-                                                                   complete: function(results) {
-                                                                       carrierPercentageData =results.data[1];
-                                                                   }
-                                                                  }
-    )
-    */
+
     //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
     $timeout(createCarrierHTML, 1000);
 
