@@ -166,6 +166,5 @@ BOWER_INSTALLED_APPS = (
     'angular-aria',
     'angular-messages',
     'angular-material#master',
-    'bootstrap',
 
 )
