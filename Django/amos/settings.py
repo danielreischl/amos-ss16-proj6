@@ -59,7 +59,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'djangobower',
-    'bootstrap',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -167,5 +166,6 @@ BOWER_INSTALLED_APPS = (
     'angular-aria',
     'angular-messages',
     'angular-material#master',
+    'bootstrap',
 
 )
