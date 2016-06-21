@@ -1,45 +1,40 @@
 <!--
-   This file is part of Rogue Vision.
+    This file is part of Rogue Vision.
 
-   Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
-       Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
-       Aleksander Penew, Abhinav Puri
+    Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
+        Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
+        Aleksander Penew, Abhinav Puri
 
-   Rogue Vision is free software: you can redistribute it and/or modify
-   it under the terms of the GNU Affero General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+    Rogue Vision is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-   Rogue Vision is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU Affero General Public License for more details.
+    Rogue Vision is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
 
-   You should have received a copy of the GNU Affero General Public License
-   along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
--->
-
+    You should have received a copy of the GNU Affero General Public License
+    along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
+    -->
 <!-- This html fragment displays the Simulation Page of the system
-     From here the following things can be done
-     1: See which data files are on the server
-     2: Set the settings for the next simulation
-     3: Start the new simulation
-     4: Upload a data file
--->
-
+    From here the following things can be done
+    1: See which data files are on the server
+    2: Set the settings for the next simulation
+    3: Start the new simulation
+    4: Upload a data file
+    -->
 <div ng-controller="simulationPageController" layout="column" layout-align="start start">
-
     <!-- Headline for starting a new simulation -->
     <h1>Select parameters to start the simulation</h1>
-
     <!--
-    Generates a table with the following values and input fields:
-    Available Datafiles as drop down
-    Wait times of the dataProcessing scripts as input filed: Compression, FirstDataLoad, DataReload
-    Amount Of Carriers as input field
-    KeepEveryXRows as Compression rate
-    -->
-
+        Generates a table with the following values and input fields:
+        Available Datafiles as drop down
+        Wait times of the dataProcessing scripts as input filed: Compression, FirstDataLoad, DataReload
+        Amount Of Carriers as input field
+        KeepEveryXRows as Compression rate
+        -->
     <form name="carriersForm" ng-submit="startSimulation()">
         <table>
             <tr>
@@ -74,24 +69,22 @@
                 <td><button type="submit" ng-disabled="carriersForm.$invalid">Start Simulation</button></td>
             </tr>
         </table>
-     </form>
-
+    </form>
     <!-- Headline for upload -->
     <h1>Upload a new CSV - file</h1>
-
     <div class = "fileUpload">
         <form action="django/dataInterface/fileUpload.html" method="post" enctype="multipart/form-data">
             <table>
                 <tr>
                     <p class="uploadText"> Choose CSV - file:<br/>
-	                <input hidden name="fileName" id="fileName">
-	                <input name="file" type="file" accept="text/csv"/>
-	                </p>
+                        <input hidden name="fileName" id="fileName">
+                        <input name="file" type="file" accept="text/csv"/>
+                    </p>
                 </tr>
                 <tr>
-                    <button type="button">Upload</button> </form>
+                    <button type="button">Upload</button>
                 </tr>
             </table>
+        </form>
     </div>
-
 </div>
