@@ -575,13 +575,11 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.refresh = function() {
         // Redraw bar chart view
         $scope.barGraph();
-        //Update the timestamp
+        // Update the timestamp
         $scope.ts = new Date();
     }
 
     $scope.barGraph = function() {
-
-
         // Requesting the number of carriers from the REST API
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
@@ -641,7 +639,10 @@ which kind of data he wants to see. The default value is average energy consumpt
             /*  get the element where the bar chart should be displayed and
                 create the chart with different parameters.
             */
-            var ctx = document.getElementById("barChart");
+            var ctx = document.getElementById("barChart").getContext("2d");
+            ctx.canvas.width = 800;
+            ctx.canvas.height = 600;
+
             var myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -650,7 +651,7 @@ which kind of data he wants to see. The default value is average energy consumpt
                             label: 'Energy Consumption in %',
                             data: carrierPercentageDataRounded,
                             backgroundColor: carrierColorArray,
-                            borderColor: '(31,27,28, 0.8)',
+                            borderColor: 'rgba(31,27,28, 1)',
                             borderWidth: 1,
                         }]
                 },
