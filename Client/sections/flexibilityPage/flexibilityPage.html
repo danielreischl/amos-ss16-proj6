@@ -37,12 +37,11 @@
             <td>
                 <!-- ng-change is empty right now. this has to change, when iterations can be selected from the database -->
 	            <div class = "iterationSelection">
-		            <label class = "iterationBox" ng-repeat="iterOption  in iterationDimensions">
-		                <input type="radio" name = "iterOption " ng-value="iterOption " ng-model="$parent.selectedIteration"/>
-		                <div>
-		                    {{iterOption }}
-		                </div>
-		            </label>
+                    <select ng-model="selectedIteration">
+                        <option ng-repeat="iteration in iterations" ng-value="iteration">
+                            {{iteration}}
+                        </option>
+                    </select>
                 </div>
             </td>
 	        <td>
