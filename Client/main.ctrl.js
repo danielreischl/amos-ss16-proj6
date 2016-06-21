@@ -202,6 +202,7 @@ angular.module('app')
 	            labelsSeparateLines: true,
 	            highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
 	            legend: "always",
+	            showRangeSelector: true,
 	            /*labelDiv looks for an element with the given id and puts the legend into this element.
 	            Therefore the legend will not bis displayed inside the graph */
 	            labelsDiv: document.getElementById("compareGraphLegend"),
