@@ -651,7 +651,7 @@ which kind of data he wants to see. The default value is average energy consumpt
                             label: 'Energy Consumption in %',
                             data: carrierPercentageDataRounded,
                             backgroundColor: carrierColorArray,
-                            borderColor: '(31,27,28, 1)',
+                            borderColor: 'rgba(31,27,28, 1)',
                             borderWidth: 1,
                         }]
                 },
