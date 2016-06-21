@@ -21,56 +21,55 @@
 
 
 
-/* This file contains all Angualr JS Services*/
+/* This file contains all AngularJS Services*/
 
 angular.module('app')
 
-    .service('percentageService', function(sessionService) {
-	/* 
-	   Provides percantage data of carriers
-	*/
-	var percentageData = [];
-	function getFromDB() {
-	    /* 
-	       Fetches data from backend
-	       So far this is called each time when getAll is called, but this is probably not necessary
-	    */
-
-	    Papa.parse('django/dataInterface/percentages_creeping.csv?session=' +sessionService.getCurrentSession(), {  download: true,
-													       dynamicTyping: true,
-													       complete: function(results) {
-														   percentageData = results.data[1];
-													       }
-													    }
-		      );
-	}
-	
-	this.getAll = function() {
-	    getFromDB();
-	    return percentageData;
-	}
-
-	this.getColorOfCarrier = function(carrier) {
-	    getFromDB();
-	    var percentageOfEnergy = percentageData[carrier - 1];
-	    var color = {'background-color': 'rgb(255,255,0)'};
-
-	    if(percentageOfEnergy > 1.05) {
-		color = {'background-color' : 'rgb(229, 28, 52)'};
+.service('percentageService', function(sessionService) {
+    /*
+    Provides percentage data of carriers
+    */
+    var percentageData = [];
+    function getFromDB() {
+        /*
+        Fetches data from backend
+        So far this is called each time when getAll is called, but this is probably not necessary
+        */
+        Papa.parse('django/dataInterface/percentages_creeping.csv?session=' +sessionService.getCurrentSession(), {
+            download: true,
+            dynamicTyping: true,
+            complete: function(results) {
+                percentageData = results.data[1];
             }
+        });
+    }
 
-            if(percentageOfEnergy <= 1.025 ) {
-		color = {'background-color' : 'rgb(178,255,89)'};
-            }
-            return color;
-	}
+    this.getAll = function() {
+        getFromDB();
+        return percentageData;
+    }
+
+    this.getColorOfCarrier = function(carrier) {
+        getFromDB();
+        var percentageOfEnergy = percentageData[carrier - 1];
+        var color = {'background-color': 'rgb(255,255,0)'};
+
+        if(percentageOfEnergy > 1.05) {
+            color = {'background-color' : 'rgb(229, 28, 52)'};
+        }
+
+        if(percentageOfEnergy <= 1.025 ) {
+            color = {'background-color' : 'rgb(178,255,89)'};
+        }
+        return color;
+    }
 
 
-	return {
-	    getAll: this.getAll,
-	    getColorOfCarrier: this.getColorOfCarrier
-	};
-    });
+    return {
+        getAll: this.getAll,
+        getColorOfCarrier: this.getColorOfCarrier
+    };
+});
 
 /* The carrierService, proved carrier data to all controllers
 For now it is used to saves the carriers for comparison, chosen by the user and proved them to all controller
@@ -132,7 +131,7 @@ angular.module('app')
 
 angular.module('app')
 
-    .service('sessionService', function() {
+.service('sessionService', function() {
 	var numberOfSessions = 0;
 	var currentSession = 1;
 

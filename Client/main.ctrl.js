@@ -459,16 +459,16 @@ which kind of data he wants to see. The default value is average energy consumpt
 
         // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
         var carrierPercentageData = percentageService.getAll();
-	var amountOfCarriers = carrierPercentageData.length;
-	/*
-	Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
+	    var amountOfCarriers = carrierPercentageData.length;
+	    /*
+	    Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
                                                                    dynamicTyping: true,
                                                                    complete: function(results) {
                                                                        carrierPercentageData = results.data[1];
                                                                    }
                                                                   }
         )
-	*/
+	    */
 	
         //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
         $timeout(drawCarriers, 1000);
@@ -844,15 +844,15 @@ the session, iterations and carriers he wans to see. */
     /* this functions creates the dygraph  from a data source and applies options to them*/
     $scope.createFlexibilityChart = function() {
 
-    $scope.carriersRequested = function() {
-        // filter for the selected carriers
-        var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
+        $scope.carriersRequested = function() {
+            // filter for the selected carriers
+            var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
 
-        //join them with commas
-        return selected.map(function(carrier){return carrier.id.toString();}).join();
-    }
+            //join them with commas
+            return selected.map(function(carrier){return carrier.id.toString();}).join();
+        }
 
-    sessionService.setCurrentSession($scope.currentSession);
+        sessionService.setCurrentSession($scope.currentSession);
 
         // create the graph with the parameters set. The request path for the database depends on 3 parameters: carrierRequested, selectedIteration and selectedSession
         // the url which should be requested wil be defined in requestedUrl
