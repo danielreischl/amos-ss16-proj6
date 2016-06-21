@@ -24,6 +24,7 @@ from dataInterface.models import iterationdata
 from dataInterface.models import sessiondata
 from django.db.models import Max
 from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
 import sys
 
 # Adds DataProcessing Path to Sys
@@ -634,13 +635,26 @@ def percentage_cont(request):
 ######### URL: fileUpload.html ################
 ###############################################
 
+# disables djangos build in cross site request forgery protection mechanism
+@csrf_exempt
 def fileUpload(request):
-    fileName = request['fileName']
+    fileName = request.POST['fileName']
     file = request.FILES['file']
-    with open('/srv/DataProcessing/InitialData/' + fileName, 'wb+') as destination:
+    
+    # check if file with that name already exists
+    if sessiondata.objects.filter(fileName=fileName).exists():
+        # there is certainly a more user-friendly way to handle this but for now it should be fine
+        return HttpResponse(status=409)
+
+    # no file with the given name exists (according to the database), write it to the directory
+    with open('/srv/DataProcessing/InitialData/' + fileName + '.csv', 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
-    return HttpResponse('Success')
+
+    # maybe add new session to session database here
+    # so far the session is added only after the corresponding simulation has been executed
+    
+    return HttpResponse(status=205)
 
 
 ###############################################
