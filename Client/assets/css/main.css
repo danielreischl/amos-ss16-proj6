@@ -180,6 +180,10 @@ label.iterationBox div{
     padding: 2px;
 }
 
+label.iterationBox {
+    cursor: pointer;
+}
+
 label.iterationBox input:checked + div {
     border: 2px solid rgb(240,0,0);
 }
