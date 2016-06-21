@@ -639,7 +639,7 @@ which kind of data he wants to see. The default value is average energy consumpt
             /*  get the element where the bar chart should be displayed and
                 create the chart with different parameters.
             */
-            var ctx = document.getElementById("barChart");
+            var ctx = document.getElementById("barChart").getContext("2d");
             ctx.canvas.width = 800;
             ctx.canvas.height = 600;
 
