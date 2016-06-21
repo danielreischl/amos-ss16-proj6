@@ -789,7 +789,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 /* controller for the Flexibility Chart. This chart will display the speed data of each carrier over absolute time. The user can select
 the session, iterations and carriers he wans to see. */
-.controller('FlexibilityChartController', function($scope, carrierService, sessionService) {
+.controller('FlexibilityChartController', function($scope, carrierService,percentageService, sessionService) {
 
     // get the array with the carriers the user wants to see in the graph.
     var carrierCompareList = carrierService.getCarrier();
@@ -830,10 +830,14 @@ the session, iterations and carriers he wans to see. */
     }
 
     // create the dropdown menu for iterations. the array gets filled with the iteration numbers available in the database.
-    $scope.iterations = [];
+    $scope.iterationDimensions = [];
     for (var i = 1; i <= lastIteration;idCounter++) {
 	    $scope.iterations.push(i);
     }
+
+    // make percentage service available in html-view
+    // not very nice, try to refactor if possible
+    $scope.percentageService = percentageService;
 
     /* this functions creates the dygraph  from a data source and applies options to them*/
     $scope.createFlexibilityChart = function() {
