@@ -402,6 +402,29 @@ which kind of data he wants to see. The default value is average energy consumpt
 /* Refresh the circle Page. The purpose of this controller is listen to the Button
  and upon receiving an event, it should trigger the update circle button*/
 .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService, percentageService) {
+    // title will change, depending on which circleView is showing.
+    var creepTitle = "Creeping Contamination";
+    var contTitle = "Continuous Contamination";
+    var changed = 0;
+    $scope.circleView_title = creepTitle;
+
+    // data variables to be changed
+    var percentageDataType = "percentages_creeping.csv";
+    var dataCont = "percentages_cont.csv";
+
+    // Button, changes the title of the view and the data displayed.
+    $scope.changeView = function() {
+       if(changed == 0) {
+           $scope.circleView_title = contTitle;
+           percentageDataType = "percentages_cont.csv"
+           changed = 1;
+       } else {
+           $scope.circleView_title = creepTitle;
+           var percentageDataType = "percentages_creeping.csv";
+           changed = 0;
+       }
+    }
+
     // Initializes time stamp
     $scope.ts = new Date();
     /* This function will highlight the carrier and save the id of the carrier inside the comaprison arrary in app.service.js*/
@@ -458,7 +481,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         var idCounter = 1;
 
         // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-        var carrierPercentageData = percentageService.getAll();
+        var carrierPercentageData = percentageService.getAll(percentageDataType);
 	    var amountOfCarriers = carrierPercentageData.length;
 	    /*
 	    Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
@@ -540,7 +563,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     //xmlHttp.send(null);
     //var amountOfCarriers = xmlHttp.responseText;
 
-    var carrierPercentageData = percentageService.getAll();
+    var carrierPercentageData = percentageService.getAll(percentageDataType);
     var amountOfCarriers = carrierPercentageData.length;
 	
     /* ID of first Carrier */

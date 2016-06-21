@@ -30,12 +30,12 @@ angular.module('app')
     Provides percentage data of carriers
     */
     var percentageData = [];
-    function getFromDB() {
+    function getFromDB(percentageDataType) {
         /*
         Fetches data from backend
         So far this is called each time when getAll is called, but this is probably not necessary
         */
-        Papa.parse('django/dataInterface/percentages_creeping.csv?session=' +sessionService.getCurrentSession(), {
+        Papa.parse('django/dataInterface/'+percentageDataType+'?session=' +sessionService.getCurrentSession(), {
             download: true,
             dynamicTyping: true,
             complete: function(results) {
@@ -44,8 +44,8 @@ angular.module('app')
         });
     }
 
-    this.getAll = function() {
-        getFromDB();
+    this.getAll = function(percentageDataType) {
+        getFromDB(percentageDataType);
         return percentageData;
     }
 
