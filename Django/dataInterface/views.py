@@ -255,12 +255,12 @@ def continuousDataAbsoluteTime(request):
         # we requested data ordered by timestamp, so rows come in blocks with identical timestamp.
         # We iterate through these to fill a the row with this timestamp
         # Once we get a row with a different timeStamp we write the row to the csv file and reset the row
-        if currentTimeStamp == None or currentTimeStamp != row.timeStamp:
+        if currentTimeStamp == None or currentTimeStamp != row.timeAbsolute:
             if currentTimeStamp != None:
                 writer.writerow(csvRow)
 
             # (re-) set csv-row
-            currentTimeStamp = row.timeStamp
+            currentTimeStamp = row.timeAbsolute
             csvRow = {'timeAbsolute': currentTimeStamp}
 
         carrier = row.carrier
