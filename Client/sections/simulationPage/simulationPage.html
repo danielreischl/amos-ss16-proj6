@@ -27,18 +27,19 @@
     -->
 <div ng-controller="simulationPageController" layout="column" layout-align="start start">
 <div class="container">
+    <div class ="page-header">
         <h1>Simulation Page</h1>
+    </div>
 
 <div class="row">
     <div class="col-md-4">
-    <!-- FORM ============ -->
 
     <form name="carrierForm" ng-submit="startSimulation()" novalidate>
-
-
-         <h3>Select Parameters</h3>
+    <div>
+      <h3>Select Parameters</h3>
+    </div>
         <!-- DataFile -->
-        <div lass="form-group" ng-class="{ 'has-error' : carrierForm.selectedDataFile.$invalid}">
+        <div class="form-group" ng-class="{ 'has-error' : carrierForm.selectedDataFile.$invalid}">
             <label>Select list:</label>
             <select class="form-control" ng-model="selectedDataFile" required>
                 <option ng-repeat="x in dataFileNames">{{x}}</option>
@@ -59,21 +60,21 @@
             <p ng-show="carrierForm.waitForCompression.$invalid" class="help-block">Wait time compression has to be between 0 and 10</p>
         </div>
 
-        <!-- NAME -->
+        <!-- Wait Time For First Data Load -->
         <div class="form-group" ng-class="{ 'has-error' : carrierForm.waitForFirstDataLoad.$invalid}">
             <label>Wait Time For First Data Load:</label>
             <input type="number" name="waitForFirstDataLoad" class="form-control" ng-model="waitForFirstDataLoad" min="0" max="1000" required>
             <p ng-show="carrierForm.waitForFirstDataLoad.$invalid" class="help-block">Amount of Carrier has to be between 0 and 1000</p>
         </div>
 
-        <!-- NAME -->
+        <!-- Wait Time For Data Reload -->
         <div class="form-group" ng-class="{ 'has-error' : carrierForm.waitForDataReload.$invalid}">
             <label>Wait Time For Data Reload:</label>
             <input type="number" name="waitForDataReload" class="form-control" ng-model="waitForDataReload" min="0" max="1000" required>
             <p ng-show="carrierForm.waitForDataReload.$invalid" class="help-block">Wait Time has to be between 0 and 1000</p>
         </div>
 
-        <!-- NAME -->
+        <!-- KeepveryXROW -->
         <div class="form-group" ng-class="{ 'has-error' : carrierForm.keepEveryXRows.$invalid}">
             <label>Keep every X Rows:</label>
             <input type="number" name="keepEveryXRows" class="form-control" ng-model="keepEveryXRows" min="1" max="100" required>
@@ -86,31 +87,26 @@
   </div>
     <!-- Headline for upload -->
     <div class="col-md-4">
-    <h4>Upload a new CSV - file</h4>
-    <div class = "fileUpload">
-        <form action="django/dataInterface/fileUpload.html" method="post" enctype="multipart/form-data">
-            <table>
-                <tr>
-                        <input name="fileName" id="fileName" placeholder = "File Name (without .csv)"/>
-                        <input name="file" type="file" accept="text/csv"/>
-                    </p>
-                </tr>
-                <tr>
-                    <input type="submit">Upload</button>
-                    <!-- 
-			 use standard html submit button to submit form
-			 if we want to use the <button> below for design considerations,
-			 we have to tell Angular to submit the form for us
+    <h3>Upload a new CSV - file</h3>
+        <form name="fileUpload" action="django/dataInterface/fileUpload.html" method="post" enctype="multipart/form-data" novalidate>
+           <div class="form-group" ng-class="{ 'has-error' : fileUpload.fileToUpload.$invalid}">
+                    <label>Select File:</label>
+                       <input type="file" name="fileToUpload"  class="form-control" placeholder = "File Name (without .csv)" accept="text/csv" required file-model="myFile"/>
+               <p ng-show="fileUpload.fileToUpload.$invalid" class="help-block">You have to add a csv File</p>
+           </div>
 
-			 <button type="button" class="btn btn-default">Upload</button>
-		    -->
-                </tr>
-            </table>
+        <button type="submit" class="btn btn-default" ng-disabled="fileUpload.$invalid">Upload File</button>
         </form>
     </div>
+
+    <div>
+      <div class="col-md-4">
+	<h4>Loaded data</h4>
+      </div>
+    </div>
 </div>
-</div>
-</div>
+
+    
 
 
 
