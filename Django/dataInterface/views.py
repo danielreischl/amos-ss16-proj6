@@ -642,8 +642,8 @@ def percentage_cont(request):
 # disables djangos build in cross site request forgery protection mechanism
 @csrf_exempt
 def fileUpload(request):
-    fileName = request.POST['fileToUpload']
-    file = request.FILES['file']
+    fileName = request.POST['fileName']
+    file = request.FILES['fileToUpload']
     
     # check if file with that name already exists
     if sessiondata.objects.filter(fileName=fileName).exists():

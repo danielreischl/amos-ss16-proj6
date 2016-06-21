@@ -90,8 +90,10 @@
     <h3>Upload a new CSV - file</h3>
         <form name="fileUpload" action="django/dataInterface/fileUpload.html" method="post" enctype="multipart/form-data" novalidate>
            <div class="form-group" ng-class="{ 'has-error' : fileUpload.fileToUpload.$invalid}">
-                    <label>Select File:</label>
-                       <input type="file" name="fileToUpload"  class="form-control" placeholder = "File Name (without .csv)" accept="text/csv" required file-model="myFile"/>
+	     <label>File name (without .csv):</label>
+	     <input name="fileName" id="fileName" placeholder = "File Name (without .csv)"/>
+             <label>Select File:</label>
+	     <input type="file" name="fileToUpload"  class="form-control" accept="text/csv" required file-model="myFile"/>
                <p ng-show="fileUpload.fileToUpload.$invalid" class="help-block">You have to add a csv File</p>
            </div>
 
