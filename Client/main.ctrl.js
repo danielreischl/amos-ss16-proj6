@@ -402,7 +402,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 /* Refresh the circle Page. The purpose of this controller is listen to the Button
  and upon receiving an event, it should trigger the update circle button*/
-.controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService) {
+    .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService, percentageService) {
     // Initializes time stamp
     $scope.ts = new Date();
 /* This function will highlight the carrier and save the id of the carrier inside the comaprison arrary in app.service.js*/
@@ -450,24 +450,27 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.circleGraphRedraw = function() {
 
         // Get the amount of carriers
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
-        xmlHttp.send(null);
-        var amountOfCarriers = xmlHttp.responseText;
+        //var xmlHttp = new XMLHttpRequest();
+        //xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
+        //xmlHttp.send(null);
+        //var amountOfCarriers = xmlHttp.responseText;
 
         // ID of first carrier
         var idCounter = 1;
 
         // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-        var carrierPercentageData;
-        Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
+        var carrierPercentageData = percentageService.getAll();
+	var amountOfCarriers = carrierPercentageData.length;
+	/*
+	Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
                                                                    dynamicTyping: true,
                                                                    complete: function(results) {
                                                                        carrierPercentageData = results.data[1];
                                                                    }
                                                                   }
         )
-
+	*/
+	
         //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
         $timeout(drawCarriers, 1000);
 
@@ -533,15 +536,20 @@ which kind of data he wants to see. The default value is average energy consumpt
     /* open connection to the REST API from the middleware and get the amount of carriers.
        After receiving the data, the integer variable will be saved inside of amountOfCarriers
     */
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
-    xmlHttp.send(null);
-    var amountOfCarriers = xmlHttp.responseText;
+    //var xmlHttp = new XMLHttpRequest();
+    //xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
+    //xmlHttp.send(null);
+    //var amountOfCarriers = xmlHttp.responseText;
+
+    var carrierPercentageData = percentageService.getAll();
+    var amountOfCarriers = carrierPercentageData.length;
+	
     /* ID of first Carrier */
     var idCounter = 1;
     // the array variable where the converted content from the csv file will be.
-    var carrierPercentageData;
+    //var carrierPercentageData;
     // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
+    /*
     Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
                                                                    dynamicTyping: true,
                                                                    complete: function(results) {
@@ -549,7 +557,7 @@ which kind of data he wants to see. The default value is average energy consumpt
                                                                    }
                                                                   }
     )
-
+    */
     //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
     $timeout(createCarrierHTML, 1000);
 
