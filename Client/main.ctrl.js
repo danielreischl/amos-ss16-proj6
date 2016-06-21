@@ -418,10 +418,12 @@ which kind of data he wants to see. The default value is average energy consumpt
            $scope.circleView_title = contTitle;
            percentageDataType = "percentages_cont.csv"
            changed = 1;
+           $scope.circleGraph();
        } else {
            $scope.circleView_title = creepTitle;
            var percentageDataType = "percentages_creeping.csv";
            changed = 0;
+           $scope.circleGraph();
        }
     }
 
