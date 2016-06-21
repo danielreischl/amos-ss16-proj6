@@ -403,10 +403,9 @@ which kind of data he wants to see. The default value is average energy consumpt
  and upon receiving an event, it should trigger the update circle button*/
 .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService, percentageService) {
     // title will change, depending on which circleView is showing.
-    var creepTitle = "Creeping Contamination";
-    var contTitle = "Continuous Contamination";
+    var circleTitle = "Creeping Contamination";
     var changed = 0;
-    $scope.circleView_title = creepTitle;
+    $scope.circleView_title = circleTitle;
 
     // data variables to be changed
     var percentageDataType = "percentages_creeping.csv";
@@ -415,14 +414,14 @@ which kind of data he wants to see. The default value is average energy consumpt
     /* Button, changes the title of the view and the data displayed. It will also redraw the circles with the new data */
     $scope.changeView = function() {
        if(changed == 0) {
-           $scope.circleView_title = contTitle;
-           percentageDataType = "percentages_cont.csv"
+           percentageDataType = "percentages_cont.csv";
+           circleTitle = "Continuous Contamination";
            changed = 1;
            clearCanvas();
            $scope.circleGraph();
        } else {
-           $scope.circleView_title = creepTitle;
            percentageDataType = "percentages_creeping.csv";
+           circleTitle = "Creeping Contamination";
            changed = 0;
            clearCanvas();
            $scope.circleGraph();
@@ -499,7 +498,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     var idCounter = 1;
 
     //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
-    $timeout(createCarrierHTML, 1000);
+    $timeout(createCarrierHTML, 2000);
 
     // function to create HTML circle fragments dynamically
     function createCarrierHTML() {
