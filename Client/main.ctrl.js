@@ -497,7 +497,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     var idCounter = 1;
 
     //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
-    $timeout(createCarrierHTML, 10000);
+    $timeout(createCarrierHTML, 0);
 
     // function to create HTML circle fragments dynamically
     function createCarrierHTML() {
