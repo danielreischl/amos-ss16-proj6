@@ -18,33 +18,37 @@
 #   along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.conf.urls import url
-
 from . import views
 
 urlpatterns = [
-    # this returns a csv-file of the requested data for multiple carriers and/or iterations- for details see views.py 
+    # this returns a csv-file of the requested data for multiple carriers and/or iterations- for details see views.py
+    # this is for the continuous graph view and has relative time as X axis
     url(r'^continuousData.csv', views.continuousData, name='data'),
+    # TODO align with views.py and test
+    # this returns a csv-file of the requested data for multiple carriers and/or iterations- for details see views.py
+    # this is for the flexibility view and has absolute time as X axis
+    url(r'^continuousDataAbsoluteTime.csv', views.continuousDataAbsoluteTime, name='dataAbsoluteTime'),
     # this returns a csv-file of raw database tables - for details see views.py 
     url(r'^rawData.csv', views.rawData, name='rawData'),
     # This returns the DataProcessing Logfile
     url(r'^log.txt', views.logs, name='DataProcessingLog'),
-    # Added the url values to enable the frontend to request values like LastItteratioOfaCarrier
+    # Added the url values to enable the frontend to request values like LastIterationOfaCarrier
     # Calls views.db2values (Further Information views.py)
     url(r'^values.request', views.db2values, name='values'),
     # URL that enables to delete values out of database
-    url (r'^deleteTables.request', views.deleteDatabaseValues, name = 'deleteTables'),
+    url(r'^deleteTables.request', views.deleteDatabaseValues, name='deleteTables'),
     # URL that provides data to the AverageEnergyConsumptionChart
-    url (r'^averageEnergyConsumption.csv', views.averageEnergyConsumption, name ='averageEnergyConsumption'),
+    url(r'^averageEnergyConsumption.csv', views.averageEnergyConsumption, name='averageEnergyConsumption'),
     # URL that provides the creeping percentages for the Circle View and Bar Chart
-    url (r'^percentages_creeping.csv', views.percentage_creeping, name = 'percentageForCircleAndBarChart'),
+    url(r'^percentages_creeping.csv', views.percentage_creeping, name='percentageForCircleAndBarChart'),
     # URL that provides the continuing percentages for the Circle View and Bar Chart
-    url (r'^percentages_cont.csv', views.percentage_cont, name = 'percentageForCircleAndBarChart'),
+    url(r'^percentages_cont.csv', views.percentage_cont, name='percentageForCircleAndBarChart'),
     # URL that resets the simulation
     url(r'^simulation.reset', views.resetSimulation, name='simulationReset'),
     # URL that provides rawData as JSON
-    url (r'^rawData.json', views.rawDataJson, name='rawDataJSON'),
+    url(r'^rawData.json', views.rawDataJson, name='rawDataJSON'),
     # URL that starts the simulation
-    url (r'^simulation.start', views.startSimulation, name = 'startSimulation'),
+    url(r'^simulation.start', views.startSimulation, name='startSimulation'),
     # URL that returns all files as a string
     url(r'^simulation.files', views.simulationFiles, name='simulationFiles'),
     # URL that True or False depending on if the Simulation is still running

@@ -30,8 +30,6 @@
 # Output: CSV file for each carrier in each iteration with the following structure (time; posAbsolute; energy; drive)
 # and the following name Session_X_Carrier_X_Iteration_X.csv
 
-# TODO: Now that we have the real data some kind of measure for flexibility can be implemented and calculated here!
-
 # IMPORTS
 # Imports Pandas for Data handling
 from __future__ import print_function
@@ -106,6 +104,7 @@ def processData(time, drive, position, energy):
 
         # Transfer the time of the timeStamp to the carrierData
         carrierData[carrier - 1][0][currentPositionAtCarrierData[carrier - 1]] = time
+
         # Transfer position to the carrierData
         carrierData[carrier - 1][1][currentPositionAtCarrierData[carrier - 1]] = position
 
@@ -114,6 +113,9 @@ def processData(time, drive, position, energy):
 
         # Transfer energy consumption of the timeStamp to the carrierData
         carrierData[carrier - 1][3][currentPositionAtCarrierData[carrier - 1]] = drive
+
+        # Transfer the time of the timeStamp for the absolute Time to the carrierData
+        carrierData[carrier - 1][4][currentPositionAtCarrierData[carrier - 1]] = time
 
         # Saves current position for carrier for further processing
         lastPositionOfCarrier[carrier - 1] = position
@@ -252,6 +254,8 @@ def compressData(carrier):
             carrierData[carrier - 1][1][saveTo] = carrierData[carrier - 1][1][i]
             carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][i]
             carrierData[carrier - 1][3][saveTo] = carrierData[carrier - 1][3][i]
+            carrierData[carrier - 1][4][saveTo] = carrierData[carrier - 1][4][i] - \
+                                                  (carrierData[carrier - 1][4][i] % KEEP_EVERY_X_ROW)
 
             # Increase the next value that is being searched for
             nextTimeStampValue += KEEP_EVERY_X_ROW
@@ -294,6 +298,8 @@ def compressData(carrier):
                 carrierData[carrier - 1][1][saveTo] = posInter
                 carrierData[carrier - 1][2][saveTo] = energyInter
                 carrierData[carrier - 1][3][saveTo] = driveInter
+                carrierData[carrier - 1][4][saveTo] = carrierData[carrier - 1][4][i] - \
+                                                      (carrierData[carrier - 1][4][i] % KEEP_EVERY_X_ROW)
 
                 # Increase the next value that is being searched for
                 nextTimeStampValue += KEEP_EVERY_X_ROW
@@ -309,6 +315,7 @@ def compressData(carrier):
             carrierData[carrier - 1][1][i - 1] = 0
             carrierData[carrier - 1][2][i - 1] = 0
             carrierData[carrier - 1][3][i - 1] = 0
+            carrierData[carrier - 1][4][i - 1] = 0
 
         # If the current row is the last one of the array and it is not needed after compression, delete it
         if i == int(currentPositionAtCarrierData[carrier - 1]) - 1 and KEEP_EVERY_X_ROW > 1:
@@ -339,7 +346,7 @@ def exportCSV(carrier):
 
     # Export carrier data with file name to csv file
     np.savetxt(fileName, export, fmt='%0.5f', delimiter=DATA_SEPARATOR, newline='\n',
-               header='time;posAbsolute;energy;drive', footer='', comments='# ')
+               header='time;posAbsolute;energy;drive;timeAbsolute', footer='', comments='# ')
 
     # Write the filename to the console and the log file
     print("Exported: " + str(fileName))
@@ -354,7 +361,7 @@ def findFirstRowInCarrierData(carrier):
     lastRowWithZero = 0
 
     for i in range(0, int(carrierData.shape[2]) - 1):
-        if (carrierData[carrier - 1][1][i] == 0):
+        if carrierData[carrier - 1][1][i] == 0:
             lastRowWithZero = i
         else:
             if lastRowWithZero >= (carrierData.shape[2]) - 1:
@@ -402,7 +409,7 @@ def ensureEnoughSpaceInCarrierData(carrier):
     global carrierData
     # If the current position at the carrier data is equal to the size of the array, the array size is doubled
     if currentPositionAtCarrierData[carrier - 1] >= carrierData.shape[2]:
-        extend = np.zeros((AMOUNT_OF_CARRIERS, 4, int(carrierData.shape[2])))
+        extend = np.zeros((AMOUNT_OF_CARRIERS, 5, int(carrierData.shape[2])))
         carrierData = np.concatenate((carrierData, extend), axis=2)
 
 
@@ -448,8 +455,7 @@ def modifyCSVFile(filename):
                 newColNames.append("position" + str(j - startPositonOfColumns))
                 # counts the amount of drives.
                 amountOfDrives = j - startPositonOfColumns
-
-            j = j + 1
+            j += 1
 
         # Skips the first row from the reader, the old header
         next(r, None)
@@ -460,7 +466,6 @@ def modifyCSVFile(filename):
         for row in r:
             w.writerow(row)
 
-        # Returns amountOfDrives
         return amountOfDrives
 
 
@@ -477,8 +482,7 @@ def moveFileToFolder(fileName, folderName):
 # Creates or loads Log DataProcessing.log
 # Format of LogFile: mm/dd/yyyy hh:mm:ss PM LogMessage
 logging.basicConfig(filename='/srv/DataProcessing/dataProcessing.log', level=logging.INFO,
-                    format='%(asctime)s %(message)s',
-                    datefmt='%m/%d/%Y %I:%M:%S %p')
+                    format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 # Calls Function to create Running.txt
 dataProcessingFunctions.createRunningFile()
@@ -513,13 +517,14 @@ if fileName == '':
 
 # Calls modifyCSVFile function
 amountOfDrives = modifyCSVFile(fileName)
+print ("Amount of drives" + str(amountOfDrives))
 
 # Variables
 # Array that saves for every drive which carrier is on it
 driveXHasCarrier = np.zeros(amountOfDrives)
 # This is where all the data goes before exporting to CSV
 # carrierData[carrier number][time = 0, pos = 1, energy consumption = 2][position of array]
-carrierData = np.zeros((AMOUNT_OF_CARRIERS, 4, 100))
+carrierData = np.zeros((AMOUNT_OF_CARRIERS, 5, 100))
 # Here is stored in which row the last entry of carrier data was made for every carrier
 # (This could also be calculated by why not store it, since its used frequently)
 currentPositionAtCarrierData = np.zeros(AMOUNT_OF_CARRIERS)
@@ -533,6 +538,7 @@ iterationNumber = 0
 carriersThroughTheSystem = 1
 
 # First row of data frames
+print (os.path.splitext(fileName)[0] + "_modified.csv")
 initialData = pd.read_csv(os.path.splitext(fileName)[0] + "_modified.csv", DATA_SEPARATOR, low_memory=False,
                           header=0)
 #    Extracting the DriveNo of the first loaded File in DATA_PATH
@@ -551,18 +557,19 @@ for index, row in initialData.iterrows():
 os.remove(os.path.splitext(fileName)[0] + "_modified.csv")
 
 # Inizialize DataFrame sessiondata columns based
-sessiondata = pd.DataFrame(
+sessionData = pd.DataFrame(
     columns=['session', 'fileName', 'amountOfCarriers', 'status'], index=['1'])
 # Adding previous extracted and calculated values to DataFrame
-sessiondata.loc['1'] = pd.Series(
+sessionData.loc['1'] = pd.Series(
     {'session': session, 'fileName': os.path.splitext(fileName)[0], 'amountOfCarriers': AMOUNT_OF_CARRIERS,
      'status': True,})
 
 # calls function to load the sessiondata data into the database
-dataProcessingFunctions.write_dataframe_to_database(sessiondata, config.get('database_tables', 'sessiondata'))
+dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'))
 
 # Counts up session for each filename
 session += 1
+
 dataProcessingFunctions.updated_config('Simulation', 'session', session)
 
 # Calls Funcion to remove RunningFile

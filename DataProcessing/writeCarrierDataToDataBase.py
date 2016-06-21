@@ -49,7 +49,7 @@ def process_file(fileName):
     # Loading data into a dataFrame
     data = pd.read_csv(filePath, config.get('Simulation','csv_seperator'))
     # Change name of Columns to fit DataBaseModel
-    data.columns = ['timeStamp', 'positionAbsolute', 'energyConsumption', 'drive']
+    data.columns = ['timeStamp', 'positionAbsolute', 'energyConsumption', 'drive','timeAbsolute']
     # Reads out session of file name and adds column to DataFrame after Casting from str to int
     session = int(fileName.split('_')[1])
     data['session'] = session
@@ -68,7 +68,7 @@ def process_file(fileName):
     # Reads out Columns to a list
     cols = data.columns.tolist()
     # Rearanges the columms
-    cols = cols[4:7] + cols[0:1] + cols[3:4] + cols[1:2] + cols[7:9]  + cols[2:3]
+    cols = cols[5:8] + cols[0:1] + cols[3:4] + cols[1:2] + cols[8:10]  + cols[2:3] + cols[4:5]
     # Reananges the dataframe data
     data = data[cols]
 

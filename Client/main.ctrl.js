@@ -77,8 +77,8 @@ angular.module('app')
     /* This scope will set the style, depending on the state variable. The style changes the width of the navigation sidebar */
 
     $scope.sideNavStyle = function() {
-        var styleIcon = {"width": "50px", "height":"100%", "background-color": "#009688" }
-        var styleFull = {"width": "200px", "height":"100%", "background-color": "#009688"}
+        var styleIcon = {"width": "50px", "height":"100%", "background-color": "#00bcd4" }
+        var styleFull = {"width": "200px", "height":"100%", "background-color": "#00bcd4"}
 
         if(state) {
             return styleFull;
@@ -511,11 +511,11 @@ which kind of data he wants to see. The default value is average energy consumpt
            is higher than the very first iteration.
             */
             if(percentageOfEnergy > 1.05) {
-                context.fillStyle = '#FF1744';
+                context.fillStyle = '#e51c34';
             } else if(percentageOfEnergy <= 1.025 ) {
-                context.fillStyle = '#00BFA5';
+                context.fillStyle = '#b2ff59';
             } else {
-                context.fillStyle = "#FFFF8D";
+                context.fillStyle = "#ffff00";
             }
 
             context.fill();
@@ -603,11 +603,11 @@ which kind of data he wants to see. The default value is average energy consumpt
            is higher than the very first iteration.
          */
         if(percentageOfEnergy > 1.05) {
-            context.fillStyle = '#FF1744';
+            context.fillStyle = '#e51c34';
         } else if(percentageOfEnergy <= 1.025 ) {
-            context.fillStyle = '#00BFA5';
+            context.fillStyle = '#b2ff59';
         } else {
-            context.fillStyle = "#FFFF8D";
+            context.fillStyle = "#ffff00";
         }
 
         context.fill();
@@ -691,13 +691,13 @@ which kind of data he wants to see. The default value is average energy consumpt
             */
             for(i = 0; i < carrierPercentageData.length; i++) {
                 if(carrierPercentageData[i] > 1.05) {
-                    carrierColorArray.push('rgba(255,23,68, 0.8)')
+                    carrierColorArray.push('rgba(229, 28, 52, 1)')
                     carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
                 } else if(carrierPercentageData[i] <= 1.025 ) {
-                    carrierColorArray.push('rgba(0,191,165, 0.8)')
+                    carrierColorArray.push('rgba(178, 255, 89, 1)')
                     carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
                 } else {
-                    carrierColorArray.push('rgba(255,255,141, 0.8)')
+                    carrierColorArray.push('rgba(255,255,0, 1)')
                     carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
                 }
             }

@@ -53,19 +53,19 @@ angular.module('app')
 	this.getColorOfCarrier = function(carrier) {
 	    getFromDB();
 	    var percentageOfEnergy = percentageData[carrier - 1];
-	    var color = {'background-color': 'rgb(255,255,141)'};
+	    var color = {'background-color': 'rgb(255,255,0)'};
 
 	    if(percentageOfEnergy > 1.05) {
-		color = {'background-color' : 'rgb(201, 24, 38)'};
+		color = {'background-color' : 'rgb(229, 28, 52)'};
             }
 
             if(percentageOfEnergy <= 1.025 ) {
-		color = {'background-color' : 'rgb(115,173,33)'};
+		color = {'background-color' : 'rgb(178,255,89)'};
             }
-
             return color;
 	}
-	
+
+
 	return {
 	    getAll: this.getAll,
 	    getColorOfCarrier: this.getColorOfCarrier
