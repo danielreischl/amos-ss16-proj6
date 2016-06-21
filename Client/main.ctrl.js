@@ -469,7 +469,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
      //* this function will clear the drawn canvas and enables redraw functions to draw on a new canvas */
     function clearCanvas() {
-        var amountOfCarriers = carrierPercentageData.length;
+        var amountOfCarriers = percentageService.getAll(percentageDataType).length;
         // delete all canvas elements, previously created for all carriers
         while (amountOfCarriers > 0) {
             var parent = document.getElementById("circleGraphs");
