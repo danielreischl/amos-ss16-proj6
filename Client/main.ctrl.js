@@ -797,7 +797,7 @@ the session, iterations and carriers he wans to see. */
     // Sets the initial time for the time stamp
     $scope.ts = new Date();
 
-    $scope.selectedIteration = "";
+    $scope.selectedIteration = "1";
 
     $scope.sessions = [];
     for (var i = 1; i <= sessionService.getNumberOfSessions(); i++) {
@@ -832,7 +832,7 @@ the session, iterations and carriers he wans to see. */
     // create the dropdown menu for iterations. the array gets filled with the iteration numbers available in the database.
     $scope.iterationDimensions = [];
     for (var i = 1; i <= lastIteration;idCounter++) {
-	    $scope.iterations.push(i);
+	    $scope.iterationDimensions.push(i);
     }
 
     // make percentage service available in html-view
@@ -894,5 +894,4 @@ the session, iterations and carriers he wans to see. */
         // Updates the  time for the time stamp
         $scope.ts = new Date();
     }
-
 })
