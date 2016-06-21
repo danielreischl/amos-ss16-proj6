@@ -39,7 +39,7 @@ html,body {
 
 header {
     width:100%;
-    background-color: #00bcd4;
+    background-color: #009688;
     color: #E0F2F1;
     height: 10%;
     padding: 2px;
@@ -61,11 +61,11 @@ header {
 }
 
 md-toolbar.toolbar {
-    background-color: #00bcd4;
+    background-color: #009688;
 }
 
 md-sidenav.md-toolbar {
-    background-color: #00bcd4;
+    background-color: #009688;
 }
 md-content {
 
@@ -91,7 +91,7 @@ md-content {
 }
 
 .topNav {
-    background-color: #00bcd4;
+    background-color: #009688;
 }
 
 #button {

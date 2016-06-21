@@ -77,8 +77,8 @@ angular.module('app')
     /* This scope will set the style, depending on the state variable. The style changes the width of the navigation sidebar */
 
     $scope.sideNavStyle = function() {
-        var styleIcon = {"width": "50px", "height":"100%", "background-color": "#00bcd4","overflow-x": "hidden" }
-        var styleFull = {"width": "200px", "height":"100%", "background-color": "#00bcd4"}
+        var styleIcon = {"width": "50px", "height":"100%", "background-color": "#009688","overflow-x": "hidden" }
+        var styleFull = {"width": "200px", "height":"100%", "background-color": "#009688"}
 
         if(state) {
             return styleFull;
