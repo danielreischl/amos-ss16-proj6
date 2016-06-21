@@ -23,6 +23,7 @@ from dataInterface.models import timestampdata
 from dataInterface.models import iterationdata
 from dataInterface.models import sessiondata
 from django.db.models import Max
+from django.db.models import Avg
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 import sys
@@ -73,7 +74,6 @@ def funcRecentSession():
 
 # Returns one percent value for CarrierView & BarchartView calculated for creeping Contamination
 def funcPercentCreeping(session, carrier):
-    # TODO: Change to new Calculation
     # If there are less then 10 iterations
     if funcMaxIteration(session, carrier) < 10:
         # Consumption at first iteration
@@ -99,9 +99,13 @@ def funcPercentCreeping(session, carrier):
 
 
 # Returns one percent value for CarrierView & BarchartView calculated for continuous Contamination
-def funcPercentCont(requestedSession, carrier):
-    # TODO: Implement Calculation
-    return 0
+def funcPercentCont(session, carrier):
+    # Extracts Average EnergyConsumption of all iterations of a session
+    initialConsumption = iterationdata.objects.filter(session=session).aggregate(Avg('energyConsumptionTotal')).get('energyConsumptionTotal__avg')
+    # Extracts energyConsumption of last Iteration of a carrier
+    lastConsumption = funcTotalEnergyConsumption(session, carrier, funcMaxIteration(session, carrier))
+    # Returns current currentConsumption divided by average of all consumptions
+    return (lastConsumption / initialConsumption)
 
 
 # Returns one percent value for CarrierView & BarchartView

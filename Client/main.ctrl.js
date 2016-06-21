@@ -77,8 +77,8 @@ angular.module('app')
     /* This scope will set the style, depending on the state variable. The style changes the width of the navigation sidebar */
 
     $scope.sideNavStyle = function() {
-        var styleIcon = {"width": "50px", "height":"100%", "background-color": "#00bcd4","overflow-x": "hidden" }
-        var styleFull = {"width": "200px", "height":"100%", "background-color": "#00bcd4"}
+        var styleIcon = {"width": "50px", "height":"100%", "background-color": "#009688","overflow-x": "hidden" }
+        var styleFull = {"width": "200px", "height":"100%", "background-color": "#009688"}
 
         if(state) {
             return styleFull;
@@ -403,29 +403,30 @@ which kind of data he wants to see. The default value is average energy consumpt
  and upon receiving an event, it should trigger the update circle button*/
 .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService, percentageService) {
     // title will change, depending on which circleView is showing.
-    var creepTitle = "Creeping Contamination";
-    var contTitle = "Continuous Contamination";
     var changed = 0;
-    $scope.circleView_title = creepTitle;
+    $scope.circleView_title = "Creeping Contamination";
 
     // data variables to be changed
     var percentageDataType = "percentages_creeping.csv";
     var dataCont = "percentages_cont.csv";
 
-    // Button, changes the title of the view and the data displayed.
+    /* Button, changes the title of the view and the data displayed. It will also redraw the circles with the new data */
     $scope.changeView = function() {
        if(changed == 0) {
-           $scope.circleView_title = contTitle;
-           percentageDataType = "percentages_cont.csv"
+           percentageDataType = "percentages_cont.csv";
+           $scope.circleView_title = "Continuous Contamination";
            changed = 1;
+           clearCanvas();
            $scope.circleGraph();
        } else {
-           $scope.circleView_title = creepTitle;
-           var percentageDataType = "percentages_creeping.csv";
+           percentageDataType = "percentages_creeping.csv";
+           $scope.circleView_title = "Creeping Contamination";
            changed = 0;
+           clearCanvas();
            $scope.circleGraph();
        }
     }
+
 
     // Initializes time stamp
     $scope.ts = new Date();
@@ -464,79 +465,25 @@ which kind of data he wants to see. The default value is average energy consumpt
         }
     }
 
+     //* this function will clear the drawn canvas and enables redraw functions to draw on a new canvas */
+    function clearCanvas() {
+        var amountOfCarriers = percentageService.getAll(percentageDataType).length;
+        // delete all canvas elements, previously created for all carriers
+        while (amountOfCarriers > 0) {
+            var parent = document.getElementById("circleGraphs");
+            var child = document.getElementById("carrier "+ amountOfCarriers);
+            parent.removeChild(child);
+            amountOfCarriers = amountOfCarriers -1;
+        }
+    };
+
     $scope.refresh = function() {
+        //clear circle canvas elements
+        clearCanvas()
         // Redraw circles
-        $scope.circleGraphRedraw();
+        $scope.circleGraph();
         //Update the timestamp
         $scope.ts = new Date();
-    }
-
-    $scope.circleGraphRedraw = function() {
-        // ID of first carrier
-        var idCounter = 1;
-
-        // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-        var carrierPercentageData = percentageService.getAll(percentageDataType);
-	    var amountOfCarriers = carrierPercentageData.length;
-
-        //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
-        $timeout(drawCarriers, 1000);
-
-        // Calls a function to draw each circle
-        function drawCarriers() {
-
-            // draw the circle for every carrier in the database
-            while (amountOfCarriers > 0) {
-                var circleId = "carrier " + idCounter;
-
-                // call the circle drawing method to paint the circles. It will get the ID of the carrier, as well as the percentage data
-                createCircle(circleId, carrierPercentageData[idCounter - 1]);
-
-                idCounter = idCounter + 1;
-                amountOfCarriers = amountOfCarriers - 1;
-            }
-        }
-
-        /*  This function will create the circles, depending on the input parameters from the database*/
-        function createCircle(carrier, percentageOfEnergy) {
-            var canvas = document.getElementById(carrier);
-            var context = canvas.getContext('2d');
-            var centerX = canvas.width / 2;
-            var centerY = canvas.height / 2;
-            var radius = 60;
-
-            context.beginPath();
-            context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-            context.lineWidth = 2;
-            context.strokeStyle = '#003300';
-            context.stroke();
-
-            /* Logic of the color: if the percentage of a carrier is above 1.05 it will be coded red,
-           because the energy consumption of the last iteration is too high in comparison to the
-           first iteration. If the value is < 1.025, then the color will be green, because the energy
-           consumption is not really increasing much.
-           Any value between is coded yellow, because it should warn the user, that the energy
-           is higher than the very first iteration.
-            */
-            if(percentageOfEnergy > 1.05) {
-                context.fillStyle = '#e51c34';
-            } else if(percentageOfEnergy <= 1.025 ) {
-                context.fillStyle = '#b2ff59';
-            } else {
-                context.fillStyle = "#ffff00";
-            }
-
-            context.fill();
-            context.lineWidth = 5;
-            context.lineWidth = 1;
-            context.fillStyle = "#212121";
-            context.lineStyle = "#212121";
-            context.font = "15px sans-serif";
-            // textAllign center will allign the text relative to the borders of the canvas
-            context.textAlign = 'center';
-            context.fillText(carrier, centerX, centerY - 7);
-            context.fillText((percentageOfEnergy*100).toFixed() + "%", centerX, centerY + 12);
-        }
     }
 
 /* create the circle page upon page load. */
@@ -545,12 +492,12 @@ which kind of data he wants to see. The default value is average energy consumpt
   // data is called from a service and saved into a variable
     var carrierPercentageData = percentageService.getAll(percentageDataType);
     var amountOfCarriers = carrierPercentageData.length;
-	
+
     /* ID of first Carrier */
     var idCounter = 1;
 
     //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
-    $timeout(createCarrierHTML, 1000);
+    $timeout(createCarrierHTML, 0);
 
     // function to create HTML circle fragments dynamically
     function createCarrierHTML() {
@@ -563,7 +510,6 @@ which kind of data he wants to see. The default value is average energy consumpt
 
             // get the element in the html page, on which the new fragment should be appended to
             angular.element(document.getElementById('circleGraphs')).append(temp);
-
             // call the circle drawing method to paint the circles. It will get the ID of the carrier, as well as the percentage data
             createCircle(circleId, carrierPercentageData[idCounter - 1]);
 
@@ -629,13 +575,11 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.refresh = function() {
         // Redraw bar chart view
         $scope.barGraph();
-        //Update the timestamp
+        // Update the timestamp
         $scope.ts = new Date();
     }
 
     $scope.barGraph = function() {
-
-
         // Requesting the number of carriers from the REST API
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
@@ -695,7 +639,10 @@ which kind of data he wants to see. The default value is average energy consumpt
             /*  get the element where the bar chart should be displayed and
                 create the chart with different parameters.
             */
-            var ctx = document.getElementById("barChart");
+            var ctx = document.getElementById("barChart").getContext("2d");
+            ctx.canvas.width = 800;
+            ctx.canvas.height = 600;
+
             var myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -704,7 +651,7 @@ which kind of data he wants to see. The default value is average energy consumpt
                             label: 'Energy Consumption in %',
                             data: carrierPercentageDataRounded,
                             backgroundColor: carrierColorArray,
-                            borderColor: '(31,27,28, 0.8)',
+                            borderColor: 'rgba(31,27,28, 1)',
                             borderWidth: 1,
                         }]
                 },
