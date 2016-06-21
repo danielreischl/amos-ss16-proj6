@@ -41,7 +41,7 @@ header {
     color: #E0F2F1;
 }
 
-p {
+.title_name {
     font-size: 37px;
     font-style: italic;
     margin: 0;

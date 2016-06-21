@@ -23,41 +23,41 @@
 <div ng-controller="compareCircleGraph">
     <div flex="100" layout = "row">
         <div flex class = "carrierSelection" ng-init="createCompareGraph()">
-          <label class = "carrierBox" ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
-            <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
-            <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
-              {{carrier.id}}
-            </div>
-          </label>
+            <label class = "carrierBox" ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
+                <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
+                <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
+                    {{carrier.id}}
+                </div>
+            </label>
         </div>
 
         <div flex class = "iterationSelection">
-	   <form name = "iterationSelection">
-             <label class = "iterationBox" ng-repeat="iterOption in iterationDimensions">
-               <input type="radio" name = "iterOption" ng-value="iterOption.id" ng-model="$parent.selectedIteration"/>
-               <div>
-		 {{iterOption.name}}
-               </div>
-             </label>
-           </form>
+            <form name = "iterationSelection">
+                <label class = "iterationBox" ng-repeat="iterOption in iterationDimensions">
+                    <input type="radio" name = "iterOption" ng-value="iterOption.id" ng-model="$parent.selectedIteration"/>
+                    <div>
+                        {{iterOption.name}}
+                    </div>
+                </label>
+            </form>
         </div>
 	
         <div flex class = "dimensionSelection">
              <label class = "iterationBox" ng-repeat="dimension in dimensions">
-               <input type="radio" name = "dimension" ng-value="dimension.id" ng-model="$parent.selectedDimension"/>
-               <div>
-		 {{dimension.name}}
-               </div>
-             </label>           
+                 <input type="radio" name = "dimension" ng-value="dimension.id" ng-model="$parent.selectedDimension"/>
+                 <div>
+                     {{dimension.name}}
+                 </div>
+             </label>
         </div>
 
-	<div flex class = "sessionSelection">
-             <label class = "iterationBox" ng-repeat="session in sessions">
-               <input type="radio" name = "session" ng-value="session" ng-model="$parent.currentSession"/>
-               <div>
-		 {{session}}
-               </div>
-             </label>           
+        <div flex class = "sessionSelection">
+            <label class = "iterationBox" ng-repeat="session in sessions">
+                <input type="radio" name = "session" ng-value="session" ng-model="$parent.currentSession"/>
+                <div>
+                    {{session}}
+                </div>
+            </label>
         </div>
 
         <div flex>
@@ -67,28 +67,36 @@
 
     </div>
 
-   <!-- The graph and the legend are displayed in a table layout.
-            The div class graphSize will make the display the graph dynamically, according to the window size of the browser
-            The div class graphLegend will display the legend of the graph right next to it-->
-   <table>
-       <tr>
-           <td>
-               <div  class = "graphSize" ng-init="createCompareGraph()" id="compareGraph"></div>
-           </td>
-           <td>
-               <div class = "graphLegend" id ="compareGraphLegend"></div>
-           </td>
-       </tr>
-   </table>
+    <!--
+    The graph and the legend are displayed in a table layout.
+    The div class graphSize will make the display the graph dynamically, according to the window size of the browser
+    The div class graphLegend will display the legend of the graph right next to it
+    -->
+    <table>
+        <tr>
+            <td>
+                <div  class = "graphSize" ng-init="createCompareGraph()" id="compareGraph"></div>
+            </td>
 
-    <!-- Container for the DataExport. Data export will request the same csv createCompareGraph requested and allows
+            <td>
+                <div class = "graphLegend" id ="compareGraphLegend"></div>
+            </td>
+        </tr>
+    </table>
+
+    <!--
+    Container for the DataExport. Data export will request the same csv createCompareGraph requested and allows
     the user to download the csv file. Layout is row and alignment is end (horizontal) start (vertical) to show
-    the link on the right side below the createCompareGraph -->
+    the link on the right side below the createCompareGraph
+    -->
     <div dataExport layout="row" layout-align="end start">
-        <!--Links to requestedUrl from createCompareGraph ()
-        requestedUrl is the defined value in createCompareGraph which is added within a href -->
-          <a href ="{{requestedUrl}}">Export Data</a>
+        <!--
+        Links to requestedUrl from createCompareGraph ()
+        requestedUrl is the defined value in createCompareGraph which is added within a href
+        -->
+        <a href ="{{requestedUrl}}">Export Data</a>
     </div>
+
 </div>
 
 

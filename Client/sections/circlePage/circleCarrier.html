@@ -31,10 +31,12 @@
     </section>
 
     <section layout="column" layout-align="center center">
+        <h1>{{circleView_title}}</h1>
         <div>
             <div id="circleGraphs"></div>
         </div>
         <div layout="row" layout-align="center center">
+            <md-button layout="column" layout-align="center end" class="md-raised md-cornered" ng-click="changeView()">Change View to {{circleView_title}}</md-button>
             <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#CompareCarrier'">Continuous Consumption Graph</md-button>
             <md-button layout="column" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#AverageEnergyConsumptionChart'">Average Consumption Graph</md-button>
             <md-button class="md-raised md-cornered" ng-click="refresh()">Refresh</md-button>

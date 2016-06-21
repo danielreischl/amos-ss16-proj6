@@ -77,7 +77,7 @@ angular.module('app')
     /* This scope will set the style, depending on the state variable. The style changes the width of the navigation sidebar */
 
     $scope.sideNavStyle = function() {
-        var styleIcon = {"width": "50px", "height":"100%", "background-color": "#00bcd4" }
+        var styleIcon = {"width": "50px", "height":"100%", "background-color": "#00bcd4","overflow-x": "hidden" }
         var styleFull = {"width": "200px", "height":"100%", "background-color": "#00bcd4"}
 
         if(state) {
@@ -219,12 +219,12 @@ angular.module('app')
     }
 
     $scope.getListStyle = function(index) {
-	if (index % 5 == 1) {
-            return {'clear': 'left'};
-	}
-	else {
-            return {};
-	}
+        if (index % 5 == 1) {
+                return {'clear': 'left'};
+        }
+        else {
+                return {};
+        }
     }
     
 
@@ -242,27 +242,27 @@ angular.module('app')
 
     $scope.getSelectedIterationsString = function() {
         var selectedIterations = [];
-	var selectedNumber;
-	// TODO: add the possibility to select individual iterations
-	switch ($scope.selectedIteration) {
-	case "last":
-	    selectedNumber = 1;
-	    break;
-	case "lastThree":
-	    selectedNumber = 3;
-	    break;
-	case "lastTen":
-	    selectedNumber = 10;
-	    break;
-	default:
-	    selectedNumber = 1;
-	}
-	
-	for (var i = amountOfIterations; i > amountOfIterations - selectedNumber && i >= 1; i--) {
-	    selectedIterations.push(i);
-	}
-	// join with comma and return
-	return selectedIterations.join();
+        var selectedNumber;
+        // TODO: add the possibility to select individual iterations
+        switch ($scope.selectedIteration) {
+        case "last":
+            selectedNumber = 1;
+            break;
+        case "lastThree":
+            selectedNumber = 3;
+            break;
+        case "lastTen":
+            selectedNumber = 10;
+            break;
+        default:
+            selectedNumber = 1;
+        }
+
+        for (var i = amountOfIterations; i > amountOfIterations - selectedNumber && i >= 1; i--) {
+            selectedIterations.push(i);
+        }
+        // join with comma and return
+        return selectedIterations.join();
     }
 
 })
@@ -270,7 +270,7 @@ angular.module('app')
 
 /* controller for the AverageEnergyConsumption Chart. This chart will display the data over iterations. The user can select
 which kind of data he wants to see. The default value is average energy consumption.*/
-    .controller('AverageEnergyConsumptionChart', function($scope, carrierService, percentageService, sessionService) {
+.controller('AverageEnergyConsumptionChart', function($scope, carrierService, percentageService, sessionService) {
 
     // get the array with the carriers the user wants to see in the graph.
     var carrierCompareList = carrierService.getCarrier();
@@ -396,16 +396,38 @@ which kind of data he wants to see. The default value is average energy consumpt
         // Updates the  time for the time stamp
         $scope.ts = new Date();
     }
-
 })
    
 
 /* Refresh the circle Page. The purpose of this controller is listen to the Button
  and upon receiving an event, it should trigger the update circle button*/
-    .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService, percentageService) {
+.controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService, percentageService) {
+    // title will change, depending on which circleView is showing.
+    var creepTitle = "Creeping Contamination";
+    var contTitle = "Continuous Contamination";
+    var changed = 0;
+    $scope.circleView_title = creepTitle;
+
+    // data variables to be changed
+    var percentageDataType = "percentages_creeping.csv";
+    var dataCont = "percentages_cont.csv";
+
+    // Button, changes the title of the view and the data displayed.
+    $scope.changeView = function() {
+       if(changed == 0) {
+           $scope.circleView_title = contTitle;
+           percentageDataType = "percentages_cont.csv"
+           changed = 1;
+       } else {
+           $scope.circleView_title = creepTitle;
+           var percentageDataType = "percentages_creeping.csv";
+           changed = 0;
+       }
+    }
+
     // Initializes time stamp
     $scope.ts = new Date();
-/* This function will highlight the carrier and save the id of the carrier inside the comaprison arrary in app.service.js*/
+    /* This function will highlight the carrier and save the id of the carrier inside the comaprison arrary in app.service.js*/
     $scope.selectCarrier = function(event) {
         // id = carrier x
         var id = event.target.id;
@@ -448,29 +470,13 @@ which kind of data he wants to see. The default value is average energy consumpt
     }
 
     $scope.circleGraphRedraw = function() {
-
-        // Get the amount of carriers
-        //var xmlHttp = new XMLHttpRequest();
-        //xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
-        //xmlHttp.send(null);
-        //var amountOfCarriers = xmlHttp.responseText;
-
         // ID of first carrier
         var idCounter = 1;
 
         // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-        var carrierPercentageData = percentageService.getAll();
-	var amountOfCarriers = carrierPercentageData.length;
-	/*
-	Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
-                                                                   dynamicTyping: true,
-                                                                   complete: function(results) {
-                                                                       carrierPercentageData = results.data[1];
-                                                                   }
-                                                                  }
-        )
-	*/
-	
+        var carrierPercentageData = percentageService.getAll(percentageDataType);
+	    var amountOfCarriers = carrierPercentageData.length;
+
         //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
         $timeout(drawCarriers, 1000);
 
@@ -533,31 +539,14 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 /* create the circle page upon page load. */
     $scope.circleGraph = function() {
-    /* open connection to the REST API from the middleware and get the amount of carriers.
-       After receiving the data, the integer variable will be saved inside of amountOfCarriers
-    */
-    //var xmlHttp = new XMLHttpRequest();
-    //xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
-    //xmlHttp.send(null);
-    //var amountOfCarriers = xmlHttp.responseText;
 
-    var carrierPercentageData = percentageService.getAll();
+  // data is called from a service and saved into a variable
+    var carrierPercentageData = percentageService.getAll(percentageDataType);
     var amountOfCarriers = carrierPercentageData.length;
 	
     /* ID of first Carrier */
     var idCounter = 1;
-    // the array variable where the converted content from the csv file will be.
-    //var carrierPercentageData;
-    // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-    /*
-    Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
-                                                                   dynamicTyping: true,
-                                                                   complete: function(results) {
-                                                                       carrierPercentageData =results.data[1];
-                                                                   }
-                                                                  }
-    )
-    */
+
     //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
     $timeout(createCarrierHTML, 1000);
 
@@ -622,7 +611,6 @@ which kind of data he wants to see. The default value is average energy consumpt
         context.fillText((percentageOfEnergy*100).toFixed() + "%", centerX, centerY + 12);
     }
 }
-
 })
 
 .controller('sessionDataTable', function($scope, $http) {
@@ -655,12 +643,12 @@ which kind of data he wants to see. The default value is average energy consumpt
         // the array variable where the converted content from the csv file will be.
         var carrierPercentageData;
         // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-        Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', { download: true,
-                                                                       dynamicTyping: true,
-                                                                       complete: function(results) {
-                                                                           carrierPercentageData =results.data[1];
-                                                                       }
-                                                                      }
+        Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', {download: true,
+                                                                               dynamicTyping: true,
+                                                                               complete: function(results) {
+                                                                                   carrierPercentageData =results.data[1];
+                                                                               }
+                                                                               }
         )
 
         // this array saves the percentage of each bar column/carrier
@@ -786,5 +774,115 @@ which kind of data he wants to see. The default value is average energy consumpt
         // returns an array with all FileNames
         return arraySimulationFileNames;
 
+    }
+})
+
+/* controller for the Flexibility Chart. This chart will display the speed data of each carrier over absolute time. The user can select
+the session, iterations and carriers he wans to see. */
+.controller('FlexibilityChartController', function($scope, carrierService, percentageService, sessionService) {
+
+    // get the array with the carriers the user wants to see in the graph.
+    var carrierCompareList = carrierService.getCarrier();
+
+    // Sets the initial time for the time stamp
+    $scope.ts = new Date();
+
+    $scope.sessions = [];
+    for (var i = 1; i <= sessionService.getNumberOfSessions(); i++) {
+	    $scope.sessions.push(i);
+    }
+
+    // the session requested from the database.
+    $scope.currentSession = sessionService.getCurrentSession();
+
+    //a string, which tells the database how many carrier the user is requesting.
+    var carriersRequested = "";
+
+    // Get the maxAmount of Carriers from the database and save it in a variable called amountOfCarriers
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.send(null);
+    var amountOfCarriers = xmlHttp.responseText;
+
+    // Get the last iteration database and save it
+    var xmlHttp2 = new XMLHttpRequest();
+    xmlHttp2.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=lastIteration', false );
+    xmlHttp2.send(null);
+    var lastIteration = xmlHttp2.responseText;
+
+    //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
+    $scope.carriers = [];
+    for (var idCounter = 1; idCounter <= amountOfCarriers;idCounter++) {
+	    var currentSelected = carrierService.hasCarrier(idCounter);
+        $scope.carriers.push({id:idCounter, selected:currentSelected});
+    }
+
+    // create the dropdown menu for iterations. the array gets filled with the iteration numbers available in the database.
+    $scope.iterations = [];
+    for (var i = 1; i <= lastIteration;i++) {
+	    $scope.iterations.push(i);
+    }
+
+    //set the first iterations to default.
+    $scope.selectedIteration = $scope.iterations[0];
+
+    // make percentage service available in html-view
+    // not very nice, try to refactor if possible
+    $scope.percentageService = percentageService;
+
+    /* this functions creates the dygraph  from a data source and applies options to them*/
+    $scope.createFlexibilityChart = function() {
+
+        $scope.carriersRequested = function() {
+            // filter for the selected carriers
+            var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
+
+            //join them with commas
+            return selected.map(function(carrier){return carrier.id.toString();}).join();
+        }
+
+        sessionService.setCurrentSession($scope.currentSession);
+
+        // create the graph with the parameters set. The request path for the database depends on 3 parameters: carrierRequested, selectedIteration and selectedSession
+        // the url which should be requested wil be defined in requestedUrl
+        // to allow to export the csv file the variable is defined as a $scope variable
+        $scope.requestedUrl = 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+$scope.carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession+'';
+
+        graph = new Dygraph(
+	       document.getElementById("FlexibilityChart"),$scope.requestedUrl , {title: 'Flexibility Graph',
+	                                                                          ylabel: 'Speed',
+	                                                                          xlabel: 'Absolute Time in ms',
+	                                                                          labelsSeparateLines: true,
+	                                                                          highlightSeriesOpts: {
+	                                                                            strokeWidth: 4,
+	                                                                            strokeBorderWidth: 1,
+	                                                                            highlightCircleSize: 5
+	                                                                          },
+	                                                                          legend: "always",
+	                                                                          /*labelDiv looks for an element with the given id and puts the legend into this element.
+	                                                                          Therefore the legend will not bis displayed inside the graph */
+	                                                                          labelsDiv: document.getElementById("FlexibilityChartLegend"),
+	                                                                          /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
+	                                                                          axes: {
+	                                                                            x: {
+                                                                                    valueFormatter: function(x) {
+                                                                                        return 'Absolute time ' + x;
+                                                                                    },
+                                                                                },
+                                                                              }
+	                                                                          }
+	       );
+
+        $scope.getListStyle = function(index) {
+            if (index % 5 == 1) {
+                return {'clear': 'left'};
+            }
+            else {
+                return {};
+            }
+        }
+
+        // Updates the  time for the time stamp
+        $scope.ts = new Date();
     }
 })

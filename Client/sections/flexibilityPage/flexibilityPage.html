@@ -1,23 +1,85 @@
 <!--
-   This file is part of Rogue Vision.
+    This file is part of Rogue Vision.
 
-   Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
-       Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
-       Aleksander Penew, Abhinav Puri
+    Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
+        Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
+        Aleksander Penew, Abhinav Puri
 
-   Rogue Vision is free software: you can redistribute it and/or modify
-   it under the terms of the GNU Affero General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+    Rogue Vision is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-   Rogue Vision is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU Affero General Public License for more details.
+    Rogue Vision is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
 
-   You should have received a copy of the GNU Affero General Public License
-   along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
--->
-
-<!--The flexibility page shows a graph of the speed   -->
-<p>This is the flexibility page</p>
+    You should have received a copy of the GNU Affero General Public License
+    along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
+    -->
+<!--The flexibility page shows a graph, in which the speed of selected carriers are compared with eacht other on the absolute
+    time. The user can select Carriers, Iterations and Sessions -->
+<div ng-controller="FlexibilityChartController">
+    <!-- Dropdown selection menus and checkbxoes are put in a table layout.-->
+    <table>
+        <tr>
+            <td>
+                <div flex class = "carrierSelection">
+                    <label class = "carrierBox" ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
+                        <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
+                        <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
+                            {{carrier.id}}
+                        </div>
+                    </label>
+                </div>
+            </td>
+            <td>
+                <!-- ng-change is empty right now. this has to change, when iterations can be selected from the database -->
+	            <div class = "iterationSelection">
+                    <select ng-model="selectedIteration">
+                        <option ng-repeat="iteration in iterations" ng-value="iteration">
+                            {{iteration}}
+                        </option>
+                    </select>
+                </div>
+            </td>
+	        <td>
+	            <div flex class = "sessionSelection">
+		            <label class = "iterationBox" ng-repeat="session in sessions">
+		                <input type="radio" name = "session" ng-value="session" ng-model="$parent.currentSession"/>
+		                <div>
+		                    {{session}}
+		                </div>
+		            </label>
+                </div>
+            </td>
+            <td>
+                <md-button class="md-raised md-cornered"  ng-click="createFlexibilityChart()">Refresh</md-button>
+                <p class = "timestamp">Time of last refresh = {{ ts | date : "HH:mm:ss.sss" }}</p>
+            </td>
+        </tr>
+    </table>
+    <!-- FlexibilityChart -->
+    <!-- The graph and the legend are displayed in a table layout.
+         The div class graphSize will make the display the graph dynamically, according to the window size of the browser
+         The div class graphLegend will display the legend of the graph right next to it-->
+    <table >
+        <tr>
+            <td>
+                <div class = "graphSize" ng-init ="createFlexibilityChart()" id="FlexibilityChart"></div>
+            </td>
+            <td>
+                <div class = "graphLegend" id ="FlexibilityChartLegend"></div>
+            </td>
+        </tr>
+    </table>
+    <!-- Container for the DataExport. Data export will request the same csv the FlexibilityChart
+         requested and allows the user to download the csv file-->
+    <!-- Layout is row and alignment is end (horizontal) start (vertical) to show it on the right side below the FlexibilityChart -->
+    <div dataExport layout="row" layout-align="end start">
+        <!--Links to url from createFlexibilityChart ()
+            requestedUrl is the defined value in createFlexibilityChart which is added within a href -->
+        <a href ="{{requestedUrl}}">Export Data</a>
+    </div>
+</div>
