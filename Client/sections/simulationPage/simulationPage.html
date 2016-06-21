@@ -26,52 +26,67 @@
     4: Upload a data file
     -->
 <div ng-controller="simulationPageController" layout="column" layout-align="start start">
-    <!-- Headline for starting a new simulation -->
-    <h1>Select parameters to start the simulation</h1>
-    <!--
-        Generates a table with the following values and input fields:
-        Available Datafiles as drop down
-        Wait times of the dataProcessing scripts as input filed: Compression, FirstDataLoad, DataReload
-        Amount Of Carriers as input field
-        KeepEveryXRows as Compression rate
-        -->
-    <form name="carriersForm" ng-submit="startSimulation()">
-        <table>
-            <tr>
-                <td align=right>Datafile:</td>
-                <td align=left>
-                    <select  ng-model="selectedDataFile" required>
-                        <option ng-repeat="x in dataFileNames">{{x}}</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td align=right> Amount of Carriers: </td>
-                <td align=left> <input type="number" name="amountOfCarriers" ng-model="amountOfCarriers" min="0" max="999" required /></td>
-            </tr>
-            <tr>
-                <td align=right> Wait time compression (in ms): </td>
-                <td align=left> <input type="number" name="waitForCompression" ng-model="waitForCompression" min="0" max="999" required /></td>
-            </tr>
-            <tr>
-                <td align=right>Wait time for first data load (in s): </td>
-                <td align=left><input type="number" name="waitForFirstDataLoad" ng-model="waitForFirstDataLoad" min="0" max="999" required /></td>
-            </tr>
-            <tr>
-                <td align=right>Wait time for  data reload (ins s): </td>
-                <td align=left><input type="number" name="waitForDataReload" ng-model="waitForDataReload" min="0" max="999" required /></td>
-            </tr>
-            <tr>
-                <td align=right>Keep Every X Rows: </td>
-                <td align=left><input type="number" name="keepEveryXRows" ng-model="keepEveryXRows"  min="0" max="999" required /></td>
-            </tr>
-            <tr>
-                <td><button type="submit" ng-disabled="carriersForm.$invalid">Start Simulation</button></td>
-            </tr>
-        </table>
+<div class="container">
+        <h1>Simulation Page</h1>
+
+<div class="row">
+    <div class="col-md-4">
+    <!-- FORM ============ -->
+
+    <form name="carrierForm" ng-submit="startSimulation()" novalidate>
+
+
+         <h3>Select Parameters</h3>
+        <!-- DataFile -->
+        <div lass="form-group" ng-class="{ 'has-error' : carrierForm.selectedDataFile.$invalid}">
+            <label>Select list:</label>
+            <select class="form-control" ng-model="selectedDataFile" required>
+                <option ng-repeat="x in dataFileNames">{{x}}</option>
+            </select>
+            <p ng-show="carrierForm.selectedDataFile.$invalid" class="help-block">Select File</p>
+        </div>
+        <!-- Amount Of Carriers -->
+        <div class="form-group" ng-class="{ 'has-error' : carrierForm.amountOfCarriers.$invalid}">
+            <label>Amount of Carriers:</label>
+            <input type="number" name="amountOfCarriers" class="form-control" ng-model="amountOfCarriers" min="0" max="100" required>
+            <p ng-show="carrierForm.amountOfCarriers.$invalid" class="help-block">Amount of Carrier has to be between 1 and 100</p>
+        </div>
+
+        <!-- WaitTimeCompression -->
+        <div class="form-group" ng-class="{ 'has-error' : carrierForm.waitForCompression.$invalid}">
+            <label>Wait time compression (in ms):</label>
+            <input type="number" name="waitForCompression" class="form-control" ng-model="waitForCompression" min="0" max="10" required>
+            <p ng-show="carrierForm.waitForCompression.$invalid" class="help-block">Wait time compression has to be between 0 and 10</p>
+        </div>
+
+        <!-- NAME -->
+        <div class="form-group" ng-class="{ 'has-error' : carrierForm.waitForFirstDataLoad.$invalid}">
+            <label>Wait Time For First Data Load:</label>
+            <input type="number" name="waitForFirstDataLoad" class="form-control" ng-model="waitForFirstDataLoad" min="0" max="1000" required>
+            <p ng-show="carrierForm.waitForFirstDataLoad.$invalid" class="help-block">Amount of Carrier has to be between 0 and 1000</p>
+        </div>
+
+        <!-- NAME -->
+        <div class="form-group" ng-class="{ 'has-error' : carrierForm.waitForDataReload.$invalid}">
+            <label>Wait Time For Data Reload:</label>
+            <input type="number" name="waitForDataReload" class="form-control" ng-model="waitForDataReload" min="0" max="1000" required>
+            <p ng-show="carrierForm.waitForDataReload.$invalid" class="help-block">Wait Time has to be between 0 and 1000</p>
+        </div>
+
+        <!-- NAME -->
+        <div class="form-group" ng-class="{ 'has-error' : carrierForm.keepEveryXRows.$invalid}">
+            <label>Keep every X Rows:</label>
+            <input type="number" name="keepEveryXRows" class="form-control" ng-model="keepEveryXRows" min="1" max="100" required>
+            <p ng-show="carrierForm.keepEveryXRows.$invalid" class="help-block">KeepEveryXRows has to be between 1 and 100</p>
+        </div>
+
+        <button type="submit" class="btn btn-default" ng-disabled="carrierForm.$invalid">Start Simulation</button>
+
     </form>
+  </div>
     <!-- Headline for upload -->
-    <h1>Upload a new CSV - file</h1>
+    <div class="col-md-4">
+    <h4>Upload a new CSV - file</h4>
     <div class = "fileUpload">
         <form action="django/dataInterface/fileUpload.html" method="post" enctype="multipart/form-data">
             <table>
@@ -82,9 +97,12 @@
                     </p>
                 </tr>
                 <tr>
-                    <button type="button">Upload</button>
+                    <button type="button" class="btn btn-default">Upload</button>
                 </tr>
             </table>
         </form>
     </div>
+</div>
+
+</div>
 </div>
