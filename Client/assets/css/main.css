@@ -19,33 +19,37 @@
    along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-html, body {
+html,body {
     height: 100%;
     width: 100%;
 }
 
 .mainLayout {
-    height: 90.5%;
+    height: 90%;
 }
+
+
 
 .ngViewContent {
     position: absolute;
     width: 100%;
+    height: 90%;
     text-align: center;
 }
 
 header {
     width:100%;
-    top:0px;
     background-color: #00bcd4;
     color: #E0F2F1;
+    height: 10%;
+    padding: 2px;
 }
 
 .title_name {
     font-size: 37px;
     font-style: italic;
     margin: 0;
-    padding-top: 25px;
+    padding-top: 40px;
 }
 
 .timestamp {
