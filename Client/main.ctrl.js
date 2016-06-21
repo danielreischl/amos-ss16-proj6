@@ -414,14 +414,12 @@ which kind of data he wants to see. The default value is average energy consumpt
     /* Button, changes the title of the view and the data displayed. It will also redraw the circles with the new data */
     $scope.changeView = function() {
        if(changed == 0) {
-           $scope.circleView_title = contTitle;
            percentageDataType = "percentages_cont.csv";
            circleTitle = "Continuous Contamination";
            changed = 1;
            clearCanvas();
            $scope.circleGraph();
        } else {
-           $scope.circleView_title = creepTitle;
            percentageDataType = "percentages_creeping.csv";
            circleTitle = "Creeping Contamination";
            changed = 0;
