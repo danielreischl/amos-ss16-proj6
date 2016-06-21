@@ -36,23 +36,23 @@
             </td>
             <td>
                 <!-- ng-change is empty right now. this has to change, when iterations can be selected from the database -->
-                <div class = "iterationSelection">
-                    <label class = "iterationBox" ng-repeat="iterOption in iterationDimensions">
-                        <input type="radio" name = "iterOption" ng-value="iterOption" ng-model="$parent.selectedIteration"/>
-                        <div>
-                            {{iterOption}}
-                        </div>
-                    </label>
+	            <div class = "iterationSelection">
+		            <label class = "iterationBox" ng-repeat="iteration in iterations">
+		                <input type="radio" name = "iteration" ng-value="iteration" ng-model="$parent.selectedIteration"/>
+		                <div>
+		                {{iteration}}
+		                </div>
+		            </label>
                 </div>
             </td>
-            <td>
-                <div flex class = "sessionSelection">
-                    <label class = "iterationBox" ng-repeat="session in sessions">
-                        <input type="radio" name = "session" ng-value="session" ng-model="$parent.currentSession"/>
-                        <div>
-                            {{session}}
-                        </div>
-                    </label>
+	        <td>
+	            <div flex class = "sessionSelection">
+		            <label class = "iterationBox" ng-repeat="session in sessions">
+		                <input type="radio" name = "session" ng-value="session" ng-model="$parent.currentSession"/>
+		                <div>
+		                    {{session}}
+		                </div>
+		            </label>
                 </div>
             </td>
             <td>
@@ -63,8 +63,8 @@
     </table>
     <!-- FlexibilityChart -->
     <!-- The graph and the legend are displayed in a table layout.
-        The div class graphSize will make the display the graph dynamically, according to the window size of the browser
-        The div class graphLegend will display the legend of the graph right next to it-->
+         The div class graphSize will make the display the graph dynamically, according to the window size of the browser
+         The div class graphLegend will display the legend of the graph right next to it-->
     <table >
         <tr>
             <td>
@@ -76,7 +76,7 @@
         </tr>
     </table>
     <!-- Container for the DataExport. Data export will request the same csv the FlexibilityChart
-        requested and allows the user to download the csv file-->
+         requested and allows the user to download the csv file-->
     <!-- Layout is row and alignment is end (horizontal) start (vertical) to show it on the right side below the FlexibilityChart -->
     <div dataExport layout="row" layout-align="end start">
         <!--Links to url from createFlexibilityChart ()

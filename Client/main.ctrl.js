@@ -270,7 +270,7 @@ angular.module('app')
 
 /* controller for the AverageEnergyConsumption Chart. This chart will display the data over iterations. The user can select
 which kind of data he wants to see. The default value is average energy consumption.*/
-    .controller('AverageEnergyConsumptionChart', function($scope, carrierService, percentageService, sessionService) {
+.controller('AverageEnergyConsumptionChart', function($scope, carrierService, percentageService, sessionService) {
 
     // get the array with the carriers the user wants to see in the graph.
     var carrierCompareList = carrierService.getCarrier();
@@ -621,7 +621,6 @@ which kind of data he wants to see. The default value is average energy consumpt
         context.fillText((percentageOfEnergy*100).toFixed() + "%", centerX, centerY + 12);
     }
 }
-
 })
 
 .controller('sessionDataTable', function($scope, $http) {
@@ -790,7 +789,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 /* controller for the Flexibility Chart. This chart will display the speed data of each carrier over absolute time. The user can select
 the session, iterations and carriers he wans to see. */
-.controller('FlexibilityChartController', function($scope, carrierService, percentageService, sessionService) {
+.controller('FlexibilityChartController', function($scope, carrierService, sessionService) {
 
     // get the array with the carriers the user wants to see in the graph.
     var carrierCompareList = carrierService.getCarrier();
@@ -798,7 +797,7 @@ the session, iterations and carriers he wans to see. */
     // Sets the initial time for the time stamp
     $scope.ts = new Date();
 
-    $scope.selectedIteration = "1";
+    $scope.selectedIteration = "";
 
     $scope.sessions = [];
     for (var i = 1; i <= sessionService.getNumberOfSessions(); i++) {
@@ -831,15 +830,10 @@ the session, iterations and carriers he wans to see. */
     }
 
     // create the dropdown menu for iterations. the array gets filled with the iteration numbers available in the database.
-    $scope.iterationDimensions = [];
-
+    $scope.iterations = [];
     for (var i = 1; i <= lastIteration;idCounter++) {
-	    $scope.iterationDimensions.push(i);
+	    $scope.iterations.push(i);
     }
-
-    // make percentage service available in html-view
-    // not very nice, try to refactor if possible
-    $scope.percentageService = percentageService;
 
     /* this functions creates the dygraph  from a data source and applies options to them*/
     $scope.createFlexibilityChart = function() {
@@ -860,24 +854,29 @@ the session, iterations and carriers he wans to see. */
         $scope.requestedUrl = 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+$scope.carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession+'';
 
         graph = new Dygraph(
-            document.getElementById("FlexibilityChart"), $scope.requestedUrl,
-                {title: 'Flexibility Graph', ylabel: 'Speed', xlabel: 'Absolute Time in ms', labelsSeparateLines: true,
-                highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
-                legend: "always",
-                /*
-                labelDiv looks for an element with the given id and puts the legend into this element.
-                Therefore the legend will not bis displayed inside the graph
-                */
-                labelsDiv: document.getElementById("FlexibilityChartLegend"),
-                /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
-                axes: {
-                    x: {
-                        valueFormatter: function(x) {
-                            return 'Iteration ' + x;
-                        },
-                    },
-                }
-        });
+	       document.getElementById("FlexibilityChart"),$scope.requestedUrl , {title: 'Flexibility Graph',
+	                                                                          ylabel: 'Speed',
+	                                                                          xlabel: 'Absolute Time in ms',
+	                                                                          labelsSeparateLines: true,
+	                                                                          highlightSeriesOpts: {
+	                                                                            strokeWidth: 4,
+	                                                                            strokeBorderWidth: 1,
+	                                                                            highlightCircleSize: 5
+	                                                                          },
+	                                                                          legend: "always",
+	                                                                          /*labelDiv looks for an element with the given id and puts the legend into this element.
+	                                                                          Therefore the legend will not bis displayed inside the graph */
+	                                                                          labelsDiv: document.getElementById("FlexibilityChartLegend"),
+	                                                                          /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
+	                                                                          axes: {
+	                                                                            x: {
+                                                                                    valueFormatter: function(x) {
+                                                                                        return 'Absolute time ' + x;
+                                                                                    },
+                                                                                },
+                                                                              }
+	                                                                          }
+	       );
 
         $scope.getListStyle = function(index) {
             if (index % 5 == 1) {
@@ -891,4 +890,5 @@ the session, iterations and carriers he wans to see. */
         // Updates the  time for the time stamp
         $scope.ts = new Date();
     }
+
 })
