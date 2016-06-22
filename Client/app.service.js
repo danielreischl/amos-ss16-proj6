@@ -142,7 +142,7 @@ angular.module('app')
 	    numberOfSessions = xmlHttp.responseText;
 
 	    // reset session number, if necessary
-	    if (currentSession < numberOfSessions) {
+	    if (currentSession > numberOfSessions) {
 		currentSession = 1;
 	    }
 	}
