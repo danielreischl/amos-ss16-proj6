@@ -59,3 +59,5 @@ https://github.com/AMOSus/amos-ss16-proj6/wiki/Software-Architecture
 https://github.com/AMOSus/amos-ss16-proj6/wiki/DataProcessing
 ### Detailed Information on the Frontend
 https://github.com/AMOSus/amos-ss16-proj6/wiki/Frontend
+### Product Glossary
+https://github.com/AMOSus/amos-ss16-proj6/wiki/Product-Glossary
