@@ -507,6 +507,9 @@ session = config.getint('Simulation', 'session')
 # FileName that should be imported
 fileName = config.get('Simulation', 'name_of_imported_file')
 
+dataProcessingFunctions.updated_config('Simulation', 'session', session +1)
+
+
 # Checks if a File is added to DATA_FILE_NAMES. If not it is terminating the script
 if fileName == '':
     print('No File selected')
@@ -566,11 +569,6 @@ sessionData.loc['1'] = pd.Series(
 
 # calls function to load the sessiondata data into the database
 dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'))
-
-# Counts up session for each filename
-session += 1
-
-dataProcessingFunctions.updated_config('Simulation', 'session', session)
 
 # Calls Funcion to remove RunningFile
 dataProcessingFunctions.deleteRunningFile()
