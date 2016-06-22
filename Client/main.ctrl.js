@@ -670,7 +670,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     }
 })
 
-.controller('simulationPageController', function($scope, $http) {
+.controller('simulationPageController', function($scope, $http, sessionService) {
 
     // This saves all Data File Names that are stored on the server
     $scope.dataFileNames = getArrayOfDataFiles();
@@ -690,6 +690,8 @@ which kind of data he wants to see. The default value is average energy consumpt
             xmlHttp.open( "GET", urlString, false);
             xmlHttp.send(null);
             var returnString  = xmlHttp.responseText;
+            //Sets the current Session to the new SessionNumber
+            sessionService.setCurrentSession(sessionService.getNumberOfSessions+1)
             alert("Simulation Started");
     };
 
