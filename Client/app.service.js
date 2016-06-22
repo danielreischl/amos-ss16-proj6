@@ -139,7 +139,8 @@ angular.module('app')
 	    // so far session, carrier and iteration have to be set - they are disregarded however
 	    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=currentSession', false );
 	    xmlHttp.send(null);
-	    numberOfSessions = xmlHttp.responseText;
+	    //parses Http-ResponseText to a decimal int
+	    numberOfSessions = parseInt(xmlHttp.responseText,10);
 
 	}
 
