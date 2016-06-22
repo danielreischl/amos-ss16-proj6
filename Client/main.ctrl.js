@@ -685,15 +685,12 @@ which kind of data he wants to see. The default value is average energy consumpt
 
     //Starts the simulation by calling the website link
     $scope.startSimulation = function() {
-
-{
             var urlString = 'django/dataInterface/simulation.start?wtSimulation=' + $scope.waitForCompression + '&wtFirstDataload=' + $scope.waitForFirstDataLoad + '&wtDataReload=' + $scope.waitForDataReload + '&amountOfCarriers=' + $scope.amountOfCarriers + '&fileName=InitialData/' + $scope.selectedDataFile  + '&keepEveryXRows=' + $scope.keepEveryXRows
             xmlHttp = new XMLHttpRequest();
             xmlHttp.open( "GET", urlString, false);
             xmlHttp.send(null);
             var returnString  = xmlHttp.responseText;
             alert("Simulation Started");
-         // If Simulation is running, prompts message "Other Simulation still running")
     };
 
     // This gets all Data File Names that are stored on the server
