@@ -25,19 +25,21 @@
     3: Start the new simulation
     4: Upload a data file
     -->
-<div ng-controller="simulationPageController" layout="column" layout-align="start start">
-<div class="container">
+<div class="container" ng-controller="simulationPageController">
     <div class ="page-header">
         <h1>Simulation Page</h1>
     </div>
 
-<div class="row">
+<div class="row-fluid" style="border-right: 1px solid #ccc;">
     <div class="col-md-4">
+        <div>
+      <h3>Start new Simulatiopn</h3>
+                   <p>Select the Parameters and start simulation on button click.</p>
+    </div>
+
 
     <form name="carrierForm" ng-submit="startSimulation()" novalidate>
-    <div>
-      <h3>Select Parameters</h3>
-    </div>
+
         <!-- DataFile -->
         <div class="form-group" ng-class="{ 'has-error' : carrierForm.selectedDataFile.$invalid}">
             <label>Select list:</label>
@@ -87,7 +89,10 @@
   </div>
     <!-- Headline for upload -->
     <div class="col-md-4">
-    <h3>Upload a new CSV - file</h3>
+        <div>
+      <h3>Upload new CSV-File</h3>
+            <p> Add a csv file for the Simulation</p>
+    </div>
         <form name="fileUpload" action="django/dataInterface/fileUpload.html" method="post" enctype="multipart/form-data" novalidate>
            <div class="form-group" ng-class="{ 'has-error' : fileUpload.fileToUpload.$invalid}">
 	     <label>File name (without .csv):</label>
@@ -103,7 +108,42 @@
 
     <div>
       <div class="col-md-4">
-	<h4>Loaded data</h4>
+	    <div>
+      <h3>Load Data</h3>
+            <p>Klick on the right column to select the datafile</p>
+    </div>
+
+
+  <table class="table table-hover table-bordered table-striped" style= "bgcolor=": #000000;">
+    <thead>
+      <tr>
+        <th>Session</th>
+        <th>FileName</th>
+        <th>Carriers</th>
+        <th>Select</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Trace.csv</td>
+        <td>15</td>
+          <td> <span class="glyphicon glyphicon-play" aria-hidden="true"></span></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Trace2.csv</td>
+        <td>15</td>
+                    <td> <span class="glyphicon glyphicon-play" aria-hidden="true"></span></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Trace.csv</td>
+        <td>15</td>
+          <td> <span class="glyphicon glyphicon-play" aria-hidden="true"></span></td>
+      </tr>
+    </tbody>
+  </table>
       </div>
     </div>
 </div>
