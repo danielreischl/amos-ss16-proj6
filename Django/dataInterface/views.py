@@ -88,7 +88,7 @@ def funcPercentCreeping(session, carrier):
         countOfIterations = int(funcMaxIteration(session, carrier) / 10)
         sumOfEnergy = 0
         # Sums up all energy consumptions
-        for i in range(1, countOfIterations):
+        for i in range(1, countOfIterations + 1):
             sumOfEnergy = sumOfEnergy + funcTotalEnergyConsumption(session, carrier, i)
         # Consumption of current iteration
         lastConsumption = funcTotalEnergyConsumption(session, carrier, funcMaxIteration(session, carrier))
@@ -534,7 +534,7 @@ def averageEnergyConsumption(request):
     writer.writerow(firstrow)
 
     # Writes rest of the csv file
-    for iteration in range(startIterationOfAllCarriers, maxIterationOfAllCarriers):
+    for iteration in range(startIterationOfAllCarriers, maxIterationOfAllCarriers + 1):
         # Creates a list with all values.
         # first value is "Iteration No"
         rowOfValues = [iteration]
