@@ -308,10 +308,12 @@ which kind of data he wants to see. The default value is average energy consumpt
     var carriersRequested = "";
 
     // Get the maxAmount of Carriers from the database and save it in a variable called amountOfCarriers
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=amountOfCarriers', false );
-    xmlHttp.send(null);
-    var amountOfCarriers = xmlHttp.responseText;
+    //var xmlHttp = new XMLHttpRequest();
+    //xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=amountOfCarriers', false );
+    //xmlHttp.send(null);
+    //var amountOfCarriers = xmlHttp.responseText;
+
+    var amountOfCarriers = 15
 
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     $scope.carriers = [];
@@ -682,6 +684,10 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.waitForDataReload = 30;
     $scope.keepEveryXRows = 100;
 
+    //Function that reads in the sessiondata json-file
+    $http.get("django/dataInterface/rawData.json?table=sessiondata")
+    .then(function (response){$scope.sessiondata = response.data;});
+
 
     //Starts the simulation by calling the website link
     $scope.startSimulation = function() {
@@ -691,9 +697,14 @@ which kind of data he wants to see. The default value is average energy consumpt
             xmlHttp.send(null);
             var returnString  = xmlHttp.responseText;
             //Sets the current Session to the new SessionNumber
-            sessionService.setCurrentSession(sessionService.getNumberOfSessions()+1)
+            sessionService.setCurrentSession(parseInt(sessionService.getNumberOfSessions())+1)
             alert("Simulation Started");
     };
+
+    // Function that sets the currentSession to submittedSession
+    $scope.setSession = function(submittedSession){
+        sessionService.setCurrentSession(submittedSession)
+    }
 
     // This gets all Data File Names that are stored on the server
     function getArrayOfDataFiles() {
