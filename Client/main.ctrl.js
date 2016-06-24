@@ -308,10 +308,12 @@ which kind of data he wants to see. The default value is average energy consumpt
     var carriersRequested = "";
 
     // Get the maxAmount of Carriers from the database and save it in a variable called amountOfCarriers
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=amountOfCarriers', false );
-    xmlHttp.send(null);
-    var amountOfCarriers = xmlHttp.responseText;
+    //var xmlHttp = new XMLHttpRequest();
+    //xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=amountOfCarriers', false );
+    //xmlHttp.send(null);
+    //var amountOfCarriers = xmlHttp.responseText;
+
+    var amountOfCarriers = 15
 
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     $scope.carriers = [];
@@ -331,8 +333,8 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.dimensions = [
         {name : "Average Energy Consumption", id : 'energyConsumptionAverage'},
         {name : "Average Acceleration", id : 'accelerationAverage'},
-	    {name : "Average Speed", id: 'speedAverage'},
-	    {name : "Total Energy Consumption", id: 'energyConsumptionTotal'}
+	{name : "Average Speed", id: 'speedAverage'},
+	{name : "Total Energy Consumption", id: 'energyConsumptionTotal'}
     ]
 
     // make percentage service available in html-view
@@ -362,7 +364,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         // create the graph with the parameters set. The request path for the database depends on 3 parameters: session, carrierRequested, selectedDimension and type
         // the url which should be requested wil be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
-        $scope.requestedUrl = 'django/dataInterface/averageEnergyConsumption.csv?session='+$scope.currentSession+'&carriers='+$scope.carriersRequested()+'&dimension='+$scope.selectedDimension+'&type='$scope.iterationDimensions;
+        $scope.requestedUrl = 'django/dataInterface/averageEnergyConsumption.csv?session='+$scope.currentSession+'&carriers='+$scope.carriersRequested()+'&dimension='+$scope.selectedDimension+'&type=last10';
 
         graph = new Dygraph(
 	       document.getElementById("AverageEnergyConsumptionChart"),$scope.requestedUrl ,
