@@ -306,7 +306,7 @@ def compressData(carrier):
 
         else:
             # Add the energy consumption to the current entry
-            carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][i]
+            carrierData[carrier - 1][2][saveTo] += carrierData[carrier - 1][2][i]
 
         # Delete the last row (not the current because it may be needed for interpolation) if it is at a position
         # In the array that will be deleted
@@ -323,6 +323,7 @@ def compressData(carrier):
             carrierData[carrier - 1][1][i] = 0
             carrierData[carrier - 1][2][i] = 0
             carrierData[carrier - 1][3][i] = 0
+            carrierData[carrier - 1][4][i] = 0
 
 
 # Exports the table of the carrier to a CSV file in the form time; posAbsolute; posOnDrive; energy
@@ -400,6 +401,8 @@ def clearCarrierData(carrier):
         carrierData[carrier - 1][1][i] = 0
         carrierData[carrier - 1][2][i] = 0
         carrierData[carrier - 1][3][i] = 0
+        carrierData[carrier - 1][4][i] = 0
+
     # Set the current position that is being filled to 0 so that the array can be filled again
     currentPositionAtCarrierData[carrier - 1] = 0
 
