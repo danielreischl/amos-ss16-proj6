@@ -457,7 +457,8 @@ which kind of data he wants to see. The default value is average energy consumpt
 
     function redrawAllSelections() {
         for(var i = percentageService.getAll(percentageDataType).length; i >= 1; i--) {
-            if carrierService.hasCarrier(i) {
+            var hasCarrier = carrierService.containsCarrier(i);
+            if hasCarrier {
                 drawSelectionOnCarrier(i, true);
             }
         }

@@ -80,6 +80,14 @@ angular.module('app')
 .service('carrierService', function(sessionService) {
     var carriersForComparison = [];
 
+    this.containsCarrier = function(carrierID){
+        for(var i = 0; i < carriersForComparison.length; i++) {
+            if (carriersForComparison[i].carrierNumber == carrierID) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     this.hasCarrier = function(carrierId) {
 	    return carriersForComparison.some(function(carrier){return carrier.carrierNumber == carrierId;});
