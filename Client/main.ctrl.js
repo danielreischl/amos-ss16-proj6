@@ -458,7 +458,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     function redrawAllSelections() {
         for(var i = percentageService.getAll(percentageDataType).length; i >= 1; i--) {
             var hasCarrier = carrierService.containsCarrier(i);
-            if hasCarrier {
+            if (hasCarrier) {
                 drawSelectionOnCarrier(i, true);
             }
         }
@@ -476,7 +476,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         var radius = 70;
 
         context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-        if selection {
+        if (selection) {
             context.beginPath();
             context.lineWidth = 7;
             context.strokeStyle = "#003300";
