@@ -468,7 +468,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     // if selection is true it draws the selection on the carrier
     // If selection is false it removes the selection on the carrier
     function drawSelectionOnCarrier(id, selection) {
-        var stringID = ("carrier " + id.toString());
+        var stringID = ("carrier " + id);
         var canvas = document.getElementById(stringID);
         var context = canvas.getContext('2d');
         var centerX = canvas.width / 2;
