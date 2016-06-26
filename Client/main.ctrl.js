@@ -428,44 +428,64 @@ which kind of data he wants to see. The default value is average energy consumpt
            clearCanvas();
            $scope.circleGraph();
        }
+       redrawAllSelections();
     }
 
 
     // Initializes time stamp
     $scope.ts = new Date();
-    /* This function will highlight the carrier and save the id of the carrier inside the comaprison arrary in app.service.js*/
+    /* This function will highlight the carrier and save the id of the carrier inside the comparison array in app.service.js*/
     $scope.selectCarrier = function(event) {
         // id = carrier x
         var id = event.target.id;
-        // This method is necessary, because the string is "carrier x" To extract x, I need to get the subsstring
-        var carrierId = id.substr(7, 8);
 
-        //var circle = document.getElementById("carrier " + carrierId);
-        var canvas = document.getElementById(id);
-        var context = canvas.getContext('2d');
-        var centerX = canvas.width / 2;
-        var centerY = canvas.height / 2;
-        var radius = 70;
+        // This method is necessary, because the string is "carrier x" To extract the int x, the substring is needed
+        var carrierId = parseInt(id.substr(7, 8));
 
         //check if carrier is already in list.
         if(!carrierService.addCarrier(carrierId)) {
             //Already in the list, remove the highlight
-            context.beginPath();
-            context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-            context.lineWidth = 9;
-            context.strokeStyle = "#ECEFF1";
-            context.stroke();
+            drawSelectionOnCarrier(carrierId, false);
 
             //If it exists delete the carrier
             carrierService.deleteCarrier(carrierId);
         } else {
             //Not in the list, highlight
+            drawSelectionOnCarrier(carrierId, true);
+        }
+    }
+
+    function redrawAllSelections() {
+        for(var i = percentageService.getAll(percentageDataType).length; i >= 1; i--) {
+            if carrierService.hasCarrier(i) {
+                drawSelectionOnCarrier(i, true);
+            }
+        }
+    }
+
+    // Draws or removes selection circle around given canvas context for id (integer)
+    // if selection is true it draws the selection on the carrier
+    // If selection is false it removes the selection on the carrier
+    function drawSelectionOnCarrier(id, selection) {
+        var stringID = ("carrier " + carrierId.toString());
+        var canvas = document.getElementById(stringID);
+        var context = canvas.getContext('2d');
+        var centerX = canvas.width / 2;
+        var centerY = canvas.height / 2;
+        var radius = 70;
+
+        context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        if selection {
             context.beginPath();
-            context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
             context.lineWidth = 7;
             context.strokeStyle = "#003300";
-            context.stroke();
+        } else {
+            context.beginPath();
+            context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            context.lineWidth = 9;
+            context.strokeStyle = "#ECEFF1";
         }
+        context.stroke();
     }
 
      //* this function will clear the drawn canvas and enables redraw functions to draw on a new canvas */
@@ -485,6 +505,8 @@ which kind of data he wants to see. The default value is average energy consumpt
         clearCanvas()
         // Redraw circles
         $scope.circleGraph();
+        // Redraw selection
+        redrawAllSelections();
         //Update the timestamp
         $scope.ts = new Date();
     }
