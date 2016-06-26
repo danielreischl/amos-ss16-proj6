@@ -428,7 +428,6 @@ which kind of data he wants to see. The default value is average energy consumpt
            clearCanvas();
            $scope.circleGraph();
        }
-       redrawAllSelections();
     }
 
 
@@ -499,7 +498,7 @@ which kind of data he wants to see. The default value is average energy consumpt
             parent.removeChild(child);
             amountOfCarriers = amountOfCarriers -1;
         }
-    };
+    }
 
     $scope.refresh = function() {
         //clear circle canvas elements
@@ -533,58 +532,65 @@ which kind of data he wants to see. The default value is average energy consumpt
                 var circleId = "carrier " + idCounter;
                 var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="selectCarrier($event)"></canvas>';
                 var temp = $compile(fragmenthtml)($scope);
+                var hasCarrier = carrierService.containsCarrier(idCounter);
+
 
                 // get the element in the html page, on which the new fragment should be appended to
                 angular.element(document.getElementById('circleGraphs')).append(temp);
                 // call the circle drawing method to paint the circles. It will get the ID of the carrier, as well as the percentage data
                 createCircle(circleId, carrierPercentageData[idCounter - 1]);
 
+                // If the carrier is in the selection then draw the selection circle
+                if (hasCarrier) {
+                    drawSelectionOnCarrier(idCounter, true);
+                }
+
                 idCounter = idCounter+1;
                 amountOfCarriers = amountOfCarriers -1;
             }
-    }
-
-    /*  This function will create the circles, depending on the input parameters from the database*/
-    function createCircle(carrier, percentageOfEnergy) {
-        var canvas = document.getElementById(carrier);
-        var context = canvas.getContext('2d');
-        var centerX = canvas.width / 2;
-        var centerY = canvas.height / 2;
-        var radius = 60;
-
-        context.beginPath();
-        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-        context.lineWidth = 2;
-        context.strokeStyle = '#003300';
-        context.stroke();
-
-        /* Logic of the color: if the percentage of a carrier is above 1.05 it will be coded red,
-           because the energy consumption of the last iteration is too high in comparison to the
-           first iteration. If the value is < 1.025, then the color will be green, because the energy
-           consumption is not really increasing much.
-           Any value between is coded yellow, because it should warn the user, that the energy
-           is higher than the very first iteration.
-         */
-        if(percentageOfEnergy > 1.05) {
-            context.fillStyle = '#e51c34';
-        } else if(percentageOfEnergy <= 1.025 ) {
-            context.fillStyle = '#b2ff59';
-        } else {
-            context.fillStyle = "#ffff00";
         }
 
-        context.fill();
-        context.lineWidth = 5;
-        context.lineWidth = 1;
-        context.fillStyle = "#212121";
-        context.lineStyle = "#212121";
-        context.font = "15px sans-serif";
-        // textAllign center will allign the text relative to the borders of the canvas
-        context.textAlign = 'center';
-        context.fillText(carrier, centerX, centerY - 7);
-        context.fillText((percentageOfEnergy*100).toFixed() + "%", centerX, centerY + 12);
+        /*  This function will create the circles, depending on the input parameters from the database*/
+        function createCircle(carrier, percentageOfEnergy) {
+            var canvas = document.getElementById(carrier);
+            var context = canvas.getContext('2d');
+            var centerX = canvas.width / 2;
+            var centerY = canvas.height / 2;
+            var radius = 60;
+
+            context.beginPath();
+            context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+            context.lineWidth = 2;
+            context.strokeStyle = '#003300';
+            context.stroke();
+
+            /* Logic of the color: if the percentage of a carrier is above 1.05 it will be coded red,
+               because the energy consumption of the last iteration is too high in comparison to the
+               first iteration. If the value is < 1.025, then the color will be green, because the energy
+               consumption is not really increasing much.
+               Any value between is coded yellow, because it should warn the user, that the energy
+               is higher than the very first iteration.
+             */
+            if(percentageOfEnergy > 1.05) {
+                context.fillStyle = '#e51c34';
+            } else if(percentageOfEnergy <= 1.025 ) {
+                context.fillStyle = '#b2ff59';
+            } else {
+                context.fillStyle = "#ffff00";
+            }
+
+            context.fill();
+            context.lineWidth = 5;
+            context.lineWidth = 1;
+            context.fillStyle = "#212121";
+            context.lineStyle = "#212121";
+            context.font = "15px sans-serif";
+            // textAlign center will allign the text relative to the borders of the canvas
+            context.textAlign = 'center';
+            context.fillText(carrier, centerX, centerY - 7);
+            context.fillText((percentageOfEnergy*100).toFixed() + "%", centerX, centerY + 12);
+        }
     }
-}
 })
 
 .controller('sessionDataTable', function($scope, $http) {
