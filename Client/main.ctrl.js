@@ -468,8 +468,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     // if selection is true it draws the selection on the carrier
     // If selection is false it removes the selection on the carrier
     function drawSelectionOnCarrier(id, selection) {
-        var stringID = ("carrier " + id);
-        var canvas = document.getElementById(stringID);
+        var canvas = document.getElementById("carrier " + id);
         var context = canvas.getContext('2d');
         var centerX = canvas.width / 2;
         var centerY = canvas.height / 2;
@@ -513,33 +512,33 @@ which kind of data he wants to see. The default value is average energy consumpt
 /* create the circle page upon page load. */
     $scope.circleGraph = function() {
 
-  // data is called from a service and saved into a variable
-    var carrierPercentageData = percentageService.getAll(percentageDataType);
-    var amountOfCarriers = carrierPercentageData.length;
+        // data is called from a service and saved into a variable
+        var carrierPercentageData = percentageService.getAll(percentageDataType);
+        var amountOfCarriers = carrierPercentageData.length;
 
-    /* ID of first Carrier */
-    var idCounter = 1;
+        /* ID of first Carrier */
+        var idCounter = 1;
 
-    //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
-    $timeout(createCarrierHTML, 0);
+        //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
+        $timeout(createCarrierHTML, 0);
 
-    // function to create HTML circle fragments dynamically
-    function createCarrierHTML() {
+        // function to create HTML circle fragments dynamically
+        function createCarrierHTML() {
 
-        /* for every carrier in the database, create a new code fragment to be injected into the html file. Each fragment is the base for a circle */
-        while (amountOfCarriers > 0) {
-            var circleId = "carrier " + idCounter;
-            var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="selectCarrier($event)"></canvas>';
-            var temp = $compile(fragmenthtml)($scope);
+            /* for every carrier in the database, create a new code fragment to be injected into the html file. Each fragment is the base for a circle */
+            while (amountOfCarriers > 0) {
+                var circleId = "carrier " + idCounter;
+                var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="selectCarrier($event)"></canvas>';
+                var temp = $compile(fragmenthtml)($scope);
 
-            // get the element in the html page, on which the new fragment should be appended to
-            angular.element(document.getElementById('circleGraphs')).append(temp);
-            // call the circle drawing method to paint the circles. It will get the ID of the carrier, as well as the percentage data
-            createCircle(circleId, carrierPercentageData[idCounter - 1]);
+                // get the element in the html page, on which the new fragment should be appended to
+                angular.element(document.getElementById('circleGraphs')).append(temp);
+                // call the circle drawing method to paint the circles. It will get the ID of the carrier, as well as the percentage data
+                createCircle(circleId, carrierPercentageData[idCounter - 1]);
 
-            idCounter = idCounter+1;
-            amountOfCarriers = amountOfCarriers -1;
-        }
+                idCounter = idCounter+1;
+                amountOfCarriers = amountOfCarriers -1;
+            }
     }
 
     /*  This function will create the circles, depending on the input parameters from the database*/
