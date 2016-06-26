@@ -125,13 +125,14 @@ angular.module('app')
         carriersForComparison.splice(0,carriersForComparison.length);
     }
 
-    // this service returns 5 functions to the caller, which he can use.
+    // this service returns these functions to the caller for use
     return {
+        containsCarrier: this.containsCarrier,
         hasCarrier: this.hasCarrier,
         addCarrier: this.addCarrier,
         getCarrier: this.getCarrier,
         deleteCarrier: this.deleteCarrier,
-        emptyCarrierArray: this.emptyCarrierArray,
+        emptyCarrierArray: this.emptyCarrierArray
     };
 });
 
