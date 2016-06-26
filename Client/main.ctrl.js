@@ -475,14 +475,12 @@ which kind of data he wants to see. The default value is average energy consumpt
         var centerY = canvas.height / 2;
         var radius = 70;
 
+        context.beginPath();
         context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
         if (selection) {
-            context.beginPath();
             context.lineWidth = 7;
             context.strokeStyle = "#003300";
         } else {
-            context.beginPath();
-            context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
             context.lineWidth = 9;
             context.strokeStyle = "#ECEFF1";
         }
