@@ -82,7 +82,7 @@ angular.module('app')
 
 
     this.hasCarrier = function(carrierId) {
-	return carriersForComparison.some(function(carrier){return carrier.carrierNumber == carrierId;});
+	    return carriersForComparison.some(function(carrier){return carrier.carrierNumber == carrierId;});
     }
     
     // function adds a carrier with a given ID
@@ -90,7 +90,7 @@ angular.module('app')
         for(var i = 0; i < carriersForComparison.length; i++) {
             if (carriersForComparison[i].carrierNumber == newCarrier) {
                 return false;
-             }
+            }
         }
         carriersForComparison.push({carrierNumber: newCarrier});
         return true;
@@ -141,7 +141,6 @@ angular.module('app')
 	    xmlHttp.send(null);
 	    //parses Http-ResponseText to a decimal int
 	    numberOfSessions = parseInt(xmlHttp.responseText,10);
-
 	}
 
 	this.getNumberOfSessions = function() {
@@ -159,9 +158,9 @@ angular.module('app')
 	}
 
 	return {
-            getNumberOfSessions: this.getNumberOfSessions,
-            getCurrentSession: this.getCurrentSession,
-            setCurrentSession: this.setCurrentSession,
+        getNumberOfSessions: this.getNumberOfSessions,
+        getCurrentSession: this.getCurrentSession,
+        setCurrentSession: this.setCurrentSession,
 	};
 	
 });
