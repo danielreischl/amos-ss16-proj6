@@ -25,7 +25,7 @@
 
 angular.module('app')
 
-.service('percentageService', function(sessionService) {
+.service('percentageService', function(sessionService, $timeout) {
     /*
     Provides percentage data of carriers
     */
@@ -46,7 +46,8 @@ angular.module('app')
 
     this.getAll = function(percentageDataType) {
         getFromDB(percentageDataType);
-        return percentageData;
+        //timeout should enable the parse fucntion to finish before returning the value
+        return $timeout(function() {return percentageData;}, 1500);
     }
 
     this.getColorOfCarrier = function(carrier) {

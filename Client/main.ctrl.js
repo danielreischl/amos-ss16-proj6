@@ -600,7 +600,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 /* bar chart View controller */
 
-.controller('barGraphController',function($scope,$timeout, carrierService) {
+.controller('barGraphController',function($scope, $timeout, carrierService, percentageService) {
 
     $scope.ts = new Date();
 
