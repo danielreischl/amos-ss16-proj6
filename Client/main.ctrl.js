@@ -735,6 +735,35 @@ which kind of data he wants to see. The default value is average energy consumpt
         sessionService.setCurrentSession(submittedSession)
     }
 
+    $scope.uploadFile = function() {
+	var formData = new FormData(document.forms.namedItem("fileUpload"));
+	var xhr = new XMLHttpRequest();
+	xhr.upload.addEventListener("progress", uploadProgress,false);
+	xhr.addEventListener("load", uploadComplete,false);
+	xhr.addEventListener("error", uploadFailed,false);
+	xhr.open("POST","django/dataInterface/fileUpload.html");
+	xhr.send(formData);
+    }
+
+    function uploadComplete(event) {
+	$scope.progress = 100;
+    }
+
+    function uploadFailed(event) {
+	$scope.progress = "The upload failed.";
+    }
+
+    function uploadProgress(event) {
+	$scope.$apply(function() {
+	    if(event.lengthComputable) {
+		$scope.progress = Math.round(event.loaded * 100 / event.total);
+	    }
+	    else {
+		$scope.progress = "Process could not be computed.";
+	    }
+	});
+    }
+
     // This gets all Data File Names that are stored on the server
     function getArrayOfDataFiles() {
 
