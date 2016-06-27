@@ -25,14 +25,15 @@
 
 angular.module('app')
 
-.service('percentageService', function(sessionService) {
+.service('percentageService', function(sessionService, $timeout) {
     /*
     Provides percentage data of carriers
     */
     var percentageData = [];
+    var flag = false;
     function getFromDB(percentageDataType) {
         /*
-        Fetches data from backend
+        Fetches data from backend and sends it to the controller. This will only be done, once the parsing is completed
         So far this is called each time when getAll is called, but this is probably not necessary
         */
         Papa.parse('django/dataInterface/'+percentageDataType+'?session=' +sessionService.getCurrentSession(), {
@@ -41,14 +42,12 @@ angular.module('app')
             complete: function(results) {
                 percentageData = results.data[1];
             }
-        });
-        return true;
+        })
     }
 
     this.getAll = function(percentageDataType) {
-        if(getFromDB(percentageDataType)) {
-             return percentageData;
-        }
+        getFromDB(percentageDataType);
+        return percentageData;
     }
 
     this.getColorOfCarrier = function(carrier) {

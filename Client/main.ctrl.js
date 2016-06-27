@@ -521,7 +521,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         /* ID of first Carrier */
         var idCounter = 1;
 
-        //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
+        //delay the creation of the circles by 0 second, so that the percentage data can be loaded into the function.
         $timeout(createCarrierHTML, 0);
 
         // function to create HTML circle fragments dynamically
@@ -600,7 +600,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 /* bar chart View controller */
 
-.controller('barGraphController',function($scope,$timeout, carrierService) {
+.controller('barGraphController',function($scope, $timeout, carrierService, percentageService) {
 
     $scope.ts = new Date();
 
@@ -612,22 +612,11 @@ which kind of data he wants to see. The default value is average energy consumpt
     }
 
     $scope.barGraph = function() {
-        // Requesting the number of carriers from the REST API
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=amountOfCarriers', false );
-        xmlHttp.send(null);
-        // the variable where the amount of carriers is saved to
-        var amountOfCarriers = xmlHttp.responseText;
-        // the array variable where the converted content from the csv file will be.
-        var carrierPercentageData;
-        // get the csv files with the percentages from the middleware, extract the exact array and save it into a variable.
-        Papa.parse('django/dataInterface/percentages_creeping.csv?session=1', {download: true,
-                                                                               dynamicTyping: true,
-                                                                               complete: function(results) {
-                                                                                   carrierPercentageData =results.data[1];
-                                                                               }
-                                                                               }
-        )
+
+        // get the data from the percentage service and save it into the variables, carrierPercentageData and amountOfCarriers
+        var percentageDataType = "percentages_creeping.csv";
+        var carrierPercentageData = percentageService.getAll(percentageDataType);
+        var amountOfCarriers = carrierPercentageData.length;
 
         // this array saves the percentage of each bar column/carrier
         var carrierPercentageDataRounded = [];
@@ -640,8 +629,8 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 
 
-        // timer is set to 1 second. this wait time is needed to fetch all data from the database
-        $timeout(createBarChartView, 1300);
+        // timer is set to 1.6 second. this wait time is needed to fetch all data from the database
+        $timeout(createBarChartView, 0);
 
         function createBarChartView() {
             // This while loop will fill the carrierArray with carrier names for the chart label
