@@ -40,9 +40,9 @@ angular.module('app')
             dynamicTyping: true,
             complete: function(results) {
                 percentageData = results.data[1];
-                return true;
             }
         });
+        return true;
     }
 
     this.getAll = function(percentageDataType) {
