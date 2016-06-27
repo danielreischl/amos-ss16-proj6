@@ -30,6 +30,7 @@ angular.module('app')
     Provides percentage data of carriers
     */
     var percentageData = [];
+    var flag = false;
     function getFromDB(percentageDataType) {
         /*
         Fetches data from backend and sends it to the controller. This will only be done, once the parsing is completed
@@ -46,8 +47,7 @@ angular.module('app')
 
     this.getAll = function(percentageDataType) {
         getFromDB(percentageDataType);
-        //timeout should enable the parse fucntion to finish before returning the value
-        return $timeout(function() {return percentageData;}, 1500);
+        return percentageData;
     }
 
     this.getColorOfCarrier = function(carrier) {
