@@ -40,9 +40,10 @@ angular.module('app')
             dynamicTyping: true,
             complete: function(results) {
                 percentageData = results.data[1];
-                return percentageData;
             }
-        });
+        })
+        return percentageData;
+        ;
     }
 
     this.getColorOfCarrier = function(carrier) {
