@@ -455,7 +455,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     }
 
     function redrawAllSelections() {
-        for(var i = percentageService.getFromDB(percentageDataType).length; i >= 1; i--) {
+        for(var i = percentageService.getAll(percentageDataType).length; i >= 1; i--) {
             var hasCarrier = carrierService.containsCarrier(i);
             if (hasCarrier) {
                 drawSelectionOnCarrier(i, true);
@@ -490,7 +490,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
      //* this function will clear the drawn canvas and enables redraw functions to draw on a new canvas */
     function clearCanvas() {
-        var amountOfCarriers = percentageService.getFromDB(percentageDataType).length;
+        var amountOfCarriers = percentageService.getAll(percentageDataType).length;
         // delete all canvas elements, previously created for all carriers
         while (amountOfCarriers > 0) {
             var parent = document.getElementById("circleGraphs");
@@ -515,7 +515,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.circleGraph = function() {
 
         // data is called from a service and saved into a variable
-        var carrierPercentageData = percentageService.getFromDB(percentageDataType);
+        var carrierPercentageData = percentageService.getAll(percentageDataType);
         var amountOfCarriers = carrierPercentageData.length;
 
         /* ID of first Carrier */
@@ -615,7 +615,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
         // get the data from the percentage service and save it into the variables, carrierPercentageData and amountOfCarriers
         var percentageDataType = "percentages_creeping.csv";
-        var carrierPercentageData = percentageService.getFromDB(percentageDataType);
+        var carrierPercentageData = percentageService.getAll(percentageDataType);
         var amountOfCarriers = carrierPercentageData.length;
 
         // this array saves the percentage of each bar column/carrier

@@ -42,8 +42,11 @@ angular.module('app')
                 percentageData = results.data[1];
             }
         })
+    }
+
+    this.getAll = function(percentageDataType) {
+        getFromDB(percentageDataType);
         return percentageData;
-        ;
     }
 
     this.getColorOfCarrier = function(carrier) {
@@ -62,7 +65,7 @@ angular.module('app')
 
 
     return {
-        getFromDB: this.getFromDB,
+        getAll: this.getAll,
         getColorOfCarrier: this.getColorOfCarrier
     };
 });
