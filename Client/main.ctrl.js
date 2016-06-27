@@ -746,10 +746,12 @@ which kind of data he wants to see. The default value is average energy consumpt
     }
 
     function uploadComplete(event) {
-	$scope.progress = 100;
+	alert(event.target.responseText);
+	//$scope.progress = 'completed';
     }
 
     function uploadFailed(event) {
+	alert('The upload failed.');
 	$scope.progress = "The upload failed.";
     }
 

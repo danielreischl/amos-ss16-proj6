@@ -658,7 +658,7 @@ def fileUpload(request):
     # maybe add new session to session database here
     # so far the session is added only after the corresponding simulation has been executed
     
-    return HttpResponse(status=205)
+    return HttpResponse('Upload succeeded')
 
 
 ###############################################
