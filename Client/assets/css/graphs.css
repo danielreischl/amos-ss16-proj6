@@ -48,3 +48,7 @@ li {
    height: 80vh;
 }
 
+.chartDesc {
+    font-size: 16px;
+    font-style: oblique;
+}

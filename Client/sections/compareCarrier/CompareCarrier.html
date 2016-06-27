@@ -23,15 +23,17 @@
 <div ng-controller="compareCircleGraph">
     <div flex="100" layout = "row">
         <div flex class = "carrierSelection" ng-init="createCompareGraph()">
+            <p class = "chartDesc">Carriers</p>
             <label class = "carrierBox" ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
-                <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
-                <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
-                    {{carrier.id}}
-                </div>
+               <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
+               <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
+                   {{carrier.id}}
+               </div>
             </label>
         </div>
 
         <div flex class = "iterationSelection">
+            <p class = "chartDesc">Iterations</p>
             <form name = "iterationSelection">
                 <label class = "iterationBox" ng-repeat="iterOption in iterationDimensions">
                     <input type="radio" name = "iterOption" ng-value="iterOption.id" ng-model="$parent.selectedIteration"/>
@@ -43,15 +45,17 @@
         </div>
 	
         <div flex class = "dimensionSelection">
-             <label class = "iterationBox" ng-repeat="dimension in dimensions">
-                 <input type="radio" name = "dimension" ng-value="dimension.id" ng-model="$parent.selectedDimension"/>
-                 <div>
-                     {{dimension.name}}
-                 </div>
+            <p class = "chartDesc">Dimensions</p>
+            <label class = "iterationBox" ng-repeat="dimension in dimensions">
+                <input type="radio" name = "dimension" ng-value="dimension.id" ng-model="$parent.selectedDimension"/>
+                <div>
+                    {{dimension.name}}
+                </div>
              </label>
         </div>
 
         <div flex class = "sessionSelection">
+            <p class = "chartDesc">Sessions</p>
             <label class = "iterationBox" ng-repeat="session in sessions">
                 <input type="radio" name = "session" ng-value="session" ng-model="$parent.currentSession"/>
                 <div>

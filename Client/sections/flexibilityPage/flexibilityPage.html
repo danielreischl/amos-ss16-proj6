@@ -26,6 +26,7 @@
         <tr>
             <td>
                 <div flex class = "carrierSelection">
+                    <p class = "chartDesc">Carriers</p>
                     <label class = "carrierBox" ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
                         <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
                         <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
@@ -37,6 +38,7 @@
             <td>
                 <!-- ng-change is empty right now. this has to change, when iterations can be selected from the database -->
 	            <div class = "iterationSelection">
+                    <p class = "chartDesc">Iterations</p>
                     <select ng-model="selectedIteration">
                         <option ng-repeat="iteration in iterations" ng-value="iteration">
                             {{iteration}}
@@ -46,6 +48,7 @@
             </td>
 	        <td>
 	            <div flex class = "sessionSelection">
+                    <p class = "chartDesc">Sessions</p>
 		            <label class = "iterationBox" ng-repeat="session in sessions">
 		                <input type="radio" name = "session" ng-value="session" ng-model="$parent.currentSession"/>
 		                <div>
