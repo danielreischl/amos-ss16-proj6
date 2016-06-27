@@ -521,8 +521,8 @@ which kind of data he wants to see. The default value is average energy consumpt
         /* ID of first Carrier */
         var idCounter = 1;
 
-        //delay the creation of the circles by 1 second, so that the percentage data can be loaded into the function.
-        $timeout(createCarrierHTML, 0);
+        //delay the creation of the circles by 1.6 second, so that the percentage data can be loaded into the function.
+        $timeout(createCarrierHTML, 1600);
 
         // function to create HTML circle fragments dynamically
         function createCarrierHTML() {
@@ -629,8 +629,8 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 
 
-        // timer is set to 1 second. this wait time is needed to fetch all data from the database
-        $timeout(createBarChartView, 1300);
+        // timer is set to 1.6 second. this wait time is needed to fetch all data from the database
+        $timeout(createBarChartView, 1600);
 
         function createBarChartView() {
             // This while loop will fill the carrierArray with carrier names for the chart label
