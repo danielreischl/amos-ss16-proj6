@@ -32,7 +32,7 @@ angular.module('app')
     var percentageData = [];
     function getFromDB(percentageDataType) {
         /*
-        Fetches data from backend
+        Fetches data from backend and sends it to the controller. This will only be done, once the parsing is completed
         So far this is called each time when getAll is called, but this is probably not necessary
         */
         Papa.parse('django/dataInterface/'+percentageDataType+'?session=' +sessionService.getCurrentSession(), {
@@ -40,15 +40,9 @@ angular.module('app')
             dynamicTyping: true,
             complete: function(results) {
                 percentageData = results.data[1];
+                return percentageData;
             }
         });
-        return true;
-    }
-
-    this.getAll = function(percentageDataType) {
-        if(getFromDB(percentageDataType)) {
-             return percentageData;
-        }
     }
 
     this.getColorOfCarrier = function(carrier) {
@@ -67,7 +61,7 @@ angular.module('app')
 
 
     return {
-        getAll: this.getAll,
+        getFromDB: this.getFromDB,
         getColorOfCarrier: this.getColorOfCarrier
     };
 });
