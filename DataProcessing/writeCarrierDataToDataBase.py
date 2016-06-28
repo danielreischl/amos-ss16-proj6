@@ -73,7 +73,7 @@ def process_file(fileName):
     data = data[cols]
 
     # calls function to load the data into the database
-    dataProcessingFunctions.write_dataframe_to_database(data, config.get('database_tables','continuous'))
+    dataProcessingFunctions.write_dataframe_to_database(data, config.get('database_tables','continuous'),'append')
 
     # Creating DataFrame for the commulated Data
     # Calculating Measures
@@ -97,7 +97,7 @@ def process_file(fileName):
          'energyConsumptionAverage': averageEnergyConsumption})
 
     # calls function to load the processed data into the database
-    dataProcessingFunctions.write_dataframe_to_database(cumulatedData, config.get('database_tables','average'))
+    dataProcessingFunctions.write_dataframe_to_database(cumulatedData, config.get('database_tables','average'),'append')
 
 
 
