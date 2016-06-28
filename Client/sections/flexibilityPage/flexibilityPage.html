@@ -59,7 +59,8 @@
             </td>
             <td>
                 <md-button class="md-raised md-cornered"  ng-click="createFlexibilityChart()">Refresh</md-button>
-                <p class = "timestamp">Time of last refresh = {{ ts | date : "HH:mm:ss.sss" }}</p>
+                <p class="timestamp">Selected file: {{currentDataFileName}}</p>
+                <p class="timestamp">Time of last refresh = {{ ts | date : "HH:mm:ss.sss" }}</p>
             </td>
         </tr>
     </table>

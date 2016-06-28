@@ -449,15 +449,31 @@ def modifyCSVFile(filename):
             if j == 0:
                 newColNames.append("ms")
             # if column includes "iw4PowerCU" it's an energy sensor
-            if "iw4PowerCU" in i:
+            elif "iw4PowerCU" in i:
                 newColNames.append("energy" + str(j - 1))
             # if column includes "ExternalEncoderPosition" it's an position sensor
-            if "ExternalEncoderPosition" in i:
+            elif "ExternalEncoderPosition" in i:
                 if startPositonOfColumns == 0:
                     startPositonOfColumns = j
                 newColNames.append("position" + str(j - startPositonOfColumns))
                 # counts the amount of drives.
                 amountOfDrives = j - startPositonOfColumns
+            else:
+                # If the file is not in the right format, remove modified file and exit system
+                os.remove(os.path.splitext(fileName)[0] + "_modified.csv")
+                # Inizialize DataFrame sessiondata columns based
+                sessionData = pd.DataFrame(
+                    columns=['session', 'fileName', 'amountOfCarriers', 'status'], index=['1'])
+                # Adding previous extracted and calculated values to DataFrame
+                sessionData.loc['1'] = pd.Series(
+                    {'session': session, 'fileName': os.path.splitext(fileName)[0],
+                     'amountOfCarriers': AMOUNT_OF_CARRIERS,
+                     'status': 'Failed',})
+                # calls function to load the sessiondata data into the database
+                dataProcessingFunctions.write_dataframe_to_database(sessionData,
+                                                                    config.get('database_tables', 'sessiondata'),'append')
+
+                sys.exit
             j += 1
 
         # Skips the first row from the reader, the old header
@@ -510,9 +526,6 @@ session = config.getint('Simulation', 'session')
 # FileName that should be imported
 fileName = config.get('Simulation', 'name_of_imported_file')
 
-dataProcessingFunctions.updated_config('Simulation', 'session', session +1)
-
-
 # Checks if a File is added to DATA_FILE_NAMES. If not it is terminating the script
 if fileName == '':
     print('No File selected')
@@ -524,6 +537,19 @@ if fileName == '':
 # Calls modifyCSVFile function
 amountOfDrives = modifyCSVFile(fileName)
 print ("Amount of drives" + str(amountOfDrives))
+
+# Updates Session in ConfigFile
+dataProcessingFunctions.updated_config('Simulation', 'session', session +1)
+
+# Inizialize DataFrame sessiondata columns based
+sessionData = pd.DataFrame(
+    columns=['session', 'fileName', 'amountOfCarriers', 'status'], index=['1'])
+# Adding previous extracted and calculated values to DataFrame
+sessionData.loc['1'] = pd.Series(
+    {'session': session, 'fileName': os.path.splitext(fileName)[0], 'amountOfCarriers': AMOUNT_OF_CARRIERS,
+     'status': 'Running',})
+# calls function to load the sessiondata data into the database
+dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'),'append')
 
 # Variables
 # Array that saves for every drive which carrier is on it
@@ -544,7 +570,6 @@ iterationNumber = 0
 carriersThroughTheSystem = 1
 
 # First row of data frames
-print (os.path.splitext(fileName)[0] + "_modified.csv")
 initialData = pd.read_csv(os.path.splitext(fileName)[0] + "_modified.csv", DATA_SEPARATOR, low_memory=False,
                           header=0)
 #    Extracting the DriveNo of the first loaded File in DATA_PATH
@@ -562,16 +587,7 @@ for index, row in initialData.iterrows():
 # Delete the "_modified" csv file
 os.remove(os.path.splitext(fileName)[0] + "_modified.csv")
 
-# Inizialize DataFrame sessiondata columns based
-sessionData = pd.DataFrame(
-    columns=['session', 'fileName', 'amountOfCarriers', 'status'], index=['1'])
-# Adding previous extracted and calculated values to DataFrame
-sessionData.loc['1'] = pd.Series(
-    {'session': session, 'fileName': os.path.splitext(fileName)[0], 'amountOfCarriers': AMOUNT_OF_CARRIERS,
-     'status': True,})
 
-# calls function to load the sessiondata data into the database
-dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'))
 
 # Calls Funcion to remove RunningFile
 dataProcessingFunctions.deleteRunningFile()

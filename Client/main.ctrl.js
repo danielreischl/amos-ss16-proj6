@@ -600,7 +600,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 /* bar chart View controller */
 
-.controller('barGraphController',function($scope, $timeout, carrierService, percentageService) {
+.controller('barGraphController',function($scope, $timeout, carrierService, percentageService, sessionService) {
 
     $scope.ts = new Date();
 
@@ -627,7 +627,8 @@ which kind of data he wants to see. The default value is average energy consumpt
         /* ID of first Carrier */
         var idCounter = 1;
 
-
+        // Saves a string of the currently selected data file name
+        $scope.currentDataFileName = sessionService.getCurrentDataFileName();
 
         // timer is set to 1.6 second. this wait time is needed to fetch all data from the database
         $timeout(createBarChartView, 0);
@@ -688,6 +689,7 @@ which kind of data he wants to see. The default value is average energy consumpt
             });
         }
     }
+
 })
 
 .controller('simulationPageController', function($scope, sessionService) {
@@ -763,10 +765,10 @@ which kind of data he wants to see. The default value is average energy consumpt
         xmlHttp.send(null);
         var string  = xmlHttp.responseText;
 
-        // Seperates the comma seperated data files string to an array
+        // Separates the comma seperated data files string to an array
         var arraySimulationFileNames = string.split(',');
 
-        // Delets the file path for every file name so that only the file name is displayed
+        // Deletes the file path for every file name so that only the file name is displayed
         for (var i = 0; i < arraySimulationFileNames.length; i++) {
             arraySimulationFileNames[i] = arraySimulationFileNames[i].substring(32);
         }

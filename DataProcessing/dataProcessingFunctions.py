@@ -80,8 +80,8 @@ def updated_config(section, sectionValue, value):
         config.write(configfile)
 
 # Writes a Pandas DataFrame to the Database
-# Input PandasDataFrame, TableName
-def write_dataframe_to_database (data, tableName):
+# Input PandasDataFrame, TableName, ifExist
+def write_dataframe_to_database (data, tableName, ifExist):
     # Reads ConfigFile
     config = ConfigParser.ConfigParser()
     config.read('settings.cfg')
@@ -107,7 +107,7 @@ def write_dataframe_to_database (data, tableName):
         sys.exit("DataBase Connection Failed")
 
     # Loads dataframe to database. Appends data or creates table and is not adding the index of the dataFrame.
-    data.to_sql(name=tableName, con=con, if_exists='append', index=False)
+    data.to_sql(name=tableName, con=con, if_exists=ifExist, index=False)
     print "pushed!"
 
     logging.info("Data loaded into Database")

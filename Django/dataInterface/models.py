@@ -106,7 +106,7 @@ class sessiondata(models.Model):
     # Integer of Amount Of Carriers in this session
     amountOfCarriers = models.IntegerField()
     # Status of Session (0 = Not Imported, 1 = Imported)
-    status = models.BooleanField()
+    status = models.TextField()
 
     def __unicode__(self):  # in python 3.3 this is __str__(self):
         return str(self.fid_Session)
