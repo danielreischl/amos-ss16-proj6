@@ -449,10 +449,10 @@ def modifyCSVFile(filename):
             if j == 0:
                 newColNames.append("ms")
             # if column includes "iw4PowerCU" it's an energy sensor
-            if "iw4PowerCU" in i:
+            elif "iw4PowerCU" in i:
                 newColNames.append("energy" + str(j - 1))
             # if column includes "ExternalEncoderPosition" it's an position sensor
-            if "ExternalEncoderPosition" in i:
+            elif "ExternalEncoderPosition" in i:
                 if startPositonOfColumns == 0:
                     startPositonOfColumns = j
                 newColNames.append("position" + str(j - startPositonOfColumns))
