@@ -140,37 +140,48 @@ angular.module('app')
 
 angular.module('app')
 
-.service('sessionService', function() {
-	var numberOfSessions = 0;
-	var currentSession = 1;
+.service('sessionService', function($http) {
+    var numberOfSessions = 0;
+    var currentSession = 1;
+    var sessionData = [];
 
-	function update () {
-	    var xmlHttp = new XMLHttpRequest();
-	    // so far session, carrier and iteration have to be set - they are disregarded however
-	    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=currentSession', false );
-	    xmlHttp.send(null);
-	    //parses Http-ResponseText to a decimal int
-	    numberOfSessions = parseInt(xmlHttp.responseText,10);
-	}
+    function update () {
+	// once sessions are added to database when they are load (instead of when simulation finishes)
+	// use sessionData also to set numberOfSessions
+	$http.get("django/dataInterface/rawData.json?table=sessiondata")
+	    .then(function (response){sessionData = response.data;});
+	
+	var xmlHttp = new XMLHttpRequest();
+	// so far session, carrier and iteration have to be set - they are disregarded however
+	xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=currentSession', false );
+	xmlHttp.send(null);
+	//parses Http-ResponseText to a decimal int
+	numberOfSessions = parseInt(xmlHttp.responseText,10);
+    }
+    
+    this.getNumberOfSessions = function() {
+	update();
+	return numberOfSessions;
+    }
 
-	this.getNumberOfSessions = function() {
-	    update();
-	    return numberOfSessions;
-	}
+    this.getCurrentSession = function() {
+	return currentSession;
+    }
 
-	this.getCurrentSession = function() {
-	    update();
-	    return currentSession;
-	}
-
-	this.setCurrentSession = function(newSession) {
-		currentSession = newSession;
-	}
-
-	return {
+    this.setCurrentSession = function(newSession) {
+	currentSession = newSession;
+    }
+    
+    this.getSessionData = function() {
+	update();
+	return sessionData;
+    }
+    
+    return {
         getNumberOfSessions: this.getNumberOfSessions,
         getCurrentSession: this.getCurrentSession,
         setCurrentSession: this.setCurrentSession,
-	};
+	getSessionData: this.getSessionData,
+    };
 	
 });

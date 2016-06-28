@@ -122,10 +122,10 @@ angular.module('app')
     var selectedIteration = "last"; // remove this later
     $scope.selectedIteration = "last";
 
-    $scope.sessions = [];
-    for (var i = 1; i <= sessionService.getNumberOfSessions(); i++) {
-	$scope.sessions.push(i);
-    }
+    $scope.sessions = sessionService.getSessionData();
+    //for (var i = 1; i <= sessionService.getNumberOfSessions(); i++) {
+    //	$scope.sessions.push(i);
+    //}
 	
     // the session requested from the database. For now it is fixed.
     $scope.currentSession = sessionService.getCurrentSession();
@@ -690,7 +690,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     }
 })
 
-.controller('simulationPageController', function($scope, $http, sessionService) {
+.controller('simulationPageController', function($scope, sessionService) {
 
     // This saves all Data File Names that are stored on the server
     $scope.dataFileNames = getArrayOfDataFiles();
@@ -703,9 +703,8 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.keepEveryXRows = 100;
 
     //Function that reads in the sessiondata json-file
-    $http.get("django/dataInterface/rawData.json?table=sessiondata")
-    .then(function (response){$scope.sessiondata = response.data;});
-
+    $scope.sessiondata = sessionService.getSessionData();
+    console.log(JSON.stringify($scope.sessionData));
 
     //Starts the simulation by calling the website link
     $scope.startSimulation = function() {
