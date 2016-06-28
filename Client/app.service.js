@@ -167,10 +167,30 @@ angular.module('app')
 		currentSession = newSession;
 	}
 
+    // Returns the string of the currently selected data file name
+	this.getCurrentDataFileName = function() {
+	    // Gets the full string of all data paths of all data files on the server
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", 'django/dataInterface/simulation.files', false);
+        xmlHttp.send(null);
+        var string  = xmlHttp.responseText;
+
+        // Separates the comma separated data files string to an array
+        var arraySimulationFileNames = string.split(',');
+
+        // Deletes the file path for every file name so that only the file name is displayed
+        for (var i = 0; i < arraySimulationFileNames.length; i++) {
+            arraySimulationFileNames[i] = arraySimulationFileNames[i].substring(32);
+        }
+
+        return arraySimulationFileNames[currentSession - 1];
+	}
+
 	return {
         getNumberOfSessions: this.getNumberOfSessions,
         getCurrentSession: this.getCurrentSession,
         setCurrentSession: this.setCurrentSession,
+        getCurrentDataFileName: this.getCurrentDataFileName
 	};
 	
 });
