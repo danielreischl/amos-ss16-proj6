@@ -142,14 +142,17 @@ angular.module('app')
 
 .service('sessionService', function($http) {
     var numberOfSessions = 0;
-    var currentSession = 1;
-    var sessionData = [];
+
+    var currentSession;
+    $http.get("django/dataInterface/rawData.json?table=sessiondata")
+	.then(function (response){currentSession = response.data[0];console.log("init session: "+JSON.stringify(currentSession));});
+    var sessionDataPromise;
 
     function update () {
 	// once sessions are added to database when they are load (instead of when simulation finishes)
 	// use sessionData also to set numberOfSessions
-	$http.get("django/dataInterface/rawData.json?table=sessiondata")
-	    .then(function (response){sessionData = response.data;});
+	//$http.get("django/dataInterface/rawData.json?table=sessiondata")
+	//    .then(function (response){sessionData = response.data;});
 	
 	var xmlHttp = new XMLHttpRequest();
 	// so far session, carrier and iteration have to be set - they are disregarded however
@@ -174,7 +177,9 @@ angular.module('app')
     
     this.getSessionData = function() {
 	update();
-	return sessionData;
+	var sessionDataPromise = $http.get("django/dataInterface/rawData.json?table=sessiondata");
+	//sessionDataPromise.then(function(response){console.log(JSON.stringify(response.data))});
+	return sessionDataPromise;
     }
 
     // Returns the string of the currently selected data file name

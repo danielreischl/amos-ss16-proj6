@@ -122,27 +122,30 @@ angular.module('app')
     var selectedIteration = "last"; // remove this later
     $scope.selectedIteration = "last";
 
-    $scope.sessions = sessionService.getSessionData();
+    $scope.sessions = [];
+    var sessionDataPromise = sessionService.getSessionData();
+    sessionDataPromise.then(function(response){$scope.sessions = response.data; console.log("Been here.");});
+    console.log("main.ctrl.js says: " + JSON.stringify($scope.sessions));
+
     //for (var i = 1; i <= sessionService.getNumberOfSessions(); i++) {
     //	$scope.sessions.push(i);
     //}
 	
     // the session requested from the database. For now it is fixed.
     $scope.currentSession = sessionService.getCurrentSession();
-    var session = 1;
 
     //a string, which tells the database how many carrier the user is requesting.
     var carriersRequested = "";
 
     // Get the maxAmount of Carriers from the database and save it in a variable called amountOfCarriers
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession.fields.session+'&carrier=1&iteration=1&value=amountOfCarriers', false );
     xmlHttp.send(null);
     var amountOfCarriers = xmlHttp.responseText;
 
     // Get the last iteration database and save it
     var xmlHttp2 = new XMLHttpRequest();
-    xmlHttp2.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=lastIteration', false );
+    xmlHttp2.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession.fields.session+'&carrier=1&iteration=1&value=lastIteration', false );
     xmlHttp2.send(null);
     var amountOfIterations = xmlHttp2.responseText;
 
@@ -192,7 +195,7 @@ angular.module('app')
 
         // the url which should be requested will be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
-        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + $scope.selectedDimension + '&session='+$scope.currentSession;
+        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + $scope.selectedDimension + '&session='+$scope.currentSession.fields.session;
 
         graph = new Dygraph(
 	        document.getElementById("compareGraph"),$scope.requestedUrl,
@@ -705,8 +708,9 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.keepEveryXRows = 100;
 
     //Function that reads in the sessiondata json-file
-    $scope.sessiondata = sessionService.getSessionData();
-    console.log(JSON.stringify($scope.sessionData));
+    var sessionDataPromise = sessionService.getSessionData();
+    sessionDataPromise.then(function(response){$scope.sessiondata = response.data});
+    console.log("Simulation page says: " + JSON.stringify($scope.sessiondata));
 
     //Starts the simulation by calling the website link
     $scope.startSimulation = function() {

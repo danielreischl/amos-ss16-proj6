@@ -55,11 +55,11 @@
         </div>
 
         <div flex class = "sessionSelection">
-            <p class = "chartDesc">Sessions</p>
+            <p class = "chartDesc">Sessions: {{currentSession.fields.fileName}}</p>
             <label class = "iterationBox" ng-repeat="session in sessions">
                 <input type="radio" name = "session" ng-value="session" ng-model="$parent.currentSession"/>
                 <div>
-                    {{session}}
+                    {{session.fields.session}}
                 </div>
             </label>
         </div>
