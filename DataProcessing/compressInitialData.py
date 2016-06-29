@@ -587,6 +587,12 @@ for index, row in initialData.iterrows():
 # Delete the "_modified" csv file
 os.remove(os.path.splitext(fileName)[0] + "_modified.csv")
 
+# Requests current session Data
+sessionData = dataProcessingFunctions.getSessionData()
+# Sets status of current session to "Finished"
+sessionData.set_value(session, 'status' , "Finished")
+# Writes the new data to the database
+dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'),'append')
 
 
 # Calls Funcion to remove RunningFile
