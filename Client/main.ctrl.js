@@ -112,6 +112,7 @@ angular.module('app')
     // make percentage service available in html-view
     // not very nice, try to refactor if possible
     $scope.percentageService = percentageService;
+    $scope.sessionService = sessionService;
     
     // default value for the dimension and yAxislabel
     var selectedDimension = "energyConsumption"; // remove this later
@@ -139,13 +140,13 @@ angular.module('app')
 
     // Get the maxAmount of Carriers from the database and save it in a variable called amountOfCarriers
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession.fields.session+'&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=amountOfCarriers', false );
     xmlHttp.send(null);
     var amountOfCarriers = xmlHttp.responseText;
 
     // Get the last iteration database and save it
     var xmlHttp2 = new XMLHttpRequest();
-    xmlHttp2.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession.fields.session+'&carrier=1&iteration=1&value=lastIteration', false );
+    xmlHttp2.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=lastIteration', false );
     xmlHttp2.send(null);
     var amountOfIterations = xmlHttp2.responseText;
 
@@ -195,7 +196,7 @@ angular.module('app')
 
         // the url which should be requested will be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
-        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + $scope.selectedDimension + '&session='+$scope.currentSession.fields.session;
+        $scope.requestedUrl = 'django/dataInterface/continuousData.csv?carriers='+ $scope.carriersRequested() + '&iterations=' + $scope.getSelectedIterationsString() + '&dimension=' + $scope.selectedDimension + '&session='+$scope.currentSession;
 
         graph = new Dygraph(
 	        document.getElementById("compareGraph"),$scope.requestedUrl,
@@ -304,7 +305,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 	$scope.sessions.push(i);
     }
 	
-    // the session requested from the database. For now it is fixed.
+    // the session requested from the database.
     $scope.currentSession = sessionService.getCurrentSession();
 
     //a string, which tells the database how many carrier the user is requesting.
@@ -361,6 +362,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 	}
 
 	sessionService.setCurrentSession($scope.currentSession);
+	$scope.currentSession = sessionService.getCurrentSession();
 	
         // create the graph with the parameters set. The request path for the database depends on 3 parameters: session, carrierRequested, selectedDimension and type
         // the url which should be requested wil be defined in requestedUrl

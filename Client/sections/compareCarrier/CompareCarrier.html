@@ -27,7 +27,7 @@
              <th class = "chartDesc">Carriers</th>
              <th class = "chartDesc">Iterations</th>
              <th class = "chartDesc">Dimensions</th>
-             <th class = "chartDesc">Sessions: {{currentSession.fields.fileName}}</th>
+             <th class = "chartDesc">Sessions: {{sessionService.getCurrentDataFileName(currentSession)}}</th>
         </tr>
         <tr>
             <td>
@@ -63,7 +63,6 @@
             </td>
             <td>
               <div flex class = "sessionSelection">
-		<p class = "chartDesc">Sessions: {{currentSession.fields.fileName}}</p>
 		<label class = "iterationBox" ng-repeat="session in sessions">
                   <input type="radio" name = "session" ng-value="session" ng-model="$parent.currentSession"/>
                   <div>

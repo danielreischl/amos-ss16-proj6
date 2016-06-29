@@ -142,10 +142,7 @@ angular.module('app')
 
 .service('sessionService', function($http) {
     var numberOfSessions = 0;
-
-    var currentSession;
-    $http.get("django/dataInterface/rawData.json?table=sessiondata")
-	.then(function (response){currentSession = response.data[0];console.log("init session: "+JSON.stringify(currentSession));});
+    var currentSession = 1;
     var sessionDataPromise;
 
     function update () {
@@ -182,8 +179,8 @@ angular.module('app')
 	return sessionDataPromise;
     }
 
-    // Returns the string of the currently selected data file name
-    this.getCurrentDataFileName = function() {
+    // Returns the string of session with sessionId
+    this.getDataFileNameById = function(id) {
 	// Gets the full string of all data paths of all data files on the server
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open( "GET", 'django/dataInterface/simulation.files', false);
@@ -198,7 +195,12 @@ angular.module('app')
             arraySimulationFileNames[i] = arraySimulationFileNames[i].substring(32);
         }
 
-        return arraySimulationFileNames[currentSession - 1];
+        return arraySimulationFileNames[id - 1];
+    }
+
+    // Returns the string of the currently selected data file name
+    this.getCurrentDataFileName = function() {
+	return this.getDataFileNameById(currentSession);
     }
     
     return {
@@ -206,7 +208,8 @@ angular.module('app')
         getCurrentSession: this.getCurrentSession,
         setCurrentSession: this.setCurrentSession,
 	getSessionData: this.getSessionData,
-	getCurrentDataFileName: this.getCurrentDataFileName
+	getCurrentDataFileName: this.getCurrentDataFileName,
+	getDataFileNameById: this.getDataFileNameById,
     };
 	
 });
