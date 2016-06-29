@@ -33,6 +33,8 @@ import sys
 import sqlite3
 # Imports ConfigParser
 import ConfigParser
+# Imports Pandas
+import pandas as pd
 
 # Creates a TextFile "Running.txt" on Start to let writeCarrierDataToDataBase.py know that the script is still running
 def createRunningFile():
@@ -112,4 +114,22 @@ def write_dataframe_to_database (data, tableName, ifExist):
 
     logging.info("Data loaded into Database")
 
+def getSessionData():
+    # Reads ConfigFile
+    config = ConfigParser.ConfigParser()
+    config.read('settings.cfg')
+    try:
+        # Opens connection to DataBsae
+        con = sqlite3.connect(config.get('Paths', 'database'))
+        # Adds "DataBase Connection: Success" after successfully connecting to database
+        logging.info("DataBase Connection: Success")
+    except:
+        # Adds Error to Log if connection to DataBase failed
+        logging.error("DataBase Connection: Fail")
+        # Adds database Path to ease the debugging
+        logging.error("DataBase Path: " + config.get('Paths', 'database'))
+        # Terminates the script with 0 and prints the message
+        sys.exit("DataBase Connection Failed")
 
+    # returns pandas dataFrame
+    return pd.read_sql (sql = 'Select * from ' + config.get('database_tables', 'sessiondata'), con = con, index_col='id')

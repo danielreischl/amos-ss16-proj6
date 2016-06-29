@@ -27,11 +27,16 @@
 
 <div ng-controller="AverageEnergyConsumptionChart">
     <!-- Dropdown selection menus and checkbxoes are put in a table layout.-->
-    <table>
+    <table id = "graphOptions">
+        <tr>
+             <th class = "chartDesc">Carriers</th>
+             <th class = "chartDesc">Iterations</th>
+             <th class = "chartDesc">Dimensions</th>
+             <th class = "chartDesc">Sessions</th>
+        </tr>
         <tr>
             <td>
                 <div flex class = "carrierSelection">
-                    <p class = "chartDesc">Carriers</p>
                     <label class = "carrierBox" ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
                         <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
                         <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
@@ -43,7 +48,6 @@
             <td>
                 <!-- ng-change is empty right now. this has to change, when iterations can be selected from the database -->
                 <div class = "iterationSelection">
-                    <p class = "chartDesc">Iterations</p>
                     <label class = "iterationBox" ng-repeat="iterOption in iterationDimensions">
                         <input type="radio" name = "iterOption" ng-value="iterOption.id" ng-model="$parent.selectedIteration"/>
                         <div>
@@ -54,7 +58,6 @@
             </td>
             <td>
                 <div class = "dimensionSelection">
-                    <p class = "chartDesc">Dimensions</p>
                     <label class = "iterationBox" ng-repeat="dimension in dimensions">
                         <input type="radio" name = "dimension" ng-value="dimension.id" ng-model="$parent.selectedDimension"/>
                         <div>
@@ -65,7 +68,6 @@
             </td>
             <td>
                 <div flex class = "sessionSelection">
-                    <p class = "chartDesc">Sessions</p>
                     <label class = "iterationBox" ng-repeat="session in sessions">
                         <input type="radio" name = "session" ng-value="session" ng-model="$parent.currentSession"/>
                         <div>

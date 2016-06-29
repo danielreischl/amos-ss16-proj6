@@ -49,6 +49,17 @@ li {
 }
 
 .chartDesc {
-    font-size: 16px;
+    font-size: 14px;
     font-style: oblique;
 }
+
+#graphOptions td {
+    border: 1px;
+    padding-left: 13px;
+    padding-right: 13px;
+}
+
+#graphOptions th {
+    text-align:center;
+}
+
