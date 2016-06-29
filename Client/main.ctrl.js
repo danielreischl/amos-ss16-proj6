@@ -811,7 +811,8 @@ the session, iterations and carriers he wans to see. */
     // the session requested from the database.
     $scope.currentSession = sessionService.getCurrentSession();
 
-    $scope.flexibilityMeasure = 0.0;
+    // flexibility measure
+    $scope.flexibilityMeasure = calculateFlexibilityMeasure();
 
     //a string, which tells the database how many carrier the user is requesting.
     var carriersRequested = "";
@@ -848,67 +849,16 @@ the session, iterations and carriers he wans to see. */
     // not very nice, try to refactor if possible
     $scope.percentageService = percentageService;
 
-    /* this functions creates the dygraph from a data source and applies options to them*/
-    $scope.createFlexibilityChart = function() {
-
-        $scope.carriersRequested = function() {
-            // filter for the selected carriers
-            var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
-
-            //join them with commas
-            return selected.map(function(carrier){return carrier.id.toString();}).join();
-        }
-
-        sessionService.setCurrentSession($scope.currentSession);
-
-        // create the graph with the parameters set. The request path for the database depends on 3 parameters: carrierRequested, selectedIteration and selectedSession
-        // the url which should be requested wil be defined in requestedUrl
-        // to allow to export the csv file the variable is defined as a $scope variable
-        $scope.requestedUrl = 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+$scope.carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession+'';
-
-        graph = new Dygraph(
-	       document.getElementById("FlexibilityChart"),$scope.requestedUrl , {title: 'Flexibility Graph',
-	                                                                          ylabel: 'Speed',
-	                                                                          xlabel: 'Absolute Time in ms',
-	                                                                          labelsSeparateLines: true,
-	                                                                          highlightSeriesOpts: {
-	                                                                            strokeWidth: 4,
-	                                                                            strokeBorderWidth: 1,
-	                                                                            highlightCircleSize: 5
-	                                                                          },
-	                                                                          legend: "always",
-	                                                                          /*labelDiv looks for an element with the given id and puts the legend into this element.
-	                                                                          Therefore the legend will not bis displayed inside the graph */
-	                                                                          labelsDiv: document.getElementById("FlexibilityChartLegend"),
-	                                                                          /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
-	                                                                          axes: {
-	                                                                            x: {
-                                                                                    valueFormatter: function(x) {
-                                                                                        return 'Absolute time ' + x;
-                                                                                    },
-                                                                                },
-                                                                              }
-	                                                                          }
-	       );
-
-        $scope.getListStyle = function(index) {
-            if (index % 5 == 1) {
-                return {'clear': 'left'};
-            }
-            else {
-                return {};
-            }
-        }
+    // returns the flexibility measure
+    function calculateFlexibilityMeasure() {
 
         // Transform the raw csv file into a 2d array
         var flexibilityArray = splitCSVToArray($scope.requestedUrl);
 
-        // Calculate the flexiblity measure from the 2d array
+        // Calculate the flexibility measure from the 2d array
         var measure = calculateFlexibilityMeasure(flexibilityArray);
 
-
-
-        $scope.flexibilityMeasure = measure;
+        return measure;
 
         // Splits the absolute time csv file into different rows for every new line
         // and then into different columns for every ","
@@ -997,8 +947,64 @@ the session, iterations and carriers he wans to see. */
             var finalMeasure = (sumOfMeasures/amountOfMeasures);
             return finalMeasure;
         }
+    }
 
-            // Updates the  time for the time stamp
-            $scope.ts = new Date();
+    /* this functions creates the dygraph from a data source and applies options to them*/
+    $scope.createFlexibilityChart = function() {
+
+        $scope.carriersRequested = function() {
+            // filter for the selected carriers
+            var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
+
+            //join them with commas
+            return selected.map(function(carrier){return carrier.id.toString();}).join();
+        }
+
+        sessionService.setCurrentSession($scope.currentSession);
+
+        // create the graph with the parameters set. The request path for the database depends on 3 parameters: carrierRequested, selectedIteration and selectedSession
+        // the url which should be requested wil be defined in requestedUrl
+        // to allow to export the csv file the variable is defined as a $scope variable
+        $scope.requestedUrl = 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+$scope.carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession+'';
+
+        graph = new Dygraph(
+	       document.getElementById("FlexibilityChart"),$scope.requestedUrl , {title: 'Flexibility Graph',
+	                                                                          ylabel: 'Speed',
+	                                                                          xlabel: 'Absolute Time in ms',
+	                                                                          labelsSeparateLines: true,
+	                                                                          highlightSeriesOpts: {
+	                                                                            strokeWidth: 4,
+	                                                                            strokeBorderWidth: 1,
+	                                                                            highlightCircleSize: 5
+	                                                                          },
+	                                                                          legend: "always",
+	                                                                          /*labelDiv looks for an element with the given id and puts the legend into this element.
+	                                                                          Therefore the legend will not bis displayed inside the graph */
+	                                                                          labelsDiv: document.getElementById("FlexibilityChartLegend"),
+	                                                                          /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
+	                                                                          axes: {
+	                                                                            x: {
+                                                                                    valueFormatter: function(x) {
+                                                                                        return 'Absolute time ' + x;
+                                                                                    },
+                                                                                },
+                                                                              }
+	                                                                          }
+	       );
+
+        $scope.getListStyle = function(index) {
+            if (index % 5 == 1) {
+                return {'clear': 'left'};
+            }
+            else {
+                return {};
+            }
+        }
+
+        // Update the flex measure for the new selection
+        $scope.flexibilityMeasure = calculateFlexibilityMeasure();
+
+        // Updates the  time for the time stamp
+        $scope.ts = new Date();
     }
 })
