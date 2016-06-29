@@ -547,7 +547,7 @@ sessionData = pd.DataFrame(
 # Adding previous extracted and calculated values to DataFrame
 sessionData.loc['1'] = pd.Series(
     {'session': session, 'fileName': os.path.splitext(fileName)[0], 'amountOfCarriers': AMOUNT_OF_CARRIERS,
-     'status': 'Running',})
+     'status': 'OK',})
 # calls function to load the sessiondata data into the database
 dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'),'append')
 
@@ -592,7 +592,8 @@ sessionData = dataProcessingFunctions.getSessionData()
 # Sets status of current session to "Finished"
 sessionData.set_value(session, 'status' , "Finished")
 # Writes the new data to the database
-dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'),'replace')
+# Disabled because status Finish doesn't have to be set right now
+#dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'),'replace')
 
 
 # Calls Funcion to remove RunningFile
