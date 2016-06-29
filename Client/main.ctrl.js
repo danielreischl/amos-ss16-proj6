@@ -704,7 +704,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 })
 
-.controller('simulationPageController', function($scope, sessionService) {
+.controller('simulationPageController', function($scope, $http, sessionService) {
 
     // This saves all Data File Names that are stored on the server
     $scope.dataFileNames = getArrayOfDataFiles();
@@ -731,6 +731,12 @@ which kind of data he wants to see. The default value is average energy consumpt
             //Sets the current Session to the new SessionNumber
             sessionService.setCurrentSession(parseInt(sessionService.getNumberOfSessions())+1)
             alert("Simulation Started");
+    };
+
+    // Calls URL to reset the Sytem and prompts an alert
+    $scope.resetSimulation = function(){
+    $http.get("django/dataInterface/simulation.reset")
+    .then(function(response){alert ('System reseted');});
     };
 
     // Function that sets the currentSession to submittedSession
