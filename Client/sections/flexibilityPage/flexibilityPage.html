@@ -27,6 +27,8 @@
              <th class = "chartDesc">Carriers</th>
              <th class = "chartDesc">Iterations</th>
              <th class = "chartDesc">Sessions</th>
+             <th class = "chartDesc">Flexibility</th>
+
         </tr>
         <tr>
             <td>
@@ -63,6 +65,9 @@
                 <md-button class="md-raised md-cornered"  ng-click="createFlexibilityChart()">Refresh</md-button>
                 <p class="timestamp">Selected file: {{currentDataFileName}}</p>
                 <p class="timestamp">Time of last refresh = {{ ts | date : "HH:mm:ss.sss" }}</p>
+            </td>
+            <td>
+                <p class="chartDesc">{{flexibilityMeasure}}</p>
             </td>
         </tr>
     </table>
