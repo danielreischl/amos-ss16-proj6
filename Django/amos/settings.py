@@ -157,7 +157,7 @@ STATICFILES_FINDERS = (
 # jquery, papa-parse, Chart.js, dygraphs, angular, angular-route, angular-animate, angular-aria, angular-messages
 # angular-material, bootstrap
 BOWER_INSTALLED_APPS = (
-    'jquery',
+    #'jquery',
     'papa-parse',
     'Chart.js',
     'dygraphs',
@@ -167,6 +167,6 @@ BOWER_INSTALLED_APPS = (
     'angular-aria',
     'angular-messages',
     'angular-material#master',
-    'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js',
+    'bootstrap',
 
 )
