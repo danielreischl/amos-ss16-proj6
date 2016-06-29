@@ -134,6 +134,7 @@ angular.module('app')
 	
     // the session requested from the database. For now it is fixed.
     $scope.currentSession = sessionService.getCurrentSession();
+    $scope.currentFileName = sessionService.getCurrentDataFileName($scope.currentSession);
 
     //a string, which tells the database how many carrier the user is requesting.
     var carriersRequested = "";
@@ -232,8 +233,11 @@ angular.module('app')
         }
     }
     
-
-
+    $scope.updateFileName = function() {
+	sessionService.setCurrentSession($scope.currentSession);
+	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
+    }
+    
     // This function empties the carriers in the comparison on page leave.
     // If the user leaves the current html snippet/template then,
     // this function will notice that and trigger the function "emptyCarrierArray"
@@ -307,6 +311,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 	
     // the session requested from the database.
     $scope.currentSession = sessionService.getCurrentSession();
+    $scope.currentFileName = sessionService.getCurrentDataFileName($scope.currentSession);
 
     //a string, which tells the database how many carrier the user is requesting.
     var carriersRequested = "";
@@ -397,6 +402,10 @@ which kind of data he wants to see. The default value is average energy consumpt
 	    else {
 		return {};
 	    }
+	}
+
+	$scope.updateFileName = function() {
+	    $scope.currentFileName = sessionService.getCurrentDataFileName($scope.currentSession);
 	}
 
         // Updates the  time for the time stamp
@@ -740,6 +749,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     }
 
     function uploadComplete(event) {
+	$scope.dataFileNames = getArrayOfDataFiles();
 	alert(event.target.responseText);
 	//$scope.progress = 'completed';
     }
