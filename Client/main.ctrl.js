@@ -308,12 +308,10 @@ which kind of data he wants to see. The default value is average energy consumpt
     var carriersRequested = "";
 
     // Get the maxAmount of Carriers from the database and save it in a variable called amountOfCarriers
-    //var xmlHttp = new XMLHttpRequest();
-    //xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=amountOfCarriers', false );
-    //xmlHttp.send(null);
-    //var amountOfCarriers = xmlHttp.responseText;
-
-    var amountOfCarriers = 15
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=amountOfCarriers', false );
+    xmlHttp.send(null);
+    var amountOfCarriers = xmlHttp.responseText;
 
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     $scope.carriers = [];
