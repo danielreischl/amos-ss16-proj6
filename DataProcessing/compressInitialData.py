@@ -240,15 +240,15 @@ def compressData(carrier):
     # Add the values to this point in the carrierData array
     saveTo = 0
 
-    # Change the
-    # carrierData[carrier - 1][0][saveTo] = carrierData[carrier - 1][0][saveTo] - firstTimeStamp
+    # Count the timestamps that are aggregated in order to average the added up energy consumptions
+    countedTimeStamps = 1
 
     for i in range(0, int(currentPositionAtCarrierData[carrier - 1])):
         # If the current value has been found this time stamp is kept and
         if (carrierData[carrier - 1][0][i] - firstTimeStamp) == nextTimeStampValue:
             # Average the time stamps of the last stamp
             carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo] / countedTimeStamps
-            # Set counted timestamps back to 1
+            # Set counted timestamps back to 1 when the energy is saved to a new data row
             countedTimeStamps = 1
 
             # Change the place where the next energy consumption is being saved to
@@ -272,13 +272,12 @@ def compressData(carrier):
             # The position has to be interpolated
         elif (carrierData[carrier - 1][0][i] - firstTimeStamp) > nextTimeStampValue:
             # Counts the amount of transferred timestamps to average in the end
-            countedTimeStamps = 0
             # This while loop iterates as long as all the values in the gap were interpolated
             # This is for the case that multiple time stamp values were missed in one gap
             while (carrierData[carrier - 1][0][i] - firstTimeStamp) > nextTimeStampValue:
                 # Average the time stamps of the last stamp
                 carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo]/countedTimeStamps
-                # Set counted timestamps back to 1
+                # Set counted timestamps back to 1 when the energy is saved to a new data row
                 countedTimeStamps = 1
 
                 # Change the place where the next energy consumption is being saved to
