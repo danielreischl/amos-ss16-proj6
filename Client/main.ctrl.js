@@ -864,7 +864,13 @@ the session, iterations and carriers he wans to see. */
         // Calculate the flexibility measure from the 2d array
         var measure = calculateFlexibilityMeasure(flexibilityArray);
 
-        return measure;
+        $scope.carriersRequested = function() {
+            // filter for the selected carriers
+            var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
+
+            //join them with commas
+            return selected.map(function(carrier){return carrier.id.toString();}).join();
+        }
 
         // Splits the absolute time csv file into different rows for every new line
         // and then into different columns for every ","
@@ -953,6 +959,8 @@ the session, iterations and carriers he wans to see. */
             var finalMeasure = (sumOfMeasures/amountOfMeasures);
             return finalMeasure;
         }
+
+        return measure;
     }
 
     /* this functions creates the dygraph from a data source and applies options to them*/
