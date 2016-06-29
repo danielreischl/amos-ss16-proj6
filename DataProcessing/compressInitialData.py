@@ -205,7 +205,8 @@ def evaluateDriveReset(drive, carrier):
 # the data is cleared
 def completeIteration(carrier):
     # Compress the data for the
-    compressData(carrier)
+    if KEEP_EVERY_X_ROW > 1:
+        compressData(carrier)
 
     exportCSV(carrier)
 
@@ -239,12 +240,16 @@ def compressData(carrier):
     # Add the values to this point in the carrierData array
     saveTo = 0
 
-    # Change the
-    # carrierData[carrier - 1][0][saveTo] = carrierData[carrier - 1][0][saveTo] - firstTimeStamp
+    # Count the timestamps that are aggregated in order to average the added up energy consumptions
+    countedTimeStamps = 1
 
     for i in range(0, int(currentPositionAtCarrierData[carrier - 1])):
         # If the current value has been found this time stamp is kept and
         if (carrierData[carrier - 1][0][i] - firstTimeStamp) == nextTimeStampValue:
+            # Average the time stamps of the last stamp
+            carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo] / countedTimeStamps
+            # Set counted timestamps back to 1 when the energy is saved to a new data row
+            countedTimeStamps = 1
 
             # Change the place where the next energy consumption is being saved to
             saveTo = int(nextTimeStampValue / KEEP_EVERY_X_ROW)
@@ -260,13 +265,21 @@ def compressData(carrier):
             # Increase the next value that is being searched for
             nextTimeStampValue += KEEP_EVERY_X_ROW
 
+            # Increase counted timestamps by 1
+            countedTimeStamps += 1
+
             # If the current value cannot be found because the timestamp was not recorded for that carrier
             # The position has to be interpolated
-        elif (carrierData[carrier - 1][0][i] - firstTimeStamp) >= nextTimeStampValue:
-
+        elif (carrierData[carrier - 1][0][i] - firstTimeStamp) > nextTimeStampValue:
+            # Counts the amount of transferred timestamps to average in the end
             # This while loop iterates as long as all the values in the gap were interpolated
             # This is for the case that multiple time stamp values were missed in one gap
-            while (carrierData[carrier - 1][0][i] - firstTimeStamp) >= nextTimeStampValue:
+            while (carrierData[carrier - 1][0][i] - firstTimeStamp) > nextTimeStampValue:
+                # Average the time stamps of the last stamp
+                carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo]/countedTimeStamps
+                # Set counted timestamps back to 1 when the energy is saved to a new data row
+                countedTimeStamps = 1
+
                 # Change the place where the next energy consumption is being saved to
                 saveTo = int(nextTimeStampValue / KEEP_EVERY_X_ROW)
 
@@ -293,6 +306,8 @@ def compressData(carrier):
                 # that the carrier wants to move to is not free.
                 driveInter = carrierData[carrier - 1][3][i]
 
+
+
                 # Transfer the values to the position
                 carrierData[carrier - 1][0][saveTo] = nextTimeStampValue
                 carrierData[carrier - 1][1][saveTo] = posInter
@@ -308,6 +323,9 @@ def compressData(carrier):
             # Add the energy consumption to the current entry
             carrierData[carrier - 1][2][saveTo] += carrierData[carrier - 1][2][i]
 
+            # Increase counted timestamps by 1
+            countedTimeStamps += 1
+
         # Delete the last row (not the current because it may be needed for interpolation) if it is at a position
         # In the array that will be deleted
         if i >= 1 and i - 1 >= 1 + int((currentPositionAtCarrierData[carrier - 1] - 1) / float(KEEP_EVERY_X_ROW)):
@@ -318,7 +336,13 @@ def compressData(carrier):
             carrierData[carrier - 1][4][i - 1] = 0
 
         # If the current row is the last one of the array and it is not needed after compression, delete it
-        if i == int(currentPositionAtCarrierData[carrier - 1]) - 1 and KEEP_EVERY_X_ROW > 1:
+        # - 1 because the "currentPositionAtCarrierData" is the position where the next empty space is
+        # Therefore the last position filled with data is currentPositionAtCarrierData[carrier - 1] - 1
+        if i == int(currentPositionAtCarrierData[carrier - 1]) - 1:
+            # Average the last energy row
+            carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo] / countedTimeStamps
+
+            # Set the values in the carrier data to 0
             carrierData[carrier - 1][0][i] = 0
             carrierData[carrier - 1][1][i] = 0
             carrierData[carrier - 1][2][i] = 0
