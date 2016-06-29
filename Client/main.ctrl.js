@@ -340,8 +340,8 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.dimensions = [
         {name : "Average Energy Consumption", id : 'energyConsumptionAverage'},
         {name : "Average Acceleration", id : 'accelerationAverage'},
-	{name : "Average Speed", id: 'speedAverage'},
-	{name : "Total Energy Consumption", id: 'energyConsumptionTotal'}
+	    {name : "Average Speed", id: 'speedAverage'},
+	    {name : "Total Energy Consumption", id: 'energyConsumptionTotal'}
     ]
 
     // make percentage service available in html-view
@@ -362,7 +362,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 	    var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
 
 	    //join them with commas
-	    
+
 	    return selected.map(function(carrier){return carrier.id.toString();}).join();
 	}
 
@@ -397,10 +397,10 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 	$scope.getListStyle = function(index) {
 	    if (index % 5 == 1) {
-		return {'clear': 'left'};
+		    return {'clear': 'left'};
 	    }
 	    else {
-		return {};
+		    return {};
 	    }
 	}
 
@@ -860,7 +860,7 @@ the session, iterations and carriers he wans to see. */
 
         // Get the last iteration database and save it
         var xmlHttp3 = new XMLHttpRequest();
-        xmlHttp3.open( "GET", 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+$scope.carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession+'');
+        xmlHttp3.open( "GET", 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession+'');
         xmlHttp3.send(null);
         var flexString = xmlHttp3.responseText;
 
@@ -870,7 +870,7 @@ the session, iterations and carriers he wans to see. */
         // Calculate the flexibility measure from the 2d array
         var measure = calculateFlexibilityMeasure(flexibilityArray);
 
-        $scope.carriersRequested = function() {
+        function carriersRequested() {
             // filter for the selected carriers
             var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
 
