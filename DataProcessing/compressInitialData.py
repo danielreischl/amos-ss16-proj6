@@ -336,7 +336,13 @@ def compressData(carrier):
             carrierData[carrier - 1][4][i - 1] = 0
 
         # If the current row is the last one of the array and it is not needed after compression, delete it
-        if i == int(currentPositionAtCarrierData[carrier - 1]) - 1 and KEEP_EVERY_X_ROW > 1:
+        # - 1 because the "currentPositionAtCarrierData" is the position where the next empty space is
+        # Therefore the last position filled with data is currentPositionAtCarrierData[carrier - 1] - 1
+        if i == int(currentPositionAtCarrierData[carrier - 1]) - 1:
+            # Average the last energy row
+            carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo] / countedTimeStamps
+
+            # Set the values in the carrier data to 0
             carrierData[carrier - 1][0][i] = 0
             carrierData[carrier - 1][1][i] = 0
             carrierData[carrier - 1][2][i] = 0
