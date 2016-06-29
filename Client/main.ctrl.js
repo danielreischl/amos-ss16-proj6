@@ -112,6 +112,7 @@ angular.module('app')
     // make percentage service available in html-view
     // not very nice, try to refactor if possible
     $scope.percentageService = percentageService;
+    $scope.sessionService = sessionService;
     
     // default value for the dimension and yAxislabel
     var selectedDimension = "energyConsumption"; // remove this later
@@ -123,13 +124,16 @@ angular.module('app')
     $scope.selectedIteration = "last";
 
     $scope.sessions = [];
-    for (var i = 1; i <= sessionService.getNumberOfSessions(); i++) {
-	$scope.sessions.push(i);
-    }
+    var sessionDataPromise = sessionService.getSessionData();
+    sessionDataPromise.then(function(response){$scope.sessions = response.data; console.log("Been here.");});
+    console.log("main.ctrl.js says: " + JSON.stringify($scope.sessions));
+
+    //for (var i = 1; i <= sessionService.getNumberOfSessions(); i++) {
+    //	$scope.sessions.push(i);
+    //}
 	
     // the session requested from the database. For now it is fixed.
     $scope.currentSession = sessionService.getCurrentSession();
-    var session = 1;
 
     //a string, which tells the database how many carrier the user is requesting.
     var carriersRequested = "";
@@ -301,7 +305,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 	$scope.sessions.push(i);
     }
 	
-    // the session requested from the database. For now it is fixed.
+    // the session requested from the database.
     $scope.currentSession = sessionService.getCurrentSession();
 
     //a string, which tells the database how many carrier the user is requesting.
@@ -358,6 +362,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 	}
 
 	sessionService.setCurrentSession($scope.currentSession);
+	$scope.currentSession = sessionService.getCurrentSession();
 	
         // create the graph with the parameters set. The request path for the database depends on 3 parameters: session, carrierRequested, selectedDimension and type
         // the url which should be requested wil be defined in requestedUrl
@@ -690,7 +695,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 })
 
-.controller('simulationPageController', function($scope, $http, sessionService) {
+.controller('simulationPageController', function($scope, sessionService) {
 
     // This saves all Data File Names that are stored on the server
     $scope.dataFileNames = getArrayOfDataFiles();
@@ -703,9 +708,9 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.keepEveryXRows = 100;
 
     //Function that reads in the sessiondata json-file
-    $http.get("django/dataInterface/rawData.json?table=sessiondata")
-    .then(function (response){$scope.sessiondata = response.data;});
-
+    var sessionDataPromise = sessionService.getSessionData();
+    sessionDataPromise.then(function(response){$scope.sessiondata = response.data});
+    console.log("Simulation page says: " + JSON.stringify($scope.sessiondata));
 
     //Starts the simulation by calling the website link
     $scope.startSimulation = function() {

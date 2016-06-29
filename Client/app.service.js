@@ -140,36 +140,48 @@ angular.module('app')
 
 angular.module('app')
 
-.service('sessionService', function() {
-	var numberOfSessions = 0;
-	var currentSession = 1;
+.service('sessionService', function($http) {
+    var numberOfSessions = 0;
+    var currentSession = 1;
+    var sessionDataPromise;
 
-	function update () {
-	    var xmlHttp = new XMLHttpRequest();
-	    // so far session, carrier and iteration have to be set - they are disregarded however
-	    xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=currentSession', false );
-	    xmlHttp.send(null);
-	    //parses Http-ResponseText to a decimal int
-	    numberOfSessions = parseInt(xmlHttp.responseText,10);
-	}
+    function update () {
+	// once sessions are added to database when they are load (instead of when simulation finishes)
+	// use sessionData also to set numberOfSessions
+	//$http.get("django/dataInterface/rawData.json?table=sessiondata")
+	//    .then(function (response){sessionData = response.data;});
+	
+	var xmlHttp = new XMLHttpRequest();
+	// so far session, carrier and iteration have to be set - they are disregarded however
+	xmlHttp.open( "GET", 'django/dataInterface/values.request?session=1&carrier=1&iteration=1&value=currentSession', false );
+	xmlHttp.send(null);
+	//parses Http-ResponseText to a decimal int
+	numberOfSessions = parseInt(xmlHttp.responseText,10);
+    }
+    
+    this.getNumberOfSessions = function() {
+	update();
+	return numberOfSessions;
+    }
 
-	this.getNumberOfSessions = function() {
-	    update();
-	    return numberOfSessions;
-	}
+    this.getCurrentSession = function() {
+	return currentSession;
+    }
 
-	this.getCurrentSession = function() {
-	    update();
-	    return currentSession;
-	}
+    this.setCurrentSession = function(newSession) {
+	currentSession = newSession;
+    }
+    
+    this.getSessionData = function() {
+	update();
+	var sessionDataPromise = $http.get("django/dataInterface/rawData.json?table=sessiondata");
+	//sessionDataPromise.then(function(response){console.log(JSON.stringify(response.data))});
+	return sessionDataPromise;
+    }
 
-	this.setCurrentSession = function(newSession) {
-		currentSession = newSession;
-	}
-
-    // Returns the string of the currently selected data file name
-	this.getCurrentDataFileName = function() {
-	    // Gets the full string of all data paths of all data files on the server
+    // Returns the string of session with sessionId
+    this.getDataFileNameById = function(id) {
+	// Gets the full string of all data paths of all data files on the server
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open( "GET", 'django/dataInterface/simulation.files', false);
         xmlHttp.send(null);
@@ -183,14 +195,21 @@ angular.module('app')
             arraySimulationFileNames[i] = arraySimulationFileNames[i].substring(32);
         }
 
-        return arraySimulationFileNames[currentSession - 1];
-	}
+        return arraySimulationFileNames[id - 1];
+    }
 
-	return {
+    // Returns the string of the currently selected data file name
+    this.getCurrentDataFileName = function() {
+	return this.getDataFileNameById(currentSession);
+    }
+    
+    return {
         getNumberOfSessions: this.getNumberOfSessions,
         getCurrentSession: this.getCurrentSession,
         setCurrentSession: this.setCurrentSession,
-        getCurrentDataFileName: this.getCurrentDataFileName
-	};
+	getSessionData: this.getSessionData,
+	getCurrentDataFileName: this.getCurrentDataFileName,
+	getDataFileNameById: this.getDataFileNameById,
+    };
 	
 });

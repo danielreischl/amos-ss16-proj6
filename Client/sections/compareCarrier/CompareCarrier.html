@@ -27,7 +27,7 @@
              <th class = "chartDesc">Carriers</th>
              <th class = "chartDesc">Iterations</th>
              <th class = "chartDesc">Dimensions</th>
-             <th class = "chartDesc">Sessions</th>
+             <th class = "chartDesc">Sessions: {{sessionService.getCurrentDataFileName(currentSession)}}</th>
         </tr>
         <tr>
             <td>
@@ -62,17 +62,17 @@
                 </div>
             </td>
             <td>
-                <div flex class = "sessionSelection">
-                    <label class = "iterationBox" ng-repeat="session in sessions">
-                        <input type="radio" name = "session" ng-value="session" ng-model="$parent.currentSession"/>
-                        <div>
-                            {{session}}
-                        </div>
-                    </label>
-                </div>
+              <div flex class = "sessionSelection">
+		<label class = "iterationBox" ng-repeat="session in sessions">
+                  <input type="radio" name = "session.fields.session" ng-value="session.fields.session" ng-model="$parent.currentSession"/>
+                  <div>
+                    {{session.fields.session}}
+                  </div>
+                </label>
+              </div>
             </td>
             <td>
-                <md-button class="md-raised md-cornered"  ng-click="createAverageEnergyConsumptionChart()">Refresh</md-button>
+                <md-button class="md-raised md-cornered"  ng-click="createCompareGraph()">Refresh</md-button>
                 <p class = "timestamp">Time of last refresh = {{ ts | date : "HH:mm:ss.sss" }}</p>
             </td>
         </tr>
