@@ -25,25 +25,28 @@
      The user will be able to select carriers and compare them in either the average Consumption Graph or Continuous Consumption graph
 -->
 
-<div ng-controller="circleGraphController">
+<div  class="container-fluid" ng-controller="circleGraphController">
+    <div class ="page-header">
+        <h1>{{circleView_title}} <span class="glyphicon glyphicon-repeat" aria-hidden="true" ng-click="refresh()"></span></h1>
+        <p> <b>Current Filename:</b> {{ currentDataFileName }} | <b>Last Refresh:</b> {{ ts | date : "HH:mm:ss" }} <br>
+            Select the Carriers you want to investigate further and click the wanted preferred Graph
+        </p>
+    </div>
 
-    <section layout="column" ng-init="circleGraph()">
-    </section>
-
-    <section layout="column" layout-align="center center">
-        <h1>{{circleView_title}}</h1>
+    <div class="row-fluid" ng-init="circleGraph()">
         <div>
             <div id="circleGraphs"></div>
         </div>
+    </div>
 
-        <div layout="row" layout-align="center center" class="btn-group">
-            <button class="btn btn-default" layout-align="center end" class="md-raised md-cornered" ng-click="changeView()">Change View to {{circleView_title}}</button>
-            <button class="btn btn-default" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#CompareCarrier'">Continuous Consumption Graph</button>
-            <button class="btn btn-default" layout-align="center end" class="md-raised md-cornered" Onclick="location.href='#AverageEnergyConsumptionChart'">Average Consumption Graph</button>
-            <button class="btn btn-default" ng-click="refresh()">Refresh</button>
-            <p class="timestamp"> Time of last refresh = {{ ts | date : "HH:mm:ss.sss" }}</p>
-        </div>
-    </section>
+    <div class="row-fluid">
+    <div class="btn-group">
+        <button class="btn btn-default" ng-click="changeView()">Change View to {{circleView_title}}</button>
+        <button class="btn btn-default" Onclick="location.href='#CompareCarrier'">Continuous Consumption Graph</button>
+        <button class="btn btn-default" Onclick="location.href='#AverageEnergyConsumptionChart'">Average Consumption Graph</button>
+        <button class="btn btn-default" Onclick="location.href='#spikeContamination'">Change View to Spike Contamination</button>
+    </div>
+    </div>
 </div>
 
 
