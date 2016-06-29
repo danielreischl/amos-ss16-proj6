@@ -858,9 +858,17 @@ the session, iterations and carriers he wans to see. */
     // returns the flexibility measure
     function calculateFlexibilityMeasure() {
 
+        $scope.carriersRequested = function() {
+            // filter for the selected carriers
+            var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
+
+            //join them with commas
+            return selected.map(function(carrier){return carrier.id.toString();}).join();
+        }
+
         // Get the last iteration database and save it
         var xmlHttp3 = new XMLHttpRequest();
-        xmlHttp3.open( "GET", 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession+'');
+        xmlHttp3.open( "GET", 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+$scope.carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession+'');
         xmlHttp3.send(null);
         var flexString = xmlHttp3.responseText;
 
@@ -869,14 +877,6 @@ the session, iterations and carriers he wans to see. */
 
         // Calculate the flexibility measure from the 2d array
         var measure = calculateFlexibilityMeasure(flexibilityArray);
-
-        function carriersRequested() {
-            // filter for the selected carriers
-            var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
-
-            //join them with commas
-            return selected.map(function(carrier){return carrier.id.toString();}).join();
-        }
 
         // Splits the absolute time csv file into different rows for every new line
         // and then into different columns for every ","
