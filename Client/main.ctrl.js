@@ -852,8 +852,14 @@ the session, iterations and carriers he wans to see. */
     // returns the flexibility measure
     function calculateFlexibilityMeasure() {
 
+        // Get the last iteration database and save it
+        var xmlHttp3 = new XMLHttpRequest();
+        xmlHttp3.open( "GET", 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+$scope.carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession+'');
+        xmlHttp3.send(null);
+        var flexString = xmlHttp3.responseText;
+
         // Transform the raw csv file into a 2d array
-        var flexibilityArray = splitCSVToArray($scope.requestedUrl);
+        var flexibilityArray = splitCSVToArray(flexString);
 
         // Calculate the flexibility measure from the 2d array
         var measure = calculateFlexibilityMeasure(flexibilityArray);
