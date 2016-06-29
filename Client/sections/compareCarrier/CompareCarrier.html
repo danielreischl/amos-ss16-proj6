@@ -64,7 +64,7 @@
             <td>
               <div flex class = "sessionSelection">
 		<label class = "iterationBox" ng-repeat="session in sessions">
-                  <input type="radio" name = "session" ng-value="session" ng-model="$parent.currentSession"/>
+                  <input type="radio" name = "session.fields.session" ng-value="session.fields.session" ng-model="$parent.currentSession"/>
                   <div>
                     {{session.fields.session}}
                   </div>
