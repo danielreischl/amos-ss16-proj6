@@ -592,7 +592,7 @@ sessionData = dataProcessingFunctions.getSessionData()
 # Sets status of current session to "Finished"
 sessionData.set_value(session, 'status' , "Finished")
 # Writes the new data to the database
-dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'),'append')
+dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'),'replaced')
 
 
 # Calls Funcion to remove RunningFile
