@@ -817,8 +817,7 @@ the session, iterations and carriers he wans to see. */
     // the session requested from the database.
     $scope.currentSession = sessionService.getCurrentSession();
 
-    // flexibility measure
-    $scope.flexibilityMeasure = calculateFlexibilityMeasure();
+
 
     //a string, which tells the database how many carrier the user is requesting.
     var carriersRequested = "";
@@ -854,6 +853,9 @@ the session, iterations and carriers he wans to see. */
     // make percentage service available in html-view
     // not very nice, try to refactor if possible
     $scope.percentageService = percentageService;
+
+    // flexibility measure
+    $scope.flexibilityMeasure = calculateFlexibilityMeasure();
 
     // returns the flexibility measure
     function calculateFlexibilityMeasure() {
