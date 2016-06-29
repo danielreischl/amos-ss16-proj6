@@ -205,7 +205,8 @@ def evaluateDriveReset(drive, carrier):
 # the data is cleared
 def completeIteration(carrier):
     # Compress the data for the
-    compressData(carrier)
+    if KEEP_EVERY_X_ROW > 1:
+        compressData(carrier)
 
     exportCSV(carrier)
 
@@ -262,11 +263,11 @@ def compressData(carrier):
 
             # If the current value cannot be found because the timestamp was not recorded for that carrier
             # The position has to be interpolated
-        elif (carrierData[carrier - 1][0][i] - firstTimeStamp) >= nextTimeStampValue:
+        elif (carrierData[carrier - 1][0][i] - firstTimeStamp) > nextTimeStampValue:
 
             # This while loop iterates as long as all the values in the gap were interpolated
             # This is for the case that multiple time stamp values were missed in one gap
-            while (carrierData[carrier - 1][0][i] - firstTimeStamp) >= nextTimeStampValue:
+            while (carrierData[carrier - 1][0][i] - firstTimeStamp) > nextTimeStampValue:
                 # Change the place where the next energy consumption is being saved to
                 saveTo = int(nextTimeStampValue / KEEP_EVERY_X_ROW)
 
