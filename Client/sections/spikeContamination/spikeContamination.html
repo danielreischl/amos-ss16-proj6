@@ -35,7 +35,6 @@
   <table class="table table-hover table-bordered table-striped" >
     <thead>
       <tr>
-          <th>Session</th>
           <th>Iteration</th>
           <th>Carrier</th>
           <th>Percentage</th>
@@ -43,12 +42,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-          <td>1</td>
-          <td>2</td>
-          <td>3</td>
-          <td>99.565</td>
-          <td> <span class="glyphicon glyphicon-play" aria-hidden="true" ng-click=""></span></td>
+      <tr ng-repeat="x in spikedata">
+          <td>{{x.fields.iteration}}</td>
+          <td>{{x.fields.carrier}}</td>
+          <td>{{x.fields.energyConsumptionPercent}} % </td>
+          <td> <span class="glyphicon glyphicon-play" aria-hidden="true" ng-click="setSession(x.fields.session)"></span></td>
       </tr>
     </tbody>
   </table>

@@ -88,7 +88,7 @@ def process_file(fileName):
     # Energy Consumption peak
     energyConsumptionPeak = data['energyConsumption'].max()
     # Spikepercentage
-    energyConsumptionPercent = energyConsumptionPeak/averageEnergyConsumption
+    energyConsumptionPercent = round((energyConsumptionPeak/averageEnergyConsumption)*100,2)
 
     # Inizialize DataFrame comulatedData with columns based on new DataBaseModel
     cumulatedData = pd.DataFrame(
