@@ -817,8 +817,6 @@ the session, iterations and carriers he wans to see. */
     // the session requested from the database.
     $scope.currentSession = sessionService.getCurrentSession();
 
-
-
     //a string, which tells the database how many carrier the user is requesting.
     var carriersRequested = "";
 
@@ -854,25 +852,27 @@ the session, iterations and carriers he wans to see. */
     // not very nice, try to refactor if possible
     $scope.percentageService = percentageService;
 
-    // flexibility measure
-    $scope.flexibilityMeasure = calculateFlexibilityMeasure();
-
-    // returns the flexibility measure
-    function calculateFlexibilityMeasure() {
-
-        $scope.carriersRequested = function() {
+    // Get selected carriers
+    $scope.carriersRequested = function() {
             // filter for the selected carriers
             var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
 
             //join them with commas
             return selected.map(function(carrier){return carrier.id.toString();}).join();
-        }
+    }
 
-        // Get the last iteration database and save it
-        var xmlHttp3 = new XMLHttpRequest();
-        xmlHttp3.open( "GET", 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+$scope.carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession+'');
-        xmlHttp3.send(null);
-        var flexString = xmlHttp3.responseText;
+     // Get the last iteration database and save it
+    var xmlHttp3 = new XMLHttpRequest();
+    var requestURLstring = 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+$scope.carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession;
+    xmlHttp3.open( "GET", requestURLstring, false);
+    xmlHttp3.send(null);
+    var flexString = xmlHttp3.responseText;
+
+    // flexibility measure
+    $scope.flexibilityMeasure = calculateFlexibilityMeasure();
+
+    // returns the flexibility measure
+    function calculateFlexibilityMeasure() {
 
         // Transform the raw csv file into a 2d array
         var flexibilityArray = splitCSVToArray(flexString);
@@ -973,14 +973,6 @@ the session, iterations and carriers he wans to see. */
 
     /* this functions creates the dygraph from a data source and applies options to them*/
     $scope.createFlexibilityChart = function() {
-
-        $scope.carriersRequested = function() {
-            // filter for the selected carriers
-            var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
-
-            //join them with commas
-            return selected.map(function(carrier){return carrier.id.toString();}).join();
-        }
 
         sessionService.setCurrentSession($scope.currentSession);
 
