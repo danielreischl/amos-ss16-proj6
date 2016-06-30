@@ -56,7 +56,8 @@ urlpatterns = [
     # URL that True or False depending on if the Simulation is still running
     url(r'^simulation.running', views.simulationRuns, name='SimulationRunning'),
     # URL for file upload
-    # disabled until we are sure that everything works
      url(r'^fileUpload.html', views.fileUpload, name='fileUpload'),
+    # URL that provides a json file for the spike contamination page
+    url(r'^spikeContamination.json', views.spikeContamination, name='spikeContamination'),
 
 ]

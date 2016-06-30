@@ -17,25 +17,29 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
 
-import csv
-from django.http import HttpResponse
+# imports sys
+import sys
+# Imports the dataModels
 from dataInterface.models import timestampdata
 from dataInterface.models import iterationdata
 from dataInterface.models import sessiondata
-from django.db.models import Max
-from django.db.models import Avg
+from dataInterface.models import spikecontaminationdata
+# Imports CSV to create CSV-Files
+import csv
+# imports subprocess to call shell
+import subprocess
+# Imports json handling
+import json
+# Imports HTTPResponse
+from django.http import HttpResponse
+# Imports Possibilty to calculate Max and Average
+from django.db.models import Max, Avg
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
-import sys
-import json
-
 # Adds DataProcessing Path to Sys
 sys.path.append('/srv/DataProcessing')
 # imports dataProcessingFunctions
 import dataProcessingFunctions
-# imports subprocess to call shell
-import subprocess
-
 
 # Returns last iteration of a carrier at a session
 def funcMaxIteration(session, carrier):
@@ -707,3 +711,20 @@ def simulationRuns(request):
 
     # else returns false
     return HttpResponse(False)
+
+
+###############################################
+######## URL: spikeContamination.json #########
+###############################################
+
+def spikeContamination(request):
+    # Provides a json file with all data from spikecontaminationdata for a particular session
+    # parameter requested Session
+    requestedSession = request.GET['session']
+
+    # Returns all data of spikecontaminationdata filtered by the requestedSession in a decending Order of percent
+    data = spikecontaminationdata.objects.all().filter(session=requestedSession).order_by('-percent')
+    # Transposes data to JSON
+    json_data = serializers.serialize('json', data)
+    # Returns JSON
+    return HttpResponse(json_data, content_type='application/json')
