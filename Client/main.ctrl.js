@@ -422,24 +422,26 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.circleView_title = "Creeping Contamination";
 
     // data variables to be changed
-    var percentageDataType = "percentages_creeping.csv";
-    var dataCont = "percentages_cont.csv";
+    var percentageDataType = "percentages_creeping";
+    var dataCont = "percentages_cont";
 
     /* Button, changes the title of the view and the data displayed. It will also redraw the circles with the new data */
     $scope.changeView = function() {
        if(changed == 0) {
-           percentageDataType = "percentages_cont.csv";
+           percentageDataType = "percentages_cont";
            $scope.circleView_title = "Continuous Contamination";
            changed = 1;
            clearCanvas();
-           $scope.circleGraph();
+           //$scope.circleGraph();
        } else {
-           percentageDataType = "percentages_creeping.csv";
+           percentageDataType = "percentages_creeping";
            $scope.circleView_title = "Creeping Contamination";
            changed = 0;
            clearCanvas();
-           $scope.circleGraph();
+           //$scope.circleGraph();
        }
+	$scope.circleGraph();
+	
     }
 
 
@@ -523,23 +525,33 @@ which kind of data he wants to see. The default value is average energy consumpt
         $scope.ts = new Date();
     }
 
-/* create the circle page upon page load. */
-    $scope.circleGraph = function() {
 
-        // data is called from a service and saved into a variable
-        var carrierPercentageData = percentageService.getAll(percentageDataType);
-        var amountOfCarriers = carrierPercentageData.length;
+    /* 
+     *  get percentage data from service
+     *  after data arrived call the functoin circleGraphMain that acutally paints the circles
+    */
+    $scope.circleGraph = function () {
+	percentageService.getPercentagePromise(percentageDataType)
+	    .then(function(result){$scope.circleGraphMain(result.data)});
+    }
+    
+    /* create the circle page upon page load. */
+    $scope.circleGraphMain = function(carrierPercentageData) {
+
+        console.log(carrierPercentageData);
+        var amountOfCarriers = Object.keys(carrierPercentageData).length;
 
         /* ID of first Carrier */
         var idCounter = 1;
 
         //delay the creation of the circles by 0 second, so that the percentage data can be loaded into the function.
-        $timeout(createCarrierHTML, 0);
+        createCarrierHTML();
 
         // function to create HTML circle fragments dynamically
         function createCarrierHTML() {
 
             /* for every carrier in the database, create a new code fragment to be injected into the html file. Each fragment is the base for a circle */
+	    console.log("createCarrierHTML");
             while (amountOfCarriers > 0) {
                 var circleId = "carrier " + idCounter;
                 var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="selectCarrier($event)"></canvas>';
@@ -550,7 +562,7 @@ which kind of data he wants to see. The default value is average energy consumpt
                 // get the element in the html page, on which the new fragment should be appended to
                 angular.element(document.getElementById('circleGraphs')).append(temp);
                 // call the circle drawing method to paint the circles. It will get the ID of the carrier, as well as the percentage data
-                createCircle(circleId, carrierPercentageData[idCounter - 1]);
+                createCircle(circleId, carrierPercentageData[idCounter]);
 
                 // If the carrier is in the selection then draw the selection circle
                 if (hasCarrier) {
@@ -626,16 +638,15 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.barGraph = function() {
 
         // get the data from the percentage service and save it into the variables, carrierPercentageData and amountOfCarriers
-        var percentageDataType = "percentages_creeping.csv";
-        var carrierPercentageData = percentageService.getAll(percentageDataType);
-        var amountOfCarriers = carrierPercentageData.length;
+        var percentageDataType = "percentages_creeping";
+        //var carrierPercentageData = percentageService.getAll(percentageDataType);
 
         // this array saves the percentage of each bar column/carrier
         var carrierPercentageDataRounded = [];
         // this array saves the color of each bar column/carrier
         var carrierColorArray = [];
         // this array saves the names of each bar column/carrier
-        var carrierArray = [];
+        //var carrierArray = [];
         /* ID of first Carrier */
         var idCounter = 1;
 
@@ -643,32 +654,46 @@ which kind of data he wants to see. The default value is average energy consumpt
         $scope.currentDataFileName = sessionService.getCurrentDataFileName();
 
         // timer is set to 1.6 second. this wait time is needed to fetch all data from the database
-        $timeout(createBarChartView, 0);
+        //$timeout(createBarChartView, 0);
 
-        function createBarChartView() {
+	//function createBarCharView() {
+	var carrierPercentageDataPromise = percentageService.getPercentagePromise(percentageDataType);
+	carrierPercentageDataPromise.then(
+	    function(result){createBarChartViewMain(result.data)}
+	);
+	//}
+
+	var createBarChartViewMain = function(carrierPercentageData) {
             // This while loop will fill the carrierArray with carrier names for the chart label
-            while (amountOfCarriers > 0) {
-                carrierArray.push("carrier " + idCounter)
-                idCounter = idCounter+1;
-                amountOfCarriers = amountOfCarriers -1;
-            }
+	    var amountOfCarriers = Object.keys(carrierPercentageData).length;
+	    var carrierArray = Object.keys(carrierPercentageData);
+	    console.log(carrierPercentageData);
+	    console.log(carrierArray);
+            //while (amountOfCarriers > 0) {
+            //    carrierArray.push("carrier " + idCounter)
+            //    idCounter = idCounter+1;
+            //    amountOfCarriers = amountOfCarriers -1;
+            //}
 
             /*  This for loop will round the percentage data and save it into a new array.
                 It will also fill the color array with the color, corresponding to the percentage of
                 the carrier. E.g. green is up to 102,5% , yellow is up 102,5 to 105% and everything above is red
             */
-            for(i = 0; i < carrierPercentageData.length; i++) {
-                if(carrierPercentageData[i] > 1.05) {
+            for(var carrier = 1; carrier <= amountOfCarriers; carrier++) {
+		console.log(carrier);
+                if(carrierPercentageData[carrier] > 1.05) {
                     carrierColorArray.push('rgba(229, 28, 52, 1)')
-                    carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
-                } else if(carrierPercentageData[i] <= 1.025 ) {
+                    carrierPercentageDataRounded.push((carrierPercentageData[carrier]*100).toFixed())
+                } else if(carrierPercentageData[carrier] <= 1.025 ) {
                     carrierColorArray.push('rgba(178, 255, 89, 1)')
-                    carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
+                    carrierPercentageDataRounded.push((carrierPercentageData[carrier]*100).toFixed())
                 } else {
                     carrierColorArray.push('rgba(255,255,0, 1)')
-                    carrierPercentageDataRounded.push((carrierPercentageData[i]*100).toFixed())
+                    carrierPercentageDataRounded.push((carrierPercentageData[carrier]*100).toFixed())
                 }
             }
+	    console.log(carrierColorArray);
+	    console.log(carrierPercentageDataRounded);
 
             /*  get the element where the bar chart should be displayed and
                 create the chart with different parameters.
@@ -824,9 +849,6 @@ the session, iterations and carriers he wans to see. */
     // the session requested from the database.
     $scope.currentSession = sessionService.getCurrentSession();
 
-    // flexibility measure
-    $scope.flexibilityMeasure = calculateFlexibilityMeasure();
-
     //a string, which tells the database how many carrier the user is requesting.
     var carriersRequested = "";
 
@@ -862,12 +884,24 @@ the session, iterations and carriers he wans to see. */
     // not very nice, try to refactor if possible
     $scope.percentageService = percentageService;
 
+    // Get selected carriers
+    $scope.carriersRequested = function() {
+            // filter for the selected carriers
+            var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
+
+            //join them with commas
+            return selected.map(function(carrier){return carrier.id.toString();}).join();
+    }
+    // flexibility measure
+    $scope.flexibilityMeasure = calculateFlexibilityMeasure();
+
     // returns the flexibility measure
     function calculateFlexibilityMeasure() {
 
         // Get the last iteration database and save it
         var xmlHttp3 = new XMLHttpRequest();
-        xmlHttp3.open( "GET", 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession+'');
+        var requestURLString = 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+$scope.carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession;
+        xmlHttp3.open( "GET", requestURLString, false);
         xmlHttp3.send(null);
         var flexString = xmlHttp3.responseText;
 
@@ -876,14 +910,6 @@ the session, iterations and carriers he wans to see. */
 
         // Calculate the flexibility measure from the 2d array
         var measure = calculateFlexibilityMeasure(flexibilityArray);
-
-        function carriersRequested() {
-            // filter for the selected carriers
-            var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
-
-            //join them with commas
-            return selected.map(function(carrier){return carrier.id.toString();}).join();
-        }
 
         // Splits the absolute time csv file into different rows for every new line
         // and then into different columns for every ","
@@ -978,14 +1004,6 @@ the session, iterations and carriers he wans to see. */
 
     /* this functions creates the dygraph from a data source and applies options to them*/
     $scope.createFlexibilityChart = function() {
-
-        $scope.carriersRequested = function() {
-            // filter for the selected carriers
-            var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
-
-            //join them with commas
-            return selected.map(function(carrier){return carrier.id.toString();}).join();
-        }
 
         sessionService.setCurrentSession($scope.currentSession);
 

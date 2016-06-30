@@ -41,8 +41,10 @@ urlpatterns = [
     url(r'^averageEnergyConsumption.csv', views.averageEnergyConsumption, name='averageEnergyConsumption'),
     # URL that provides the creeping percentages for the Circle View and Bar Chart
     url(r'^percentages_creeping.csv', views.percentage_creeping, name='percentageForCircleAndBarChart'),
-    # URL that provides the continuing percentages for the Circle View and Bar Chart
+    # URL that provides the continuing percentages for the Circle View and Bar Chart as csv File
     url(r'^percentages_cont.csv', views.percentage_cont, name='percentageForCircleAndBarChart'),
+    # URL that provides the continuing percentages for the Circle View and Bar Chart as JSON file
+    url(r'^percentages.json', views.percentages_json, name='percentageForCircleAndBarChart'),
     # URL that resets the simulation
     url(r'^simulation.reset', views.resetSimulation, name='simulationReset'),
     # URL that provides rawData as JSON

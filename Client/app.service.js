@@ -25,35 +25,35 @@
 
 angular.module('app')
 
-.service('percentageService', function(sessionService, $timeout) {
+.service('percentageService', function(sessionService, $timeout, $http) {
     /*
-    Provides percentage data of carriers
+      Provides percentage data of carriers
     */
+    var percentageDataPromise;
     var percentageData = [];
     var flag = false;
     function getFromDB(percentageDataType) {
         /*
-        Fetches data from backend and sends it to the controller. This will only be done, once the parsing is completed
-        So far this is called each time when getAll is called, but this is probably not necessary
+          Fetches data from backend and sends it to the controller. This will only be done, once the parsing is completed
+          So far this is called each time when getAll is called, but this is probably not necessary
         */
-        Papa.parse('django/dataInterface/'+percentageDataType+'?session=' +sessionService.getCurrentSession(), {
-            download: true,
-            dynamicTyping: true,
-            complete: function(results) {
-                percentageData = results.data[1];
-            }
-        })
+	percentageDataPromise = $http.get('django/dataInterface/percentages.json?session=' +sessionService.getCurrentSession() + '&type='+percentageDataType);
     }
-
+    
     this.getAll = function(percentageDataType) {
         getFromDB(percentageDataType);
+	percentageDataPromise.then(function(result) {percentageData = result.data});
         return percentageData;
+    }
+    
+    this.getPercentagePromise = function(percentageDataType) {
+	return $http.get('django/dataInterface/percentages.json?session=' +sessionService.getCurrentSession() + '&type='+percentageDataType);
     }
 
     this.getColorOfCarrier = function(carrier) {
-        var percentageOfEnergy = percentageData[carrier - 1];
+        var percentageOfEnergy = percentageData[carrier];
         var color = {'background-color': 'rgb(255,255,0)'};
-
+	
         if(percentageOfEnergy > 1.05) {
             color = {'background-color' : 'rgb(229, 28, 52)'};
         }
@@ -67,7 +67,8 @@ angular.module('app')
 
     return {
         getAll: this.getAll,
-        getColorOfCarrier: this.getColorOfCarrier
+        getColorOfCarrier: this.getColorOfCarrier,
+	getPercentagePromise: this.getPercentagePromise,
     };
 });
 
