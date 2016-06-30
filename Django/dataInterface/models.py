@@ -91,6 +91,10 @@ class iterationdata(models.Model):
     energyConsumptionTotal = models.FloatField()
     # The average energy Consumption of a carrier in one iteration
     energyConsumptionAverage = models.FloatField()
+    # Highest energy peak of a carrier in one iteration
+    energyConsumptionPeak = models.FloatField()
+    # Peak divided by averageEnergyConsumption
+    energyConsumptionPercent = models.FloatField()
 
     # Display the session, carrier and iteration number of this database entry
     def __unicode__(self):  # in python 3.3 this is __str__(self):
@@ -107,20 +111,6 @@ class sessiondata(models.Model):
     amountOfCarriers = models.IntegerField()
     # Status of Session (0 = Not Imported, 1 = Imported)
     status = models.TextField()
-
-    def __unicode__(self):  # in python 3.3 this is __str__(self):
-        return str(self.fid_Session)
-
-# Table in the database that stores values for spike Contamination (Session, Iteration, Carrier, Percent)
-class spikecontaminationdata(models.Model):
-    # Integer of session
-    session = models.IntegerField()
-    # Integer of Iteration
-    iteration = models.IntegerField()
-    # Integer of Carrier
-    carrier = models.IntegerField()
-    # Float of calculated Percent
-    percent = models.FloatField()
 
     def __unicode__(self):  # in python 3.3 this is __str__(self):
         return str(self.fid_Session)

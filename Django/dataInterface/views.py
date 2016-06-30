@@ -23,7 +23,6 @@ import sys
 from dataInterface.models import timestampdata
 from dataInterface.models import iterationdata
 from dataInterface.models import sessiondata
-from dataInterface.models import spikecontaminationdata
 # Imports CSV to create CSV-Files
 import csv
 # imports subprocess to call shell
@@ -722,8 +721,8 @@ def spikeContamination(request):
     # parameter requested Session
     requestedSession = request.GET['session']
 
-    # Returns all data of spikecontaminationdata filtered by the requestedSession in a decending Order of percent
-    data = spikecontaminationdata.objects.all().filter(session=requestedSession).order_by('-percent')
+    # Returns all data of iterationdata filtered by the requestedSession in a decending Order of energyConsumptionPercent
+    data = iterationdata.objects.all().filter(session=requestedSession).order_by('-energyConsumptionPercent')
     # Transposes data to JSON
     json_data = serializers.serialize('json', data)
     # Returns JSON
