@@ -97,7 +97,7 @@ class iterationdata(models.Model):
         return "S_" + str(self.fid_Session) + "_C_" + str(self.fid_Carrier) + "_I_" + str(self.fid_Iteration)
 
 
-# Table in the databse that stores values for each session (Name Of the File, SessionNo, AmountOfCarriers, Status)
+# Table in the database that stores values for each session (Name Of the File, SessionNo, AmountOfCarriers, Status)
 class sessiondata(models.Model):
     # Integer of session
     session = models.IntegerField()
@@ -107,6 +107,20 @@ class sessiondata(models.Model):
     amountOfCarriers = models.IntegerField()
     # Status of Session (0 = Not Imported, 1 = Imported)
     status = models.TextField()
+
+    def __unicode__(self):  # in python 3.3 this is __str__(self):
+        return str(self.fid_Session)
+
+# Table in the database that stores values for spike Contamination (Session, Iteration, Carrier, Percent)
+class spikecontaminationdata(models.Model):
+    # Integer of session
+    session = models.IntegerField()
+    # Integer of Iteration
+    iteration = models.IntegerField()
+    # Integer of Carrier
+    carrier = models.IntegerField()
+    # Float of calculated Percent
+    percent = models.FloatField()
 
     def __unicode__(self):  # in python 3.3 this is __str__(self):
         return str(self.fid_Session)
