@@ -27,6 +27,7 @@ from django.db.models import Avg
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 import sys
+import json
 
 # Adds DataProcessing Path to Sys
 sys.path.append('/srv/DataProcessing')
@@ -633,6 +634,34 @@ def percentage_cont(request):
 
     # Returns CSV-File
     return response
+
+###############################################
+######### URL: percentages_cont.json ###########
+###############################################
+
+def percentages_json(request):
+    # Provides a csv file of percent energy consumption from first to last iteration
+    # parameter requested Session
+    requestedSession = request.GET['session']
+    requestedType = request.GET['type']
+
+    # Reads out amountOfCarriers for requested Session
+    amountOfCarriers = funcAmountOfCarriers(requestedSession)
+
+    percentageData = {};
+    
+    for carrier in range(1, amountOfCarriers + 1):
+        if requestedType == 'percentages_cont':
+            percentageData[carrier] = funcPercentCont(requestedSession, carrier)
+        elif requestedType == 'percentages_creeping':
+            percentageData[carrier] = funcPercentCreeping(requestedSession, carrier)
+
+    # Convert data to JSON
+    json_data = json.dumps(percentageData)
+
+    # Returns JSON object
+    return HttpResponse(json_data, content_type='application/json')
+
 
 
 ###############################################
