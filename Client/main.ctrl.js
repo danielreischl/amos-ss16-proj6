@@ -340,8 +340,8 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.dimensions = [
         {name : "Average Energy Consumption", id : 'energyConsumptionAverage'},
         {name : "Average Acceleration", id : 'accelerationAverage'},
-	{name : "Average Speed", id: 'speedAverage'},
-	{name : "Total Energy Consumption", id: 'energyConsumptionTotal'}
+	    {name : "Average Speed", id: 'speedAverage'},
+	    {name : "Total Energy Consumption", id: 'energyConsumptionTotal'}
     ]
 
     // make percentage service available in html-view
@@ -362,7 +362,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 	    var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
 
 	    //join them with commas
-	    
+
 	    return selected.map(function(carrier){return carrier.id.toString();}).join();
 	}
 
@@ -397,10 +397,10 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 	$scope.getListStyle = function(index) {
 	    if (index % 5 == 1) {
-		return {'clear': 'left'};
+		    return {'clear': 'left'};
 	    }
 	    else {
-		return {};
+		    return {};
 	    }
 	}
 
@@ -729,7 +729,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 })
 
-.controller('simulationPageController', function($scope, sessionService) {
+.controller('simulationPageController', function($scope, $http, sessionService) {
 
     // This saves all Data File Names that are stored on the server
     $scope.dataFileNames = getArrayOfDataFiles();
@@ -756,6 +756,12 @@ which kind of data he wants to see. The default value is average energy consumpt
             //Sets the current Session to the new SessionNumber
             sessionService.setCurrentSession(parseInt(sessionService.getNumberOfSessions())+1)
             alert("Simulation Started");
+    };
+
+    // Calls URL to reset the Sytem and prompts an alert
+    $scope.resetSimulation = function(){
+    $http.get("django/dataInterface/simulation.reset")
+    .then(function(response){alert ('System reseted');});
     };
 
     // Function that sets the currentSession to submittedSession
@@ -871,16 +877,127 @@ the session, iterations and carriers he wans to see. */
     // not very nice, try to refactor if possible
     $scope.percentageService = percentageService;
 
-    /* this functions creates the dygraph  from a data source and applies options to them*/
-    $scope.createFlexibilityChart = function() {
-
-        $scope.carriersRequested = function() {
+    // Get selected carriers
+    $scope.carriersRequested = function() {
             // filter for the selected carriers
             var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
 
             //join them with commas
             return selected.map(function(carrier){return carrier.id.toString();}).join();
+    }
+
+     // Get the last iteration database and save it
+    var xmlHttp3 = new XMLHttpRequest();
+    var requestURLstring = 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+$scope.carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession;
+    xmlHttp3.open( "GET", requestURLstring, false);
+    xmlHttp3.send(null);
+    var flexString = xmlHttp3.responseText;
+
+    // flexibility measure
+    $scope.flexibilityMeasure = calculateFlexibilityMeasure();
+
+    // returns the flexibility measure
+    function calculateFlexibilityMeasure() {
+
+        // Transform the raw csv file into a 2d array
+        var flexibilityArray = splitCSVToArray(flexString);
+
+        // Calculate the flexibility measure from the 2d array
+        var measure = calculateFlexibilityMeasure(flexibilityArray);
+
+        // Splits the absolute time csv file into different rows for every new line
+        // and then into different columns for every ","
+        function splitCSVToArray(string) {
+            // Splits the string array for every new line
+            var lineArray = string.split('\n');
+
+            // Goes through the new line array and splits the array up for every comma
+            for (var i = 0; i < lineArray.length; i++) {
+                lineArray[i] = lineArray[i].split(',');
+
+                // Parses to int (and NaN in the case of no value)
+                for (var j = 0; j < lineArray[i].length; j++) {
+                    lineArray[i][j] = parseInt(lineArray[i][j])
+                }
+            }
+
+            return lineArray;
         }
+
+        // Takes a 2d array with one header, new line ("\n") for row and "," for column and calculates the flexibility
+        // measure
+        function calculateFlexibilityMeasure(array) {
+            // The sum of all deviations from the mean over all rows
+            var sumOfMeasures = 0.0;
+            // the amount of rows that had more than 1 values
+            var amountOfMeasures = 0;
+
+            // Iterate through all rows (timestamps)
+            for (var i = 1; i < array.length; i++) {
+                // Sum of values for calculating the mean in that row
+                var sumOfNumbers = 0.0;
+                // Amount of numbers in that row
+                var amountOfNumbers = 0;
+
+                // Iterate through all columns for that row (all carriers speed during that timestamp)
+                for (var j = 1; j < array[i].length; j++) {
+                    console.log("for (var j = "+j+"; "+j+" < "+array[i].length+"; "+j+"++)");
+                    console.log("array["+i+"]["+j+"]: "+ array[i][j]);
+
+                    // Checks if data entry has a number
+                    if (isNaN(array[i][j]) == false) {
+                        // Add data entry to sum for calculating the mean
+                        sumOfNumbers += array[i][j];
+                        amountOfNumbers += 1;
+
+                        console.log("sumOfNumbers: " + sumOfNumbers);
+                        console.log("amountOfNumbers: " + amountOfNumbers);
+                    }
+                    console.log("finished array["+i+"]["+j+"]: "+ array[i][j]);
+                }
+                console.log("finished i: " + i);
+
+                // If more than one data point in that row (more than one carrier is moving during that time)
+                // then the flexibility measure for that timestamp can be calculated
+                if (amountOfNumbers > 1) {
+                    // Calculate the mean for that row
+                    var middle = 0.0;
+                    middle = (sumOfNumbers/amountOfNumbers);
+                    console.log("middle value: " + middle);
+
+                    // Calculate the average deviation from the mean for every column in that row
+                    var avgDeviation = 0.0;
+                    for (var j = 1; j < array[i].length; j++) {
+                        if (isNaN(array[i][j]) == false) {
+                            var deviation = Math.abs(array[i][j] - middle);
+                            console.log("deviation of "+array[i][j]+" to "+middle+" :" + deviation);
+                            avgDeviation += deviation;
+                            console.log("avg deviation: " + avgDeviation);
+
+                        }
+                    }
+                    // add the deviation to the sum of deaviations
+                    sumOfMeasures += (avgDeviation/amountOfNumbers);
+                    console.log("sumOfMeasures: " + sumOfMeasures);
+
+                    amountOfMeasures += 1;
+                    console.log("amountOfMeasures: " + amountOfMeasures);
+                }
+            }
+            // If no rows with multiple carriers have been found, return 0 to avoid dividing by 0
+            if (amountOfMeasures == 0) {
+                return 0;
+            }
+            // Divide the sumOfMeasures by amountOfMeasures to get the average deviation for all timestamps
+            var finalMeasure = (sumOfMeasures/amountOfMeasures);
+            return finalMeasure;
+        }
+
+        return measure;
+    }
+
+    /* this functions creates the dygraph from a data source and applies options to them*/
+    $scope.createFlexibilityChart = function() {
 
         sessionService.setCurrentSession($scope.currentSession);
 
@@ -922,6 +1039,9 @@ the session, iterations and carriers he wans to see. */
                 return {};
             }
         }
+
+        // Update the flex measure for the new selection
+        $scope.flexibilityMeasure = calculateFlexibilityMeasure();
 
         // Updates the  time for the time stamp
         $scope.ts = new Date();

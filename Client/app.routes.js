@@ -59,8 +59,8 @@ angular
         templateUrl: 'sections/AverageEnergyConsumptionChart/AverageEnergyConsumptionChart.html'
       })
 
-       .when('/alertPage', {
-        templateUrl: 'sections/alertPage/alertPage.html'
+       .when('/spikeContamination', {
+        templateUrl: 'sections/spikeContamination/spikeContamination.html'
       })
 
        .when('/simulation', {
