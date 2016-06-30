@@ -860,19 +860,18 @@ the session, iterations and carriers he wans to see. */
             //join them with commas
             return selected.map(function(carrier){return carrier.id.toString();}).join();
     }
-
-     // Get the last iteration database and save it
-    var xmlHttp3 = new XMLHttpRequest();
-    var requestURLstring = 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+$scope.carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession;
-    xmlHttp3.open( "GET", requestURLstring, false);
-    xmlHttp3.send(null);
-    var flexString = xmlHttp3.responseText;
-
     // flexibility measure
     $scope.flexibilityMeasure = calculateFlexibilityMeasure();
 
     // returns the flexibility measure
     function calculateFlexibilityMeasure() {
+
+        // Get the last iteration database and save it
+        var xmlHttp3 = new XMLHttpRequest();
+        var requestURLString = 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+$scope.carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession;
+        xmlHttp3.open( "GET", requestURLString, false);
+        xmlHttp3.send(null);
+        var flexString = xmlHttp3.responseText;
 
         // Transform the raw csv file into a 2d array
         var flexibilityArray = splitCSVToArray(flexString);
