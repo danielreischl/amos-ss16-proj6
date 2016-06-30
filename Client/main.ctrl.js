@@ -704,6 +704,13 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 })
 
+.controller('spikeContaminationController', function($scope, $http, sessionService) {
+
+
+
+
+})
+
 .controller('simulationPageController', function($scope, $http, sessionService) {
 
     // This saves all Data File Names that are stored on the server

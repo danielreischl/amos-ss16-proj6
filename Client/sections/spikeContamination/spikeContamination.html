@@ -20,13 +20,38 @@
 -->
 
 
-<!-- this html snippet will display all alerts, during a real time simulation
+<!-- this html snippet will display all spikes, during a real time simulation
  The user will be able to see all important events occurring without being inside one of the charts view-->
 
-<div class="container" ng-controller="simulationPageController">
+<div class="container" ng-controller="spikeContaminationController">
     <div class ="page-header">
         <h1>Spike Contamination</h1>
-        <p> To be done</p>
+        <p> Klick on the right column to investigate a carrier further</p>
     </div>
+
+    <div class="col-sx-12">
+
+<!--table that shows the spikes-->
+  <table class="table table-hover table-bordered table-striped" >
+    <thead>
+      <tr>
+          <th>Session</th>
+          <th>Iteration</th>
+          <th>Carrier</th>
+          <th>Percentage</th>
+          <th>Investigate</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>99.565</td>
+          <td> <span class="glyphicon glyphicon-play" aria-hidden="true" ng-click=""></span></td>
+      </tr>
+    </tbody>
+  </table>
+      </div>
 
 </div>
