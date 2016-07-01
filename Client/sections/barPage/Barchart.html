@@ -20,11 +20,15 @@
 -->
 <!--Button to change to the circle chart view  -->
 <div layout="row" layout-align="center center">
-       <button class="btn btn-default" Onclick="location.href='#CircleCarrier'">Change to Circle Chart View</button>
-</div>
-
 <!--Controller of the barChart View and the initial call  -->
 <div ng-controller="barGraphController">
+        <div class ="page-header">
+        <h1> BarChart <span class="glyphicon glyphicon-repeat" aria-hidden="true" ng-click="refresh()"></span></h1>
+        <p> <b>Current Filename:</b> {{ currentFileName }} | <b>Last Refresh:</b> {{ ts | date : "HH:mm:ss" }} <br>
+            Select the Carriers you want to investigate further and click the wanted preferred Graph
+        </p>
+    </div>
+
     <section layout="column" layout-align="center center" ng-init="barGraph()">
         <div>
             <!--place where the canvas will be displayed  -->
@@ -34,8 +38,6 @@
         <div layout="row" layout-align="center center" class="btn-group">
             <button class="btn btn-default" Onclick="location.href='#CompareCarrier'">Continuous Consumption Graph</button>
             <button class="btn btn-default" Onclick="location.href='#AverageEnergyConsumptionChart'">Average Consumption Graph</button>
-            <button class="btn btn-default" ng-click="refresh()">Refresh</button>
-            <p class="timestamp"> Time of last refresh = {{ ts | date : "HH:mm:ss.sss" }}</p>
         </div>
     </section>
 </div>

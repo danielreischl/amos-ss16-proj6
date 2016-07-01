@@ -25,8 +25,10 @@
 
 <div class="container" ng-controller="spikeContaminationController">
     <div class ="page-header">
-        <h1>Spike Contamination</h1>
-        <p> Klick on the right column to investigate a carrier further</p>
+        <h1>Spike Contamination <span class="glyphicon glyphicon-repeat" aria-hidden="true" ng-click="refresh()"></span></h1>
+        <p> <b>Current Filename:</b> {{ currentFileName }} | <b>Last Refresh:</b> {{ ts | date : "HH:mm:ss" }} <br>
+             Klick on the right column to investigate a carrier further
+        </p>
     </div>
 
     <div class="col-sx-12">

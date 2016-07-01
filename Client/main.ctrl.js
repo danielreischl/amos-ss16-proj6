@@ -134,7 +134,6 @@ angular.module('app')
 	
     // the session requested from the database. For now it is fixed.
     $scope.currentSession = sessionService.getCurrentSession();
-    $scope.currentFileName = sessionService.getCurrentDataFileName($scope.currentSession);
 
     //a string, which tells the database how many carrier the user is requesting.
     var carriersRequested = "";
@@ -416,7 +415,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 /* Refresh the circle Page. The purpose of this controller is listen to the Button
  and upon receiving an event, it should trigger the update circle button*/
-.controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $mdSidenav, carrierService, percentageService) {
+.controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $http, $mdSidenav, carrierService, percentageService, sessionService) {
     // title will change, depending on which circleView is showing.
     var changed = 0;
     $scope.circleView_title = "Creeping Contamination";
@@ -424,6 +423,9 @@ which kind of data he wants to see. The default value is average energy consumpt
     // data variables to be changed
     var percentageDataType = "percentages_creeping";
     var dataCont = "percentages_cont";
+
+    // sets the current File Name
+    $http.get("django/dataInterface/rawData.json").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
 
     /* Button, changes the title of the view and the data displayed. It will also redraw the circles with the new data */
     $scope.changeView = function() {
@@ -443,7 +445,6 @@ which kind of data he wants to see. The default value is average energy consumpt
 	$scope.circleGraph();
 	
     }
-
 
     // Initializes time stamp
     $scope.ts = new Date();
@@ -523,6 +524,8 @@ which kind of data he wants to see. The default value is average energy consumpt
         redrawAllSelections();
         //Update the timestamp
         $scope.ts = new Date();
+        // sets the current File Name
+        $http.get("django/dataInterface/rawData.json").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
     }
 
 
@@ -624,7 +627,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 /* bar chart View controller */
 
-.controller('barGraphController',function($scope, $timeout, carrierService, percentageService, sessionService) {
+.controller('barGraphController',function($scope, $timeout, $http, carrierService, percentageService, sessionService) {
 
     $scope.ts = new Date();
 
@@ -650,8 +653,8 @@ which kind of data he wants to see. The default value is average energy consumpt
         /* ID of first Carrier */
         var idCounter = 1;
 
-        // Saves a string of the currently selected data file name
-        $scope.currentDataFileName = sessionService.getCurrentDataFileName();
+         // sets the current File Name
+          $http.get("django/dataInterface/rawData.json").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
 
         // timer is set to 1.6 second. this wait time is needed to fetch all data from the database
         //$timeout(createBarChartView, 0);
@@ -738,10 +741,15 @@ which kind of data he wants to see. The default value is average energy consumpt
     $http.get("django/dataInterface/spikeContamination.json?session=" + session)
     .then(function (response){$scope.spikedata = response.data;});
 
-    setValues = function(carrier){
+    // sets the current File Name
+    $http.get("django/dataInterface/rawData.json").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
+
+    $scope.setValues = function(carrier){
     // Sets Carrier to selected Carrier
+    console.log("SetValues started.");
     carrierService.emptyCarrierArray();
-    carrierService.addCarrier(parseInt(carrier,10));
+    carrierService.addCarrier(5);
+
     };
 
 })
