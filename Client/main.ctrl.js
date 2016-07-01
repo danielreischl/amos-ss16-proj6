@@ -734,10 +734,21 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 .controller('spikeContaminationController', function($scope, $http, sessionService, carrierService) {
 
+     $scope.ts = new Date();
+
+     $scope.refresh = function() {
+        // Update the timestamp
+        $scope.ts = new Date();
+        // Calls updatedata
+        $scope.updatedata
+    }
+
     // gets current session
     session = sessionService.getCurrentSession();
 
-    // gets data
+    $scope.updatedata = function(){
+
+    // gets SpikeData
     $http.get("django/dataInterface/spikeContamination.json?session=" + session)
     .then(function (response){$scope.spikedata = response.data;});
 
@@ -754,6 +765,11 @@ which kind of data he wants to see. The default value is average energy consumpt
     carrierService.addCarrier(carrier);
 
     };
+
+
+
+    }
+
 
 })
 
