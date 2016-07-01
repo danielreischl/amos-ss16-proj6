@@ -360,10 +360,13 @@ def exportCSV(carrier):
     fileName = os.path.abspath(os.path.join("CarrierData", fileName))
 
     # Finds the first relevant row (position != 0) in the carrier data
-    firstRow = findFirstRowInCarrierData(carrier)
+    firstRow = findFirstSignificantRowInCarrierData(carrier)
 
     # Finds the last relevant row (position != 0) in the carrier data
     lastRow = findLastRowInCarrierData(carrier)
+
+    if lastRow > 2:
+        lastRow -= 2
 
     # Only selects the relevant sub selection from carrier data (without position == 0) to export to csv
     # Commented out for testing
@@ -395,7 +398,27 @@ def findFirstRowInCarrierData(carrier):
                 return lastRowWithZero + 1
 
     print("Couldn't find first row.")
-    return lastRowWithZero
+    return 0
+
+
+# Finds the first row of the array that will be exported as CSV, where pos and energy consumption != 0
+def findFirstSignificantRowInCarrierData(carrier):
+    if carrierData[carrier - 1][1][0] != 0:
+        return 0
+
+    lastRowWithZero = 0
+
+    for i in range(0, int(carrierData.shape[2]) - 1):
+        if carrierData[carrier - 1][1][i] == 0 or carrierData[carrier - 1][2][i] < 1400:
+            lastRowWithZero = i
+        else:
+            if lastRowWithZero >= (carrierData.shape[2]) - 1:
+                return (carrierData.shape[2]) - 1
+            else:
+                return lastRowWithZero + 1
+
+    print("Couldn't find first significant row.")
+    return 0
 
 
 # Finds the first row of the array that will be exported as CSV, where pos and energy consumption != 0
@@ -415,7 +438,7 @@ def findLastRowInCarrierData(carrier):
                 return lastRowWithZero - 1
 
     print("Couldn't find last row.")
-    return lastRowWithZero
+    return (carrierData.shape[2]) - 1
 
 
 # Clear the carrier data array for a certain carrier to all 0.0
@@ -599,7 +622,7 @@ initialData = pd.read_csv(os.path.splitext(fileName)[0] + "_modified.csv", DATA_
 #    Extracting the DriveNo of the first loaded File in DATA_PATH
 # Iterates each row and afterwards each drive
 #  Calls compressData with a pd.Series. The values are:
-# ms, No. of Drive, Energy Consmption, Position
+# ms, No. of Drive, Energy Consumption, Position
 for index, row in initialData.iterrows():
     for drive in range(0, amountOfDrives):
         time = int(float(str(row['ms']).replace(',', '.')))
@@ -620,5 +643,5 @@ sessionData.set_value(session, 'status' , "Finished")
 #dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'),'replace')
 
 
-# Calls Funcion to remove RunningFile
+# Calls Function to remove RunningFile
 dataProcessingFunctions.deleteRunningFile()
