@@ -79,6 +79,44 @@ who need the data.
 
 angular.module('app')
 
+// service that provides iteration data to all controllers
+.service ('iterationService', function (){
+    var iterationsForComparison = [];
+
+     // function adds a iteration with a given ID to iterationsForComparison
+    this.addIteration = function(newIteration) {
+        console.log("add Iteration");
+        for(var i = 0; i < iterationsForComparison.length; i++) {
+            if (iterationsForComparison[i].iterationNumber == newIteration) {
+                return false;
+            }
+        }
+        carriersForComparison.push({iterationNumber: newIteration});
+        return true;
+    };
+
+    // returns the array with CarrierIDs to be compared
+    this.getIterations = function(){
+        return iterationsForComparison;
+    };
+
+    // this function empties the array, so that no iteration item is left inside anymore.
+    this.emptyIterationArray = function() {
+        console.log("emptyCarrierArray");
+        iterationsForComparison.splice(0,iterationsForComparison.length);
+    };
+
+    // this service returns these functions to the caller for use
+    return {
+        addIteration: this.addIteration,
+        getIterations: this.getIterations,
+        emptyIterationArray: this.emptyIterationArray
+    };
+
+});
+
+angular.module('app')
+
 .service('carrierService', function(sessionService) {
     var carriersForComparison = [];
 

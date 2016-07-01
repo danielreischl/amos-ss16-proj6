@@ -330,7 +330,6 @@ which kind of data he wants to see. The default value is average energy consumpt
     // create the dropdown menu for iterations. the id is corresponding to the key word used in the database to extract the dimension.
     $scope.iterationDimensions = [
         {name : "Last 10 Iterations", id : 'last10'},
-        {name : "Last 3 Iterations", id : 'last3'},
         {name : "All", id : 'all'}
     ]
 
@@ -360,7 +359,6 @@ which kind of data he wants to see. The default value is average energy consumpt
 	    var selected = $scope.carriers.filter(function(carrier){return carrier.selected;});
 
 	    //join them with commas
-
 	    return selected.map(function(carrier){return carrier.id.toString();}).join();
 	}
 
@@ -731,7 +729,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 })
 
-.controller('spikeContaminationController', function($scope, $http, sessionService, carrierService) {
+.controller('spikeContaminationController', function($scope, $http, sessionService, carrierService, iterationService) {
 
      $scope.ts = new Date();
 
@@ -757,19 +755,16 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;
     });
 
-    $scope.setValues = function(carrier){
+    $scope.setValues = function(carrier, iteration){
+     console.log("SetValues started.");
     // Sets Carrier to selected Carrier
-    console.log("SetValues started.");
     carrierService.emptyCarrierArray();
     carrierService.addCarrier(carrier);
-
+    // Sets Iteration to selected Iteration
+    iterationService.emptyIterationArray();
+    iterationService.addIteration(iteration);
     };
-
-
-
     }
-
-
 })
 
 .controller('simulationPageController', function($scope, $http, sessionService) {
