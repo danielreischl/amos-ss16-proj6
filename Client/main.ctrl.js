@@ -425,7 +425,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     var dataCont = "percentages_cont";
 
     // sets the current File Name
-    $http.get("django/dataInterface/rawData.json").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
+    $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
 
     /* Button, changes the title of the view and the data displayed. It will also redraw the circles with the new data */
     $scope.changeView = function() {
@@ -525,7 +525,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         //Update the timestamp
         $scope.ts = new Date();
         // sets the current File Name
-        $http.get("django/dataInterface/rawData.json").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
+        $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
     }
 
 
@@ -654,7 +654,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         var idCounter = 1;
 
          // sets the current File Name
-          $http.get("django/dataInterface/rawData.json").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
+          $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
 
         // timer is set to 1.6 second. this wait time is needed to fetch all data from the database
         //$timeout(createBarChartView, 0);
@@ -742,7 +742,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     .then(function (response){$scope.spikedata = response.data;});
 
     // sets the current File Name
-    $http.get("django/dataInterface/rawData.json").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
+    $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
 
     $scope.setValues = function(carrier){
     // Sets Carrier to selected Carrier
