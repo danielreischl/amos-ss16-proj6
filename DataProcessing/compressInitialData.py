@@ -365,6 +365,9 @@ def exportCSV(carrier):
     # Finds the last relevant row (position != 0) in the carrier data
     lastRow = findLastRowInCarrierData(carrier)
 
+    if lastRow > 2:
+        lastRow -= 2
+
     # Only selects the relevant sub selection from carrier data (without position == 0) to export to csv
     # Commented out for testing
     export = np.transpose(carrierData[carrier - 1][:, firstRow:lastRow + 1])
