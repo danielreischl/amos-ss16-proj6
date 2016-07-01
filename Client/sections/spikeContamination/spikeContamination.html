@@ -35,6 +35,7 @@
   <table class="table table-hover table-bordered table-striped" >
     <thead>
       <tr>
+          <th>index</th>
           <th>Iteration</th>
           <th>Carrier</th>
           <th>Percentage</th>
@@ -43,6 +44,7 @@
     </thead>
     <tbody>
       <tr ng-repeat="x in spikedata">
+          <td>{{$index}}</td>
           <td>{{x.fields.iteration}}</td>
           <td>{{x.fields.carrier}}</td>
           <td>{{x.fields.energyConsumptionPercent}} % </td>
