@@ -742,13 +742,16 @@ which kind of data he wants to see. The default value is average energy consumpt
     .then(function (response){$scope.spikedata = response.data;});
 
     // sets the current File Name
-    $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
+    $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){
+    console.log ("Getting Json File")
+    $scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;
+    });
 
     $scope.setValues = function(carrier){
     // Sets Carrier to selected Carrier
     console.log("SetValues started.");
     carrierService.emptyCarrierArray();
-    carrierService.addCarrier(5);
+    carrierService.addCarrier(carrier);
 
     };
 

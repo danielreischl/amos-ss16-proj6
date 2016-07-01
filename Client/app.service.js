@@ -97,6 +97,7 @@ angular.module('app')
     
     // function adds a carrier with a given ID
     this.addCarrier = function(newCarrier) {
+        console.log("add Carrier");
         for(var i = 0; i < carriersForComparison.length; i++) {
             if (carriersForComparison[i].carrierNumber == newCarrier) {
                 return false;
@@ -124,6 +125,7 @@ angular.module('app')
 
     // this function empties the array, so that no carrier item is left inside anymore.
     this.emptyCarrierArray = function() {
+        console.log("emptyCarrierArray");
         carriersForComparison.splice(0,carriersForComparison.length);
     }
 
