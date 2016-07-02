@@ -401,19 +401,17 @@ def findFirstRowInCarrierData(carrier):
 
 # Finds the first row of the array that will be exported as CSV, where pos and energy consumption != 0
 def findFirstSignificantRowInCarrierData(carrier):
-    if carrierData[carrier - 1][1][0] != 0:
-        return 0
 
-    lastRowWithZero = 0
+    firstSignificantRow = 0
 
     for i in range(0, int(carrierData.shape[2]) - 1):
         if carrierData[carrier - 1][1][i] == 0 or carrierData[carrier - 1][2][i] < 1400:
-            lastRowWithZero = i
+            firstSignificantRow = i + 1
         else:
-            if lastRowWithZero >= (carrierData.shape[2]) - 1:
+            if firstSignificantRow >= (carrierData.shape[2]) - 1:
                 return (carrierData.shape[2]) - 1
             else:
-                return lastRowWithZero + 1
+                return firstSignificantRow
 
     print("Couldn't find first significant row.")
     return 0
