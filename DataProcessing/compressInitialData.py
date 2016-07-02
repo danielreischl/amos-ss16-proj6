@@ -511,7 +511,7 @@ def modifyCSVFile(filename):
                 nameOfFile = os.path.splitext(fileName)[0]
                 sessionData.loc['1'] = pd.Series(
                     {'session': session,
-                     'fileName': nameOfFile[13:],
+                     'fileName': nameOfFile[12:],
                      'amountOfCarriers': AMOUNT_OF_CARRIERS,
                      'status': 'Failed'})
                 # calls function to load the sessiondata data into the database
@@ -593,7 +593,7 @@ sessionData = pd.DataFrame(
 # Adding previous extracted and calculated values to DataFrame
 nameOfFile = os.path.splitext(fileName)[0]
 sessionData.loc['1'] = pd.Series({'session': session,
-                                  'fileName': nameOfFile[13:],
+                                  'fileName': nameOfFile[12:],
                                   'amountOfCarriers': AMOUNT_OF_CARRIERS,
                                   'status': 'OK'})
 # calls function to load the sessiondata data into the database
