@@ -222,7 +222,7 @@ def compressData(carrier):
     print("Compressing data of carrier: " + str(carrier))
 
     # Select first and relevant timestamp, so the timestamps before can be deleted
-    firstRow = findFirstRowInCarrierData(carrier)
+    firstRow = findFirstSignificantRowInCarrierData()
 
     if firstRow != 0:
         # Roll all relevant time stamps to the top
