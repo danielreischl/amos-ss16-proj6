@@ -587,13 +587,15 @@ print("Amount of drives" + str(amountOfDrives))
 # Updates Session in ConfigFile
 dataProcessingFunctions.updated_config('Simulation', 'session', session + 1)
 
-# Inizialize DataFrame sessiondata columns based
+# Initialize DataFrame sessiondata columns based
 sessionData = pd.DataFrame(
     columns=['session', 'fileName', 'amountOfCarriers', 'status'], index=['1'])
 # Adding previous extracted and calculated values to DataFrame
-sessionData.loc['1'] = pd.Series(
-    {'session': session, 'fileName': os.path.splitext(fileName)[0], 'amountOfCarriers': AMOUNT_OF_CARRIERS,
-     'status': 'OK',})
+nameOfFile = os.path.splitext(fileName)[0]
+sessionData.loc['1'] = pd.Series({'session': session,
+                                  'fileName': nameOfFile[13:],
+                                  'amountOfCarriers': AMOUNT_OF_CARRIERS,
+                                  'status': 'OK'})
 # calls function to load the sessiondata data into the database
 dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'), 'append')
 
