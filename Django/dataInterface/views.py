@@ -121,7 +121,7 @@ def funcPercentCont(session, carrier):
     # Extracts Average EnergyConsumption of all iterations of a session
     initialConsumption = iterationdata.objects.filter(session=session).aggregate(Avg('energyConsumptionTotal')).get('energyConsumptionTotal__avg')
     # Extracts energyConsumption of last Iteration of a carrier
-    lastConsumption = funcTotalEnergyConsumption(session, carrier, funcMaxIteration(session, carrier))
+    lastConsumption = iterationdata.objects.filter(session=session, carrier=carrier).aggregate(Avg('energyConsumptionTotal')).get('energyConsumptionTotal__avg')
     # Returns current currentConsumption divided by average of all consumptions
     return (lastConsumption / initialConsumption)
 
