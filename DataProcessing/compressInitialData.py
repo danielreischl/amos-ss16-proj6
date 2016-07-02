@@ -276,7 +276,7 @@ def compressData(carrier):
             # This is for the case that multiple time stamp values were missed in one gap
             while (carrierData[carrier - 1][0][i] - firstTimeStamp) > nextTimeStampValue:
                 # Average the time stamps of the last stamp
-                carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo]/countedTimeStamps
+                carrierData[carrier - 1][2][saveTo] = carrierData[carrier - 1][2][saveTo] / countedTimeStamps
                 # Set counted timestamps back to 1 when the energy is saved to a new data row
                 countedTimeStamps = 1
 
@@ -305,8 +305,6 @@ def compressData(carrier):
                 # The interpolated drive is always the 2nd drive because this error only occurs when the drive
                 # that the carrier wants to move to is not free.
                 driveInter = carrierData[carrier - 1][3][i]
-
-
 
                 # Transfer the values to the position
                 carrierData[carrier - 1][0][saveTo] = nextTimeStampValue
@@ -508,17 +506,20 @@ def modifyCSVFile(filename):
             else:
                 # If the file is not in the right format, remove modified file and exit system
                 os.remove(os.path.splitext(fileName)[0] + "_modified.csv")
-                # Inizialize DataFrame sessiondata columns based
+                # Initialize DataFrame sessiondata columns based
                 sessionData = pd.DataFrame(
                     columns=['session', 'fileName', 'amountOfCarriers', 'status'], index=['1'])
                 # Adding previous extracted and calculated values to DataFrame
+                nameOfFile = os.path.splitext(fileName)[0]
                 sessionData.loc['1'] = pd.Series(
-                    {'session': session, 'fileName': os.path.splitext(fileName)[0],
+                    {'session': session,
+                     'fileName': nameOfFile[13:],
                      'amountOfCarriers': AMOUNT_OF_CARRIERS,
-                     'status': 'Failed',})
+                     'status': 'Failed'})
                 # calls function to load the sessiondata data into the database
                 dataProcessingFunctions.write_dataframe_to_database(sessionData,
-                                                                    config.get('database_tables', 'sessiondata'),'append')
+                                                                    config.get('database_tables', 'sessiondata'),
+                                                                    'append')
 
                 sys.exit
             j += 1
@@ -583,10 +584,10 @@ if fileName == '':
 
 # Calls modifyCSVFile function
 amountOfDrives = modifyCSVFile(fileName)
-print ("Amount of drives" + str(amountOfDrives))
+print("Amount of drives" + str(amountOfDrives))
 
 # Updates Session in ConfigFile
-dataProcessingFunctions.updated_config('Simulation', 'session', session +1)
+dataProcessingFunctions.updated_config('Simulation', 'session', session + 1)
 
 # Inizialize DataFrame sessiondata columns based
 sessionData = pd.DataFrame(
@@ -596,7 +597,7 @@ sessionData.loc['1'] = pd.Series(
     {'session': session, 'fileName': os.path.splitext(fileName)[0], 'amountOfCarriers': AMOUNT_OF_CARRIERS,
      'status': 'OK',})
 # calls function to load the sessiondata data into the database
-dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'),'append')
+dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'), 'append')
 
 # Variables
 # Array that saves for every drive which carrier is on it
@@ -637,10 +638,10 @@ os.remove(os.path.splitext(fileName)[0] + "_modified.csv")
 # Requests current session Data
 sessionData = dataProcessingFunctions.getSessionData()
 # Sets status of current session to "Finished"
-sessionData.set_value(session, 'status' , "Finished")
+sessionData.set_value(session, 'status', "Finished")
 # Writes the new data to the database
 # Disabled because status Finish doesn't have to be set right now
-#dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'),'replace')
+# dataProcessingFunctions.write_dataframe_to_database(sessionData, config.get('database_tables', 'sessiondata'),'replace')
 
 
 # Calls Function to remove RunningFile
