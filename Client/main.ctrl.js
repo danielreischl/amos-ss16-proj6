@@ -763,12 +763,12 @@ which kind of data he wants to see. The default value is average energy consumpt
         // Calls updatedata
         $scope.updatedata
     }
-    // function that updates all data
+
     // gets current session
     session = sessionService.getCurrentSession();
 
+    // function that updates all data
     $scope.updatedata = function(){
-
     // gets SpikeData
     $http.get("django/dataInterface/spikeContamination.json?session=" + session)
     .then(function (response){$scope.spikedata = response.data;});
@@ -788,13 +788,14 @@ which kind of data he wants to see. The default value is average energy consumpt
         // Sets Iteration to selected Iteration
         iterationService.emptyIterationArray();
         iterationService.addIteration(iteration);
+        // Redirects to Cont Graph
         $window.location.href = '#CompareCarrier';
 
     };
     }
 })
 
-.controller('simulationPageController', function($scope, $http, sessionService) {
+.controller('simulationPageController', function($scope, $http, $window, sessionService) {
 
     // This saves all Data File Names that are stored on the server
     $scope.dataFileNames = getArrayOfDataFiles();
@@ -829,9 +830,11 @@ which kind of data he wants to see. The default value is average energy consumpt
     .then(function(response){alert ('System reseted');});
     };
 
-    // Function that sets the currentSession to submittedSession
+    // Function that sets the currentSession to submittedSession and redirects to the Circle Vuew
     $scope.setSession = function(submittedSession){
         sessionService.setCurrentSession(submittedSession)
+        // Redirects to Circle View
+        $window.location.href = '#CircleCarrier';
     }
 
     $scope.uploadFile = function() {
