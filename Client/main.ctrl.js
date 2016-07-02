@@ -90,7 +90,7 @@ angular.module('app')
 })
 
 /* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/
-.controller('compareCircleGraph', function($scope, carrierService, percentageService, sessionService) {
+.controller('compareCircleGraph', function($scope, carrierService, percentageService, sessionService, iterationService) {
 
 
     // Get the array with the carriers that were selected from the carrierService
@@ -119,9 +119,14 @@ angular.module('app')
     $scope.selectedDimension = "energyConsumption";
     var yAxisLabel = yAxisLabels[selectedDimension];
 
-    // default value for the selected Iterations
-    var selectedIteration = "last"; // remove this later
-    $scope.selectedIteration = "last";
+    $scope.selectedIteration = "";
+
+    // if a iteration is Set, the iteration shouldn't be overwritten on initial call of controler
+    if (iterationService.getIterations().length == 0){
+        // default value for the selected Iterations
+        var selectedIteration = "last"; // remove this later
+        $scope.selectedIteration = "last";
+    }
 
     $scope.sessions = [];
     var sessionDataPromise = sessionService.getSessionData();
@@ -239,9 +244,10 @@ angular.module('app')
     
     // This function empties the carriers in the comparison on page leave.
     // If the user leaves the current html snippet/template then,
-    // this function will notice that and trigger the function "emptyCarrierArray"
+    // this function will notice that and trigger the function "emptyCarrierArray" & emptyIterationArray
     $scope.$on("$destroy", function() {
         carrierService.emptyCarrierArray();
+        iterationService.emptyIterationArray();
     });
 
     //
@@ -249,28 +255,43 @@ angular.module('app')
     //
 
     $scope.getSelectedIterationsString = function() {
+
         var selectedIterations = [];
         var selectedNumber;
         // TODO: add the possibility to select individual iterations
         switch ($scope.selectedIteration) {
         case "last":
+             // Empties IterationArray
+            iterationService.emptyIterationArray();
             selectedNumber = 1;
             break;
         case "lastThree":
+             // Empties IterationArray
+            iterationService.emptyIterationArray();
             selectedNumber = 3;
             break;
         case "lastTen":
+            // Empties IterationArray
+            iterationService.emptyIterationArray();
             selectedNumber = 10;
             break;
+        case "all":
+            // Empties IterationArray
+            iterationService.emptyIterationArray();
+            selectedNumber = amountOfIterations;
+            break;
         default:
-            selectedNumber = 1;
+            selectedNumber = 0;
         }
 
         for (var i = amountOfIterations; i > amountOfIterations - selectedNumber && i >= 1; i--) {
-            selectedIterations.push(i);
+            // Adds iteration to the iteration Service
+            iterationService.addIteration(i);
         }
         // join with comma and return
-        return selectedIterations.join();
+        iterationReturn = iterationService.getIterations();
+        // return comma seperated String with all requested iterations
+        return iterationReturn.toString();
     }
 
 })
@@ -729,9 +750,12 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 })
 
-.controller('spikeContaminationController', function($scope, $http, sessionService, carrierService, iterationService) {
+// Controller that contains all function for the spikeContamination page
+.controller('spikeContaminationController', function($scope, $http, sessionService, carrierService, iterationService, $window) {
 
+    // sets current time for timestamp
      $scope.ts = new Date();
+
 
      $scope.refresh = function() {
         // Update the timestamp
@@ -739,7 +763,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         // Calls updatedata
         $scope.updatedata
     }
-
+    // function that updates all data
     // gets current session
     session = sessionService.getCurrentSession();
 
@@ -755,14 +779,17 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;
     });
 
+    // sets Values and redirects to continuesGraph
     $scope.setValues = function(carrier, iteration){
-     console.log("SetValues started.");
-    // Sets Carrier to selected Carrier
-    carrierService.emptyCarrierArray();
-    carrierService.addCarrier(carrier);
-    // Sets Iteration to selected Iteration
-    iterationService.emptyIterationArray();
-    iterationService.addIteration(iteration);
+        console.log("SetValues started.");
+        // Sets Carrier to selected Carrier
+        carrierService.emptyCarrierArray();
+        carrierService.addCarrier(carrier);
+        // Sets Iteration to selected Iteration
+        iterationService.emptyIterationArray();
+        iterationService.addIteration(iteration);
+        $window.location.href = '#CompareCarrier';
+
     };
     }
 })

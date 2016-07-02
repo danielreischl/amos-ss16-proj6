@@ -37,7 +37,7 @@
   <table class="table table-hover table-bordered table-striped" >
     <thead>
       <tr>
-          <th>index</th>
+          <th>#</th>
           <th>Iteration</th>
           <th>Carrier</th>
           <th>Percentage</th>
@@ -50,7 +50,7 @@
           <td>{{x.fields.iteration}}</td>
           <td>{{x.fields.carrier}}</td>
           <td>{{x.fields.energyConsumptionPercent}} % </td>
-          <td> <span class="glyphicon glyphicon-play" aria-hidden="true" ng-click="setValues(x.fields.carrier)"></span></td>
+          <td> <span class="glyphicon glyphicon-play" aria-hidden="true" ng-click="setValues(x.fields.carrier,x.fields.iteration)"></span></td>
       </tr>
     </tbody>
   </table>

@@ -87,15 +87,15 @@ angular.module('app')
     this.addIteration = function(newIteration) {
         console.log("add Iteration");
         for(var i = 0; i < iterationsForComparison.length; i++) {
-            if (iterationsForComparison[i].iterationNumber == newIteration) {
+            if (iterationsForComparison[i] == newIteration) {
                 return false;
             }
         }
-        carriersForComparison.push({iterationNumber: newIteration});
+        iterationsForComparison.push(newIteration);
         return true;
     };
 
-    // returns the array with CarrierIDs to be compared
+    // returns the array with IterationIDs to be compared
     this.getIterations = function(){
         return iterationsForComparison;
     };
