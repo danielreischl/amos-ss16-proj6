@@ -42,39 +42,53 @@ import dataProcessingFunctions
 
 # Returns last iteration of a carrier at a session
 def funcMaxIteration(session, carrier):
-    return timestampdata.objects.filter(session=session, carrier=carrier).aggregate(Max('iteration')).get(
+    try:
+        return timestampdata.objects.filter(session=session, carrier=carrier).aggregate(Max('iteration')).get(
         'iteration__max')
-
+    except:
+        return
 
 # Returns total energy consumption of a carrier in a paticular session and iteration
 def funcTotalEnergyConsumption(session, carrier, iteration):
-    return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).energyConsumptionTotal
-
+    try:
+        return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).energyConsumptionTotal
+    except:
+        return
 
 # Returns average Speed of a carrier in a paticular session and iteration
 def funcSpeedAverage(session, carrier, iteration):
-    return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).speedAverage
-
+    try:
+        return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).speedAverage
+    except:
+        return
 
 # Returns average energy consumption of a carrier in a paticular session and iteration
 def funcAverageEnergyConsumption(session, carrier, iteration):
-    return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).energyConsumptionAverage
-
+    try:
+        return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).energyConsumptionAverage
+    except:
+        return
 
 # Returns average acceleration of a carrier in a paticular session and iteration
 def funcAccelerationAverage(session, carrier, iteration):
-    return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).accelerationAverage
-
+    try:
+        return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).accelerationAverage
+    except:
+        return
 
 # Returns the amount of carriers in a specific session
 def funcAmountOfCarriers(session):
-    return timestampdata.objects.filter(session=session).aggregate(Max('carrier')).get('carrier__max')
-
+    try:
+        return timestampdata.objects.filter(session=session).aggregate(Max('carrier')).get('carrier__max')
+    except:
+        return
 
 # Returns the most recent session
 def funcRecentSession():
-    return sessiondata.objects.all().aggregate(Max('session')).get('session__max')
-
+    try:
+        return sessiondata.objects.all().aggregate(Max('session')).get('session__max')
+    except:
+        return
 
 # Returns one percent value for CarrierView & BarchartView calculated for creeping Contamination
 def funcPercentCreeping(session, carrier):
@@ -503,7 +517,7 @@ def averageEnergyConsumption(request):
     writer = csv.writer(response, delimiter=',')
 
     # determine max iteration of all requested carriers
-    maxIterationOfAllCarriers = 0
+    maxIterationOfAllCarriers = 0.0
     for carrier in carriers:
         if funcMaxIteration(requestedSession, carrier) > maxIterationOfAllCarriers:
             maxIterationOfAllCarriers = funcMaxIteration(requestedSession, carrier)
