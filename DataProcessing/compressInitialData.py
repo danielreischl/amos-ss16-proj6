@@ -222,7 +222,7 @@ def compressData(carrier):
     print("Compressing data of carrier: " + str(carrier))
 
     # Select first and relevant timestamp, so the timestamps before can be deleted
-    firstRow = findFirstSignificantRowInCarrierData()
+    firstRow = findFirstSignificantRowInCarrierData(carrier)
 
     if firstRow != 0:
         # Roll all relevant time stamps to the top
@@ -508,10 +508,10 @@ def modifyCSVFile(filename):
                 sessionData = pd.DataFrame(
                     columns=['session', 'fileName', 'amountOfCarriers', 'status'], index=['1'])
                 # Adding previous extracted and calculated values to DataFrame
-                nameOfFile = os.path.splitext(fileName)[0]
+                nameOfFileInitial = os.path.splitext(fileName)[0]
                 sessionData.loc['1'] = pd.Series(
                     {'session': session,
-                     'fileName': nameOfFile[12:],
+                     'fileName': nameOfFileInitial[12:],
                      'amountOfCarriers': AMOUNT_OF_CARRIERS,
                      'status': 'Failed'})
                 # calls function to load the sessiondata data into the database
