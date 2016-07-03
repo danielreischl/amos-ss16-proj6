@@ -128,7 +128,6 @@ angular.module('app')
         $scope.selectedIteration = "last";
     }
 
-    $scope.sessions = [];
     var sessionDataPromise = sessionService.getSessionData();
     sessionDataPromise.then(function(response){$scope.sessions = response.data; console.log("Been here.");});
     console.log("main.ctrl.js says: " + JSON.stringify($scope.sessions));
@@ -299,7 +298,7 @@ angular.module('app')
 
 /* controller for the AverageEnergyConsumption Chart. This chart will display the data over iterations. The user can select
 which kind of data he wants to see. The default value is average energy consumption.*/
-.controller('AverageEnergyConsumptionChart', function($scope, carrierService, percentageService, sessionService) {
+.controller('AverageEnergyConsumptionChart', function($scope, carrierService, percentageService, sessionService, $http, $window) {
 
     // get the array with the carriers the user wants to see in the graph.
     var carrierCompareList = carrierService.getCarrier();
@@ -312,25 +311,25 @@ which kind of data he wants to see. The default value is average energy consumpt
 
     var units = {'energyConsumptionAverage': 'W',
 		 'accelerationAverage' : '?',
-		 'speedAverage': '?',
+		 'speedAverage': 'mm/ms',
 		 'energyConsumptionTotal': 'W' };
 
     // Sets the initial time for the time stamp
     $scope.ts = new Date();
 
     // default value for the dimension and yAxislabel
-    $scope.selectedDimension = "energyConsumptionAverage";
+    $scope.selectedDimension = "energyConsumptionTotal";
 
     $scope.selectedIteration = "last10";
 
-    $scope.sessions = [];
-    for (var i = 1; i <= sessionService.getNumberOfSessions(); i++) {
-	$scope.sessions.push(i);
-    }
+     //Function that reads in the sessiondata json-file
+    var sessionDataPromise = sessionService.getSessionData();
+    sessionDataPromise.then(function(response){$scope.sessiondata = response.data});
+    console.log("Simulation page says: " + JSON.stringify($scope.sessiondata));
+
 	
     // the session requested from the database.
     $scope.currentSession = sessionService.getCurrentSession();
-    $scope.currentFileName = sessionService.getCurrentDataFileName($scope.currentSession);
 
     //a string, which tells the database how many carrier the user is requesting.
     var carriersRequested = "";
@@ -351,7 +350,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     // create the dropdown menu for iterations. the id is corresponding to the key word used in the database to extract the dimension.
     $scope.iterationDimensions = [
         {name : "Last 10 Iterations", id : 'last10'},
-        {name : "All", id : 'all'}
+        {name : "All Iterations", id : 'all'}
     ]
 
     // create the dropdown menu for dimensions. the id is corresponding to the key word used in the database to extract the dimension.
@@ -365,6 +364,11 @@ which kind of data he wants to see. The default value is average energy consumpt
     // make percentage service available in html-view
     // not very nice, try to refactor if possible
     $scope.percentageService = percentageService;
+
+    // Switches Graph to CompareGraph
+    $scope.switchGraph = function(){
+        $window.location.href = '#CompareCarrier';
+    }
 
      // This function receives the changes from the dropDown menu "dimensions" and changes the yAxis name of the graph and requests the needed data by changing the string name.
     // $scope.changeDimension = function() {
@@ -390,6 +394,13 @@ which kind of data he wants to see. The default value is average energy consumpt
         // the url which should be requested wil be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
         $scope.requestedUrl = 'django/dataInterface/averageEnergyConsumption.csv?session='+$scope.currentSession+'&carriers='+$scope.carriersRequested()+'&dimension='+$scope.selectedDimension+'&type='+$scope.selectedIteration;
+
+
+
+         // Download file
+         $scope.downloadFile = function(){
+            window.location = $scope.requestedUrl;
+            }
 
         graph = new Dygraph(
 	       document.getElementById("AverageEnergyConsumptionChart"),$scope.requestedUrl ,
