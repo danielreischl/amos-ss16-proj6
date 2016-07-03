@@ -90,7 +90,19 @@ angular.module('app')
 })
 
 /* controller for the compareGraph. Should display the comparison chart with all the carriers the user wants to compare*/
-.controller('compareCircleGraph', function($scope, carrierService, percentageService, sessionService, iterationService) {
+.controller('compareCircleGraph', function($scope, carrierService, $http, $window, percentageService, sessionService, iterationService) {
+
+    // function that removes that the buttons are highlighted until you click somewhere else in the page
+    $(".btn").mouseup(function(){
+    $(this).blur();
+    })
+
+    // Switches Graph to requested View
+    $scope.switchGraph = function(view){
+        if (view=='AvgEng'){$window.location.href = '#AverageEnergyConsumptionChart';};
+        if (view=='Circle'){$window.location.href = '#CircleCarrier';};
+        if (view=='Spike'){$window.location.href = '#spikeContamination';};
+    }
 
 
     // Get the array with the carriers that were selected from the carrierService
@@ -120,6 +132,11 @@ angular.module('app')
     var yAxisLabel = yAxisLabels[selectedDimension];
 
     $scope.selectedIteration = "";
+
+     //Function that reads in the sessiondata json-file
+    var sessionDataPromise = sessionService.getSessionData();
+    sessionDataPromise.then(function(response){$scope.sessiondata = response.data});
+    console.log("Simulation page says: " + JSON.stringify($scope.sessiondata));
 
     // if a iteration is Set, the iteration shouldn't be overwritten on initial call of controler
     if (iterationService.getIterations().length == 0){
@@ -197,6 +214,12 @@ angular.module('app')
 	        //join them with commas
 	        return selected.map(function(carrier){return carrier.id.toString();}).join();
 	    }
+
+
+         // Download file
+         $scope.downloadFile = function(){
+            window.location = $scope.requestedUrl;
+           }
 
         // the url which should be requested will be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
@@ -370,9 +393,11 @@ which kind of data he wants to see. The default value is average energy consumpt
     // not very nice, try to refactor if possible
     $scope.percentageService = percentageService;
 
-    // Switches Graph to CompareGraph
-    $scope.switchGraph = function(){
-        $window.location.href = '#CompareCarrier';
+    // Switches Graph to requested View
+    $scope.switchGraph = function(view){
+        if (view=='ContEng'){$window.location.href = '#CompareCarrier';};
+        if (view=='Circle'){$window.location.href = '#CircleCarrier';};
+        if (view=='Spike'){$window.location.href = '#spikeContamination';};
     }
 
      // This function receives the changes from the dropDown menu "dimensions" and changes the yAxis name of the graph and requests the needed data by changing the string name.
@@ -391,6 +416,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 	    //join them with commas
 	    return selected.map(function(carrier){return carrier.id.toString();}).join();
 	}
+
 
 	sessionService.setCurrentSession($scope.currentSession);
 	$scope.currentSession = sessionService.getCurrentSession();

@@ -20,93 +20,107 @@
 -->
 
 
-<div ng-controller="compareCircleGraph">
+<div class="container-fluid" ng-controller="compareCircleGraph">
     <!-- Dropdown selection menus and checkbxoes are put in a table layout.-->
-    <table id = "graphOptions">
-        <tr>
-             <th class = "chartDesc">Carriers</th>
-             <th class = "chartDesc">Iterations</th>
-             <th class = "chartDesc">Dimensions</th>
-             <th class = "chartDesc">Sessions: {{currentFileName}}</th>
-        </tr>
-        <tr>
-            <td>
-                <div flex class = "carrierSelection">
-                    <label class = "carrierBox" ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
-                        <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
-                        <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
-                            {{carrier.id}}
-                        </div>
-                    </label>
-                </div>
-            </td>
-            <td>
-                <!-- ng-change is empty right now. this has to change, when iterations can be selected from the database -->
-                <div class = "iterationSelection">
-                    <label class = "iterationBox" ng-repeat="iterOption in iterationDimensions">
-                        <input type="radio" name = "iterOption" ng-value="iterOption.id" ng-model="$parent.selectedIteration"/>
-                        <div>
-                            {{iterOption.name}}
-                        </div>
-                    </label>
-                </div>
-            </td>
-            <td>
-                <div class = "dimensionSelection">
-                    <label class = "iterationBox" ng-repeat="dimension in dimensions">
-                        <input type="radio" name = "dimension" ng-value="dimension.id" ng-model="$parent.selectedDimension"/>
-                        <div>
-                            {{dimension.name}}
-                        </div>
-                    </label>
-                </div>
-            </td>
-            <td>
-              <div flex class = "sessionSelection">
-		<label class = "iterationBox" ng-repeat="session in sessions">
-                  <input type="radio" name = "session.fields.session" ng-click="$parent.updateFileName()" ng-value="session.fields.session" ng-model="$parent.currentSession"/>
-                  <div>
-                    {{session.fields.session}}
-                  </div>
-                </label>
-              </div>
-            </td>
-            <td>
-                <md-button class="md-raised md-cornered"  ng-click="createCompareGraph()">Refresh</md-button>
-                <p class = "timestamp">Time of last refresh = {{ ts | date : "HH:mm:ss.sss" }}</p>
-            </td>
-        </tr>
-    </table>
+     <div class = "row-fluid">
+        <div class="col-md-12 col-sm-12">
+            <!-- Initizalizes table -->
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th class="col-sm-2">Switch View</th>
+                        <th class="col-sm-2">Carrier</th>
+                        <th class="col-sm-2">Iteration</th>
+                        <th class="col-sm-2">Dimension</th>
+                        <th class="col-sm-1">Files</th>
+                        <th class="col-sm-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <!-- Switch View Cell -->
+                        <td>
+                            <button type="button" class="btn btn-default btn-block" ng-click = "switchGraph('Circle')">
+                                <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Circle View
+                            </button>
+                            <button type="button" class="btn btn-default btn-block" ng-click = "switchGraph('AvgEng')">
+                                <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Avg Energy
+                            </button>
+                            <button type="button" class="btn btn-default btn-block" ng-click = "switchGraph('Spike')">
+                                <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Spike View
+                            </button>
+                        </td>
+                        <!-- Carrier Cell -->
+                        <td>
+                            <div class ="carrierSelection">
+                                <label class = "carrierBox " ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
+                                    <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
+                                        <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
+                                            {{carrier.id}}
+                                        </div>
+                                </label>
+                            </div>
+                        </td>
+                        <!-- Iteration Cell -->
+                        <td>
+                            <label class = "iterationBox btn btn-default btn-block" ng-repeat="iterOption in iterationDimensions">
+                                <input type="radio" name = "iterOption" ng-value="iterOption.id" ng-model="$parent.selectedIteration"/>
+                                <div>
+                                    {{iterOption.name}}
+                                 </div>
+                            </label>
+                        </td>
+                        <!-- Dimension Cell -->
+                        <td>
+                            <div class = "dimensionSelection">
+                                <label class = "iterationBox btn btn-default btn-block" ng-repeat="dimension in dimensions">
+                                    <input type="radio" name = "dimension" ng-value="dimension.id" ng-model="$parent.selectedDimension"/>
+                                    <div>
+                                        {{dimension.name}}
+                                    </div>
+                                </label>
+                            </div>
+                        </td>
+                        <!-- Session Cell
+                        Prompts Radiobuttons from the json data Extract
+                        -->
+                        <td>
+                            <div class = "sessionSelection">
+                                <label class = "iterationBox btn btn-default btn-block" ng-repeat="x in sessiondata">
+                                    <input type="radio" name = "x.fields.session" ng-value="x.fields.session" ng-model="$parent.currentSession" />
+                                    <div>
+                                        {{x.fields.fileName}}
+                                    </div>
+                                </label>
+                            </div>
+                        </td>
+                        <!-- Action Cell -->
+                        <td>
+                            <button type="button" class="btn btn-default btn-block" ng-click = "createCompareGraph()">
+                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh
+                            </button>
+                            <button type="button" class="btn btn-default btn-block" ng-click = "downloadFile()">
+                                <span class="glyphicon glyphicon-save-file" aria-hidden="true"></span> Export Data
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
     <!--
-    The graph and the legend are displayed in a table layout.
+    The graph and the legend are displayed in a div layout.
     The div class graphSize will make the display the graph dynamically, according to the window size of the browser
     The div class graphLegend will display the legend of the graph right next to it
     -->
-    <table>
-        <tr>
-            <td>
-                <div  class = "graphSize" ng-init="createCompareGraph()" id="compareGraph"></div>
-            </td>
-
-            <td>
+     <div class="row-fluid">
+            <div class="col-xs-10">
+                <div class = "graphSize" ng-init ="createCompareGraph()" id="compareGraph"></div>
+            </div>
+            <div class="col-xs-2">
                 <div class = "graphLegend" id ="compareGraphLegend"></div>
-            </td>
-        </tr>
-    </table>
-
-    <!--
-    Container for the DataExport. Data export will request the same csv createCompareGraph requested and allows
-    the user to download the csv file. Layout is row and alignment is end (horizontal) start (vertical) to show
-    the link on the right side below the createCompareGraph
-    -->
-    <div dataExport layout="row" layout-align="end start">
-        <!--
-        Links to requestedUrl from createCompareGraph ()
-        requestedUrl is the defined value in createCompareGraph which is added within a href
-        -->
-        <a href ="{{requestedUrl}}">Export Data</a>
-    </div>
-
+            </div>
+        </div>
 </div>
 
 
