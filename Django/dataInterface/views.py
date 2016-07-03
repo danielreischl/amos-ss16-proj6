@@ -563,7 +563,7 @@ def averageEnergyConsumption(request):
                 rowOfValues.append(funcTotalEnergyConsumption(requestedSession, carrier, iteration))
             # Appends result of function funcSpeedAverage to the list
             elif requestedDimension == 'speedAverage':
-                rowOfValues.append(funcTotalEnergyConsumption(requestedSession, carrier, iteration))
+                rowOfValues.append(funcSpeedAverage(requestedSession, carrier, iteration))
             # Appends result of function funcAccelerationAverage to the list
             elif requestedDimension == 'accelerationAverage':
                 rowOfValues.append(funcAccelerationAverage(requestedSession, carrier, iteration))
