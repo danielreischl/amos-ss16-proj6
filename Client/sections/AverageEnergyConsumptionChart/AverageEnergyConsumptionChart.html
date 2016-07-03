@@ -45,13 +45,13 @@
                     <tr>
                         <!-- Switch View Cell -->
                         <td>
-                            <button type="button" class="btn btn-default btn-block" ng-click = "switchGraph()">
+                            <button type="button" class="btn btn-default btn-block" ng-click = "switchGraph('Circle')">
                                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Circle View
                             </button>
-                            <button type="button" class="btn btn-default btn-block" ng-click = "switchGraph()">
+                            <button type="button" class="btn btn-default btn-block" ng-click = "switchGraph('ContEng')">
                                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Cont. Energy
                             </button>
-                            <button type="button" class="btn btn-default btn-block" ng-click = "switchGraph()">
+                            <button type="button" class="btn btn-default btn-block" ng-click = "switchGraph('Spike')">
                                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Spike View
                             </button>
                         </td>
@@ -68,14 +68,12 @@
                         </td>
                         <!-- Iteration Cell -->
                         <td>
-                            <div class = "iterationSelection">
                                 <label class = "iterationBox btn btn-default btn-block" ng-repeat="iterOption in iterationDimensions">
                                     <input type="radio" name = "iterOption" ng-value="iterOption.id" ng-model="$parent.selectedIteration"/>
                                 <div>
                                     {{iterOption.name}}
                                  </div>
                                 </label>
-                            </div>
                         </td>
                         <!-- Dimension Cell -->
                         <td>
