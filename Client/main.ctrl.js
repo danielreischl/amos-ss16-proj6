@@ -300,6 +300,11 @@ angular.module('app')
 which kind of data he wants to see. The default value is average energy consumption.*/
 .controller('AverageEnergyConsumptionChart', function($scope, carrierService, percentageService, sessionService, $http, $window) {
 
+    // function that removes that the buttons are highlighted until you click somewhere else in the page
+    $(".btn").mouseup(function(){
+    $(this).blur();
+    })
+
     // get the array with the carriers the user wants to see in the graph.
     var carrierCompareList = carrierService.getCarrier();
 
