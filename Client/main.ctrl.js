@@ -564,17 +564,11 @@ which kind of data he wants to see. The default value is average energy consumpt
 
      //* this function will clear the drawn canvas and enables redraw functions to draw on a new canvas */
     function clearCanvas() {
-        // get the data from the backend. When the data is collected from the database, start the cleaning process
-        percentageService.getPercentagePromise(percentageDataType)
-            .then(function(result){startCleaning(result.data)});
-
         // delete all canvas elements, previously created for all carriers
-        function startCleaning(carrierPercentageData) {
-            var parent = document.getElementById("circleGraphs");
+        var parent = document.getElementById("circleGraphs");
             while (parent.firstChild) {
-                parent.removeChild(myNode.firstChild);
+                parent.removeChild(parent.firstChild);
             }
-        }
     }
 
     $scope.refresh = function() {
