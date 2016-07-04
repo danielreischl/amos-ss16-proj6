@@ -1028,7 +1028,7 @@ the session, iterations and carriers he wans to see. */
 
                 // Parses to int (and NaN in the case of no value)
                 for (var j = 0; j < lineArray[i].length; j++) {
-                    lineArray[i][j] = parseInt(lineArray[i][j])
+                    lineArray[i][j] = parseFloat(lineArray[i][j])
                 }
             }
 
@@ -1052,21 +1052,17 @@ the session, iterations and carriers he wans to see. */
 
                 // Iterate through all columns for that row (all carriers speed during that timestamp)
                 for (var j = 1; j < array[i].length; j++) {
-                    console.log("for (var j = "+j+"; "+j+" < "+array[i].length+"; "+j+"++)");
-                    console.log("array["+i+"]["+j+"]: "+ array[i][j]);
+                    // console.log("for (var j = "+j+"; "+j+" < "+array[i].length+"; "+j+"++)");
+                    console.log("array["+i+"]["+j+"]: " + array[i][j]);
 
                     // Checks if data entry has a number
                     if (isNaN(array[i][j]) == false) {
                         // Add data entry to sum for calculating the mean
                         sumOfNumbers += array[i][j];
                         amountOfNumbers += 1;
-
-                        console.log("sumOfNumbers: " + sumOfNumbers);
-                        console.log("amountOfNumbers: " + amountOfNumbers);
                     }
-                    console.log("finished array["+i+"]["+j+"]: "+ array[i][j]);
                 }
-                console.log("finished i: " + i);
+                console.log("finished i: " + i + " with " + amountOfNumbers + " numbers");
 
                 // If more than one data point in that row (more than one carrier is moving during that time)
                 // then the flexibility measure for that timestamp can be calculated
@@ -1077,22 +1073,25 @@ the session, iterations and carriers he wans to see. */
                     console.log("middle value: " + middle);
 
                     // Calculate the average deviation from the mean for every column in that row
-                    var avgDeviation = 0.0;
+                    var totDeviation = 0.0;
                     for (var j = 1; j < array[i].length; j++) {
                         if (isNaN(array[i][j]) == false) {
-                            var deviation = Math.abs(array[i][j] - middle);
-                            console.log("deviation of "+array[i][j]+" to "+middle+" :" + deviation);
-                            avgDeviation += deviation;
-                            console.log("avg deviation: " + avgDeviation);
-
+                            var deviation = 0.0;
+                            if (array[i][j] > middle) {
+                                deviation = Math.abs(array[i][j] - middle);
+                            } else {
+                                deviation = Math.abs(middle - array[i][j]);
+                            }
+                            // console.log("deviation of "+array[i][j]+" to "+middle+" :" + deviation);
+                            totDeviation += deviation;
+                            // console.log("total deviation: " + totDeviation);
                         }
                     }
-                    // add the deviation to the sum of deaviations
-                    sumOfMeasures += (avgDeviation/amountOfNumbers);
-                    console.log("sumOfMeasures: " + sumOfMeasures);
-
+                    // add the deviation to the sum of deviations
+                    sumOfMeasures += (totDeviation/amountOfNumbers);
                     amountOfMeasures += 1;
-                    console.log("amountOfMeasures: " + amountOfMeasures);
+                    console.log("new AMes (" + amountOfMeasures + ") SMes: " + sumOfMeasures + " = " + "totDEV: " + totDeviation " / " + " AONum: " + amountOfNumbers);
+
                 }
             }
             // If no rows with multiple carriers have been found, return 0 to avoid dividing by 0
