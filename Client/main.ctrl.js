@@ -1046,8 +1046,7 @@ the session, iterations and carriers he wans to see. */
 
                 // Iterate through all columns for that row (all carriers speed during that timestamp)
                 for (var j = 1; j < array[i].length; j++) {
-                    // console.log("for (var j = "+j+"; "+j+" < "+array[i].length+"; "+j+"++)");
-                    console.log("array["+i+"]["+j+"]: " + array[i][j]);
+                    // console.log("array["+i+"]["+j+"]: " + array[i][j]);
 
                     // Checks if data entry has a number
                     if (isNaN(array[i][j]) == false) {
@@ -1056,7 +1055,7 @@ the session, iterations and carriers he wans to see. */
                         amountOfNumbers += 1;
                     }
                 }
-                console.log("finished i: " + i + " with " + amountOfNumbers + " numbers");
+                // console.log("finished i: " + i + " with " + amountOfNumbers + " numbers");
 
                 // If more than one data point in that row (more than one carrier is moving during that time)
                 // then the flexibility measure for that timestamp can be calculated
@@ -1064,7 +1063,6 @@ the session, iterations and carriers he wans to see. */
                     // Calculate the mean for that row
                     var middle = 0.0;
                     middle = (sumOfNumbers/amountOfNumbers);
-                    console.log("middle value: " + middle);
 
                     // Calculate the average deviation from the mean for every column in that row
                     var totDeviation = 0.0;
@@ -1076,15 +1074,13 @@ the session, iterations and carriers he wans to see. */
                             } else {
                                 deviation = Math.abs(middle - array[i][j]);
                             }
-                            // console.log("deviation of "+array[i][j]+" to "+middle+" :" + deviation);
                             totDeviation += deviation;
-                            // console.log("total deviation: " + totDeviation);
                         }
                     }
                     // add the deviation to the sum of deviations
                     sumOfMeasures += (totDeviation/amountOfNumbers);
                     amountOfMeasures += 1;
-                    console.log("new AMes (" + amountOfMeasures + ") SMes: " + sumOfMeasures + " = totDEV: " + totDeviation + " / AONum: " + amountOfNumbers);
+                    // console.log("new AMes (" + amountOfMeasures + ") SMes: " + sumOfMeasures + " = totDEV: " + totDeviation + " / AONum: " + amountOfNumbers);
 
                 }
             }
