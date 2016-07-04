@@ -499,8 +499,6 @@ which kind of data he wants to see. The default value is average energy consumpt
            changed = 0;
        }
         clearCanvas();
-	    $scope.circleGraph();
-
     }
 
     // Initializes time stamp
@@ -572,6 +570,7 @@ which kind of data he wants to see. The default value is average energy consumpt
             parent.removeChild(child);
             amountOfCarriers = amountOfCarriers -1;
         }
+	    $scope.circleGraph();
     }
 
     $scope.refresh = function() {
