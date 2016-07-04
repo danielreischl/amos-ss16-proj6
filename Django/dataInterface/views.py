@@ -31,22 +31,25 @@ import subprocess
 import json
 # Imports HTTPResponse
 from django.http import HttpResponse
-# Imports Possibilty to calculate Max and Average
+# Imports Possibility to calculate Max and Average
 from django.db.models import Max, Avg
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
+
 # Adds DataProcessing Path to Sys
 sys.path.append('/srv/DataProcessing')
 # imports dataProcessingFunctions
 import dataProcessingFunctions
 
+
 # Returns last iteration of a carrier at a session
 def funcMaxIteration(session, carrier):
     try:
         return timestampdata.objects.filter(session=session, carrier=carrier).aggregate(Max('iteration')).get(
-        'iteration__max')
+            'iteration__max')
     except:
         return
+
 
 # Returns total energy consumption of a carrier in a paticular session and iteration
 def funcTotalEnergyConsumption(session, carrier, iteration):
@@ -55,26 +58,30 @@ def funcTotalEnergyConsumption(session, carrier, iteration):
     except:
         return
 
-# Returns average Speed of a carrier in a paticular session and iteration
+
+# Returns average Speed of a carrier in a particular session and iteration
 def funcSpeedAverage(session, carrier, iteration):
     try:
         return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).speedAverage
     except:
         return
 
-# Returns average energy consumption of a carrier in a paticular session and iteration
+
+# Returns average energy consumption of a carrier in a particular session and iteration
 def funcAverageEnergyConsumption(session, carrier, iteration):
     try:
         return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).energyConsumptionAverage
     except:
         return
 
-# Returns average acceleration of a carrier in a paticular session and iteration
+
+# Returns average acceleration of a carrier in a particular session and iteration
 def funcAccelerationAverage(session, carrier, iteration):
     try:
         return iterationdata.objects.get(session=session, carrier=carrier, iteration=iteration).accelerationAverage
     except:
         return
+
 
 # Returns the amount of carriers in a specific session
 def funcAmountOfCarriers(session):
@@ -83,12 +90,14 @@ def funcAmountOfCarriers(session):
     except:
         return
 
+
 # Returns the most recent session
 def funcRecentSession():
     try:
         return sessiondata.objects.all().aggregate(Max('session')).get('session__max')
     except:
         return
+
 
 # Returns one percent value for CarrierView & BarchartView calculated for creeping Contamination
 def funcPercentCreeping(session, carrier):
@@ -119,9 +128,11 @@ def funcPercentCreeping(session, carrier):
 # Returns one percent value for CarrierView & BarchartView calculated for continuous Contamination
 def funcPercentCont(session, carrier):
     # Extracts Average EnergyConsumption of all iterations of a session
-    initialConsumption = iterationdata.objects.filter(session=session).aggregate(Avg('energyConsumptionTotal')).get('energyConsumptionTotal__avg')
+    initialConsumption = iterationdata.objects.filter(session=session).aggregate(Avg('energyConsumptionTotal')).get(
+        'energyConsumptionTotal__avg')
     # Extracts energyConsumption of last Iteration of a carrier
-    lastConsumption = iterationdata.objects.filter(session=session, carrier=carrier).aggregate(Avg('energyConsumptionTotal')).get('energyConsumptionTotal__avg')
+    lastConsumption = iterationdata.objects.filter(session=session, carrier=carrier).aggregate(
+        Avg('energyConsumptionTotal')).get('energyConsumptionTotal__avg')
     # Returns current currentConsumption divided by average of all consumptions
     return (lastConsumption / initialConsumption)
 
@@ -353,7 +364,7 @@ def rawDataJson(request):
     # Parameter: Table
     requestedTable = request.GET['table']
 
-    # Defines which table should be returned: SessionData, Iterationdata or TimeStampData
+    # Defines which table should be returned: sessionData, iterationdata or timeStampData
     if requestedTable == "sessiondata":
         data = sessiondata.objects.all()
     elif requestedTable == "iteration":
@@ -376,7 +387,7 @@ def rawDataJson(request):
 
 def logs(request):
     # Returns a log file
-    # parameter type, possiblie Values: DataProcessing
+    # parameter type, possible Values: DataProcessing
     requestedType = request.GET['type']
 
     # Transfer Logfile to String
@@ -652,6 +663,7 @@ def percentage_cont(request):
     # Returns CSV-File
     return response
 
+
 ###############################################
 ######### URL: percentages_cont.json ###########
 ###############################################
@@ -666,7 +678,7 @@ def percentages_json(request):
     amountOfCarriers = funcAmountOfCarriers(requestedSession)
 
     percentageData = {};
-    
+
     for carrier in range(1, amountOfCarriers + 1):
         if requestedType == 'percentages_cont':
             percentageData[carrier] = funcPercentCont(requestedSession, carrier)
@@ -680,7 +692,6 @@ def percentages_json(request):
     return HttpResponse(json_data, content_type='application/json')
 
 
-
 ###############################################
 ######### URL: fileUpload.html ################
 ###############################################
@@ -690,7 +701,7 @@ def percentages_json(request):
 def fileUpload(request):
     fileName = request.POST['fileName']
     file = request.FILES['fileToUpload']
-    
+
     # check if file with that name already exists
     if sessiondata.objects.filter(fileName=fileName).exists():
         # there is certainly a more user-friendly way to handle this but for now it should be fine
@@ -703,7 +714,7 @@ def fileUpload(request):
 
     # maybe add new session to session database here
     # so far the session is added only after the corresponding simulation has been executed
-    
+
     return HttpResponse('Upload succeeded')
 
 
@@ -735,7 +746,8 @@ def spikeContamination(request):
     # parameter requested Session
     requestedSession = request.GET['session']
 
-    # Returns all data of iterationdata filtered by the requestedSession in a decending Order of energyConsumptionPercent
+    # Returns all data of iterationdata filtered by the requestedSession in a depending Order of
+    # energyConsumptionPercent
     data = iterationdata.objects.all().filter(session=requestedSession).order_by('-energyConsumptionPercent')
     # Transposes data to JSON
     json_data = serializers.serialize('json', data)
