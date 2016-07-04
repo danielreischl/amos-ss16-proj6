@@ -490,15 +490,17 @@ which kind of data he wants to see. The default value is average energy consumpt
     /* Button, changes the title of the view and the data displayed. It will also redraw the circles with the new data */
     $scope.changeView = function() {
        if(changed == 0) {
+           clearCanvas();
            percentageDataType = "percentages_cont";
            $scope.circleView_title = "Continuous Contamination";
            changed = 1;
        } else {
+           clearCanvas();
            percentageDataType = "percentages_creeping";
            $scope.circleView_title = "Creeping Contamination";
            changed = 0;
        }
-        clearCanvas();
+        $scope.circleGraph();
     }
 
     // Initializes time stamp
@@ -560,17 +562,20 @@ which kind of data he wants to see. The default value is average energy consumpt
 
      //* this function will clear the drawn canvas and enables redraw functions to draw on a new canvas */
     function clearCanvas() {
-        // get the data from the backend. Only the amount of carriers is needed.
-        var carrierPercentageData = percentageService.getPercentagePromise(percentageDataType);
-        var amountOfCarriers = Object.keys(carrierPercentageData).length;
+        // get the data from the backend. When the data is collected from the database, start the cleaning process
+        percentageService.getPercentagePromise(percentageDataType)
+            .then(function(result){startCleaning(result.data)});
+
         // delete all canvas elements, previously created for all carriers
-        while (amountOfCarriers > 0) {
-            var parent = document.getElementById("circleGraphs");
-            var child = document.getElementById("carrier "+ amountOfCarriers);
-            parent.removeChild(child);
-            amountOfCarriers = amountOfCarriers -1;
+        function startCleaning(carrierPercentageData) {
+            var amountOfCarriers = Object.keys(carrierPercentageData).length;
+            while (amountOfCarriers > 0) {
+                var parent = document.getElementById("circleGraphs");
+                var child = document.getElementById("carrier "+ amountOfCarriers);
+                parent.removeChild(child);
+                amountOfCarriers = amountOfCarriers -1;
+            }
         }
-	    $scope.circleGraph();
     }
 
     $scope.refresh = function() {
