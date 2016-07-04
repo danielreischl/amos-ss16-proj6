@@ -493,17 +493,14 @@ which kind of data he wants to see. The default value is average energy consumpt
            percentageDataType = "percentages_cont";
            $scope.circleView_title = "Continuous Contamination";
            changed = 1;
-           clearCanvas();
-           //$scope.circleGraph();
        } else {
            percentageDataType = "percentages_creeping";
            $scope.circleView_title = "Creeping Contamination";
            changed = 0;
-           clearCanvas();
-           //$scope.circleGraph();
        }
-	$scope.circleGraph();
-	
+        clearCanvas();
+	    $scope.circleGraph();
+
     }
 
     // Initializes time stamp
@@ -565,7 +562,9 @@ which kind of data he wants to see. The default value is average energy consumpt
 
      //* this function will clear the drawn canvas and enables redraw functions to draw on a new canvas */
     function clearCanvas() {
-        var amountOfCarriers = percentageService.getAll(percentageDataType).length;
+        // get the data from the backend. Only the amount of carriers is needed.
+        var carrierPercentageData = percentageService.getPercentagePromise(percentageDataType);
+        var amountOfCarriers = Object.keys(carrierPercentageData).length;
         // delete all canvas elements, previously created for all carriers
         while (amountOfCarriers > 0) {
             var parent = document.getElementById("circleGraphs");
@@ -597,7 +596,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 	percentageService.getPercentagePromise(percentageDataType)
 	    .then(function(result){$scope.circleGraphMain(result.data)});
     }
-    
+
     /* create the circle page upon page load. */
     $scope.circleGraphMain = function(carrierPercentageData) {
 
