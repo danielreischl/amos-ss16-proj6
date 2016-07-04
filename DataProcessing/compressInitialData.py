@@ -484,7 +484,7 @@ def modifyCSVFile(filename):
         amountOfDrives = 0
 
         # Start position of Position Columns
-        startPositonOfColumns = 0
+        startPositionOfColumns = 0
 
         # Iterates the first row of the initial file and depending on the value writes columns into the file
         for i in first_row:
@@ -496,11 +496,11 @@ def modifyCSVFile(filename):
                 newColNames.append("energy" + str(j - 1))
             # if column includes "ExternalEncoderPosition" it's an position sensor
             elif "ExternalEncoderPosition" in i:
-                if startPositonOfColumns == 0:
-                    startPositonOfColumns = j
-                newColNames.append("position" + str(j - startPositonOfColumns))
+                if startPositionOfColumns == 0:
+                    startPositionOfColumns = j
+                newColNames.append("position" + str(j - startPositionOfColumns))
                 # counts the amount of drives.
-                amountOfDrives = j - startPositonOfColumns
+                amountOfDrives = j - startPositionOfColumns
             else:
                 # If the file is not in the right format, remove modified file and exit system
                 os.remove(os.path.splitext(fileName)[0] + "_modified.csv")
