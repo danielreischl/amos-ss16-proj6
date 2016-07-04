@@ -626,7 +626,7 @@ initialData = pd.read_csv(os.path.splitext(fileName)[0] + "_modified.csv", DATA_
 #  Calls compressData with a pd.Series. The values are:
 # ms, No. of Drive, Energy Consumption, Position
 for index, row in initialData.iterrows():
-    for drive in range(0, amountOfDrives + 1):
+    for drive in range(0, amountOfDrives):
         time = int(float(str(row['ms']).replace(',', '.')))
         position = float(str(row['position' + str(drive)]).replace(',', '.'))
         energy = float(str(row['energy' + str(drive)]).replace(',', '.'))
