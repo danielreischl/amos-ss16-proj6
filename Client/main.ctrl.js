@@ -1084,7 +1084,7 @@ the session, iterations and carriers he wans to see. */
                     // add the deviation to the sum of deviations
                     sumOfMeasures += (totDeviation/amountOfNumbers);
                     amountOfMeasures += 1;
-                    console.log("new AMes (" + amountOfMeasures + ") SMes: " + sumOfMeasures + " = totDEV: " + totDeviation " / AONum: " + amountOfNumbers);
+                    console.log("new AMes (" + amountOfMeasures + ") SMes: " + sumOfMeasures + " = totDEV: " + totDeviation + " / AONum: " + amountOfNumbers);
 
                 }
             }
