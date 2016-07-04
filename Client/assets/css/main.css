@@ -224,3 +224,16 @@ ul.carrierSelection li{
     overflow: auto;
  }
 
+.md-tab {
+    background-color: #fff;
+    border-radius: 9px;
+    border: 0.5px solid #D8D8D8;
+    padding: 15px;
+    width: 200px;
+    height: 150px;
+    text-transform: none;
+}
+
+.tabView {
+  padding-top: 20px;
+}
