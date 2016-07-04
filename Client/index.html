@@ -63,57 +63,52 @@ the user can see different graphs -->
       <link rel="stylesheet" href="assets/css/graphs.css">
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
       <!-- End of Stylesheets-->
-   </head>
-   <body ng-controller="MainController as main" ng-cloak >
+</head>
+<body ng-controller="MainController as main" ng-cloak>
 
+    <!-- Defining a container layout with flex boxes -->
+    <div flex layout = "column" class = "fillParameter">
+        <div layout = "column">
+            <div flex>
+                <!-- Header of the website template. This will be displayed on every site-->
+                <header layout = "row">
+                    <!-- Displays the FAU - LOGO and Amos lettering -->
+                    <a href="index.html#/"><img src="assets/images/FAU-Logo.png"style="width:auto; height:80px; padding-top: 20px; padding-left: 15px;"></a>
+                    <p class = "title_name">AMOS</p>
+                    <section flex></section>
+                    <!-- Displays the RogueVision Logo and lettering and "Data Analytics Application" -->
+                    <a href="index.html#/"><img src="assets/images/RogueVision.png"style="width:auto; height:80px;"></a>
+                    <h2> {{main.title}} <br>Data Analytics Application </h2>
+                </header>
+            </div>
+        </div>
+        <!--- This section is the content part of the layout. It includes the side navigation and ng-view for the html snippets from the different views -->
+        <div flex layout = "row" class = "fillParameter">
+            <div ng-controller="sideNavController">
+                <!-- Side Navigation-->
+                <md-sidenav md-component-id="menue" layout="column" class="md-sidenav-left" md-is-locked-open ="true" ng-style = "sideNavStyle()" >
+                    <!--Top part of the side navigation, which is a toolbar. Inside the toolbar is only a button, represented by a button. This button will trigger the navigation to open/close -->
+                    <md-toolbar class ="toolbar">
+                        <md-button class="md-icon-button" ng-click ="toggleSidebar()">
+                        <md-icon md-svg-src="assets/images/ic_menu_white_36px.svg"></md-icon>
+                        </md-button>
+                    </md-toolbar>
 
-   <!--- This section is the top part of the layout. The header is inside this section -->
-
-         <!-- Header of the website template. This will be displayed on every site-->
-         <header layout = "row" layout-align ="start start">
-                 <!-- Displays the FAU - LOGO and Amos lettering -->
-                <a href="index.html#/"><img src="assets/images/FAU-Logo.png"style="width:auto; height:80px;"></a>
-                            <p class = "title_name">AMOS</p>
-                <section flex></section>
-                 <!-- Displays the RogueVision Logo and lettering and "Data Analytics Application" -->
-                 <a href="index.html#/"><img src="assets/images/RogueVision.png"style="width:auto; height:80px;"></a>
-                 <h2> {{main.title}} <br>Data Analytics Application </h2>
-         </header>
-
-   <!--- This section is the content part of the layout. It includes the side navigation and ng-view for the html snippets from the different views -->
-
-   <section layout ="row" class = "mainLayout" ng-controller="sideNavController">
-    <!-- Side Navigation-->
-        <md-sidenav md-component-id="menue" layout="column" class="md-sidenav-left" md-is-locked-open ="true" ng-style = "sideNavStyle()" >
-
-            <!--Top part of the side navigation, which is a toolbar. Inside the toolbar is only a button, represented by a button. This button will trigger the navigation to open/close -->
-            <md-toolbar class ="toolbar">
-                 <md-button class="md-icon-button" ng-click ="toggleSidebar()">
-                    <md-icon md-svg-src="assets/images/ic_menu_white_36px.svg"></md-icon>
-                 </md-button>
-            </md-toolbar>
-
-            <!--Main part of the side navigation, which consists of links to different views. The links are either icons or icons and text, depending on the state of the navigation bar (small/big) -->
-            <md-button class ="navButton" Onclick="location.href='#/'"><md-icon md-svg-src="assets/images/ic_home_white_36px.svg"></md-icon>&nbsp&nbsp{{home}}</md-button>
-            <md-button class ="navButton" Onclick="location.href='#CircleCarrier'"><md-icon md-svg-src="assets/images/ic_donut_small_white_36px.svg"></md-icon>&nbsp&nbsp{{circleView}}</md-button>
-            <md-button class ="navButton" Onclick="location.href='#BarCarrier'"><md-icon md-svg-src="assets/images/ic_equalizer_white_36px.svg"></md-icon>&nbsp&nbsp{{barView}}</md-button>
-            <md-button class ="navButton" Onclick="location.href='#flexibilityPage'"><md-icon md-svg-src="assets/images/ic_show_chart_white_36px.svg"></md-icon>&nbsp&nbsp{{flexView}}</md-button>
-            <md-button class ="navButton" Onclick="location.href='#alertPage'"><md-icon md-svg-src="assets/images/ic_alarm_white_36px.svg"></md-icon>&nbsp&nbsp{{alertView}}</md-button>
-            <md-button class ="navButton" Onclick="location.href='#simulation'"><md-icon md-svg-src="assets/images/ic_play_circle_outline_white_36px.svg"></md-icon>&nbsp&nbsp{{simulation}}</md-button>
-            <md-button class ="navButton" Onclick="location.href='#settings'"> <md-icon md-svg-src="assets/images/ic_build_white_36px.svg"></md-icon>&nbsp&nbsp{{settings}}</md-button>
-            <md-button class ="navButton" Onclick="location.href='#help'"> <md-icon md-svg-src="assets/images/ic_help_white_36px.svg"></md-icon>&nbsp&nbsp{{help}}</md-button>
-        </md-sidenav>
-
-        <!-- Content for the different views-->
-        <md-content flex layout="column">
-             <!-- ng-view should show the html snippet, if a user clicks on a navigation button
-         also I defined this part as "mainFrame". For now it should indicate the position of the main
-         objects as well as give a link to the potential styles.     -->
-            <section  layout = "column" layout-align="center center">
-                 <div ng-view class = "ngViewContent"> </div>
-            </section>
-        </md-content>
-   </section>
-
-   </body>
+                    <!--Main part of the side navigation, which consists of links to different views. The links are either icons or icons and text, depending on the state of the navigation bar (small/big) -->
+                    <md-button class ="navButton" Onclick="location.href='#/'"><md-icon md-svg-src="assets/images/ic_home_white_36px.svg"></md-icon>&nbsp&nbsp{{home}}</md-button>
+                    <md-button class ="navButton" Onclick="location.href='#CircleCarrier'"><md-icon md-svg-src="assets/images/ic_donut_small_white_36px.svg"></md-icon>&nbsp&nbsp{{circleView}}</md-button>
+                    <md-button class ="navButton" Onclick="location.href='#BarCarrier'"><md-icon md-svg-src="assets/images/ic_equalizer_white_36px.svg"></md-icon>&nbsp&nbsp{{barView}}</md-button>
+                    <md-button class ="navButton" Onclick="location.href='#flexibilityPage'"><md-icon md-svg-src="assets/images/ic_show_chart_white_36px.svg"></md-icon>&nbsp&nbsp{{flexView}}</md-button>
+                    <md-button class ="navButton" Onclick="location.href='#simulation'"><md-icon md-svg-src="assets/images/ic_play_circle_outline_white_36px.svg"></md-icon>&nbsp&nbsp{{simulation}}</md-button>
+                    <md-button class ="navButton" Onclick="location.href='#help'"> <md-icon md-svg-src="assets/images/ic_help_white_36px.svg"></md-icon>&nbsp&nbsp{{help}}</md-button>
+                </md-sidenav>
+            </div>
+            <!-- ng-view should show the html snippet, if a user clicks on a navigation button
+                also I defined this part as "mainFrame". For now it should indicate the position of the main
+                objects as well as give a link to the potential styles.
+            -->
+            <div flex="grow" layout-fill ng-view class = "ngViewContent"> </div>
+        </div>
+    </div>
+</body>
 </html>

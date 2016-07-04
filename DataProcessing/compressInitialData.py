@@ -363,8 +363,9 @@ def exportCSV(carrier):
     # Finds the last relevant row (position != 0) in the carrier data
     lastRow = findLastRowInCarrierData(carrier)
 
-    if lastRow > 2:
-        lastRow -= 2
+    removeLastDataRows = int(np.ceil(200.0/KEEP_EVERY_X_ROW))
+    if lastRow > removeLastDataRows:
+        lastRow -= removeLastDataRows
 
     # Only selects the relevant sub selection from carrier data (without position == 0) to export to csv
     # Commented out for testing
@@ -484,7 +485,7 @@ def modifyCSVFile(filename):
         amountOfDrives = 0
 
         # Start position of Position Columns
-        startPositonOfColumns = 0
+        startPositionOfColumns = 0
 
         # Iterates the first row of the initial file and depending on the value writes columns into the file
         for i in first_row:
@@ -496,11 +497,11 @@ def modifyCSVFile(filename):
                 newColNames.append("energy" + str(j - 1))
             # if column includes "ExternalEncoderPosition" it's an position sensor
             elif "ExternalEncoderPosition" in i:
-                if startPositonOfColumns == 0:
-                    startPositonOfColumns = j
-                newColNames.append("position" + str(j - startPositonOfColumns))
+                if startPositionOfColumns == 0:
+                    startPositionOfColumns = j
+                newColNames.append("position" + str(j - startPositionOfColumns))
                 # counts the amount of drives.
-                amountOfDrives = j - startPositonOfColumns
+                amountOfDrives = j - startPositionOfColumns
             else:
                 # If the file is not in the right format, remove modified file and exit system
                 os.remove(os.path.splitext(fileName)[0] + "_modified.csv")

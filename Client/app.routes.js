@@ -35,10 +35,6 @@ angular
     .config(['$routeProvider', function($routeProvider) {
     $routeProvider
 
-      .when('/Graph', {
-        templateUrl: 'sections/graphExample/GraphExample.html',
-      })
-
       .when('/', {
         templateUrl: 'sections/landingPage/HomePageIcons.html'
       })
@@ -65,10 +61,6 @@ angular
 
        .when('/simulation', {
         templateUrl: 'sections/simulationPage/simulationPage.html'
-      })
-
-       .when('/settings', {
-        templateUrl: 'sections/settingsPage/settingsPage.html'
       })
 
        .when('/help', {
