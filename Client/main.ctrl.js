@@ -570,12 +570,9 @@ which kind of data he wants to see. The default value is average energy consumpt
 
         // delete all canvas elements, previously created for all carriers
         function startCleaning(carrierPercentageData) {
-            var amountOfCarriers = Object.keys(carrierPercentageData).length;
-            while (amountOfCarriers > 0) {
-                var parent = document.getElementById("circleGraphs");
-                var child = document.getElementById("carrier "+ amountOfCarriers);
-                parent.removeChild(child);
-                amountOfCarriers = amountOfCarriers -1;
+            var parent = document.getElementById("circleGraphs");
+            while (parent.firstChild) {
+                parent.removeChild(myNode.firstChild);
             }
         }
     }
