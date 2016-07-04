@@ -476,13 +476,13 @@ which kind of data he wants to see. The default value is average energy consumpt
 /* Refresh the circle Page. The purpose of this controller is listen to the Button
  and upon receiving an event, it should trigger the update circle button*/
 .controller('circleGraphController', function($scope, $compile, $mdDialog, $mdMedia, $timeout, $http, $mdSidenav, carrierService, percentageService, sessionService) {
-    // title will change, depending on which circleView is showing.
+    // title and button will change, depending on which circleView is showing.
     var changed = 0;
     $scope.circleView_title = "Creeping Contamination";
+    $scope.circleView_button = "Continuous Contamination";
 
-    // data variables to be changed
+    // data variable to be changed
     var percentageDataType = "percentages_creeping";
-    var dataCont = "percentages_cont";
 
     // sets the current File Name
     $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
@@ -493,11 +493,13 @@ which kind of data he wants to see. The default value is average energy consumpt
            clearCanvas();
            percentageDataType = "percentages_cont";
            $scope.circleView_title = "Continuous Contamination";
+           $scope.circleView_button = "Creeping Contamination";
            changed = 1;
        } else {
            clearCanvas();
            percentageDataType = "percentages_creeping";
            $scope.circleView_title = "Creeping Contamination";
+           $scope.circleView_button = "Continuous Contamination";
            changed = 0;
        }
         $scope.circleGraph();
@@ -568,12 +570,9 @@ which kind of data he wants to see. The default value is average energy consumpt
 
         // delete all canvas elements, previously created for all carriers
         function startCleaning(carrierPercentageData) {
-            var amountOfCarriers = Object.keys(carrierPercentageData).length;
-            while (amountOfCarriers > 0) {
-                var parent = document.getElementById("circleGraphs");
-                var child = document.getElementById("carrier "+ amountOfCarriers);
-                parent.removeChild(child);
-                amountOfCarriers = amountOfCarriers -1;
+            var parent = document.getElementById("circleGraphs");
+            while (parent.firstChild) {
+                parent.removeChild(myNode.firstChild);
             }
         }
     }
