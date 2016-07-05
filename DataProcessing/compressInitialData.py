@@ -265,11 +265,8 @@ def compressData(carrier):
             # Increase the next value that is being searched for
             nextTimeStampValue += KEEP_EVERY_X_ROW
 
-            # Increase counted timestamps by 1
-            countedTimeStamps += 1
-
-            # If the current value cannot be found because the timestamp was not recorded for that carrier
-            # The position has to be interpolated
+        # If the current value cannot be found because the timestamp was not recorded for that carrier
+        # The position has to be interpolated
         elif (carrierData[carrier - 1][0][i] - firstTimeStamp) > nextTimeStampValue:
             # Counts the amount of transferred timestamps to average in the end
             # This while loop iterates as long as all the values in the gap were interpolated
