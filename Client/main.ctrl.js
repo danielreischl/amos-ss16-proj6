@@ -938,7 +938,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 /* controller for the Flexibility Chart. This chart will display the speed data of each carrier over absolute time. The user can select
 the session, iterations and carriers he wans to see. */
-.controller('FlexibilityChartController', function($scope, carrierService, percentageService, sessionService) {
+.controller('FlexibilityChartController', function($scope, $http, $window, carrierService, percentageService, sessionService) {
 
     // function that removes that the buttons are highlighted until you click somewhere else in the page
     $(".btn").mouseup(function(){
