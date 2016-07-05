@@ -76,14 +76,25 @@ The title of each item is structured like a table of content. on a Button click,
             <!-- This is the item that will be always shown and on which the user can click on to expand the content -->
             <div class="panel-heading">
                 <h4 class="panel-title">
-                <a href ="" ng-click="collapsed4 =! collapsed4">Front End</a>
+                <a href ="" ng-click="collapsed4 =! collapsed4">Data Processing</a>
                 </h4>
             </div>
             <!-- content of the above clickable element -->
             <div ng-show="collapsed4" class="panel-collapse collapse in">
-                <div class="panel-body">
-                    Insert Front End text
-                </div>
+                <ng-include src="'sections/helpPage/helpPageFragments/projectDocuFragments/DataProcessing.html'"></ng-include>
+            </div>
+        </div>
+        <!-- Fifth closed element in the accordion structure -->
+        <div class="panel panel-default">
+            <!-- This is the item that will be always shown and on which the user can click on to expand the content -->
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                <a href ="" ng-click="collapsed5 =! collapsed5">Front End</a>
+                </h4>
+            </div>
+            <!-- content of the above clickable element -->
+            <div ng-show="collapsed5" class="panel-collapse collapse in">
+                <ng-include src="'sections/helpPage/helpPageFragments/projectDocuFragments/FrontEnd.html'"></ng-include>
             </div>
         </div>
     </div>

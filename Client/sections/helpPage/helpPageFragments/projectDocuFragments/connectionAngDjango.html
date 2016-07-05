@@ -49,13 +49,13 @@
     <p><code>django/dataInterface/values.request?session=X&amp;carrier=Y&amp;iteration=Z&amp;value=requestedValue</code></p>
     <ul class="list-group">
         <li class="list-group-item">
-            X = Requested Session
+            <strong>X</strong> = Requested Session
         </li>
         <li class="list-group-item">
-            Y = Requested Carrier
+            <strong>Y</strong> = Requested Carrier
         </li>
         <li class="list-group-item">
-            Z = Requested Iteration
+            <strong>Z</strong> = Requested Iteration
         </li>
     </ul>
 
@@ -124,10 +124,10 @@
                     <p><code>/django/dataInterface/rawData.csv?table=tablename</code></p>
                     <p>tablename:</p>
                     <ul class="list-group">
-                        <li class="list-group-item">
+                        <li class="list-group-item text-left">
                             <strong>iteration:</strong> Extracts the table iterationdata
                         </li>
-                        <li class="list-group-item">
+                        <li class="list-group-item text-left">
                             <strong>timestamp:</strong> Extracts the table timestampdata
                         </li>
                     </ul>
@@ -170,16 +170,16 @@
                     <p><code>django/dataInterface/averageEnergyConsumption.csv?session=X&amp;carriers=Y&amp;dimension=Z&amp;type=A</code></p>
                     <ul class="list-group">
                         <li class="list-group-item text-left">
-                            X = Requested Session
+                            <strong>X</strong> = Requested Session
                         </li>
                         <li class="list-group-item text-left">
-                            Y = Requested Carriers (Multiple Carriers have to be divided by ',')
+                            <strong>Y</strong> = Requested Carriers (Multiple Carriers have to be divided by ',')
                         </li>
                         <li class="list-group-item text-left">
-                            Z = Requested Dimension
+                            <strong>Z</strong> = Requested Dimension
                         </li>
                         <li class="list-group-item text-left">
-                            A = Requested Type
+                            <strong>A</strong> = Requested Type
                         </li>
                     </ul>
                     <p>The requested Dimension can be:</p>
@@ -199,10 +199,10 @@
                     </ul>
                     <p>The requested Type can be:</p>
                     <ul class="list-group">
-                        <li class="list-group-item">
+                        <li class="list-group-item text-left">
                             <strong>all:</strong> Returns data for all iterations
                         </li>
-                        <li class="list-group-item">
+                        <li class="list-group-item text-left">
                             <strong>last10:</strong> Returns data for the last 10 iterations
                         </li>
                     </ul>
@@ -274,16 +274,16 @@
                     <p><code>djhttps://osr-amos.cs.fau.de/ss16/proj6-test/django/dataInterface/continuousDataAbsoluteTime.csv?carriers=Y&amp;iterations=A&amp;dimension=Z&amp;session=X</code></p>
                     <ul class="list-group">
                         <li class="list-group-item text-left">
-                            X = Requested Session
+                            <strong>X</strong> = Requested Session
                         </li>
                         <li class="list-group-item text-left">
-                            Y = Requested Carriers (Multiple Carriers have to be divided by ',')
+                            <strong>Y</strong> = Requested Carriers (Multiple Carriers have to be divided by ',')
                         </li>
                         <li class="list-group-item text-left">
-                            Z = Requested Dimension
+                            <strong>Z</strong> = Requested Dimension
                         </li>
-                        <li class="list-group-item text-left"
-                        >A = Requested Iterations
+                        <li class="list-group-item text-left">
+                            <strong>A</strong> = Requested Iterations
                         </li>
                     </ul>
 
@@ -291,16 +291,16 @@
 
                     <ul class="list-group">
                         <li class="list-group-item text-left">
-                            ** positionAbsolute:** The absolute position (relative to the beginning of the first drive, in mm) that the carrier is at
+                            <strong>positionAbsolute:</strong>The absolute position (relative to the beginning of the first drive, in mm) that the carrier is at
                         </li>
                         <li class="list-group-item text-left">
-                            ** speed:** The speed that the carrier has at that timeStamp (derived from the positionAbsolute and the timeStamps)
+                            <strong>speed:</strong>The speed that the carrier has at that timeStamp (derived from the positionAbsolute and the timeStamps)
                         </li>
                         <li class="list-group-item text-left">
-                            ** acceleration:** The acceleration that the carrier has at that timeStamp (derived from the positionAbsolute and the timeStamps)
+                            <strong>acceleration:</strong>The acceleration that the carrier has at that timeStamp (derived from the positionAbsolute and the timeStamps)
                         </li>
                         <li class="list-group-item text-left">
-                            ** energyConsumption:** The total amount of energy consumed by the carrier since the last timeStamp (in W)
+                            <strong>energyConsumption:</strong>The total amount of energy consumed by the carrier since the last timeStamp (in W)
                         </li>
                     </ul>
                 </div>
