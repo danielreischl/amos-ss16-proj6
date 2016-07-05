@@ -21,12 +21,28 @@
 
 <!--The help page of this program. Here, the user will find a user manual -->
 <div class="col-sx-2">
+    <!-- Page header, explaining the help page -->
+    <div class ="page-header">
+        <h1>Help Page</h1>
+        <p>
+            This help Page contains all Information, needed to navigate through the Data Analysis Tool and will explain details about the project.
+        </p>
+    </div>
+    <!-- The Help Page is strcutured in form of a tab layout. There are a total of 3 tabs, which are Glossary, Manual and Project Documentation -->
     <div ng-cloak class ="tabView">
         <md-content>
+            <!-- Initialize Tab layout. -->
             <md-tabs md-dynamic-height md-border-bottom>
+                <!-- First tab-->
                 <md-tab label="Glossary">
                     <md-content class="md-padding">
-                        <h1 class="md-display-2">Glossary</h1>
+                        <div class ="page-header">
+                            <h1>Glossary</h1>
+                                <p>
+                                    In this tab, the definition and meaning of all terms are explained in the form of a Glossary.
+                                </p>
+                        </div>
+                        <!-- Glossary Part is structured in a table format. There are 2 columns "term" and "Definition" -->
                         <table class="table table-hover table-bordered table-striped" >
                             <thead>
                                 <tr>
@@ -148,14 +164,92 @@
                         </table>
                     </md-content>
                 </md-tab>
+                <!-- Second tab-->
                 <md-tab label="Manual">
                     <md-content class="md-padding">
-                        <h1 class="md-display-2">Manual</h1>
+                         <div class ="page-header">
+                            <h1>Manual</h1>
+                                <p>
+                                    In this Tab, a user manual is presented to help the user work with the Data Analytics App. It will explain all necessary steps in detail.
+                                </p>
+                        </div>
                     </md-content>
                 </md-tab>
+                <!-- Third tab-->
                 <md-tab label="Project Documentation">
                     <md-content class="md-padding">
-                        <h1 class="md-display-2">Project Documentation</h1>
+                         <div class ="page-header">
+                            <h1>Project Documentation</h1>
+                                <p>
+                                    In this Tab, the details of the project are presented and readable. This is about the technical realization of the project.
+                                </p>
+                        </div>
+                        <!-- Project Documentation Part is structured in a ina an accordion layout. Basically it is a list of collapsible items.
+                        The title of each item is structured like a table of content. on a Button click, the element will open up and show the content -->
+                        <div class="container">
+                            <div class="panel-group" id="accordion">
+                                <!-- First closed element in the accordion structure -->
+                                <div class="panel panel-default">
+                                    <!-- This is the item that will be always shown and on which the user can click on to expand the content -->
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                        <a href ="" ng-click="collapsed =! collapsed">Bill of Material (BOM)</a>
+                                        </h4>
+                                    </div>
+                                    <!-- content of the above clickable element -->
+                                    <div ng-show="collapsed" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            Insert BoM
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Second closed element in the accordion structure -->
+                                <div class="panel panel-default">
+                                    <!-- This is the item that will be always shown and on which the user can click on to expand the content -->
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                        <a href ="" ng-click="test =! test">Connection of AngularJS and Django</a>
+                                        </h4>
+                                    </div>
+                                    <!-- content of the above clickable element -->
+                                    <div ng-show="test" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            Insert Connection text
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Third closed element in the accordion structure -->
+                                <div class="panel panel-default">
+                                    <!-- This is the item that will be always shown and on which the user can click on to expand the content -->
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                        <a href ="" ng-click="collapsed3 =! collapsed3">Database Schema</a>
+                                        </h4>
+                                    </div>
+                                    <!-- content of the above clickable element -->
+                                    <div ng-show="collapsed3" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            Insert Database text
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Forth closed element in the accordion structure -->
+                                <div class="panel panel-default">
+                                    <!-- This is the item that will be always shown and on which the user can click on to expand the content -->
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                        <a href ="" ng-click="collapsed4 =! collapsed4">Front End</a>
+                                        </h4>
+                                    </div>
+                                    <!-- content of the above clickable element -->
+                                    <div ng-show="collapsed4" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            Insert Front End text
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </md-content>
                 </md-tab>
             </md-tabs>
