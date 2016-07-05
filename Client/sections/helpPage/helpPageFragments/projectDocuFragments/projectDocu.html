@@ -1,0 +1,90 @@
+<!--
+   This file is part of Rogue Vision.
+
+   Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
+       Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
+       Aleksander Penew, Abhinav Puri
+
+   Rogue Vision is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   Rogue Vision is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Affero General Public License for more details.
+
+   You should have received a copy of the GNU Affero General Public License
+   along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!-- Project Documentation, to be inserted into the help page -->
+
+<!-- Explanation of the sub-tab -->
+<div class ="page-header">
+    <h1>Project Documentation</h1>
+        <p>
+            In this Tab, the details of the project are presented and readable. This is about the technical realization of the project.
+        </p>
+</div>
+<!-- Project Documentation Part is structured in a ina an accordion layout. Basically it is a list of collapsible items.
+The title of each item is structured like a table of content. on a Button click, the element will open up and show the content -->
+<div class="container">
+    <div class="panel-group" id="accordion">
+        <!-- First closed element in the accordion structure -->
+        <div class="panel panel-default">
+            <!-- This is the item that will be always shown and on which the user can click on to expand the content -->
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                <a href ="" ng-click="collapsed =! collapsed">Bill of Material (BOM)</a>
+                </h4>
+            </div>
+            <!-- content of the above clickable element. The content will be inserted from a different html fragment -->
+            <div ng-show="collapsed" class="panel-collapse collapse in">
+                <ng-include src="'sections/helpPage/helpPageFragments/projectDocuFragments/BoM.html'"></ng-include>
+            </div>
+        </div>
+        <!-- Second closed element in the accordion structure -->
+        <div class="panel panel-default">
+            <!-- This is the item that will be always shown and on which the user can click on to expand the content -->
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                <a href ="" ng-click="collapsed2 =! collapsed2">Connection of AngularJS and Django</a>
+                </h4>
+            </div>
+            <!-- content of the above clickable element. The content will be inserted from a different html fragment -->
+            <div ng-show="collapsed2" class="panel-collapse collapse in">
+                <ng-include src="'sections/helpPage/helpPageFragments/projectDocuFragments/connectionAngDjango.html'"></ng-include>
+            </div>
+        </div>
+        <!-- Third closed element in the accordion structure -->
+        <div class="panel panel-default">
+            <!-- This is the item that will be always shown and on which the user can click on to expand the content -->
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                <a href ="" ng-click="collapsed3 =! collapsed3">Database Schema</a>
+                </h4>
+            </div>
+            <!-- content of the above clickable element -->
+            <div ng-show="collapsed3" class="panel-collapse collapse in">
+                <ng-include src="'sections/helpPage/helpPageFragments/projectDocuFragments/DatabaseSchema.html'"></ng-include>
+            </div>
+        </div>
+        <!-- Forth closed element in the accordion structure -->
+        <div class="panel panel-default">
+            <!-- This is the item that will be always shown and on which the user can click on to expand the content -->
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                <a href ="" ng-click="collapsed4 =! collapsed4">Front End</a>
+                </h4>
+            </div>
+            <!-- content of the above clickable element -->
+            <div ng-show="collapsed4" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    Insert Front End text
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

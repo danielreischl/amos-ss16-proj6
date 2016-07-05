@@ -1172,3 +1172,16 @@ the session, iterations and carriers he wans to see. */
         $scope.ts = new Date();
     }
 })
+
+/* from here on, all controllers are for the scrolling to elements in a page */
+
+.controller('ScrollController', function ($scope, $location, $anchorScroll) {
+
+    /* anchor scrolls to the id, injected into the location hash.
+       then activates scroll
+    */
+    $scope.scrollTo = function(id) {
+        $location.hash(id);
+        $anchorScroll();
+    };
+})

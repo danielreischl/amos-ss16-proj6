@@ -1,0 +1,214 @@
+<!--
+   This file is part of Rogue Vision.
+
+   Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
+       Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
+       Aleksander Penew, Abhinav Puri
+
+   Rogue Vision is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   Rogue Vision is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Affero General Public License for more details.
+
+   You should have received a copy of the GNU Affero General Public License
+   along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!-- Database Schema, to be inserted into the project documentation page -->
+
+<div class="panel-body">
+    <!-- Explanation of the sub-tab -->
+    <div class ="page-header">
+        <h1>Database Schema</h1>
+        <p>
+            In here, the Database Schema is documented.
+        </p>
+    </div>
+    <!-- Table Timestamp Data section -->
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+           Database Table 1: Timestamp Data
+        </div>
+        <div class="panel-body">
+            <p><strong>This table stores all the relevant data for every data point recorded by the sensors</strong></p>
+            <table class="table table-hover table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Data Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>id</td>
+                        <td>AutoField</td>
+                        <td>ID (It is not necessary to explicitly declare a primary key when using django models)</td>
+                    </tr>
+                    <tr>
+                        <td>session</td>
+                        <td>Integer</td>
+                        <td>Integer of the current session in which a carrier is in the system</td>
+                    </tr>
+                    <tr>
+                        <td>carrier</td>
+                        <td>Integer</td>
+                        <td>Integer that identifies the carrier</td>
+                    </tr>
+                    <tr>
+                        <td>iteration</td>
+                        <td>Integer</td>
+                        <td>Integer of the current Iteration in which a carrier is in the system</td>
+                    </tr>
+                    <tr>
+                        <td>timeStamp</td>
+                        <td>Integer</td>
+                        <td>The time (in ms) from the <strong>beginning of the current Iteration</strong> for the particular carrier (starts at 0 every time the carrier enters the production line)</td>
+                    </tr>
+                    <tr>
+                        <td>timeAbsolute</td>
+                        <td>Integer</td>
+                        <td>The time (in ms) from the <strong>start of the Recording</strong> that the data is recorded</td>
+                    </tr>
+                    <tr>
+                        <td>drive</td>
+                        <td>Integer</td>
+                        <td>The drive that the carrier was on when this timeStamp was recorded</td>
+                    </tr>
+                    <tr>
+                        <td>positionAbsolute</td>
+                        <td>Float</td>
+                        <td>The absolute position (relative to the beginning of the first drive, in mm) that the carrier is at</td>
+                    </tr>
+                    <tr>
+                        <td>speed</td>
+                        <td>Float</td>
+                        <td>The speed that the carrier has at that timeStamp (derived from the positionAbsolute and the timeStamps)</td>
+                    </tr>
+                    <tr>
+                        <td>acceleration</td>
+                        <td>Float</td>
+                        <td>The acceleration that the carrier has at that timeStamp (derived from the positionAbsolute and the timeStamps)</td>
+                    </tr>
+                    <tr>
+                        <td>energyConsumption</td>
+                        <td>Float</td>
+                        <td>The total amount of energy consumed by the carrier since the last timeStamp (in W)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Table Iteration Data section -->
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+           Database Table 2: Iteration Data
+        </div>
+        <div class="panel-body">
+            <p><strong>This table stores all the data that is calculated over the course of one iteration (sums and averages)</strong></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Data Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>id</td>
+                        <td>AutoField</td>
+                        <td>ID (It is not necessary to explicitly declare a primary key when using django models)</td>
+                    </tr>
+                    <tr>
+                        <td>session</td>
+                        <td>Integer</td>
+                        <td>Integer of the current session in which a carrier is in the system</td>
+                    </tr>
+                    <tr>
+                        <td>carrier</td>
+                        <td>Integer</td>
+                        <td>Integer that identifies the carrier</td>
+                    </tr>
+                    <tr>
+                        <td>iteration</td>
+                        <td>Integer</td>
+                        <td>Integer of the current Iteration in which a carrier is in the system</td>
+                    </tr>
+                    <tr>
+                        <td>speedAverage</td>
+                        <td>Float</td>
+                        <td>The average speed of a carrier in one iteration</td>
+                    </tr>
+                    <tr>
+                        <td>accelerationAverage</td>
+                        <td>Float</td>
+                        <td>The average acceleration of a carrier in one iteration</td>
+                    </tr>
+                    <tr>
+                        <td>energyConsumptionTotal</td>
+                        <td>Float</td>
+                        <td>The total energy Consumption of a carrier in one iteration</td>
+                    </tr>
+                    <tr>
+                        <td>energyConsumptionAverage</td>
+                        <td>Float</td>
+                        <td>The average energy Consumption of a carrier in one iteration</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Table Session Data section -->
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+           Database Table 1: Timestamp Data
+        </div>
+        <div class="panel-body">
+            <p><strong>This table stores all the data that is relevant for a session</strong></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Data Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>id</td>
+                        <td>AutoField</td>
+                        <td>ID (It is not necessary to explicitly declare a primary key when using django models)</td>
+                    </tr>
+                    <tr>
+                        <td>session</td>
+                        <td>Integer</td>
+                        <td>the session</td>
+                    </tr>
+                    <tr>
+                        <td>fileName</td>
+                        <td>string</td>
+                        <td>name of the file the session is loaded from</td>
+                    </tr>
+                    <tr>
+                        <td>amountOfCarriers</td>
+                        <td>Integer</td>
+                        <td>Amount of Carriers</td>
+                    </tr>
+                    <tr>
+                        <td>stats</td>
+                        <td>boolean</td>
+                        <td>true if processed</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

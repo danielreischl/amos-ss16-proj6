@@ -1,0 +1,421 @@
+<!--
+   This file is part of Rogue Vision.
+
+   Copyright (C) 2016 Daniel Reischl, Rene Rathmann, Peter Tan,
+       Tobias Dorsch, Shefali Shukla, Vignesh Govindarajulu,
+       Aleksander Penew, Abhinav Puri
+
+   Rogue Vision is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   Rogue Vision is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Affero General Public License for more details.
+
+   You should have received a copy of the GNU Affero General Public License
+   along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!-- Connection AngularJS and Django, to be inserted into the project documentation page -->
+
+<div class="panel-body">
+    <!-- Explanation of the sub-tab -->
+    <div class ="page-header">
+        <h1>Connection of AngularJS and Django</h1>
+        <p>
+            In here, the connection between AngularJS and Django is documented.
+        </p>
+    </div>
+    <!-- The text is structured almost identical to the wiki page on github -->
+    <p>The Frontend (Client) can communicate with the django by an API. This can be divided into three different types of communications:</p>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <a href="" ng-click="scrollTo('requestValue')">Request Values</a>
+        </li>
+        <li class="list-group-item">
+            <a href="" ng-click="scrollTo('requestCSV')">Request CSV Files</a>
+        </li>
+        <li class="list-group-item">
+            <a href="" ng-click="scrollTo('takeActions')">Take Actions</a>
+        </li>
+        <li class="list-group-item">
+            <a href="" ng-click="scrollTo('testLoc')">How to test it locally without building the whole project</a>
+        </li>
+    </ul>
+    <p>The Frontend (Client) can retrieve values from django and the database by an API. Therefor the following URL can be used:</p>
+    <p><code>django/dataInterface/values.request?session=X&amp;carrier=Y&amp;iteration=Z&amp;value=requestedValue</code></p>
+    <ul class="list-group">
+        <li class="list-group-item">
+            X = Requested Session
+        </li>
+        <li class="list-group-item">
+            Y = Requested Carrier
+        </li>
+        <li class="list-group-item">
+            Z = Requested Iteration
+        </li>
+    </ul>
+
+    <!-- Requested Value Section -->
+    <div class="panel panel-primary">
+        <div class="panel-heading" id ="requestValue">
+            Request Values
+        </div>
+        <div class="panel-body">
+            <h4>Requestable Values (requestedValue):</h4>
+            <ul class="list-group" >
+                <li class="list-group-item text-left" >
+                    <strong>amountOfCarriers</strong> (amount of carriers -&gt; X has to be set with proper value but Y, Z have to be set without proper values)
+                </li>
+                <li class="list-group-item text-left">
+                    <strong>lastIteration</strong> (last Iteration of a carrier in a specific session -&gt; Iteration has to be set but value doesn't matter)
+                </li>
+                <li class="list-group-item text-left">
+                    <strong>energyConsumptionAverage</strong> (average energy consumption of a carrier in a specific session and iteration)
+                </li>
+                <li class="list-group-item text-left">
+                    <strong>speedAverage</strong> (averagespeed of a carrier in a specific session and iteration)
+                </li>
+                <li class="list-group-item text-left">
+                    <strong>energyConsumptionTotal</strong> (total energy consumption of a carrier in a specific session and iteration)
+                </li>
+                <li class="list-group-item text-left">
+                    <strong>accelerationAverage</strong> (average acceleration of a carrier in a specific session and iteration)
+                </li>
+                <li class="list-group-item text-left">
+                    <strong>currentSession</strong> (current session -&gt; Iteration, Carrier and Session have to be set but values don't matter)
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Request CSV File Section -->
+    <div class="panel panel-primary">
+        <div class="panel-heading" id ="requestCSV">
+            Request CSV Files
+        </div>
+        <div class="panel-body">
+            <p>The Frontend (Client) can retrieve csv-files from django and the database by an API:</p>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('rawData')">Raw Data</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('avgEnChart')">Average Energy Consumption Chart Data</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('percentageForChart')">Percentages for Circle View and Bar Chart</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('absTimeData')">Absolute Time Data</a>
+                </li>
+            </ul>
+
+             <!-- Raw Data section -->
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="rawData">
+                    Raw Data:
+                </div>
+                <div class="panel-body">
+                    <p>Raw data can be extracted with the follwoing url:</p>
+                    <p><code>/django/dataInterface/rawData.csv?table=tablename</code></p>
+                    <p>tablename:</p>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <strong>iteration:</strong> Extracts the table iterationdata
+                        </li>
+                        <li class="list-group-item">
+                            <strong>timestamp:</strong> Extracts the table timestampdata
+                        </li>
+                    </ul>
+                    <p>To see which values are extracted, have a look at the <strong>Database Schema</strong></p>
+                </div>
+            </div>
+
+            <!-- Average Energy Consumption Chart Data Section -->
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="avgEnChart">
+                    Average Energy Consumption Chart Data
+                </div>
+                <div class="panel-body">
+                    <p>The Average Energy Consumption Chart Data is structured like in the table below. Depending on the paramaters the csv file data changes.</p>
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Iteration</th>
+                                <th>Carrier 1</th>
+                                <th>Carrier 2</th>
+                                <th>Carrier X</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>50124</td>
+                                <td>34591</td>
+                                <td>12342</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>34032</td>
+                                <td>44555</td>
+                                <td>12441</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>The url to request the csv file is:</p>
+                    <p><code>django/dataInterface/averageEnergyConsumption.csv?session=X&amp;carriers=Y&amp;dimension=Z&amp;type=A</code></p>
+                    <ul class="list-group">
+                        <li class="list-group-item text-left">
+                            X = Requested Session
+                        </li>
+                        <li class="list-group-item text-left">
+                            Y = Requested Carriers (Multiple Carriers have to be divided by ',')
+                        </li>
+                        <li class="list-group-item text-left">
+                            Z = Requested Dimension
+                        </li>
+                        <li class="list-group-item text-left">
+                            A = Requested Type
+                        </li>
+                    </ul>
+                    <p>The requested Dimension can be:</p>
+                    <ul class="list-group">
+                        <li class="list-group-item text-left">
+                            <strong>energyConsumptionTotal:</strong> Total Energy Consumption of carrier in a specific iteration
+                        </li>
+                        <li class="list-group-item text-left">
+                            <strong>speedAverage:</strong> Average Speed of a carrier in a specific iteration
+                        </li>
+                        <li class="list-group-item text-left">
+                            <strong>accelerationAverage:</strong> Average Acceleration of a carrier in a specific iteration
+                        </li>
+                        <li class="list-group-item text-left">
+                            <strong>energyConsumptionAverage:</strong> Average Energy Consumption of a carrier in a specific iteration
+                        </li>
+                    </ul>
+                    <p>The requested Type can be:</p>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <strong>all:</strong> Returns data for all iterations
+                        </li>
+                        <li class="list-group-item">
+                            <strong>last10:</strong> Returns data for the last 10 iterations
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Percentages for Circle View and Bar Chart Section -->
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="percentageForChart">
+                    Percentages for Circle View and Bar Chart
+                </div>
+                <div class="panel-body">
+                    <p>To get the percentages which are shown in the CircleView and Barchart the following url has to be used:</p>
+                    <p><code>django/dataInterface/percentages.csv?session=X</code></p>
+                    <p>X = Requested Session</p>
+                    <p>The output CSV-File looks like this:</p>
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Carrier 1</th>
+                                <th>Carrier 2</th>
+                                <th>Carrier 3</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0.98</td>
+                                <td>0.34</td>
+                                <td>0.56</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>These values are calculated by the Total Energy Consumption of the last iteration divided by the Total Energy Consumption of the first iteration</p>
+                </div>
+            </div>
+
+            <!-- Absolute Time Data Section -->
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="absTimeData">
+                    Absolute Time Data
+                </div>
+                <div class="panel-body">
+                    <p>The Absolute Time Data is structured like in the table below. Depending on the paramaters the csv file data changes.</p>
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Absolute Time Stamp (in ms)</th>
+                                <th>Carrier 1</th>
+                                <th>Carrier 2</th>
+                                <th>Carrier X</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>50124</td>
+                                <td>34591</td>
+                                <td>12342</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>34032</td>
+                                <td>44555</td>
+                                <td>12441</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>The url to request the csv file is:</p>
+                    <p><code>djhttps://osr-amos.cs.fau.de/ss16/proj6-test/django/dataInterface/continuousDataAbsoluteTime.csv?carriers=Y&amp;iterations=A&amp;dimension=Z&amp;session=X</code></p>
+                    <ul class="list-group">
+                        <li class="list-group-item text-left">
+                            X = Requested Session
+                        </li>
+                        <li class="list-group-item text-left">
+                            Y = Requested Carriers (Multiple Carriers have to be divided by ',')
+                        </li>
+                        <li class="list-group-item text-left">
+                            Z = Requested Dimension
+                        </li>
+                        <li class="list-group-item text-left"
+                        >A = Requested Iterations
+                        </li>
+                    </ul>
+
+                    <p>The requested Dimension can be:</p>
+
+                    <ul class="list-group">
+                        <li class="list-group-item text-left">
+                            ** positionAbsolute:** The absolute position (relative to the beginning of the first drive, in mm) that the carrier is at
+                        </li>
+                        <li class="list-group-item text-left">
+                            ** speed:** The speed that the carrier has at that timeStamp (derived from the positionAbsolute and the timeStamps)
+                        </li>
+                        <li class="list-group-item text-left">
+                            ** acceleration:** The acceleration that the carrier has at that timeStamp (derived from the positionAbsolute and the timeStamps)
+                        </li>
+                        <li class="list-group-item text-left">
+                            ** energyConsumption:** The total amount of energy consumed by the carrier since the last timeStamp (in W)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Take Actions Section -->
+    <div class="panel panel-primary">
+        <div class="panel-heading" id ="takeActions">
+            Take Actions
+        </div>
+        <div class="panel-body">
+            <p>By calling specific urls you can also take the following actions:</p>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('clearDB')">Clear Database</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('startScript')">Start Scripts</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('extrLog')">Extract Logfiles</a>
+                </li>
+            </ul>
+        </div>
+        <!-- Clear Database Section -->
+        <div class="panel panel-info">
+            <div class="panel-heading" id ="clearDB">
+                Clear Database
+            </div>
+            <div class="panel-body">
+                <p>By calling the following url, all values of the database can be removed. This is useful especially for testing but might also be needed to simulate the data processing.</p>
+                <p><code>/django/dataInterface/deleteTables.request?table=tablename</code> </p>
+                <p>tablename:</p>
+                <ul class="list-group">
+                    <li class="list-group-item text-left">
+                        <strong>iteration:</strong> Deletes all values of the table iterationdata
+                    </li>
+                    <li class="list-group-item text-left">
+                        <strong>timestamp:</strong> Deletes all values of the table timestampdata
+                    </li>
+                    <li class="list-group-item text-left">
+                        <strong>sessiondata:</strong> Deletes all values of the table sessiondata
+                    </li>
+                    <li class="list-group-item text-left">
+                        <strong>all:</strong> Deletes all values of the tables sessiondata, iterationdata and timestampdata
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Start Scripts Section -->
+        <div class="panel panel-info">
+            <div class="panel-heading" id ="startScript">
+                Start Scripts
+            </div>
+            <div class="panel-body">
+                <p>By calling the following url, the data processing scripts are started and another csv file is loaded:</p>
+                <p><code>/django/dataInterface/simulation.start?amountOfCarriers=X&amp;</code> </p>
+            </div>
+        </div>
+
+        <!--  Extract Log Files Section -->
+        <div class="panel panel-info">
+            <div class="panel-heading" id ="extrLog">
+                Extract Log Files
+            </div>
+            <div class="panel-body">
+                <p>By calling the following url, logfiles can be extracted as txt-file:</p>
+                <p><code>/django/dataInterface/log.txt?type=X</code> </p>
+                <p>X = type of Logfile</p>
+                <p>Type of Logfile:</p>
+                <ul class="list-group">
+                    <li class="list-group-item text-left">
+                        <strong>DataProcessing</strong>: Extracts the dataProcessing log file
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- test locally Section -->
+    <div class="panel panel-primary">
+        <div class="panel-heading" id ="testLoc">
+            How to test it locally without building the whole project
+        </div>
+        <div class="panel-body">
+            <p>Theoretically this instruction isn't necessary but it is an easy way to build django locally and test the received values. Might be helpful for testing.</p>
+            <ul class="list-group">
+                <li class="list-group-item text-left">
+                    <h3>1. Open Command line and initialize Database</h3>
+                    <p><code>python manage.py makemigrations helloWorld</code></p>
+                    <p><code>python manage.py migrate --noinput</code></p>
+                    <p><code>python manage.py runserver</code></p>
+                </li>
+                <li class="list-group-item text-left">
+                    <h3>2. Change path of database in DataProcesing/setConstants.py to your local path</h3>
+                </li>
+                <li class="list-group-item text-left">
+                    <h3>3. Create Folders in DataProcessing</h3>
+                    <p><code>mkdir InitialData CarrierData CarrierDataArchive</code></p>
+                </li>
+                <li class="list-group-item text-left">
+                    <h3>4. Download Data from our local drive and save it in InitialData</h3>
+                </li>
+                <li class="list-group-item text-left">
+                    <h3>5. Run DataProcessing Scripts to load data into the Database</h3>
+                    <p><code>python compressInitialData.py</code></p>
+                    <p><code>python writeCarrierDataToDataBase.py</code></p>
+                </li>
+                <li class="list-group-item text-left">
+                    <h3>6. Open Browser with the following url:</h3>
+                    <p><code>http://localhost:8000/django/dataInterface/values.request?session=X&amp;carrier=Y&amp;iteration=Z&amp;value=requestedValue</code></p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
