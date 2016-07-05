@@ -55,7 +55,7 @@
                             <div class ="carrierSelection">
                                 <label class = "carrierBox " ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
                                     <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
-                                        <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
+                                        <div class = "carrierBox" ng-style = "carrier.color">
                                             {{carrier.id}}
                                         </div>
                                 </label>

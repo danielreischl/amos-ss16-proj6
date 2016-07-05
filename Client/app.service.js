@@ -50,10 +50,8 @@ angular.module('app')
 	return $http.get('django/dataInterface/percentages.json?session=' +sessionService.getCurrentSession() + '&type='+percentageDataType);
     }
 
-    this.getColorOfCarrier = function(carrier) {
-        var percentageOfEnergy = percentageData[carrier];
+    this.getColorOfCarrier = function(percentageOfEnergy) {
         var color = {'background-color': 'rgb(255,255,0)'};
-	
         if(percentageOfEnergy > 1.05) {
             color = {'background-color' : 'rgb(229, 28, 52)'};
         }

@@ -149,11 +149,7 @@ angular.module('app')
     sessionDataPromise.then(function(response){$scope.sessions = response.data; console.log("Been here.");});
     console.log("main.ctrl.js says: " + JSON.stringify($scope.sessions));
 
-    //for (var i = 1; i <= sessionService.getNumberOfSessions(); i++) {
-    //	$scope.sessions.push(i);
-    //}
-	
-    // the session requested from the database. For now it is fixed.
+    // the session requested from the database.
     $scope.currentSession = sessionService.getCurrentSession();
 
     //a string, which tells the database how many carrier the user is requesting.
@@ -173,10 +169,7 @@ angular.module('app')
 
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     $scope.carriers = [];
-    for (var idCounter = 1; idCounter <= amountOfCarriers;idCounter++) {
-	var currentSelected = carrierService.hasCarrier(idCounter);
-        $scope.carriers.push({id:idCounter, selected:currentSelected});
-    }
+    updateCarrierArray();
 
     //
     // Start of $scope
@@ -187,14 +180,14 @@ angular.module('app')
     $scope.dimensions = [
         {name : "Energy Consumption", id: 'energyConsumption'},
         {name : "Position", id: 'positionAbsolute'},
-	    {name : "Speed", id: 'speed'},
-	    {name : "Acceleration", id: 'acceleration'},
-	    {name : "drive", id : 'drive'},
+	{name : "Speed", id: 'speed'},
+	{name : "Acceleration", id: 'acceleration'},
+	{name : "drive", id : 'drive'},
     ]
 
     $scope.iterationDimensions = [
         {name : 'Last', id : 'last'},
-	    {name : 'Last 3', id : 'lastThree'},
+	{name : 'Last 3', id : 'lastThree'},
         {name : "Last 10", id: 'lastTen'},
         {name : "All", id: 'all'}
     ]
@@ -250,6 +243,18 @@ angular.module('app')
         $scope.ts = new Date();
     }
 
+    // gets percentageData from percentageService and fills carriers array with the selection and color information
+    function updateCarrierArray() {
+	percentageService.getPercentagePromise('percentages_creeping').then(
+	    function(result) {
+		var percentageData = result.data;
+		for (var idCounter = 1; idCounter <= Object.keys(percentageData).length; idCounter++) {
+		    var currentSelected = carrierService.hasCarrier(idCounter);
+		    $scope.carriers.push({id:idCounter, selected:currentSelected, color:percentageService.getColorOfCarrier(percentageData[idCounter])});
+		}
+	    });
+    }
+    
     $scope.getListStyle = function(index) {
         if (index % 5 == 1) {
                 return {'clear': 'left'};
@@ -262,6 +267,7 @@ angular.module('app')
     $scope.updateFileName = function() {
 	sessionService.setCurrentSession($scope.currentSession);
 	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
+	updateCarrierArray();
     }
     
     // This function empties the carriers in the comparison on page leave.
