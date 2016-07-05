@@ -195,21 +195,26 @@ def evaluateDriveReset(drive, carrier):
         print("A new carrier (" + str(carrier) + ") gets pulled onto drive 1")
         # If all carriers already passed the system, the first one enters again
         if carriersThroughTheSystem >= AMOUNT_OF_CARRIERS:
-            carriersThroughTheSystem = 0
+            carriersThroughTheSystem = 1
+
+            # check if carrier 1 is still in the production line and if yes then don't pull a carrier
+            carrierOne = carrierOneOnBelt()
+
+            if carrierOne == 0:
+                # Put carrier 1 onto the first drive
+                print("New carrier gets pulled")
+                driveXHasCarrier[drive - 1] = 1
+            else:
+                # Remove the carrier from drive 1
+                print("Carrier 1 can't get pulled because he is still in the belt")
+                driveXHasCarrier[drive - 1] = 0
+        # If now all the carrier have passed the system the next one enters
         else:
             # Increase the number of carriers that are in the system
             carriersThroughTheSystem += 1
 
-        # check if carrier 1 is still in the production line and if yes then don't pull a carrier
-        carrierOne = carrierOneOnBelt()
-        if carrierOne == 0:
-            # Put carrier 1 onto the first drive
-            print("New carrier gets pulled")
+            # Put the next carrier on the system
             driveXHasCarrier[drive - 1] = carriersThroughTheSystem
-        else:
-            # Remove the carrier from drive 1
-            print("Carrier 1 can't get pulled because he is still in the belt")
-            driveXHasCarrier[drive - 1] = 0
 
     # If the current drive isn't 1 and it has a carrier waiting to go on that drive, the drive before is being evaluated
     # so that the carrier that was waiting can go to the drive
@@ -637,7 +642,7 @@ driveXHasCarrierWaiting = np.zeros(amountOfDrives)
 # Number of Iterations
 iterationNumber = 0
 # The amount of carriers who entered drive 1 (Therefore starting with carrier 1) in the current run
-carriersThroughTheSystem = 0
+carriersThroughTheSystem = 1
 
 # First row of data frames
 initialData = pd.read_csv(os.path.splitext(fileName)[0] + "_modified.csv", DATA_SEPARATOR, low_memory=False,
