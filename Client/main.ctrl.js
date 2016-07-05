@@ -1090,6 +1090,9 @@ the session, iterations and carriers he wans to see. */
             }
             // Divide the sumOfMeasures by amountOfMeasures to get the average deviation for all timestamps
             var finalMeasure = (sumOfMeasures/amountOfMeasures);
+            // Takes Measure times 100 and rounds it to last 2 decimals
+            // Converts 0,0333333 to 3,33
+            finalMeasure = (Math.round(finalMeasure * 10000)) / 100;
             return finalMeasure;
         }
 
