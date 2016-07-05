@@ -934,16 +934,21 @@ which kind of data he wants to see. The default value is average energy consumpt
 the session, iterations and carriers he wans to see. */
 .controller('FlexibilityChartController', function($scope, carrierService, percentageService, sessionService) {
 
+    // function that removes that the buttons are highlighted until you click somewhere else in the page
+    $(".btn").mouseup(function(){
+    $(this).blur();
+    })
+
     // get the array with the carriers the user wants to see in the graph.
     var carrierCompareList = carrierService.getCarrier();
 
     // Sets the initial time for the time stamp
     $scope.ts = new Date();
 
-    $scope.sessions = [];
-    for (var i = 1; i <= sessionService.getNumberOfSessions(); i++) {
-	    $scope.sessions.push(i);
-    }
+    //Function that reads in the sessiondata json-file
+    var sessionDataPromise = sessionService.getSessionData();
+    sessionDataPromise.then(function(response){$scope.sessiondata = response.data});
+    console.log("Simulation page says: " + JSON.stringify($scope.sessiondata));
 
     // the session requested from the database.
     $scope.currentSession = sessionService.getCurrentSession();
@@ -982,6 +987,13 @@ the session, iterations and carriers he wans to see. */
     // make percentage service available in html-view
     // not very nice, try to refactor if possible
     $scope.percentageService = percentageService;
+
+     // Switches Graph to requested View
+    $scope.switchGraph = function(view){
+        if (view=='ContEng'){$window.location.href = '#CompareCarrier';};
+        if (view=='Circle'){$window.location.href = '#CircleCarrier';};
+        if (view=='Spike'){$window.location.href = '#spikeContamination';};
+    }
 
     // Get selected carriers
     $scope.carriersRequested = function() {
@@ -1099,6 +1111,7 @@ the session, iterations and carriers he wans to see. */
         return measure;
     }
 
+
     /* this functions creates the dygraph from a data source and applies options to them*/
     $scope.createFlexibilityChart = function() {
 
@@ -1108,6 +1121,11 @@ the session, iterations and carriers he wans to see. */
         // the url which should be requested wil be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
         $scope.requestedUrl = 'django/dataInterface/continuousDataAbsoluteTime.csv?carriers='+$scope.carriersRequested()+'&iterations='+$scope.selectedIteration+'&dimension=speed&session='+$scope.currentSession+'';
+
+        // Download file
+        $scope.downloadFile = function(){
+            window.location = $scope.requestedUrl;
+        }
 
         graph = new Dygraph(
 	       document.getElementById("FlexibilityChart"),$scope.requestedUrl , {title: 'Flexibility Graph',
@@ -1145,6 +1163,10 @@ the session, iterations and carriers he wans to see. */
 
         // Update the flex measure for the new selection
         $scope.flexibilityMeasure = calculateFlexibilityMeasure();
+
+        $scope.updateFileName = function() {
+	        $scope.currentFileName = sessionService.getCurrentDataFileName($scope.currentSession);
+	    }
 
         // Updates the  time for the time stamp
         $scope.ts = new Date();
