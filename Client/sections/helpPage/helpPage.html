@@ -134,6 +134,16 @@
                                         acceleration over the selected iterations.
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>Flexibility Measure</td>
+                                    <td class="text-left">
+                                        The Flexibility Measure is the average of the deviation of Carrier speeds from the mean Carrier speeds over all timestamps where more than one carrier is on the Conveyor Belt.
+                                        In other words: For every time stamp when at least two Carriers are moving at the same time on the Conveyor Belt, their speed deviation is calculated.
+                                        The Flexibility Measure averages this measure over all Time Stamps.
+                                        This results in a lower measure, when the carriers are moving equally fast for a longer time, a higher measure, when the carriers are moving at more different speeds more often, and in the measure being zero when only one carrier is selected.
+                                        The dimension of the measure is the same as the speed of the Carriers. For better visualization the measure is later multiplied by 100 and rounded after the first two digits.
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </md-content>
