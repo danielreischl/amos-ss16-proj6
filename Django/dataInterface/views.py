@@ -128,11 +128,11 @@ def funcPercentCreeping(session, carrier):
 # Returns one percent value for CarrierView & BarchartView calculated for continuous Contamination
 def funcPercentCont(session, carrier):
     # Extracts Average EnergyConsumption of all iterations of a session
-    initialConsumption = iterationdata.objects.filter(session=session).aggregate(Avg('energyConsumptionTotal')).get(
-        'energyConsumptionTotal__avg')
+    initialConsumption = iterationdata.objects.filter(session=session).aggregate(Avg('energyConsumptionAverage')).get(
+        'energyConsumptionAverage__avg')
     # Extracts energyConsumption of last Iteration of a carrier
     lastConsumption = iterationdata.objects.filter(session=session, carrier=carrier).aggregate(
-        Avg('energyConsumptionTotal')).get('energyConsumptionTotal__avg')
+        Avg('energyConsumptionAverage')).get('energyConsumptionAverage__avg')
     # Returns current currentConsumption divided by average of all consumptions
     return (lastConsumption / initialConsumption)
 
