@@ -243,6 +243,8 @@ def continuousData(request):
             csvRow[key] = row.acceleration
         elif requestedDimension == "energyConsumption":
             csvRow[key] = row.energyConsumption
+        elif requestedDimension == "drive":
+            csvRow[key] = row.drive
 
     # write last row
     writer.writerow(csvRow)
