@@ -60,7 +60,7 @@
                             <div class ="carrierSelection">
                                 <label class = "carrierBox " ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
                                     <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
-                                        <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
+                                        <div class = "carrierBox" ng-style = "carrier.color">
                                             {{carrier.id}}
                                         </div>
                                 </label>
@@ -88,7 +88,7 @@
                         </td>
                         <!-- Action Cell -->
                         <td>
-                            <button type="button" class="btn btn-default btn-block" ng-click = "createAverageEnergyConsumptionChart()">
+                            <button type="button" class="btn btn-default btn-block" ng-click = "reload()">
                                 <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh
                             </button>
                             <button type="button" class="btn btn-default btn-block" ng-click = "downloadFile()">

@@ -248,6 +248,7 @@ angular.module('app')
 	percentageService.getPercentagePromise('percentages_creeping').then(
 	    function(result) {
 		var percentageData = result.data;
+		$scope.carriers = [];
 		for (var idCounter = 1; idCounter <= Object.keys(percentageData).length; idCounter++) {
 		    var currentSelected = carrierService.hasCarrier(idCounter);
 		    $scope.carriers.push({id:idCounter, selected:currentSelected, color:percentageService.getColorOfCarrier(percentageData[idCounter])});
@@ -268,6 +269,13 @@ angular.module('app')
 	sessionService.setCurrentSession($scope.currentSession);
 	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
 	updateCarrierArray();
+    }
+
+    $scope.reload = function() {
+	sessionService.setCurrentSession($scope.currentSession);
+	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
+	updateCarrierArray();
+	$scope.createCompareGraph();
     }
     
     // This function empties the carriers in the comparison on page leave.
@@ -376,10 +384,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     $scope.carriers = [];
-    for (var idCounter = 1; idCounter <= amountOfCarriers;idCounter++) {
-	var currentSelected = carrierService.hasCarrier(idCounter);
-        $scope.carriers.push({id:idCounter, selected:currentSelected});
-    }
+    updateCarrierArray();
     
     // create the dropdown menu for iterations. the id is corresponding to the key word used in the database to extract the dimension.
     $scope.iterationDimensions = [
@@ -406,6 +411,27 @@ which kind of data he wants to see. The default value is average energy consumpt
         if (view=='Spike'){$window.location.href = '#spikeContamination';};
     }
 
+    // gets percentageData from percentageService and fills carriers array with the selection and color information
+    function updateCarrierArray() {
+	percentageService.getPercentagePromise('percentages_creeping').then(
+	    function(result) {
+		var percentageData = result.data;
+		$scope.carriers = [];
+		for (var idCounter = 1; idCounter <= Object.keys(percentageData).length; idCounter++) {
+		    var currentSelected = carrierService.hasCarrier(idCounter);
+		    $scope.carriers.push({id:idCounter, selected:currentSelected, color:percentageService.getColorOfCarrier(percentageData[idCounter])});
+		    console.log(percentageData[idCounter]);
+		}
+	    });
+    }
+
+    $scope.reload = function() {
+	sessionService.setCurrentSession($scope.currentSession);
+	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
+	updateCarrierArray();
+	$scope.createAverageEnergyConsumptionChart();
+    }
+    
      // This function receives the changes from the dropDown menu "dimensions" and changes the yAxis name of the graph and requests the needed data by changing the string name.
     // $scope.changeDimension = function() {
     //	    selectedDimension = $scope.selectedDimension;
@@ -460,6 +486,8 @@ which kind of data he wants to see. The default value is average energy consumpt
                                                                                           }
 	                                                                                      });
 
+
+	
 	$scope.getListStyle = function(index) {
 	    if (index % 5 == 1) {
 		    return {'clear': 'left'};
@@ -976,10 +1004,7 @@ the session, iterations and carriers he wans to see. */
 
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     $scope.carriers = [];
-    for (var idCounter = 1; idCounter <= amountOfCarriers;idCounter++) {
-	    var currentSelected = carrierService.hasCarrier(idCounter);
-        $scope.carriers.push({id:idCounter, selected:currentSelected});
-    }
+    updateCarrierArray();
 
     // create the dropdown menu for iterations. the array gets filled with the iteration numbers available in the database.
     $scope.iterations = [];
@@ -1117,7 +1142,25 @@ the session, iterations and carriers he wans to see. */
         return measure;
     }
 
-
+    function updateCarrierArray() {
+	percentageService.getPercentagePromise('percentages_creeping').then(
+	    function(result) {
+		var percentageData = result.data;
+		$scope.carriers = [];
+		for (var idCounter = 1; idCounter <= Object.keys(percentageData).length; idCounter++) {
+		    var currentSelected = carrierService.hasCarrier(idCounter);
+		    $scope.carriers.push({id:idCounter, selected:currentSelected, color:percentageService.getColorOfCarrier(percentageData[idCounter])});
+		}
+	    });
+    }
+    
+    $scope.reload = function() {
+	sessionService.setCurrentSession($scope.currentSession);
+	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
+	updateCarrierArray();
+	$scope.createFlexibilityChart();
+    }
+    
     /* this functions creates the dygraph from a data source and applies options to them*/
     $scope.createFlexibilityChart = function() {
 
@@ -1158,7 +1201,7 @@ the session, iterations and carriers he wans to see. */
 	                                                                          }
 	       );
 
-        $scope.getListStyle = function(index) {
+	$scope.getListStyle = function(index) {
             if (index % 5 == 1) {
                 return {'clear': 'left'};
             }
