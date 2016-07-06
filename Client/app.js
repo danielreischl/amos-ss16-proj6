@@ -23,7 +23,7 @@
 /* This File is for modularizsation purposes. All new modules should be collected here.
 */
 
-angular.module('app', ['ngRoute', 'app.routes', 'ngMaterial' , 'chart.js'])
+angular.module('app', ['ngRoute', 'app.routes', 'ngMaterial' , 'chart.js', 'ui.bootstrap'])
 
 /*
 changing angularJS specific theme color, to our color set
