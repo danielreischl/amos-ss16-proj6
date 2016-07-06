@@ -168,5 +168,6 @@ BOWER_INSTALLED_APPS = (
     'angular-messages',
     'angular-material#master',
     'bootstrap',
+    'bootstrap-ui',
 
 )
