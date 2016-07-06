@@ -32,7 +32,8 @@ angular.module('app')
     var percentageDataPromise;
     var percentageData = [];
     var flag = false;
-    function getFromDB(percentageDataType) {
+    var percentageDataType = "percentages_creeping";
+    function getFromDB() {
         /*
           Fetches data from backend and sends it to the controller. This will only be done, once the parsing is completed
           So far this is called each time when getAll is called, but this is probably not necessary
@@ -40,13 +41,13 @@ angular.module('app')
 	percentageDataPromise = $http.get('django/dataInterface/percentages.json?session=' +sessionService.getCurrentSession() + '&type='+percentageDataType);
     }
     
-    this.getAll = function(percentageDataType) {
+    this.getAll = function() {
         getFromDB(percentageDataType);
 	percentageDataPromise.then(function(result) {percentageData = result.data});
         return percentageData;
     }
     
-    this.getPercentagePromise = function(percentageDataType) {
+    this.getPercentagePromise = function() {
 	return $http.get('django/dataInterface/percentages.json?session=' +sessionService.getCurrentSession() + '&type='+percentageDataType);
     }
 
@@ -62,11 +63,15 @@ angular.module('app')
         return color;
     }
 
+    this.setPercentageType = function(newType) {
+	percentageDataType = newType;
+    }
 
     return {
         getAll: this.getAll,
         getColorOfCarrier: this.getColorOfCarrier,
 	getPercentagePromise: this.getPercentagePromise,
+	setPercentageType: this.setPercentageType,
     };
 });
 

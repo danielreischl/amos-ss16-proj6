@@ -245,7 +245,7 @@ angular.module('app')
 
     // gets percentageData from percentageService and fills carriers array with the selection and color information
     function updateCarrierArray() {
-	percentageService.getPercentagePromise('percentages_creeping').then(
+	percentageService.getPercentagePromise().then(
 	    function(result) {
 		var percentageData = result.data;
 		$scope.carriers = [];
@@ -413,7 +413,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
     // gets percentageData from percentageService and fills carriers array with the selection and color information
     function updateCarrierArray() {
-	percentageService.getPercentagePromise('percentages_creeping').then(
+	percentageService.getPercentagePromise().then(
 	    function(result) {
 		var percentageData = result.data;
 		$scope.carriers = [];
@@ -526,12 +526,14 @@ which kind of data he wants to see. The default value is average energy consumpt
        if(changed == 0) {
            clearCanvas();
            percentageDataType = "percentages_cont";
+	   percentageService.setPercentageType(percentageDataType);
            $scope.circleView_title = "Continuous Contamination";
            $scope.circleView_button = "Creeping Contamination";
            changed = 1;
        } else {
            clearCanvas();
            percentageDataType = "percentages_creeping";
+	   percentageService.setPercentageType(percentageDataType);
            $scope.circleView_title = "Creeping Contamination";
            $scope.circleView_button = "Continuous Contamination";
            changed = 0;
@@ -563,7 +565,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     }
 
     function redrawAllSelections() {
-        for(var i = percentageService.getAll(percentageDataType).length; i >= 1; i--) {
+        for(var i = percentageService.getAll().length; i >= 1; i--) {
             var hasCarrier = carrierService.containsCarrier(i);
             if (hasCarrier) {
                 drawSelectionOnCarrier(i, true);
@@ -624,7 +626,7 @@ which kind of data he wants to see. The default value is average energy consumpt
      *  after data arrived call the functoin circleGraphMain that acutally paints the circles
     */
     $scope.circleGraph = function () {
-	percentageService.getPercentagePromise(percentageDataType)
+	percentageService.getPercentagePromise()
 	    .then(function(result){$scope.circleGraphMain(result.data)});
     }
 
@@ -732,6 +734,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
         // get the data from the percentage service and save it into the variables, carrierPercentageData and amountOfCarriers
         var percentageDataType = "percentages_creeping";
+	percentageService.setPercentageType(percentageDataType);
         //var carrierPercentageData = percentageService.getAll(percentageDataType);
 
         // this array saves the percentage of each bar column/carrier
@@ -750,7 +753,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         //$timeout(createBarChartView, 0);
 
 	//function createBarCharView() {
-	var carrierPercentageDataPromise = percentageService.getPercentagePromise(percentageDataType);
+	var carrierPercentageDataPromise = percentageService.getPercentagePromise();
 	carrierPercentageDataPromise.then(
 	    function(result){createBarChartViewMain(result.data)}
 	);
@@ -1143,7 +1146,7 @@ the session, iterations and carriers he wans to see. */
     }
 
     function updateCarrierArray() {
-	percentageService.getPercentagePromise('percentages_creeping').then(
+	percentageService.getPercentagePromise().then(
 	    function(result) {
 		var percentageData = result.data;
 		$scope.carriers = [];
