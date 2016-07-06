@@ -31,8 +31,8 @@ import subprocess
 import json
 # Imports HTTPResponse
 from django.http import HttpResponse
-# Imports Possibility to calculate Max and Average
-from django.db.models import Max, Avg
+# Imports Helper Functions for Django Models
+from django.db.models import F, Func, FloatField, Sum, Max, Avg
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 
@@ -581,6 +581,18 @@ def averageEnergyConsumption(request):
             # Appends result of function funcAverageEnergyConsumption to the list
             elif requestedDimension == 'energyConsumptionAverage':
                 rowOfValues.append(funcAverageEnergyConsumption(requestedSession, carrier, iteration))
+            # Appends friction-like value to the row
+            # the value is not really the friction but it should be 0 in a frictionless-environment and increases when friction increases
+            elif requestedDimension == 'averageFriction':
+                averageFriction = timestampdata.objects.filter(session = requestedSession, carrier = carrier, iteration = iteration).aggregate(averageFriction = Avg(Func(F('energyConsumption')/F('acceleration'), function= 'ABS'), outputField = FloatField()))
+                rowOfValues.append(averageFriction.get('averageFriction'))
+            # Appends the energy *in*efficiency to the row
+            # energy *in*efficiency is the ratio of total energyConsumption and an ideal-energy-related value
+            # the ideal-energy-related value is the sum of all acceleration values, it differs from the ideal energy by a constant factor
+            elif requestedDimension == 'energyInefficiency':
+                energyValues = timestampdata.objects.filter(session = requestedSession, carrier = carrier, iteration = iteration).aggregate(
+                    totalEnergy = Sum(Func(F('energyConsumption'), function = 'ABS')), totalIdealEnergy = Sum(Func(F('acceleration'), function = 'ABS')))
+                rowOfValues.append(energyValues.get('totalEnergy')/energyValues.get('totalIdealEnergy'))
             # any other paramater returns 'no such paramater defined'
             else:
                 return HttpResponse('No such paramter defined')

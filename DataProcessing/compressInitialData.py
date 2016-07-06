@@ -125,6 +125,18 @@ def processData(time, drive, position, energy):
 
 
 # This method is called when da drive reset its position to 0 and the carrier moves on to the next drive.
+def carrierOneOnBelt():
+    global driveXHasCarrier
+
+    print("driveXHasCarrier.size " + str(driveXHasCarrier.size))
+
+    for i in range(0, driveXHasCarrier.size):
+        print("i " + str(i))
+        if driveXHasCarrier[i] == 1:
+            return 1
+    return 0
+
+
 def evaluateDriveReset(drive, carrier):
     # Ensures that all modified global variables are called globally
     global driveXHasCarrier
@@ -156,6 +168,12 @@ def evaluateDriveReset(drive, carrier):
         # If all carriers went through the drives, the iteration is complete and the iterationNumber is increased
         if carrier == AMOUNT_OF_CARRIERS:
             iterationNumber += 1
+        # If the carrier is carrier 1
+        if carrier == 1 and driveXHasCarrier[0] == 0:
+            # Put carrier 1 onto the first drive
+            print("Carrier 1 gets pulled")
+            driveXHasCarrier[0] = 1
+
 
     # The carrier moves to the next drive; Checks if there is a "next" drive
     if drive < amountOfDrives:
@@ -174,17 +192,29 @@ def evaluateDriveReset(drive, carrier):
 
     # If the current drive is drive 1, then a new carrier is pulled onto the drive 1
     if drive == 1:
-        print("A new carrier gets pulled onto drive 1")
-
+        print("A new carrier (" + str(carrier) + ") gets pulled onto drive 1")
         # If all carriers already passed the system, the first one enters again
         if carriersThroughTheSystem >= AMOUNT_OF_CARRIERS:
             carriersThroughTheSystem = 1
+
+            # check if carrier 1 is still in the production line and if yes then don't pull a carrier
+            carrierOne = carrierOneOnBelt()
+
+            if carrierOne == 0:
+                # Put carrier 1 onto the first drive
+                print("New carrier gets pulled")
+                driveXHasCarrier[drive - 1] = 1
+            else:
+                # Remove the carrier from drive 1
+                print("Carrier 1 can't get pulled because he is still in the belt")
+                driveXHasCarrier[drive - 1] = 0
+        # If now all the carrier have passed the system the next one enters
         else:
             # Increase the number of carriers that are in the system
             carriersThroughTheSystem += 1
 
-        # Put the new carrier onto the first drive
-        driveXHasCarrier[drive - 1] = carriersThroughTheSystem
+            # Put the next carrier on the system
+            driveXHasCarrier[drive - 1] = carriersThroughTheSystem
 
     # If the current drive isn't 1 and it has a carrier waiting to go on that drive, the drive before is being evaluated
     # so that the carrier that was waiting can go to the drive
@@ -199,7 +229,6 @@ def evaluateDriveReset(drive, carrier):
     # Prints out state of carriers on each drive after the evaluation
     print("After the carriers have moved ")
     print(driveXHasCarrier)
-
 
 # If a carrier leaves the last drive, the data for the carrier is compressed, the CSV file is exported and
 # the data is cleared
@@ -265,11 +294,8 @@ def compressData(carrier):
             # Increase the next value that is being searched for
             nextTimeStampValue += KEEP_EVERY_X_ROW
 
-            # Increase counted timestamps by 1
-            countedTimeStamps += 1
-
-            # If the current value cannot be found because the timestamp was not recorded for that carrier
-            # The position has to be interpolated
+        # If the current value cannot be found because the timestamp was not recorded for that carrier
+        # The position has to be interpolated
         elif (carrierData[carrier - 1][0][i] - firstTimeStamp) > nextTimeStampValue:
             # Counts the amount of transferred timestamps to average in the end
             # This while loop iterates as long as all the values in the gap were interpolated
