@@ -1187,7 +1187,9 @@ the session, iterations and carriers he wans to see. */
        then activates scroll
     */
     $scope.scrollTo = function(id) {
+        var old = $location.hash();
         $location.hash(id);
         $anchorScroll();
+        $location.hash(old);
     };
 })
