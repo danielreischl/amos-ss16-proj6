@@ -245,6 +245,12 @@ angular.module('app')
 
     // gets percentageData from percentageService and fills carriers array with the selection and color information
     function updateCarrierArray() {
+	$scope.carriers.forEach(
+	    function(carrier) {
+		if (carrier.selected) {
+		    carrierService.addCarrier(carrier.id);
+		}
+	    });
 	percentageService.getPercentagePromise().then(
 	    function(result) {
 		var percentageData = result.data;
@@ -413,6 +419,12 @@ which kind of data he wants to see. The default value is average energy consumpt
 
     // gets percentageData from percentageService and fills carriers array with the selection and color information
     function updateCarrierArray() {
+	$scope.carriers.forEach(
+	    function(carrier) {
+		if (carrier.selected) {
+		    carrierService.addCarrier(carrier.id);
+		}
+	    });
 	percentageService.getPercentagePromise().then(
 	    function(result) {
 		var percentageData = result.data;
@@ -1146,6 +1158,12 @@ the session, iterations and carriers he wans to see. */
     }
 
     function updateCarrierArray() {
+	$scope.carriers.forEach(
+		function(carrier) {
+		    if (carrier.selected) {
+			carrierService.addCarrier(carrier.id);
+		    }
+		});
 	percentageService.getPercentagePromise().then(
 	    function(result) {
 		var percentageData = result.data;
