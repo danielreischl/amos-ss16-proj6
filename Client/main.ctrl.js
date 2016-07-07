@@ -250,6 +250,9 @@ angular.module('app')
 		if (carrier.selected) {
 		    carrierService.addCarrier(carrier.id);
 		}
+		else {
+		    carrierService.deleteCarrier(carrier.id);
+		}
 	    });
 	percentageService.getPercentagePromise().then(
 	    function(result) {
@@ -423,6 +426,9 @@ which kind of data he wants to see. The default value is average energy consumpt
 	    function(carrier) {
 		if (carrier.selected) {
 		    carrierService.addCarrier(carrier.id);
+		}
+		else {
+		    carrierService.deleteCarrier(carrier.id);
 		}
 	    });
 	percentageService.getPercentagePromise().then(
@@ -1162,6 +1168,9 @@ the session, iterations and carriers he wans to see. */
 		function(carrier) {
 		    if (carrier.selected) {
 			carrierService.addCarrier(carrier.id);
+		    }
+		    else {
+			carrierService.deleteCarrier(carrier.id);
 		    }
 		});
 	percentageService.getPercentagePromise().then(
