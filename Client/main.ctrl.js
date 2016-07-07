@@ -291,7 +291,7 @@ angular.module('app')
     // If the user leaves the current html snippet/template then,
     // this function will notice that and trigger the function "emptyCarrierArray" & emptyIterationArray
     $scope.$on("$destroy", function() {
-        carrierService.emptyCarrierArray();
+        //carrierService.emptyCarrierArray();
         iterationService.emptyIterationArray();
     });
 
