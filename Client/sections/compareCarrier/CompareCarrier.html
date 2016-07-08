@@ -55,7 +55,7 @@
                             <div class ="carrierSelection">
                                 <label class = "carrierBox " ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
                                     <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
-                                        <div class = "carrierBox" ng-style = "percentageService.getColorOfCarrier(carrier.id)">
+                                        <div class = "carrierBox" ng-style = "carrier.color">
                                             {{carrier.id}}
                                         </div>
                                 </label>
@@ -63,40 +63,27 @@
                         </td>
                         <!-- Iteration Cell -->
                         <td>
-                            <label class = "iterationBox btn btn-default btn-block" ng-repeat="iterOption in iterationDimensions">
-                                <input type="radio" name = "iterOption" ng-value="iterOption.id" ng-model="$parent.selectedIteration"/>
-                                <div>
-                                    {{iterOption.name}}
-                                 </div>
-                            </label>
+                            <div>
+                                <label class="btn btn-default btn-block" ng-repeat="iterOption in iterationDimensions"  ng-model="$parent.selectedIteration" uib-btn-radio="iterOption.id">{{iterOption.name}}</label>
+                            </div>
                         </td>
                         <!-- Dimension Cell -->
                         <td>
-                            <div class = "dimensionSelection">
-                                <label class = "iterationBox btn btn-default btn-block" ng-repeat="dimension in dimensions">
-                                    <input type="radio" name = "dimension" ng-value="dimension.id" ng-model="$parent.selectedDimension"/>
-                                    <div>
-                                        {{dimension.name}}
-                                    </div>
-                                </label>
+                            <div>
+                                <label class="btn btn-default btn-block" ng-repeat="dimension in dimensions"  ng-model="$parent.selectedDimension" uib-btn-radio="dimension.id">{{dimension.name}}</label>
                             </div>
                         </td>
                         <!-- Session Cell
                         Prompts Radiobuttons from the json data Extract
                         -->
                         <td>
-                            <div class = "sessionSelection">
-                                <label class = "iterationBox btn btn-default btn-block" ng-repeat="x in sessiondata">
-                                    <input type="radio" name = "x.fields.session" ng-value="x.fields.session" ng-model="$parent.currentSession" />
-                                    <div>
-                                        {{x.fields.fileName}}
-                                    </div>
-                                </label>
+                            <div>
+                                <label class="btn btn-default btn-block" ng-repeat="x in sessiondata"  ng-model="$parent.currentSession" uib-btn-radio="x.fields.session">{{x.fields.fileName}}</label>
                             </div>
                         </td>
                         <!-- Action Cell -->
                         <td>
-                            <button type="button" class="btn btn-default btn-block" ng-click = "createCompareGraph()">
+                            <button type="button" class="btn btn-default btn-block" ng-click = "reload()">
                                 <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Refresh
                             </button>
                             <button type="button" class="btn btn-default btn-block" ng-click = "downloadFile()">

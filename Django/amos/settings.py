@@ -168,5 +168,6 @@ BOWER_INSTALLED_APPS = (
     'angular-messages',
     'angular-material#master',
     'bootstrap',
+    'http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.3.3.js',
 
 )
