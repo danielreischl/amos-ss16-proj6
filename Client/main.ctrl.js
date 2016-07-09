@@ -898,6 +898,14 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 .controller('simulationPageController', function($scope, $http, $window, sessionService) {
 
+    $http.get("django/dataInterface/simulation.running").then(function (response){
+        if (response.data == "True"){
+            $scope.running = true;
+        }else{
+            $scope.running = false;
+        }
+    });
+
     // This saves all Data File Names that are stored on the server
     $scope.dataFileNames = getArrayOfDataFiles();
 
