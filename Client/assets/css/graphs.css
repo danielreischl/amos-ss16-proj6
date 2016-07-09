@@ -35,7 +35,10 @@
     border-color: black;
     width: 150px;
     background-color: white;
+
 }
+
+.graphLegend > span.highlight { border: 1px solid grey; }
 
 .graphSize {
    width: 80vw;
