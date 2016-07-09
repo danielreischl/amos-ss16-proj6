@@ -70,13 +70,8 @@
                         Prompts Radiobuttons from the json data Extract
                         -->
                         <td>
-                            <div class = "sessionSelection">
-                                <label class = "iterationBox btn btn-default btn-block" ng-repeat="x in sessiondata">
-                                    <input type="radio" name = "x.fields.session" ng-value="x.fields.session" ng-model="$parent.currentSession" />
-                                    <div>
-                                        {{x.fields.fileName}}
-                                    </div>
-                                </label>
+                            <div>
+                                <label class="btn btn-default btn-block" ng-repeat="x in sessiondata"  ng-model="$parent.currentSession" uib-btn-radio="x.fields.session">{{x.fields.fileName}}</label>
                             </div>
                         </td>
                         <!-- Action Cell -->
