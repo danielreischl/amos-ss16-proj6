@@ -540,8 +540,10 @@ which kind of data he wants to see. The default value is average energy consumpt
     var percentageDataType = "percentages_creeping";
 
     // sets the current File Name
-    $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
-
+    $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){
+        $scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;
+        $scope.fileStatus = response.data[sessionService.getCurrentSession()-1].fields.status;
+    });
     /* Button, changes the title of the view and the data displayed. It will also redraw the circles with the new data */
     $scope.changeView = function() {
        if(changed == 0) {
@@ -638,7 +640,10 @@ which kind of data he wants to see. The default value is average energy consumpt
         //Update the timestamp
         $scope.ts = new Date();
         // sets the current File Name
-        $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
+        $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){
+            $scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;
+            $scope.fileStatus = response.data[sessionService.getCurrentSession()-1].fields.status;
+        });
     }
 
 
