@@ -102,6 +102,7 @@ angular.module('app')
         if (view=='AvgEng'){$window.location.href = '#AverageEnergyConsumptionChart';};
         if (view=='Circle'){$window.location.href = '#CircleCarrier';};
         if (view=='Spike'){$window.location.href = '#spikeContamination';};
+        if (view=='Flexibility'){$window.location.href = '#flexibilityPage';};
     }
 
 
@@ -404,6 +405,8 @@ which kind of data he wants to see. The default value is average energy consumpt
         if (view=='ContEng'){$window.location.href = '#CompareCarrier';};
         if (view=='Circle'){$window.location.href = '#CircleCarrier';};
         if (view=='Spike'){$window.location.href = '#spikeContamination';};
+        if (view=='Flexibility'){$window.location.href = '#flexibilityPage';};
+
     }
 
      // This function receives the changes from the dropDown menu "dimensions" and changes the yAxis name of the graph and requests the needed data by changing the string name.
