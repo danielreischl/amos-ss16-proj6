@@ -32,6 +32,7 @@ html,body {
 .ngViewContent {
     text-align: center;
     background-color : #ECEFF1;
+    height: 100%;
 }
 
 header {
@@ -110,6 +111,7 @@ md-content {
        -webkit-border-radius: 100%;
      box-shadow: 0 9px #999;
       }
+
  #button:hover{
     color: #ffffff;
    background-color: #73AD21;
@@ -220,4 +222,10 @@ ul.carrierSelection li{
 
 .tabView {
   padding-top: 20px;
+}
+
+.btn-carrier {width:20%;}
+
+.btn-defaul:active{
+font-style: bold;
 }
