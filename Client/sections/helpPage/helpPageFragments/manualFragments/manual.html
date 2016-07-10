@@ -23,7 +23,90 @@
 
 <div class ="page-header">
     <h1>Manual</h1>
-        <p>
-            In this Tab, a user manual is presented to help the user work with the Data Analytics App. It will explain all necessary steps in detail.
-        </p>
+    <p>
+        This short manual will provide an overview on how the basic
+        functionalities of the Demonstrator Data Analytics App work
+    </p>
+    <p>
+        The application loads a csv file with data generated from the
+        demonstrator and provides visualization of carriers data in order to
+        detect different types of contamination
+    </p>
+    <p>
+        This guide will show how an operator should look for different
+        types of contamination
+    </p>
+</div>
+
+<div class="container">
+    <div class="panel-group" id="accordion">
+
+         <!-- First closed element in the accordion structure -->
+        <div class="panel panel-default">
+            <!-- This is the item that will be always shown and on which the user can click on to expand the content -->
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                <a href ="" ng-click="collapsed =! collapsed">General Functions</a>
+                </h4>
+            </div>
+            <!-- content of the above clickable element. The content will be inserted from a different html fragment -->
+            <div ng-show="collapsed" class="panel-collapse collapse in">
+                <ng-include src="'sections/helpPage/helpPageFragments/manualFragments/general_functions.html'"></ng-include>
+            </div>
+        </div>
+
+         <!-- Second closed element in the accordion structure -->
+        <div class="panel panel-default">
+            <!-- This is the item that will be always shown and on which the user can click on to expand the content -->
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                <a href ="" ng-click="collapsed2 =! collapsed2">Importing Data</a>
+                </h4>
+            </div>
+            <!-- content of the above clickable element. The content will be inserted from a different html fragment -->
+            <div ng-show="collapsed2" class="panel-collapse collapse in">
+                <ng-include src="'sections/helpPage/helpPageFragments/manualFragments/data_import.html'"></ng-include>
+            </div>
+        </div>
+
+        <!-- Third closed element in the accordion structure -->
+        <div class="panel panel-default">
+            <!-- This is the item that will be always shown and on which the user can click on to expand the content -->
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                <a href ="" ng-click="collapsed3 =! collapsed3">Identifying Creeping Contamination</a>
+                </h4>
+            </div>
+            <!-- content of the above clickable element. The content will be inserted from a different html fragment -->
+            <div ng-show="collapsed3" class="panel-collapse collapse in">
+                <ng-include src="'sections/helpPage/helpPageFragments/manualFragments/creeping_cont.html'"></ng-include>
+            </div>
+        </div>
+        <!-- Forth closed element in the accordion structure -->
+        <div class="panel panel-default">
+            <!-- This is the item that will be always shown and on which the user can click on to expand the content -->
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                <a href ="" ng-click="collapsed4 =! collapsed4">Identifying Continuous Contamination</a>
+                </h4>
+            </div>
+            <!-- content of the above clickable element. The content will be inserted from a different html fragment -->
+            <div ng-show="collapsed4" class="panel-collapse collapse in">
+                <ng-include src="'sections/helpPage/helpPageFragments/manualFragments/continuous_cont.html'"></ng-include>
+            </div>
+        </div>
+        <!-- Fifth closed element in the accordion structure -->
+        <div class="panel panel-default">
+            <!-- This is the item that will be always shown and on which the user can click on to expand the content -->
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                <a href ="" ng-click="collapsed5 =! collapsed5">Identifying Energy Spikes</a>
+                </h4>
+            </div>
+            <!-- content of the above clickable element. The content will be inserted from a different html fragment -->
+            <div ng-show="collapsed5" class="panel-collapse collapse in">
+                <ng-include src="'sections/helpPage/helpPageFragments/manualFragments/energy_spikes.html'"></ng-include>
+            </div>
+        </div>
+    </div>
 </div>
