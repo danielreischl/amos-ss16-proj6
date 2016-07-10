@@ -1212,7 +1212,7 @@ the session, iterations and carriers he wans to see. */
 
     // this function ic called, when the user enters the graph page for the first time.
     // It will draw the graph and sets the selected carriers to a default value.
-    $Scope.init = function() {
+    $scope.init = function() {
         // all carriers should be selected by default. This is done, by adding all carrier ids to the carrierService array.
         for(i = 1; i <= amountOfCarriers; i++) {
             carrierService.addCarrier(i);
