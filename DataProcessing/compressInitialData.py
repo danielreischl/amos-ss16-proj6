@@ -82,9 +82,9 @@ def processData(time, drive, position, energy):
 
     # If position is zero and it wasn't 0 before, the carrier has left the drive and the drive needs to be reset
     if position == 0 and lastPositionOfCarrier[carrier - 1] != 0:
-        print("Drive " + str(drive) + " Carrier " + str(carrier) + " Time " + str(time))
-        print("Position  " + str(position))
-        print("Energy    " + str(energy))
+        #print("Drive " + str(drive) + " Carrier " + str(carrier) + " Time " + str(time))
+        #print("Position  " + str(position))
+        #print("Energy    " + str(energy))
 
         # Reset the drive
         evaluateDriveReset(drive, carrier)
@@ -140,11 +140,11 @@ def evaluateDriveReset(drive, carrier):
     global lastCarrierThatEnteredDriveOne
 
     # Prints out a message that the drive just restarted and which carrier will be leaving the drive
-    print("Drive " + str(drive) + " restarted, with carrier " + str(carrier))
+    #print("Drive " + str(drive) + " restarted, with carrier " + str(carrier))
 
     # Prints out state of carriers on each drive before the evaluation
-    print("Before moving carriers ")
-    print(driveXHasCarrier)
+    #print("Before moving carriers ")
+    #print(driveXHasCarrier)
 
     # If this method is called because a carrier has been waiting to move to the next drive, then there may be the
     # possibility that in the meantime another carrier has entered the drive. So in this case the carrier doesn't leave
@@ -162,7 +162,7 @@ def evaluateDriveReset(drive, carrier):
         # If the carrier is carrier 1 and the first drive is empty put him on drive 1
         if driveXHasCarrier[0] == 0:
             # Put the carrier onto the first drive
-            print("Carrier " + str(carrier) + " gets pulled")
+            # print("Carrier " + str(carrier) + " gets pulled")
             driveXHasCarrier[0] = carrier
             lastCarrierThatEnteredDriveOne = carrier
 
@@ -171,12 +171,12 @@ def evaluateDriveReset(drive, carrier):
         # If the next drive isn't empty, the carrier gets put on the waiting list (driveXHasCarrierWaiting)
         if driveXHasCarrier[drive - 1 + 1] != 0:
             # Print conflict message
-            print("Carrier " + str(carrier) + " wants to go to drive " + str(drive + 1) + " ,but there is carrier " \
-                  + str(driveXHasCarrier[drive - 1 + 1]) + " on there")
+            # print("Carrier " + str(carrier) + " wants to go to drive " + str(drive + 1) + " ,but there is carrier " \
+            #      + str(driveXHasCarrier[drive - 1 + 1]) + " on there")
             # Put the carrier on the waiting list for the next drive
             driveXHasCarrierWaiting[drive - 1 + 1] = carrier
             # Print current waiting list
-            print("Carriers waiting: " + str(driveXHasCarrierWaiting))
+            # print("Carriers waiting: " + str(driveXHasCarrierWaiting))
         else:
             # If the next drive is empty, the carrier moves to the next drive
             driveXHasCarrier[drive - 1 + 1] = carrier
@@ -194,27 +194,27 @@ def evaluateDriveReset(drive, carrier):
 
         if carrierXOnBelt(lastCarrierThatEnteredDriveOne) == 1:
             # Can't put next carrier on drive because he is still on the drive
-            print("Carrier (" + str(
-                lastCarrierThatEnteredDriveOne) + ") can't get pulled because he is still on the drive")
+            # print("Carrier (" + str(
+            #    lastCarrierThatEnteredDriveOne) + ") can't get pulled because he is still on the drive")
             driveXHasCarrier[drive - 1] = 0
         else:
             # Put next carrier on drive
-            print("A new carrier (" + str(lastCarrierThatEnteredDriveOne) + ") gets pulled onto drive 1")
+            # print("A new carrier (" + str(lastCarrierThatEnteredDriveOne) + ") gets pulled onto drive 1")
             driveXHasCarrier[drive - 1] = lastCarrierThatEnteredDriveOne
 
     # If the current drive isn't 1 and it has a carrier waiting to go on that drive, the drive before is being evaluated
     # so that the carrier that was waiting can go to the drive
     else:
         if driveXHasCarrierWaiting[drive - 1] != 0:
-            print("Pulling carrier " + str(driveXHasCarrierWaiting[drive - 1]) + " to drive " + str(drive))
+            # print("Pulling carrier " + str(driveXHasCarrierWaiting[drive - 1]) + " to drive " + str(drive))
             # Calling evaluatingDriveReset for the drive before and the waiting carrier
             evaluateDriveReset(drive - 1, driveXHasCarrierWaiting[drive - 1])
             # Carrier is no longer waiting to go to the drive
             driveXHasCarrierWaiting[drive - 1] = 0
 
     # Prints out state of carriers on each drive after the evaluation
-    print("After the carriers have moved ")
-    print(driveXHasCarrier)
+    # print("After the carriers have moved ")
+    # print(driveXHasCarrier)
 
 
 # If a carrier leaves the last drive, the data for the carrier is compressed, the CSV file is exported and
@@ -244,11 +244,10 @@ def completeIteration(carrier):
 def writeEnergyToDatabase(carrier, energySum):
     averageEnergy = float(energySum / currentPositionAtCarrierData[carrier - 1])
 
-    # TODO write to DB
+    # Table name of iteration data
+    tableName = config.get('database_tables','average')
     # Everything needed to write values to the DB
-    print("Session " + str(session) + " Iteration " + str(iterationNumber) + " Carrier " + str(carrier))
-    print("Total energy: " + str(energySum))
-    print("Average energy: " + str(averageEnergy))
+    dataProcessingFunctions.writeCumulatedValuesToDB(tableName,session,carrier,iterationNumber,averageEnergy)
 
 
 # Removes all the not relevant timestamps at the beginning of the data array by rolling the data up to the top
@@ -258,7 +257,7 @@ def rollUpData(carrier):
     # Select first and relevant timestamp, so the timestamps before can be deleted
     firstRow = findFirstRowInCarrierData(carrier)
 
-    print("Rolling up, before FirstTS: " + str(firstRow))
+    # print("Rolling up, before FirstTS: " + str(firstRow))
 
     if firstRow != 0:
         # Roll all relevant time stamps to the top
@@ -267,7 +266,7 @@ def rollUpData(carrier):
         # Update current position in Carrier Data (move up by int(firstRow)
         currentPositionAtCarrierData[carrier - 1] -= firstRow
 
-    print("After rolling: " + str(findFirstRowInCarrierData(carrier)))
+    # print("After rolling: " + str(findFirstRowInCarrierData(carrier)))
 
 
 # Removes the last 200 timestamps from the data where the energy spike is

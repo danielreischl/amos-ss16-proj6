@@ -91,18 +91,21 @@ def process_file(fileName):
     energyConsumptionPercent = round((energyConsumptionPeak/averageEnergyConsumption)*100,2)
 
     # Inizialize DataFrame comulatedData with columns based on new DataBaseModel
-    cumulatedData = pd.DataFrame(
-        columns=['session', 'carrier', 'iteration', 'speedAverage', 'accelerationAverage',
-                 'energyConsumptionTotal', 'energyConsumptionAverage', 'energyConsumptionPeak', 'energyConsumptionPercent'], index=['1'])
+    #cumulatedData = pd.DataFrame(
+    #    columns=['session', 'carrier', 'iteration', 'speedAverage', 'accelerationAverage',
+    #             'energyConsumptionTotal', 'energyConsumptionAverage', 'energyConsumptionPeak', 'energyConsumptionPercent'], index=['1'])
     # Adding previous extracted and calculated values to DataFrame
-    cumulatedData.loc['1'] = pd.Series(
-        {'session': session, 'carrier': carrier, 'iteration': iteration, 'speedAverage': averageSpeed,
-         'accelerationAverage': averageAcceleration, 'energyConsumptionTotal': totalEnergyConsumption,
-         'energyConsumptionAverage': averageEnergyConsumption,'energyConsumptionPeak': energyConsumptionPeak,
-         'energyConsumptionPercent': energyConsumptionPercent})
+    #cumulatedData.loc['1'] = pd.Series(
+    #    {'session': session, 'carrier': carrier, 'iteration': iteration, 'speedAverage': averageSpeed,
+    #     'accelerationAverage': averageAcceleration, 'energyConsumptionTotal': totalEnergyConsumption,
+    #     'energyConsumptionAverage': averageEnergyConsumption,'energyConsumptionPeak': energyConsumptionPeak,
+    #     'energyConsumptionPercent': energyConsumptionPercent})
 
     # calls function to load the processed data into the database
-    dataProcessingFunctions.write_dataframe_to_database(cumulatedData, config.get('database_tables','average'),'append')
+    cumulatedData = {'session': session, 'carrier': carrier, 'iteration': iteration, 'speedAverage': averageSpeed,
+         'accelerationAverage': averageAcceleration, 'energyConsumptionTotal': totalEnergyConsumption, 'energyConsumptionPeak': energyConsumptionPeak, 'energyConsumptionPercent': energyConsumptionPercent}
+    dataProcessingFunctions.writeRemainingCumulatedValuesToDB(cumulatedData, config.get('database_tables','average'))
+    #dataProcessingFunctions.write_dataframe_to_database(cumulatedData, config.get('database_tables','average'),'append')
 
 def moveFileToFolder(fileName, folderName):
     print ("Moving: " + fileName + " to " + os.path.join(folderName, os.path.basename(fileName)))

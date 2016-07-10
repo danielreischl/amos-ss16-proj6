@@ -84,17 +84,17 @@ class iterationdata(models.Model):
 
 
     # The average speed of a carrier in one iteration
-    speedAverage = models.FloatField()
+    speedAverage = models.FloatField(null=True)
     # The average acceleration of a carrier in one iteration
-    accelerationAverage = models.FloatField()
+    accelerationAverage = models.FloatField(null=True)
     # The total energy Consumption of a carrier in one iteration
-    energyConsumptionTotal = models.FloatField()
+    energyConsumptionTotal = models.FloatField(null=True)
     # The average energy Consumption of a carrier in one iteration
-    energyConsumptionAverage = models.FloatField()
+    energyConsumptionAverage = models.FloatField(null=True)
     # Highest energy peak of a carrier in one iteration
-    energyConsumptionPeak = models.FloatField()
+    energyConsumptionPeak = models.FloatField(null=True)
     # Peak divided by averageEnergyConsumption
-    energyConsumptionPercent = models.FloatField()
+    energyConsumptionPercent = models.FloatField(null=True)
 
     # Display the session, carrier and iteration number of this database entry
     def __unicode__(self):  # in python 3.3 this is __str__(self):
