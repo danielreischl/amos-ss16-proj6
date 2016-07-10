@@ -1209,6 +1209,16 @@ the session, iterations and carriers he wans to see. */
 	updateCarrierArray();
 	$scope.createFlexibilityChart();
     }
+
+    // this function ic called, when the user enters the graph page for the first time.
+    // It will draw the graph and sets the selected carriers to a default value.
+    $Scope.init {
+        // all carriers should be selected by default. This is done, by adding all carrier ids to the carrierService array.
+        for(i = 1; i <= amountOfCarriers; i++) {
+            carrierService.addCarrier(i);
+        }
+        $scope.reload;
+    }
     
     /* this functions creates the dygraph from a data source and applies options to them*/
     $scope.createFlexibilityChart = function() {
