@@ -170,7 +170,7 @@ angular.module('app')
 
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     $scope.carriers = [];
-    updateCarrierArray();
+    updateCarrierArrayAndDrawGraph();
 
     //
     // Start of $scope
@@ -245,7 +245,7 @@ angular.module('app')
     }
 
     // gets percentageData from percentageService and fills carriers array with the selection and color information
-    function updateCarrierArray() {
+    function updateCarrierArrayAndDrawGraph() {
 	$scope.carriers.forEach(
 	    function(carrier) {
 		if (carrier.selected) {
@@ -263,6 +263,7 @@ angular.module('app')
 		    var currentSelected = carrierService.hasCarrier(idCounter);
 		    $scope.carriers.push({id:idCounter, selected:currentSelected, color:percentageService.getColorOfCarrier(percentageData[idCounter])});
 		}
+		$scope.createCompareGraph();
 	    });
     }
     
@@ -278,14 +279,13 @@ angular.module('app')
     $scope.updateFileName = function() {
 	sessionService.setCurrentSession($scope.currentSession);
 	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
-	updateCarrierArray();
+	updateCarrierArrayAndDrawGraph();
     }
 
     $scope.reload = function() {
 	sessionService.setCurrentSession($scope.currentSession);
 	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
-	updateCarrierArray();
-	$scope.createCompareGraph();
+	updateCarrierArrayAndDrawGraph();
     }
     
     // This function empties the carriers in the comparison on page leave.
@@ -394,7 +394,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     $scope.carriers = [];
-    updateCarrierArray();
+    updateCarrierArrayAndDrawGraph();
     
     // create the dropdown menu for iterations. the id is corresponding to the key word used in the database to extract the dimension.
     $scope.iterationDimensions = [
@@ -424,7 +424,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     }
 
     // gets percentageData from percentageService and fills carriers array with the selection and color information
-    function updateCarrierArray() {
+    function updateCarrierArrayAndDrawGraph() {
 	$scope.carriers.forEach(
 	    function(carrier) {
 		if (carrier.selected) {
@@ -441,16 +441,15 @@ which kind of data he wants to see. The default value is average energy consumpt
 		for (var idCounter = 1; idCounter <= Object.keys(percentageData).length; idCounter++) {
 		    var currentSelected = carrierService.hasCarrier(idCounter);
 		    $scope.carriers.push({id:idCounter, selected:currentSelected, color:percentageService.getColorOfCarrier(percentageData[idCounter])});
-		    console.log(percentageData[idCounter]);
 		}
+		$scope.createAverageEnergyConsumptionChart();
 	    });
     }
 
     $scope.reload = function() {
 	sessionService.setCurrentSession($scope.currentSession);
 	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
-	updateCarrierArray();
-	$scope.createAverageEnergyConsumptionChart();
+	updateCarrierArrayAndDrawGraph();
     }
     
      // This function receives the changes from the dropDown menu "dimensions" and changes the yAxis name of the graph and requests the needed data by changing the string name.
@@ -1044,7 +1043,7 @@ the session, iterations and carriers he wans to see. */
 
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     $scope.carriers = [];
-    updateCarrierArray();
+    updateCarrierArrayAndDrawGraph();
 
     // create the dropdown menu for iterations. the array gets filled with the iteration numbers available in the database.
     $scope.iterations = [];
@@ -1182,7 +1181,7 @@ the session, iterations and carriers he wans to see. */
         return measure;
     }
 
-    function updateCarrierArray() {
+    function updateCarrierArrayAndDrawGraph() {
 	$scope.carriers.forEach(
 		function(carrier) {
 		    if (carrier.selected) {
@@ -1200,14 +1199,14 @@ the session, iterations and carriers he wans to see. */
 		    var currentSelected = carrierService.hasCarrier(idCounter);
 		    $scope.carriers.push({id:idCounter, selected:currentSelected, color:percentageService.getColorOfCarrier(percentageData[idCounter])});
 		}
+		$scope.createFlexibilityChart();
 	    });
     }
     
     $scope.reload = function() {
 	sessionService.setCurrentSession($scope.currentSession);
 	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
-	updateCarrierArray();
-	$scope.createFlexibilityChart();
+	updateCarrierArrayAndDrawGraph();
     }
 
     // this function ic called, when the user enters the graph page for the first time.
