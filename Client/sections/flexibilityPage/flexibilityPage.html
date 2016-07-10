@@ -52,13 +52,8 @@
                         </td>
                         <!-- Carrier Cell -->
                         <td>
-                            <div class = "carrierSelection">
-                                <label class = "carrierBox" ng-repeat="carrier in carriers" ng-style="getListStyle(carrier.id)">
-                                    <input type="checkbox" id = "{{carrier.id}}" name="carriers[]" value = "{{carrier.id}}" ng-model="carrier.selected"/>
-                                    <div class = "carrierBox" ng-style = "carrier.color">
-                                        {{carrier.id}}
-                                    </div>
-                                </label>
+                            <div>
+                                <label class="btn btn-default btn-carrier" ng-repeat="carrier in carriers" ng-style="carrier.color" ng-model="carrier.selected" uib-btn-checkbox>{{carrier.id}}</label>
                             </div>
                         </td>
                         <!-- Iteration Cell -->
@@ -75,13 +70,8 @@
                         Prompts Radiobuttons from the json data Extract
                         -->
                         <td>
-                            <div class = "sessionSelection">
-                                <label class = "iterationBox btn btn-default btn-block" ng-repeat="x in sessiondata">
-                                    <input type="radio" name = "x.fields.session" ng-value="x.fields.session" ng-model="$parent.currentSession" />
-                                    <div>
-                                        {{x.fields.fileName}}
-                                    </div>
-                                </label>
+                            <div>
+                                <label class="btn btn-default btn-block" ng-repeat="x in sessiondata"  ng-model="$parent.currentSession" uib-btn-radio="x.fields.session">{{x.fields.fileName}}</label>
                             </div>
                         </td>
                         <!-- Action Cell -->
@@ -109,7 +99,7 @@
          The div class graphLegend will display the legend of the graph right next to it-->
     <div class="row-fluid">
         <div class="col-xs-10">
-            <div class = "graphSize" ng-init ="createFlexibilityChart()" id="FlexibilityChart"></div>
+            <div class = "graphSize" ng-init ="init()" id="FlexibilityChart"></div>
         </div>
         <div class="col-xs-2">
             <div class = "graphLegend" id ="FlexibilityChartLegend"></div>

@@ -102,6 +102,7 @@ angular.module('app')
         if (view=='AvgEng'){$window.location.href = '#AverageEnergyConsumptionChart';};
         if (view=='Circle'){$window.location.href = '#CircleCarrier';};
         if (view=='Spike'){$window.location.href = '#spikeContamination';};
+        if (view=='Flexibility'){$window.location.href = '#flexibilityPage';};
     }
 
 
@@ -418,6 +419,8 @@ which kind of data he wants to see. The default value is average energy consumpt
         if (view=='ContEng'){$window.location.href = '#CompareCarrier';};
         if (view=='Circle'){$window.location.href = '#CircleCarrier';};
         if (view=='Spike'){$window.location.href = '#spikeContamination';};
+        if (view=='Flexibility'){$window.location.href = '#flexibilityPage';};
+
     }
 
     // gets percentageData from percentageService and fills carriers array with the selection and color information
@@ -537,8 +540,10 @@ which kind of data he wants to see. The default value is average energy consumpt
     var percentageDataType = "percentages_creeping";
 
     // sets the current File Name
-    $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
-
+    $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){
+        $scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;
+        $scope.fileStatus = response.data[sessionService.getCurrentSession()-1].fields.status;
+    });
     /* Button, changes the title of the view and the data displayed. It will also redraw the circles with the new data */
     $scope.changeView = function() {
        if(changed == 0) {
@@ -635,7 +640,10 @@ which kind of data he wants to see. The default value is average energy consumpt
         //Update the timestamp
         $scope.ts = new Date();
         // sets the current File Name
-        $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){$scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;});
+        $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){
+            $scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;
+            $scope.fileStatus = response.data[sessionService.getCurrentSession()-1].fields.status;
+        });
     }
 
 
@@ -890,6 +898,14 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 .controller('simulationPageController', function($scope, $http, $window, sessionService) {
 
+    $http.get("django/dataInterface/simulation.running").then(function (response){
+        if (response.data == "True"){
+            $scope.running = true;
+        }else{
+            $scope.running = false;
+        }
+    });
+
     // This saves all Data File Names that are stored on the server
     $scope.dataFileNames = getArrayOfDataFiles();
 
@@ -913,8 +929,11 @@ which kind of data he wants to see. The default value is average energy consumpt
             xmlHttp.send(null);
             var returnString  = xmlHttp.responseText;
             //Sets the current Session to the new SessionNumber
-            sessionService.setCurrentSession(parseInt(sessionService.getNumberOfSessions())+1)
+            sessionService.setCurrentSession(parseInt(sessionService.getNumberOfSessions())+1);
             alert("Simulation Started");
+            //refreshes the website
+            $window.location.href = '#simulation';
+
     };
 
     // Calls URL to reset the Sytem and prompts an alert
@@ -1189,6 +1208,16 @@ the session, iterations and carriers he wans to see. */
 	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
 	updateCarrierArray();
 	$scope.createFlexibilityChart();
+    }
+
+    // this function ic called, when the user enters the graph page for the first time.
+    // It will draw the graph and sets the selected carriers to a default value.
+    $scope.init = function() {
+        // all carriers should be selected by default. This is done, by adding all carrier ids to the carrierService array.
+        for(i = 1; i <= amountOfCarriers; i++) {
+            carrierService.addCarrier(i);
+        }
+        $scope.reload;
     }
     
     /* this functions creates the dygraph from a data source and applies options to them*/

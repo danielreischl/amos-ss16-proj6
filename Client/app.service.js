@@ -52,13 +52,13 @@ angular.module('app')
     }
 
     this.getColorOfCarrier = function(percentageOfEnergy) {
-        var color = {'background-color': 'rgb(255,255,0)'};
+        var color = {'border-color': 'rgb(255,255,0)'};
         if(percentageOfEnergy > 1.05) {
-            color = {'background-color' : 'rgb(229, 28, 52)'};
+            color = {'border-color' : 'rgb(229, 28, 52)'};
         }
 
         if(percentageOfEnergy <= 1.025 ) {
-            color = {'background-color' : 'rgb(178,255,89)'};
+            color = {'border-color' : 'rgb(178,255,89)'};
         }
         return color;
     }

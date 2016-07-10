@@ -38,6 +38,10 @@
                 <p>Select the parameters and start simulation on button click.</p>
             </div>
 
+            <div ng-show="running" class ="alert alert-warning">
+                <strong>Info!</strong>  Loading a new session is diabled because another simulation is still running!
+            </div>
+
             <form name="carrierForm" ng-submit="startSimulation()" novalidate>
 
             <!-- DataFile -->
@@ -83,8 +87,7 @@
                 <p ng-show="carrierForm.keepEveryXRows.$invalid" class="help-block">KeepEveryXRows has to be between 1 and 100</p>
             </div>
 
-            <button type="submit" class="btn btn-default" ng-disabled="carrierForm.$invalid">Start Simulation</button>
-
+            <button type="submit" class="btn btn-default" ng-disabled="carrierForm.$invalid || running">Start Simulation</button>
             </form>
         </div>
     <!-- Headline for upload -->
