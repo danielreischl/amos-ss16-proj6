@@ -929,8 +929,11 @@ which kind of data he wants to see. The default value is average energy consumpt
             xmlHttp.send(null);
             var returnString  = xmlHttp.responseText;
             //Sets the current Session to the new SessionNumber
-            sessionService.setCurrentSession(parseInt(sessionService.getNumberOfSessions())+1)
+            sessionService.setCurrentSession(parseInt(sessionService.getNumberOfSessions())+1);
             alert("Simulation Started");
+            //refreshes the website
+            $window.location.href = '#simulation';
+
     };
 
     // Calls URL to reset the Sytem and prompts an alert
