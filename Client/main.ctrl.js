@@ -234,7 +234,7 @@ angular.module('app')
 	            /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
 	            axes: {
 	                x: {
-                         valueFormatter: function(x) {
+                         axisLabelFormatter: function(x) {
                             if(x % 1 == 0) {
             	                return x;
                             } else {
@@ -494,7 +494,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 	                                                                                     {title: yAxisLabels[$scope.selectedDimension],
 	                                                                                      ylabel: yAxisLabels[$scope.selectedDimension]+' in '+units[$scope.selectedDimension],
 	                                                                                      xlabel: 'Iteration',
-	                                                                                      labelsSeparateLines: true,
+	                                                                                      labelsSeparateLines: true,f
 	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
 	                                                                                      legend: "always",
 	                                                                                      /*labelDiv looks for an element with the given id and puts the legend into this element.
@@ -502,15 +502,15 @@ which kind of data he wants to see. The default value is average energy consumpt
 	                                                                                      labelsDiv: document.getElementById("compareAverageEnergyConsumptionGraphLegend"),
 	                                                                                      /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
 	                                                                                      axes: {
-                                                                                                x: {
-                                                                                                     valueFormatter: function(x) {
-                                                                                                        if(x % 1 == 0) {
-                                                                                                            return x;
-                                                                                                        } else {
-                                                                                                            return "";
-                                                                                                        }
-                                                                                                    }
+                                                                                            x: {
+                                                                                                axisLabelFormatter: function(x) {
+                                                                                                  if (x % 1 == 0) {
+                                                                                                    return x;
+                                                                                                  } else {
+                                                                                                    return "";
+                                                                                                  }
                                                                                                 }
+                                                                                              }
                                                                                             }
                                                                                           });
 
@@ -1258,16 +1258,16 @@ the session, iterations and carriers he wans to see. */
 	                                                                          labelsDiv: document.getElementById("FlexibilityChartLegend"),
 	                                                                          /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
 	                                                                          axes: {
-                                                                                    x: {
+                                                                                            x: {
                                                                                                 axisLabelFormatter: function(x) {
-                                                                                            if(x % 1 == 0) {
-                                                                                                return x;
-                                                                                            } else {
-                                                                                              return "";
+                                                                                                  if (x % 1 == 0) {
+                                                                                                    return x;
+                                                                                                  } else {
+                                                                                                    return "";
+                                                                                                  }
+                                                                                                }
+                                                                                              }
                                                                                             }
-                                                                                          }
-                                                                                        }
-                                                                                 }
                                                                                  });
 
 	$scope.getListStyle = function(index) {
