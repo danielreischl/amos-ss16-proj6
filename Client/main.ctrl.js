@@ -494,7 +494,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 	                                                                                     {title: yAxisLabels[$scope.selectedDimension],
 	                                                                                      ylabel: yAxisLabels[$scope.selectedDimension]+' in '+units[$scope.selectedDimension],
 	                                                                                      xlabel: 'Iteration',
-	                                                                                      labelsSeparateLines: true,f
+	                                                                                      labelsSeparateLines: true,
 	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
 	                                                                                      legend: "always",
 	                                                                                      /*labelDiv looks for an element with the given id and puts the legend into this element.
