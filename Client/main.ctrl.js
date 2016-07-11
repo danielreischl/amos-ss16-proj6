@@ -126,7 +126,7 @@ angular.module('app')
     // not very nice, try to refactor if possible
     $scope.percentageService = percentageService;
     $scope.sessionService = sessionService;
-    
+
     // default value for the dimension and yAxislabel
     var selectedDimension = "energyConsumption"; // remove this later
     $scope.selectedDimension = "energyConsumption";
@@ -197,7 +197,7 @@ angular.module('app')
     $scope.createCompareGraph = function() {
 
 	sessionService.setCurrentSession($scope.currentSession);
-	
+
 	//ensure that the variable is empty, before saving the new request path into it
         //var carriersRequested = "";
 
@@ -235,9 +235,13 @@ angular.module('app')
 	            axes: {
 	                x: {
                          valueFormatter: function(x) {
-                            return x + ' ms';
-                        },
-                    },
+                            if(x % 1 == 0) {
+            	                return x;
+                            } else {
+                                return "";
+                            }
+                        }
+                    }
                 }
 	            });
 
@@ -266,7 +270,7 @@ angular.module('app')
 		$scope.createCompareGraph();
 	    });
     }
-    
+
     $scope.getListStyle = function(index) {
         if (index % 5 == 1) {
                 return {'clear': 'left'};
@@ -275,7 +279,7 @@ angular.module('app')
                 return {};
         }
     }
-    
+
     $scope.updateFileName = function() {
 	sessionService.setCurrentSession($scope.currentSession);
 	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
@@ -287,7 +291,7 @@ angular.module('app')
 	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
 	updateCarrierArrayAndDrawGraph();
     }
-    
+
     // This function empties the carriers in the comparison on page leave.
     // If the user leaves the current html snippet/template then,
     // this function will notice that and trigger the function "emptyCarrierArray" & emptyIterationArray
@@ -379,7 +383,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     sessionDataPromise.then(function(response){$scope.sessiondata = response.data});
     console.log("Simulation page says: " + JSON.stringify($scope.sessiondata));
 
-	
+
     // the session requested from the database.
     $scope.currentSession = sessionService.getCurrentSession();
 
@@ -395,7 +399,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     $scope.carriers = [];
     updateCarrierArrayAndDrawGraph();
-    
+
     // create the dropdown menu for iterations. the id is corresponding to the key word used in the database to extract the dimension.
     $scope.iterationDimensions = [
         {name : "Last 10 Iterations", id : 'last10'},
@@ -451,7 +455,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
 	updateCarrierArrayAndDrawGraph();
     }
-    
+
      // This function receives the changes from the dropDown menu "dimensions" and changes the yAxis name of the graph and requests the needed data by changing the string name.
     // $scope.changeDimension = function() {
     //	    selectedDimension = $scope.selectedDimension;
@@ -472,7 +476,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 	sessionService.setCurrentSession($scope.currentSession);
 	$scope.currentSession = sessionService.getCurrentSession();
-	
+
         // create the graph with the parameters set. The request path for the database depends on 3 parameters: session, carrierRequested, selectedDimension and type
         // the url which should be requested wil be defined in requestedUrl
         // to allow to export the csv file the variable is defined as a $scope variable
@@ -498,16 +502,20 @@ which kind of data he wants to see. The default value is average energy consumpt
 	                                                                                      labelsDiv: document.getElementById("compareAverageEnergyConsumptionGraphLegend"),
 	                                                                                      /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
 	                                                                                      axes: {
-	                                                                                        x: {
-                                                                                                valueFormatter: function(x) {
-                                                                                                    return 'Iteration ' + x;
-                                                                                                },
-                                                                                            },
-                                                                                          }
-	                                                                                      });
+                                                                                                x: {
+                                                                                                     valueFormatter: function(x) {
+                                                                                                        if(x % 1 == 0) {
+                                                                                                            return x;
+                                                                                                        } else {
+                                                                                                            return "";
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                          });
 
 
-	
+
 	$scope.getListStyle = function(index) {
 	    if (index % 5 == 1) {
 		    return {'clear': 'left'};
@@ -525,7 +533,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         $scope.ts = new Date();
     }
 })
-   
+
 
 /* Refresh the circle Page. The purpose of this controller is listen to the Button
  and upon receiving an event, it should trigger the update circle button*/
@@ -646,7 +654,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     }
 
 
-    /* 
+    /*
      *  get percentage data from service
      *  after data arrived call the functoin circleGraphMain that acutally paints the circles
     */
@@ -1202,7 +1210,7 @@ the session, iterations and carriers he wans to see. */
 		$scope.createFlexibilityChart();
 	    });
     }
-    
+
     $scope.reload = function() {
 	sessionService.setCurrentSession($scope.currentSession);
 	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
@@ -1218,7 +1226,7 @@ the session, iterations and carriers he wans to see. */
         }
         $scope.reload;
     }
-    
+
     /* this functions creates the dygraph from a data source and applies options to them*/
     $scope.createFlexibilityChart = function() {
 
@@ -1250,14 +1258,17 @@ the session, iterations and carriers he wans to see. */
 	                                                                          labelsDiv: document.getElementById("FlexibilityChartLegend"),
 	                                                                          /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
 	                                                                          axes: {
-	                                                                            x: {
-                                                                                    valueFormatter: function(x) {
-                                                                                        return 'Absolute time ' + x;
-                                                                                    },
-                                                                                },
-                                                                              }
-	                                                                          }
-	       );
+                                                                                    x: {
+                                                                                                axisLabelFormatter: function(x) {
+                                                                                            if(x % 1 == 0) {
+                                                                                                return x;
+                                                                                            } else {
+                                                                                              return "";
+                                                                                            }
+                                                                                          }
+                                                                                        }
+                                                                                 }
+                                                                                 });
 
 	$scope.getListStyle = function(index) {
             if (index % 5 == 1) {
