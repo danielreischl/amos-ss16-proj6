@@ -39,8 +39,13 @@ header {
     background-color: #009688;
     color: #E0F2F1;
     width: 100%;
+
 }
 
+.navigation {
+    height: 100%;
+    background-color: #009688;
+}
 
 .title_name {
     font-size: 37px;
@@ -61,9 +66,6 @@ md-toolbar.toolbar {
     background-color: #009688;
 }
 
-md-sidenav.md-toolbar {
-    background-color: #009688;
-}
 md-content {
     background-color : #ECEFF1;
 }
@@ -86,9 +88,6 @@ md-content {
   background-color : #4DB6AC;
 }
 
-.topNav {
-    background-color: #009688;
-}
 
 #button {
         height: 200px;
@@ -211,20 +210,14 @@ ul.carrierSelection li{
     overflow: auto;
  }
 
-.md-tab {
-    background-color: #fff;
-    border-radius: 9px;
-    border: 0.5px solid #D8D8D8;
-    padding: 15px;
-    width: 200px;
-    height: 150px;
-    text-transform: none;
+.tabFont {
+    font-size: 1.3em;
+    color: #0064b3
 }
 
-.tabView {
-  padding-top: 20px;
+.nav-tabs > li > a {
+    border: 1px solid #000;
 }
-
 .btn-carrier {width:20%;}
 
 .btn-defaul:active{

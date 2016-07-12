@@ -23,8 +23,6 @@
 This index file is the main page. This should later be a Dashboard, where
 the user can see different graphs -->
 
-
-
 <!DOCTYPE html >
 <html ng-app="app" xmlns="http://www.w3.org/1999/html">
    <head>
@@ -86,24 +84,22 @@ the user can see different graphs -->
     </div>
     <!--- This section is the content part of the layout. It includes the side navigation and ng-view for the html snippets from the different views -->
     <div layout = "row" class ="fillParameter">
-        <div ng-controller="sideNavController">
-            <!-- Side Navigation-->
-            <md-sidenav md-component-id="menue" layout="column" class="md-sidenav-left" md-is-locked-open ="true" ng-style = "sideNavStyle()" >
-                <!--Top part of the side navigation, which is a toolbar. Inside the toolbar is only a button, represented by a button. This button will trigger the navigation to open/close -->
-                <md-toolbar class ="toolbar">
-                    <md-button class="md-icon-button" ng-click ="toggleSidebar()">
-                    <md-icon md-svg-src="assets/images/ic_menu_white_36px.svg"></md-icon>
-                    </md-button>
-                </md-toolbar>
+        <!-- Side Navigation-->
+        <div ng-controller="sideNavController" layout="column" class ="navigation" ng-style = "sideNavStyle()" >
+            <!--Top part of the side navigation, which is a toolbar. Inside the toolbar is only a button, represented by a button. This button will trigger the navigation to open/close -->
+            <md-toolbar class ="toolbar">
+                <md-button class="md-icon-button" ng-click ="toggleSidebar()">
+                <md-icon md-svg-src="assets/images/ic_menu_white_36px.svg"></md-icon>
+                </md-button>
+            </md-toolbar>
 
-                <!--Main part of the side navigation, which consists of links to different views. The links are either icons or icons and text, depending on the state of the navigation bar (small/big) -->
-                <md-button class ="navButton" Onclick="location.href='#/'"><md-icon md-svg-src="assets/images/ic_home_white_36px.svg"></md-icon>&nbsp&nbsp{{home}}</md-button>
-                <md-button class ="navButton" Onclick="location.href='#CircleCarrier'"><md-icon md-svg-src="assets/images/ic_donut_small_white_36px.svg"></md-icon>&nbsp&nbsp{{circleView}}</md-button>
-                <md-button class ="navButton" Onclick="location.href='#BarCarrier'"><md-icon md-svg-src="assets/images/ic_equalizer_white_36px.svg"></md-icon>&nbsp&nbsp{{barView}}</md-button>
-                <md-button class ="navButton" Onclick="location.href='#flexibilityPage'"><md-icon md-svg-src="assets/images/ic_show_chart_white_36px.svg"></md-icon>&nbsp&nbsp{{flexView}}</md-button>
-                <md-button class ="navButton" Onclick="location.href='#simulation'"><md-icon md-svg-src="assets/images/ic_play_circle_outline_white_36px.svg"></md-icon>&nbsp&nbsp{{simulation}}</md-button>
-                <md-button class ="navButton" Onclick="location.href='#help'"> <md-icon md-svg-src="assets/images/ic_help_white_36px.svg"></md-icon>&nbsp&nbsp{{help}}</md-button>
-            </md-sidenav>
+            <!--Main part of the side navigation, which consists of links to different views. The links are either icons or icons and text, depending on the state of the navigation bar (small/big) -->
+            <md-button class ="navButton" Onclick="location.href='#/'"><md-icon md-svg-src="assets/images/ic_home_white_36px.svg"></md-icon>&nbsp&nbsp{{home}}</md-button>
+            <md-button class ="navButton" Onclick="location.href='#CircleCarrier'"><md-icon md-svg-src="assets/images/ic_donut_small_white_36px.svg"></md-icon>&nbsp&nbsp{{circleView}}</md-button>
+            <md-button class ="navButton" Onclick="location.href='#BarCarrier'"><md-icon md-svg-src="assets/images/ic_equalizer_white_36px.svg"></md-icon>&nbsp&nbsp{{barView}}</md-button>
+            <md-button class ="navButton" Onclick="location.href='#flexibilityPage'"><md-icon md-svg-src="assets/images/ic_show_chart_white_36px.svg"></md-icon>&nbsp&nbsp{{flexView}}</md-button>
+            <md-button class ="navButton" Onclick="location.href='#simulation'"><md-icon md-svg-src="assets/images/ic_play_circle_outline_white_36px.svg"></md-icon>&nbsp&nbsp{{simulation}}</md-button>
+            <md-button class ="navButton" Onclick="location.href='#help'"> <md-icon md-svg-src="assets/images/ic_help_white_36px.svg"></md-icon>&nbsp&nbsp{{help}}</md-button>
         </div>
         <!-- ng-view should show the html snippet, if a user clicks on a navigation button
             also I defined this part as "mainFrame". For now it should indicate the position of the main
