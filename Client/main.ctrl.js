@@ -939,6 +939,10 @@ which kind of data he wants to see. The default value is average energy consumpt
         }
     });
 
+
+    //progress of file upload
+    $scope.progress = 0;
+    
     // This saves all Data File Names that are stored on the server
     $scope.dataFileNames = getArrayOfDataFiles();
 
@@ -994,7 +998,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     function uploadComplete(event) {
 	$scope.dataFileNames = getArrayOfDataFiles();
 	alert(event.target.responseText);
-	//$scope.progress = 'completed';
+	$scope.progress = 0;
     }
 
     function uploadFailed(event) {

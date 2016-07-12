@@ -103,7 +103,11 @@
                     <label>Select File:</label>
 	                <input type="file" id="fileToUpload" name="fileToUpload"  class="form-control" accept="text/csv" required file-model="myFile"/>
 			<p ng-show="fileUpload.fileToUpload.$invalid" class="help-block">You have to add a csv File</p>
-			<p>Progress: {{progress}}</p>
+			<p style = "margin-top:5px">
+			  <uib-progressbar max="100" value="progress"><span style="color:white; white-space:nowrap;">{{progress}}%</span></uib-progressbar>
+			</p>
+			
+			<!--<p>Progress: {{progress}}</p>-->
                 </div>
 
                 <button type="button" class="btn btn-default" ng-disabled="fileUpload.$invalid" ng-click="uploadFile()">Upload File</button>
