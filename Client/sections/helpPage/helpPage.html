@@ -29,32 +29,30 @@
         </p>
     </div>
     <!-- The Help Page is strcutured in form of a tab layout. There are a total of 3 tabs, which are Glossary, Manual and Project Documentation -->
-    <div ng-cloak class ="tabView">
-        <md-content>
-            <!-- Initialize Tab layout. -->
-            <md-tabs md-dynamic-height md-border-bottom>
-                <!-- First tab-->
-                <md-tab label="Glossary">
-                    <!-- Content part, this will be inserted from a different html fragment -->
-                    <md-content class="md-padding">
-                        <ng-include src="'sections/helpPage/helpPageFragments/glossaryFragments/glossary.html'"></ng-include>
-                    </md-content>
-                </md-tab>
-                <!-- Second tab-->
-                <md-tab label="Manual">
-                    <!-- Content part, this will be inserted from a different html fragment -->
-                    <md-content class="md-padding">
-                        <ng-include src="'sections/helpPage/helpPageFragments/manualFragments/manual.html'"></ng-include>
-                    </md-content>
-                </md-tab>
-                <!-- Third tab-->
-                <md-tab label="Project Documentation">
-                    <!-- Content part, this will be inserted from a different html fragment -->
-                    <md-content class="md-padding">
-                        <ng-include src="'sections/helpPage/helpPageFragments/projectDocuFragments/projectDocu.html'"></ng-include>
-                    </md-content>
-                </md-tab>
-            </md-tabs>
-        </md-content>
-    </div>
+    <uib-tabset active="active">
+        <!-- First tab-->
+        <uib-tab index="0">
+            <uib-tab-heading>
+                <p class = "tabFont">Glossary</p>
+            </uib-tab-heading>
+            <!-- Content part, this will be inserted from a different html fragment -->
+            <ng-include src="'sections/helpPage/helpPageFragments/glossaryFragments/glossary.html'"></ng-include>
+        </uib-tab>
+        <!-- Second tab-->
+        <uib-tab index="1">
+            <uib-tab-heading>
+                <p class = "tabFont">Manual</p>
+            </uib-tab-heading>
+            <!-- Content part, this will be inserted from a different html fragment -->
+            <ng-include src="'sections/helpPage/helpPageFragments/manualFragments/manual.html'"></ng-include>
+        </uib-tab>
+        <!-- Third tab-->
+        <uib-tab index="2">
+            <uib-tab-heading>
+                <p class = "tabFont">Project Documentation</p>
+            </uib-tab-heading>
+            <!-- Content part, this will be inserted from a different html fragment -->
+            <ng-include src="'sections/helpPage/helpPageFragments/projectDocuFragments/projectDocu.html'"></ng-include>
+        </uib-tab>
+    </uib-tabset>
 </div>
