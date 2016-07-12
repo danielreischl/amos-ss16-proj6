@@ -238,13 +238,26 @@
             </tbody>
          </table>
          <p class ="text-justify">
-            The timestamps are now relative, starting from 0, which is the moment that the carrier entered the conveyor belt. With K = 2 the energy consumption of every two succeeding timestamps is averaged and gets written to the TS of which TS is dividable by K. Timestamps where TS is not dividable by K (every odd number in this case) are deleted. However, due to the missing timestamps two different scenarios may occur.
+            The timestamps are now relative, starting from 0, which is the moment that the carrier entered the conveyor belt.
+            With K = 2 the energy consumption of every two succeeding timestamps is averaged and gets written to the TS of which TS is dividable by K.
+            Timestamps where TS is not dividable by K (every odd number in this case) are deleted. However, due to the missing timestamps two different scenarios may occur.
          </p>
          <p class ="text-justify">
-            The timestamp which is dividable by K doesn't have all K timestamps so that the energy consumption can't get averaged by dividing by K. In this case the energy consumption is calculated by the amount of rows in that category. In this case only divided by one. 2- When looking for the next timestamp that is dividable by K, the next TS is higher than the next multiple of K. In this case the timestamp has to interpolated. For interpolating the energy: since the energy of the previous timestamp was already used for calculating the prior TS, the energy consumption is assumed to be constant and the energy consumption of the current timestamp is taken. The position is linearly interpolated between the last and the current TS. The drive and the absolute time value just also get copied from the current time stamp value.
+            The timestamp which is dividable by K doesn't have all K timestamps so that the energy consumption can't get averaged by dividing by K.
+             In this case the energy consumption is calculated by the amount of rows in that category.
+             In this case only divided by one. 2- When looking for the next timestamp that is dividable by K, the next TS is higher than the next multiple of K.
+             In this case the timestamp has to interpolated.
+             For interpolating the energy: since the energy of the previous timestamp was already used for calculating the prior TS, the energy consumption is assumed to be constant and the energy consumption of the current timestamp is taken.
+             The position is linearly interpolated between the last and the current TS.
+             The drive and the absolute time value just also get copied from the current time stamp value.
          </p>
          <p class ="text-justify">
-            Because the compression has to interpolate these missing timestamps, the energy consumption is slightly changed from the original data file. In order to still ensure that the average and total energy consumption for an iteration are constant, the total energy consumption is already calculated during this compression procedure as well. It is arguable, whether the original data file is also not optimal because the energy consumption in reality does not have missing TS. But, calculating the average and total energy consumption after compression is dependent of the compression parameter K. Because, if K is smaller, then more timestamps have to interpolated, changing the energy consumption more. Therefore, there energy consumption is calculated based on the energy values before the compression.
+            Because the compression has to interpolate these missing timestamps, the energy consumption is slightly changed from the original data file.
+             In order to still ensure that the average and total energy consumption for an iteration are constant, the total energy consumption is already calculated during this compression procedure as well.
+             It is arguable, whether the original data file is also not optimal because the energy consumption in reality does not have missing TS.
+             But, calculating the average and total energy consumption after compression is dependent of the compression parameter K.
+             Because, if K is smaller, then more timestamps have to interpolated, changing the energy consumption more.
+             Therefore, there energy consumption is calculated based on the energy values before the compression.
          </p>
       </div>
    </div>
