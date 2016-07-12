@@ -27,6 +27,9 @@
         <p> <b>Current Filename:</b> {{ currentFileName }} | <b>Last Refresh:</b> {{ ts | date : "HH:mm:ss" }} <br>
             Select the Carriers you want to investigate further and click the wanted preferred Graph
         </p>
+        <div ng-show="running" class ="alert alert-info">
+                <strong>Info!</strong>  A simulation is running. The system might be slow or not all data is shown until the end of the simulation.
+        </div>
     </div>
 
     <section layout="column" layout-align="center center" ng-init="barGraph()">
