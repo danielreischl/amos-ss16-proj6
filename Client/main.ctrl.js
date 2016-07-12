@@ -228,11 +228,17 @@ angular.module('app')
 	            highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
 	            legend: "always",
 	            showRangeSelector: true,
-
-	            //Only draws axis with integers as labels
+	            /*labelDiv looks for an element with the given id and puts the legend into this element.
+	            Therefore the legend will not bis displayed inside the graph */
+	            labelsDiv: document.getElementById("compareGraphLegend")
 	            axes: {
 	                x: {
-                         axisLabelFormatter: function(x) {
+	                    /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
+	                    valueFormatter: function(x) {
+                            return x + ' ms';
+                        },
+                        //Only draws axis with integers as labels
+                        axisLabelFormatter: function(x) {
                             if(x % 1 == 0) {
             	                return x;
                             } else {
@@ -241,12 +247,6 @@ angular.module('app')
                         }
                     }
                 },
-
-	            /*labelDiv looks for an element with the given id and puts the legend into this element.
-	            Therefore the legend will not bis displayed inside the graph */
-	            labelsDiv: document.getElementById("compareGraphLegend")
-	            /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
-
 	            });
 
         $scope.ts = new Date();
@@ -501,10 +501,16 @@ which kind of data he wants to see. The default value is average energy consumpt
 	                                                                                      labelsSeparateLines: true,
 	                                                                                      highlightSeriesOpts: {strokeWidth: 4, strokeBorderWidth: 1, highlightCircleSize: 5},
 	                                                                                      legend: "always",
-
-	                                                                                      // Only draws axis with integers as labels
+	                                                                                      /*labelDiv looks for an element with the given id and puts the legend into this element.
+	                                                                                       Therefore the legend will not bis displayed inside the graph */
+	                                                                                      labelsDiv: document.getElementById("compareAverageEnergyConsumptionGraphLegend")
 	                                                                                      axes: {
                                                                                             x: {
+                                                                                                /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
+                                                                                                valueFormatter: function(x) {
+                                                                                                    return 'Iteration ' + x;
+                                                                                                },
+                                                                                                // Only draws axis with integers as labels
                                                                                                 axisLabelFormatter: function(x) {
                                                                                                   if (x % 1 == 0) {
                                                                                                     return x;
@@ -514,10 +520,6 @@ which kind of data he wants to see. The default value is average energy consumpt
                                                                                                 }
                                                                                               }
                                                                                           },
-	                                                                                      /*labelDiv looks for an element with the given id and puts the legend into this element.
-	                                                                                       Therefore the legend will not bis displayed inside the graph */
-	                                                                                      labelsDiv: document.getElementById("compareAverageEnergyConsumptionGraphLegend")
-	                                                                                      /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
 	                                                                                      });
 
 
@@ -1259,22 +1261,25 @@ the session, iterations and carriers he wans to see. */
 	                                                                            highlightCircleSize: 5
 	                                                                          },
 	                                                                          legend: "always",
-	                                                                          // Only draw whole number integers as labels
+	                                                                          /*labelDiv looks for an element with the given id and puts the legend into this element.
+	                                                                          Therefore the legend will not bis displayed inside the graph */
+	                                                                          labelsDiv: document.getElementById("FlexibilityChartLegend"),
 	                                                                          axes: {
                                                                                     x: {
+                                                                                        /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
+                                                                                        valueFormatter: function(x) {
+                                                                                            return 'Absolute time ' + x;
+                                                                                        },
+                                                                                        // Only draw whole number integers as labels
                                                                                         axisLabelFormatter: function(x) {
                                                                                             if (x % 1 == 0) {
                                                                                                 return x;
                                                                                             } else {
                                                                                                 return "";
                                                                                             }
+                                                                                        }
                                                                                     }
-                                                                                }
                                                                               },
-	                                                                          /*labelDiv looks for an element with the given id and puts the legend into this element.
-	                                                                          Therefore the legend will not bis displayed inside the graph */
-	                                                                          labelsDiv: document.getElementById("FlexibilityChartLegend"),
-	                                                                          /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
 	                                                                          });
 
 	$scope.getListStyle = function(index) {
