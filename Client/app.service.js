@@ -120,7 +120,7 @@ angular.module('app')
 
 angular.module('app')
 
-.service('carrierService', function(sessionService) {
+.service('carrierService', function(percentageService) {
     var carriersForComparison = [];
 
     this.containsCarrier = function(carrierID){
@@ -138,7 +138,6 @@ angular.module('app')
     
     // function adds a carrier with a given ID
     this.addCarrier = function(newCarrier) {
-        console.log("add Carrier");
         for(var i = 0; i < carriersForComparison.length; i++) {
             if (carriersForComparison[i].carrierNumber == newCarrier) {
                 return false;
@@ -146,11 +145,26 @@ angular.module('app')
         }
         carriersForComparison.push({carrierNumber: newCarrier});
         return true;
-    };
+    }
 
     // returns the array with CarrierIDs to be compared
     this.getCarrier = function(){
         return carriersForComparison;
+    }
+
+    // return whether carriersForComparison is empty or not
+    this.isEmpty = function() {
+	return (carriersForComparison.length == 0);
+    }
+
+    // return whether all carriers with index 1 .. carrierIndex are selected
+    this.containsAllUpTo = function(carrierIndex) {
+	for (var i = 0; i <= carrierIndex; i++) {
+	    if (!this.hasCarrier(carrierIndex)) {
+		return false;
+	    }
+	}
+	return true;
     }
 
     // deletes a carrier with a given ID
@@ -164,19 +178,35 @@ angular.module('app')
         return false;
     }
 
+    // this function selects all Carriers
+    this.selectAll = function() {
+	percentageService.getPercentagePromise().then(
+	    function(result) {
+		carriersForComparison = [];
+		for (var carrierId in result.data) {
+		    carriersForComparison.push({carrierNumber: carrierId});
+		}
+		console.log(carriersForComparison);
+	    }
+	);
+    }
+    
     // this function empties the array, so that no carrier item is left inside anymore.
     this.emptyCarrierArray = function() {
         console.log("emptyCarrierArray");
-        carriersForComparison.splice(0,carriersForComparison.length);
+        carriersForComparison = [];
     }
 
     // this service returns these functions to the caller for use
     return {
         containsCarrier: this.containsCarrier,
         hasCarrier: this.hasCarrier,
+	containsAllUpTo: this.containsAllUpTo,
+	isEmpty: this.isEmpty,
         addCarrier: this.addCarrier,
         getCarrier: this.getCarrier,
         deleteCarrier: this.deleteCarrier,
+	selectAll: this.selectAll,
         emptyCarrierArray: this.emptyCarrierArray
     };
 });

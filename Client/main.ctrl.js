@@ -1059,7 +1059,7 @@ the session, iterations and carriers he wans to see. */
 
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     $scope.carriers = [];
-    updateCarrierArrayAndDrawGraph();
+    //updateCarrierArrayAndDrawGraph();
 
     // create the dropdown menu for iterations. the array gets filled with the iteration numbers available in the database.
     $scope.iterations = [];
@@ -1197,22 +1197,30 @@ the session, iterations and carriers he wans to see. */
         return measure;
     }
 
-    function updateCarrierArrayAndDrawGraph() {
+    function updateCarrierArrayAndDrawGraph(init) {
 	$scope.carriers.forEach(
-		function(carrier) {
-		    if (carrier.selected) {
-			carrierService.addCarrier(carrier.id);
-		    }
-		    else {
-			carrierService.deleteCarrier(carrier.id);
-		    }
-		});
+	    function(carrier) {
+		if (carrier.selected) {
+		    carrierService.addCarrier(carrier.id);
+		}
+		else {
+		    carrierService.deleteCarrier(carrier.id);
+		}
+	    });
 	percentageService.getPercentagePromise().then(
 	    function(result) {
 		var percentageData = result.data;
 		$scope.carriers = [];
 		for (var idCounter = 1; idCounter <= Object.keys(percentageData).length; idCounter++) {
-		    var currentSelected = carrierService.hasCarrier(idCounter);
+		    var currentSelected;
+		    // if we call this function on initialization and no carriers are selected, all carriers get selected
+		    // if there are some carriers preselected or this is not the first call, we don't change anything
+		    if (init && carrierService.isEmpty()) {
+			currentSelected = true;
+		    }
+		    else {
+			currentSelected = carrierService.hasCarrier(idCounter);
+		    }
 		    $scope.carriers.push({id:idCounter, selected:currentSelected, color:percentageService.getColorOfCarrier(percentageData[idCounter])});
 		}
 		$scope.createFlexibilityChart();
@@ -1222,19 +1230,25 @@ the session, iterations and carriers he wans to see. */
     $scope.reload = function() {
 	sessionService.setCurrentSession($scope.currentSession);
 	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
-	updateCarrierArrayAndDrawGraph();
+	updateCarrierArrayAndDrawGraph(false);
     }
 
     // this function ic called, when the user enters the graph page for the first time.
     // It will draw the graph and sets the selected carriers to a default value.
     $scope.init = function() {
-        // all carriers should be selected by default. This is done, by adding all carrier ids to the carrierService array.
-        for(i = 1; i <= amountOfCarriers; i++) {
-            carrierService.addCarrier(i);
-        }
+	updateCarrierArrayAndDrawGraph(true);
+        // if (carrierService.isEmpty()) {
+	//    carrierService.selectAll();
+	// }
         $scope.reload;
     }
 
+    $scope.$on("$destroy", function() {
+	if(carrierService.containsAllUpTo($scope.carriers.length)) {
+	    carrierService.emptyCarrierArray();
+	}
+    });
+    
     /* this functions creates the dygraph from a data source and applies options to them*/
     $scope.createFlexibilityChart = function() {
 
