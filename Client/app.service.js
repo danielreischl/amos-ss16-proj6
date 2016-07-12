@@ -88,7 +88,6 @@ angular.module('app')
 
      // function adds a iteration with a given ID to iterationsForComparison
     this.addIteration = function(newIteration) {
-        console.log("add Iteration");
         for(var i = 0; i < iterationsForComparison.length; i++) {
             if (iterationsForComparison[i] == newIteration) {
                 return false;
@@ -105,7 +104,6 @@ angular.module('app')
 
     // this function empties the array, so that no iteration item is left inside anymore.
     this.emptyIterationArray = function() {
-        console.log("emptyCarrierArray");
         iterationsForComparison.splice(0,iterationsForComparison.length);
     };
 
@@ -186,14 +184,12 @@ angular.module('app')
 		for (var carrierId in result.data) {
 		    carriersForComparison.push({carrierNumber: carrierId});
 		}
-		console.log(carriersForComparison);
 	    }
 	);
     }
     
     // this function empties the array, so that no carrier item is left inside anymore.
     this.emptyCarrierArray = function() {
-        console.log("emptyCarrierArray");
         carriersForComparison = [];
     }
 
@@ -249,7 +245,6 @@ angular.module('app')
     this.getSessionData = function() {
 	update();
 	var sessionDataPromise = $http.get("django/dataInterface/rawData.json?table=sessiondata");
-	//sessionDataPromise.then(function(response){console.log(JSON.stringify(response.data))});
 	return sessionDataPromise;
     }
 
