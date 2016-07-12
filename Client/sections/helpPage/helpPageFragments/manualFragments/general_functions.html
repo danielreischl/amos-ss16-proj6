@@ -29,13 +29,56 @@
             General functions of the web application.
         </p>
     </div>
-    <!-- Files Section -->
+    <!-- Start Explanation -->
     <div class="panel panel-primary">
         <div class="panel-heading">
-            1. Dummy
+            Explanation
         </div>
         <div class="panel-body">
+            <p>
+                First of all, the application provides two views of the current
+                condition of carriers: Circles View and Bar Chart View
+            </p>
+            <img src="assets/images/manual images/Bild1.png"  class="img-responsive">
+            </br>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Circles View
+                </div>
+                <div class="panel-body">
+                    <p>
+                        Selecting the Circle View shows a list of carriers and the current state of their energy consumption.
+                        Circle View has two different sub-views that offer data based on what type of contamination the user
+                        expects to detect.
+                    </p>
+                    <ul class="list-group">
+                        <li class="list-group-item text-left">
+                            <strong>1.</strong> Creeping Contamination – energy consumption
+                            for the carrier is calculated as the average energy consumption
+                            (current iteration) of the carrier to the average energy consumption
+                            of that carrier from the 1st 10% of the iterations
 
+                        </li>
+                        <li class="list-group-item text-left">
+                            <strong>2.</strong> Continuous Contamination – energy consumption for the
+                            carrier is calculated as the average energy consumption of the current carrier
+                            over average energy consumption of all the carriers for all iterations
+                        </li>
+                    </ul>
+                    <p>
+                        Green circles depict no or minimal increase in energy consumption, yellow – slight increase
+                        and red – a significant increase.
+                    </p>
+                    <p>
+                        In order to switch between the two views there is a toggle button under the circles.
+                    </p>
+                    </br>
+                    <img src="assets/images/manual images/Bild2.png"  class="img-responsive">
+                    </br>
+                    <img src="assets/images/manual images/Bild3.png"  class="img-responsive">
+                    </br>
+                </div>
+            </div>
         </div>
     </div>
 </div>
