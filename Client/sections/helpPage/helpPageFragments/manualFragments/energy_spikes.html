@@ -29,13 +29,40 @@
             Explanation on how to identify Energy Spikes with the web application
         </p>
     </div>
-    <!-- Files Section -->
+    <!-- Explanation Section -->
     <div class="panel panel-primary">
         <div class="panel-heading">
-            1. Dummy
+            Explanation
         </div>
         <div class="panel-body">
-
+            <ul class="list-group">
+                <li class="list-group-item text-left">
+                    <p>
+                        <strong>1.</strong> In order to detect Energy Spikes we decided to implement a table that ranks energy peaks.
+                        The user goes to the Circles View and choses the button on the bottom right to change to the Energy Spikes Contamination.
+                    </p>
+                    <img src="assets/images/manual images/Bild19.png"  class="img-responsive">
+                </li>
+                <li class="list-group-item text-left">
+                    <p>
+                        <strong>2.</strong> The logic behind the table: for every timestamp the energy consumption of the carrier at this point of
+                        time is compared as a % to the average energy consumption of that carrier for the current iteration. The table then collects
+                        all these values and ranks them in descending order. It shows the corresponding Carrier, Iteration, %. There is a possibility
+                        to look up the spike in detail by clicking on the “play” button on the right. In the following example Carrier 5 in Iteration
+                        1 has the highest spike.
+                    </p>
+                    <img src="assets/images/manual images/Bild20.png"  class="img-responsive">
+                </li>
+                <li class="list-group-item text-left">
+                    <p>
+                        <strong>3.</strong>The Investigate button redirects the user to a graph (Continuous Consumption Graph) that shows the
+                        Energy Consumption for every timestamp of the selected carrier and iteration. There is a visible spike before the end.
+                        In order to represent data correctly, we disregard the energy drops right after the carrier enters the flexible line and the
+                        spike right before exiting the flexible line.
+                    </p>
+                    <img src="assets/images/manual images/Bild21.png"  class="img-responsive">
+                </li>
+            </ul>
         </div>
     </div>
 </div>

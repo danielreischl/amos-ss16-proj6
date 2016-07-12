@@ -29,13 +29,61 @@
            Explanation on how to identify Creeping Contamination with the web application
         </p>
     </div>
-    <!-- Files Section -->
+    <!-- Explanation Section -->
     <div class="panel panel-primary">
         <div class="panel-heading">
-            1. Dummy
+            Explanation
         </div>
         <div class="panel-body">
-
+            <ul class="list-group">
+                <li class="list-group-item text-left">
+                    <p>
+                        <strong>1.</strong> In order to detect Creeping Contamination the user clicks on the Circles View which provides a hint
+                        regarding where the energy consumption has been increasing. The user should select the “problematic”
+                        carriers depicted in yellow and red. In this case carriers 1, 6, 7 and 8.
+                    </p>
+                    <img src="assets/images/manual images/Bild6.png"  class="img-responsive">
+                </li>
+                <li class="list-group-item text-left">
+                    <p>
+                        <strong>2.</strong> After selecting the circles the user should click on one of the Graph Views in order to analyze the situation.
+                        The best way for this scenario is to chose the Average Consumption Graph
+                    </p>
+                    <img src="assets/images/manual images/Bild7.png"  class="img-responsive">
+                    <p>Detail View:</p>
+                    <img src="assets/images/manual images/Bild8.png"  class="img-responsive">
+                </li>
+                <li class="list-group-item text-left">
+                    <p>
+                        <strong>3.</strong> The User then gets a chart displayed with Energy Consumption over All Iterations for the selected carriers.
+                        This page offers the options to chose carriers, iterations, dimensions, trace (imported csv.) and a button to switch to other graphs.
+                        Switching to Continuous Consumption offers the possibility to look up Energy Consumption, Position, Acceleration and Speed for every carrier per
+                        Iteration in more detail. In order to detect creeping contamination we suggest examining Average Energy Consumption and Total Energy Consumption
+                        from the Dimensions selection.
+                    </p>
+                    <strong>Total Energy Consumption for the selected carriers, all iterations, Trace - SV</strong>
+                    <img src="assets/images/manual images/Bild9.png"  class="img-responsive">
+                    </br>
+                    <strong>Average Energy Consumption for the selected carriers, all iterations, Trace - SV</strong>
+                    <img src="assets/images/manual images/Bild10.png"  class="img-responsive">
+                </li>
+                <li class="list-group-item text-left">
+                    <p>
+                        <strong>4.</strong> Detecting the Contamination: In both graphs a steady rise in energy consumption is clearly visible.
+                        This lets the user conclude that there is a creeping contamination. The trace used for this analysis was Trace_SV. The test setup:
+                        dirt was poured on the carriers in order to increase their energy consumption. We also provide a comparison between Total and
+                        Average Energy Consumption between this scenario (SV) and the normal case scenario (NB) that clearly shows the difference.
+                    </p>
+                    </br>
+                    <img src="assets/images/manual images/Bild11.png"  class="img-responsive">
+                    </br>
+                    <img src="assets/images/manual images/Bild12.png"  class="img-responsive">
+                    </br>
+                    <img src="assets/images/manual images/Bild13.png"  class="img-responsive">
+                    </br>
+                    <img src="assets/images/manual images/Bild14.png"  class="img-responsive">
+                </li>
+            </ul>
         </div>
     </div>
 </div>
