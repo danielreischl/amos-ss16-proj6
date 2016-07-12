@@ -29,6 +29,9 @@
         <p> <b>Current Filename:</b> {{ currentFileName }} | <b>Last Refresh:</b> {{ ts | date : "HH:mm:ss" }} <br>
              Klick on the right column to investigate a carrier further
         </p>
+        <div ng-show="running" class ="alert info-warning">
+                <strong>Info!</strong>  A simulation is running. The system might be slow or not all data is shown until the end of the simulation.
+        </div>
     </div>
 
     <div class="col-sx-12">

@@ -28,10 +28,15 @@
 <div  class="container-fluid" ng-controller="circleGraphController">
     <div class ="page-header">
         <h1>{{circleView_title}} <span class="glyphicon glyphicon-repeat" aria-hidden="true" ng-click="refresh()"></span></h1>
-        <p> <b>Current Filename:</b> {{ currentFileName }} | <b>Last Refresh:</b> {{ ts | date : "HH:mm:ss" }} | <b>Status:</b> {{ fileStatus }} <br>
+        <p> <b>Current Filename:</b> {{ currentFileName }} | <b>Last Refresh:</b> {{ ts | date : "HH:mm:ss" }} <br>
             Select the Carriers and the preferred graph for further investigation
         </p>
+        <div ng-show="running" class ="alert alert-info">
+                <strong>Info!</strong>  A simulation is running. The system might be slow or not all data is shown until the end of the simulation.
+        </div>
     </div>
+
+
 
     <div class="row-fluid" ng-init="circleGraph()">
         <div>
