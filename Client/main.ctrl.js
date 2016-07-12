@@ -913,7 +913,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.dataFileNames = getArrayOfDataFiles();
 
     // Standard Values
-    $scope.amountOfCarriers = 15;
+    $scope.amountOfCarriers = 18;
     $scope.waitForCompression = 0;
     $scope.waitForFirstDataLoad = 30;
     $scope.waitForDataReload = 30;
