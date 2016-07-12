@@ -17,302 +17,325 @@
 
    You should have received a copy of the GNU Affero General Public License
    along with Rogue Vision.  If not, see <http://www.gnu.org/licenses/>.
--->
-
+   -->
 <!-- Data Processing, to be inserted into the project documentation page -->
-
 <div class="panel-body">
-    <!-- Explanation of the sub-tab -->
-    <div class ="page-header">
-        <h1>Data Processing</h1>
-        <p>
-            In here, the Data Processing is documented.
-        </p>
-    </div>
-    <!-- Files Section -->
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            1. How to test it locally without building the whole project
-        </div>
-        <div class="panel-body">
-            <ul class="list-group">
-                <li class="list-group-item text-left">
-                    <h3>compressInitialData.py</h3>
-                    <p class ="text-justify">
-                        This script simulates all sensors of the production system, that are pushing their data for each timestamp
-                        to the processing unit. This script also serves the purpose of being the processing unit. It maps the drive
-                        data to different carriers. Once a carrier has passed through the production line, its data is compressed for
-                        size reduction and is exported as cvs file. Details on the data compression can be found in "2. Compress Data".
-                    </p>
-                    <p><strong>Input:</strong> CSV file with the following structure (ms; energy1;...;energyX; pos1;...;posX) (x = Amount of Drives)</p>
-                    <p class ="text-justify">
-                        <strong>Output:</strong> CSV file for each carrier in each iteration with the following structure (time; posAbsolute; energy;
-                        drive) and the following name Session_X_Carrier_X_Iteration_X.csv
-                    </p>
-                </li>
-                <li class="list-group-item text-left">
-                    <h3>writeCarrierDataToDataBase.py</h3>
-                    <p>Takes the output from compressInitialData.py and writes the data after processing into the database. Further information in "3. Write Data To Database".</p>
-                </li>
-                <li class="list-group-item text-left">
-                    <h3>initDataProcessingSimulation.sh</h3>
-                    <p>Enables to run writeCarrierDataToDataBase.py &amp; compressInitialData.py simultaneously</p>
-                </li>
-                <li class="list-group-item text-left">
-                    <h3>setConstants.py</h3>
-                    <p>File that contains variables that are used in both files. Is currently a dummy file until the settings can be set through the frontend.</p>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <!-- Compress Data Section -->
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            2. How to test it locally without building the whole project
-        </div>
-        <div class="panel-body">
-            <p class ="text-left">The data is compressed directly after mapping it to the carriers and before exporting as CSV file.</p>
-            <p class ="text-left">After mapping to the carrier the data for every  time stamp has the following structure.
-                This is a short example how the data could look like for a carrier X:
-            </p>
-            <table class="table table-hover table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>time in ms</th>
-                        <th>Position Absolute in mm</th>
-                        <th>Energy consumption in W</th>
-                        <th>Drive</th>
-                        <th>Time Absolute</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>0</td>
-                        <td>10.213</td>
-                        <td>42.111</td>
-                        <td>1</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>11.234</td>
-                        <td>40.111</td>
-                        <td>1</td>
-                        <td>1</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>12.214</td>
-                        <td>44.111</td>
-                        <td>2</td>
-                        <td>2</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>13.012</td>
-                        <td>39.111</td>
-                        <td>2</td>
-                        <td>3</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>13.932</td>
-                        <td>49.111</td>
-                        <td>2</td>
-                        <td>4</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p class ="text-justify">
-                After the compression from all the rows, every X-th row is kept and the data is aggregated accordingly
-                (X being a variable). The time, position, drive and the time absolute are kept for the X-th row.
-                In the other rows, the data is deleted. The energy consumption is cumulated over the other timestamps and therefore not deleted.
-                In the example for X=2 the data would look like this after the compression. The values for timestamp, position and drive are only kept
-                at each 2nd row, the other rows are deleted, while the energy consumption is cumulated over the next timestamps that will be deleted.
-            </p>
-            <table class="table table-hover table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>time in ms</th>
-                        <th>Position Absolute in mm</th>
-                        <th>Energy consumption in W</th>
-                        <th>Drive</th>
-                        <th>time absolute</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>0</td>
-                        <td>10.213</td>
-                        <td>82.111</td>
-                        <td>1</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>12.214</td>
-                        <td>83.111</td>
-                        <td>2</td>
-                        <td>2</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>13.932</td>
-                        <td>49.111</td>
-                        <td>2</td>
-                        <td>4</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p class ="text-justify">
-                For better visualization, the original table is displayed once more with the values highlighted accordingly:
-                <strong><em>These values are neither deleted nor modified</em></strong>; <em>These values are deleted and information is lost</em>;
-                <code>These values are cumulated to a single value</code>.
-            </p>
-            <table class="table table-hover table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>time in ms</th>
-                        <th>Position Absolute in mm</th>
-                        <th>Energy consumption in W</th>
-                        <th>Drive</th>
-                        <th>time absolute in ms</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong><em>0</em></strong></td>
-                        <td><strong><em>10.213</em></strong></td>
-                        <td><code>42.111</code></td>
-                        <td><strong><em>1</em></strong></td>
-                        <td><strong><em>0</em></strong></td>
-                    </tr>
-                    <tr>
-                        <td><em>1</em></td>
-                        <td><em>11.234</em></td>
-                        <td><code>40.111</code></td>
-                        <td><em>1</em></td>
-                        <td><em>1</em></td>
-                    </tr>
-                    <tr>
-                        <td><strong><em>2</em></strong></td>
-                        <td><strong><em>12.214</em></strong></td>
-                        <td><code>44.111</code></td>
-                        <td><strong><em>2</em></strong></td>
-                        <td><strong><em>2</em></strong></td>
-                    </tr>
-                    <tr>
-                        <td><em>3</em></td>
-                        <td><em>13.012</em></td>
-                        <td><code>39.111</code></td>
-                        <td><em>2</em></td>
-                        <td><em>3</em></td>
-                    </tr>
-                    <tr>
-                        <td><strong><em>4</em></strong></td>
-                        <td><strong><em>13.932</em></strong></td>
-                        <td><code>49.111</code></td>
-                        <td><strong><em>2</em></strong></td>
-                        <td><strong><em>4</em></strong></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <!-- Write Data to Database Section -->
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            3. Write Data to Database
-        </div>
-        <div class="panel-body">
-            <p>After the compression of the data, every csv is read into the database. Therefore it firstly reads out the filename the following values:</p>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <strong>Session</strong>
-                </li>
-                <li class="list-group-item">
-                    <strong>Carrier</strong>
-                </li>
-                <li class="list-group-item">
-                    <strong>Iteration</strong>
-                </li>
-            </ul>
-            <p>Additional the data from the csv will also be read in:</p>
-            <ul class="panel-body">
-                <li class="list-group-item">
-                    <strong>Time (in ms)</strong>
-                </li>
-                <li class="list-group-item">
-                     <strong>Position Absolute (in mm)</strong>
-                </li>
-                <li class="list-group-item">
-                    <strong>Energy consumption (in W)</strong>
-                </li>
-                <li class="list-group-item">
-                    <strong>Drive</strong>
-                </li>
-                <li class="list-group-item">
-                    <strong>Time absolute (in ms)</strong>
-                </li>
-            </ul>
-            <p>In a third step the additional values are calculated:</p>
-            <ul class="panel-body">
-                <li class="list-group-item">
-                    Speed (in mm/ms): (Position Absoulte 2 - Position Absoulte 1) / (Time 2 - Time 1)
-                </li>
-                <li class="list-group-item">
-                    Acceleration (in mm/ms²): (Speed2 - Speed1) / (time2 - time1)
-                </li>
-            </ul>
-            <p>
-                All of these information are getting stored in the database afterwards. For more Information on the database structure:
-                <strong>Database Schema (Table 1)</strong>
-            </p>
-            <p>Afterwards the iteration values are calculated:</p>
-            <ul class="panel-body">
-                <li class="list-group-item">
-                    <strong>Average Speed</strong>
-                </li>
-                <li class="list-group-item">
-                    <strong>Average Acceleration</strong>
-                </li>
-                <li class="list-group-item">
-                    <strong>Total Energy Consumption</strong>
-                </li>
-                <li class="list-group-item">
-                    <strong>Average Energy Consumption</strong>
-                </li>
-            </ul>
-            <p>
-                These measuers in additon to session, carrier, iteration are also stored in the database. For more Information on the database structure:
-                <strong>Database Schema (Table 2)</strong>
-            </p>
-        </div>
-    </div>
-    <!-- Terminating writeCarrierDataToDataBase.py Section -->
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            4. Terminating writeCarrierDataToDataBase.py
-        </div>
-        <div class="panel-body">
-            <p class ="text-justify">
-                In reality this script should run the whole time. But to save ressources in this project, a simple termination option was implemented.
-                On Startup compressInitialData.py creates Running.txt and deletes it after the data simulation is terminated. This enables to terminate
-                writeCarrierDataToDataBase.py. As soon as compressInitialData.py is terminated, Running.txt is deleted and as soon as writeCarrierDataToDataBase.py
-                doesn't find Running.txt anymore it terminates.
-            </p>
-        </div>
-    </div>
-    <!-- Logging Section -->
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            5. Logging
-        </div>
-        <div class="panel-body">
-            <p class ="text-justify">
-                Both scripts compressInitialData.py and writeCarrierDataToDataBase.py are writing simultaneously logs into the file "DataProcessing.log".
-                This file should later be read in by the frontend to visualize the progress of the scripts.
-            </p>
-        </div>
-    </div>
+   <!-- Explanation of the sub-tab -->
+   <div class ="page-header">
+      <h1>Data Processing</h1>
+      <p>
+         In here, the Data Processing is documented.
+      </p>
+   </div>
+   <!-- Files Section -->
+   <div class="panel panel-primary">
+      <div class="panel-heading">
+         1. Files
+      </div>
+      <div class="panel-body">
+         <ul class="list-group">
+            <li class="list-group-item text-left">
+               <h3>compressInitialData.py</h3>
+               <p class ="text-justify">
+                  This script simulates all sensors in the drives of the production system, that are pushing their data for each timestamp to the processing unit.
+                  Since it receives the energy consumption and position for every drive, but not for every carrier, the first step is to map the position of the drive to the different carriers.
+                  Once a carrier has passed through the production line, its data is compressed for size reduction and is exported as cvs file.
+                  Details on the data mapping can be found in 2. and on the compression can be found in 3.
+               </p>
+               <p><strong>Input:</strong>CSV file with the following structure (ms; energy1;...;energyX; pos1;...;posX) (It also needs Amount of Drives and KEEP_EVERY_X_ROW, as well as the file name to be processed as compression constant set in the config files)</p>
+               <p class ="text-justify">
+                  <strong>Output:</strong> CSV file for each carrier in each iteration with the following structure (time; posAbsolute; energy; drive) and the following name Session_X_Carrier_X_Iteration_X.csv
+               </p>
+            </li>
+            <li class="list-group-item text-left">
+               <h3>writeCarrierDataToDataBase.py</h3>
+               <p>Takes the output from compressInitialData.py and writes the data after processing into the database. Further information in "3. Write Data To Database".</p>
+            </li>
+            <li class="list-group-item text-left">
+               <h3>initDataProcessingSimulation.sh</h3>
+               <p>Enables to run writeCarrierDataToDataBase.py &amp; compressInitialData.py simultaneously</p>
+            </li>
+            <li class="list-group-item text-left">
+               <h3>setConstants.py</h3>
+               <p>File that contains variables that are used in both files. Is currently a dummy file until the settings can be set through the frontend.</p>
+            </li>
+         </ul>
+      </div>
+   </div>
+   <!-- Compress Data Section -->
+   <div class="panel panel-primary">
+      <div class="panel-heading">
+         2. Mapping Drive Data to Carrier Data
+      </div>
+      <div class="panel-body">
+         <p class ="text-left">The first step of the data processing is to map the sensor data of the drives to the carriers.
+            Therefore a three dimensional float array is carrierData[carrier][dimension][i] is being used.
+            First dimension carrier hold as many carriers as there are according to the config file.
+            Secondly, the dimension has 5 attributes: TS, relative position, energy consumption, drive, absolute position.
+            The third dimension "i" holds all the different timestamps.
+            To map the data to the carriers the function processData is called for every Timestamp and Carrier of the original data wit the input parameters: TS, position and energy. For mapping, the array driveXHasCarrier[] with length according to the amount of drives stores which carrier (value returned from the array) is on which drive (space in the array).
+            When no carrier is on the drive in the beginning, the first carrier gets pulled and the array looks like this for 3 drive [1, 0, 0].
+            When in this setting the function processData is called for drive 1 all input gets written to the carrierData[1][dimension][i].
+            When processData gets called for a drive that doesn't have a carrier, the TS gets deleted.
+            When processData is called with position 0 with a drive that contains a carrier and which last position was not zero (at the i-1th timestamp), this means that the carrier has left the drive and gets put to the next free spot on the driveXHasCarrier[] array.
+            When the drive was the first drive and the maximum amount of carriers hasn't been reached, a new carrier gets pulled and for the example the driveXHasCarrier[] array then looks like this: [2, 1, 0].
+            When a carrier leaves the last drive, the carrierData array for that carrier gets compressed and exported which will be explained soon.
+         </p>
+      </div>
+      <div class="panel-heading">
+         Mapping Problems and missing time stamps
+      </div>
+      <div class="panel-body">
+         <p class ="text-left">
+            There are two problems that lead to missing time stamps during the mapping process.
+         </p>
+         <p class ="text-left">
+            When a carrier leaves a drive and tries to move to the next one it sometimes happens that according to the data there is still another carrier on that drive.
+            The algorithm then "queues" the carrier as waiting carrier for that particular drive.
+            As a result, the timestamps where the carrier will be in this waiting state will be lost, as he is on "no" drive during that time.
+            As soon as the carrier of the next drive leaves, the carrier gets put on the drive.
+         </p>
+         <p class ="text-left">
+            Another problem in the data is that there occur "waiting times" in the data, where after moving from one drive to another there may be some time until the position sensor of the drive has recognized the carrier.
+            During that time all the transmitted TS of the sensor are zero. In order to not have the position of the carrier drop to zero at any given time, all TS where the position is zero also get deleted.
+            This also causes missing TS in the final carrierData.
+            These missing time stamps have to interpolated in order to ensure consistent graphs visualization and data export.
+            When having different missing values for certain TS there are visualization errors when drawing the graphs and missing values in the exported data tables.
+            The interpolation is done in the compression phase.
+         </p>
+         <p class ="text-left">
+            These missing time stamps have to interpolated in order to ensure consistent graphs visualization and data export.
+            When having different missing values for certain TS there are visualization errors when drawing the graphs and missing values in the exported data tables.
+            The interpolation is done in the compression phase.
+         </p>
+      </div>
+      <div class="panel-heading">
+         Mapping Problems and missing time stamps
+      </div>
+      <div class="panel-heading">
+         3. Compress Data
+      </div>
+      <div>
+         <p class ="text-left">
+            The data is compressed directly after mapping it to the carriers. After a carrier has "left" the last drive, the 2d data array consisting of carrierData[carrier][dimension][TS] gets compressed. The compression follows these steps:
+         </p>
+         <p class ="text-left">
+            1. The first step is to roll up the data to the first TS where the position and energy consumption is not equal to zero. This ensures that the first TS of the array is the TS where the carrier started its run through the conveyor belt.
+         </p>
+         <p class ="text-left">
+            2. In this step the last 200 TS get deleted from the carrierData array get deleted, as the energy consumption spikes up (to 150% - 300% of the average) in the last 0,2 seconds of the iteration, when the carrier accelerates to quickly leave the conveyor belt. This timeframe is deleted in order to reduce bias when identifying carrier contamination.
+         </p>
+         <p class ="text-left">
+            3. The 3rd step is the main compression process. This function iterates through all TS of the carrierData[carrier][dimension][TS] array (i). The compression has the goal to get the data to a consistent form with all (relative) TS as a multiple of the KEEP_EVERY_X_ROW compression constant K. Before the compression the data looks like this:
+         </p>
+         <p class ="text-left">
+            Before the compression the obtained data may look like this:
+         </p>
+         <table class="table table-hover table-bordered table-striped">
+            <thead>
+               <tr>
+                  <th>time in ms</th>
+                  <th>Position Absolute in mm</th>
+                  <th>Energy consumption in W</th>
+                  <th>Drive</th>
+                  <th>Time Absolute</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td>100</td>
+                  <td>10.0</td>
+                  <td>1.1</td>
+                  <td>1</td>
+                  <td>100</td>
+               </tr>
+               <tr>
+                  <td>102</td>
+                  <td>10.2</td>
+                  <td>1.2</td>
+                  <td>1</td>
+                  <td>102</td>
+               </tr>
+               <tr>
+                  <td>104</td>
+                  <td>10.4</td>
+                  <td>1.3</td>
+                  <td>2</td>
+                  <td>104</td>
+               </tr>
+               <tr>
+                  <td>109</td>
+                  <td>10.9</td>
+                  <td>1.4</td>
+                  <td>2</td>
+                  <td>109</td>
+               </tr>
+               <tr>
+                  <td>110</td>
+                  <td>11.0</td>
+                  <td>1.5</td>
+                  <td>2</td>
+                  <td>110</td>
+               </tr>
+            </tbody>
+         </table>
+         <p class ="text-justify">
+            It has to be noted that the (relative) TS haven't been calculated as they are still equal to the absolute time. Also, some TS are missing due to the noted mapping problems. After the compression the data of this example looks like this for K = 2.
+         </p>
+         <table class="table table-hover table-bordered table-striped">
+            <thead>
+               <tr>
+                  <th>time in ms</th>
+                  <th>Position Absolute in mm</th>
+                  <th>Energy consumption in W</th>
+                  <th>Drive</th>
+                  <th>Time Absolute</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td>0</td>
+                  <td>10.0</td>
+                  <td>1.1</td>
+                  <td>1</td>
+                  <td>100</td>
+               </tr>
+               <tr>
+                  <td>2</td>
+                  <td>10.2</td>
+                  <td>1.2</td>
+                  <td>1</td>
+                  <td>102</td>
+               </tr>
+               <tr>
+                  <td>4</td>
+                  <td>10.4</td>
+                  <td>1.3</td>
+                  <td>2</td>
+                  <td>104</td>
+               </tr>
+               <tr>
+                  <td>6</td>
+                  <td>10.6</td>
+                  <td>1.4</td>
+                  <td>2</td>
+                  <td>106</td>
+               </tr>
+               <tr>
+                  <td>8</td>
+                  <td>10.8</td>
+                  <td>1.4</td>
+                  <td>2</td>
+                  <td>108</td>
+               </tr>
+               <tr>
+                  <td>10</td>
+                  <td>11.0</td>
+                  <td>1.5</td>
+                  <td>2</td>
+                  <td>110</td>
+               </tr>
+            </tbody>
+         </table>
+         <p class ="text-justify">
+            The timestamps are now relative, starting from 0, which is the moment that the carrier entered the conveyor belt. With K = 2 the energy consumption of every two succeeding timestamps is averaged and gets written to the TS of which TS is dividable by K. Timestamps where TS is not dividable by K (every odd number in this case) are deleted. However, due to the missing timestamps two different scenarios may occur.
+         </p>
+         <p class ="text-justify">
+            The timestamp which is dividable by K doesn't have all K timestamps so that the energy consumption can't get averaged by dividing by K. In this case the energy consumption is calculated by the amount of rows in that category. In this case only divided by one. 2- When looking for the next timestamp that is dividable by K, the next TS is higher than the next multiple of K. In this case the timestamp has to interpolated. For interpolating the energy: since the energy of the previous timestamp was already used for calculating the prior TS, the energy consumption is assumed to be constant and the energy consumption of the current timestamp is taken. The position is linearly interpolated between the last and the current TS. The drive and the absolute time value just also get copied from the current time stamp value.
+         </p>
+         <p class ="text-justify">
+            Because the compression has to interpolate these missing timestamps, the energy consumption is slightly changed from the original data file. In order to still ensure that the average and total energy consumption for an iteration are constant, the total energy consumption is already calculated during this compression procedure as well. It is arguable, whether the original data file is also not optimal because the energy consumption in reality does not have missing TS. But, calculating the average and total energy consumption after compression is dependent of the compression parameter K. Because, if K is smaller, then more timestamps have to interpolated, changing the energy consumption more. Therefore, there energy consumption is calculated based on the energy values before the compression.
+         </p>
+      </div>
+   </div>
+   <!-- Write Data to Database Section -->
+   <div class="panel panel-primary">
+      <div class="panel-heading">
+         3. Write Data to Database
+      </div>
+      <div class="panel-body">
+         <p>After the compression of the data, every csv is read into the database. Therefore it firstly reads out the filename the following values:</p>
+         <ul class="list-group">
+            <li class="list-group-item">
+               <strong>Session</strong>
+            </li>
+            <li class="list-group-item">
+               <strong>Carrier</strong>
+            </li>
+            <li class="list-group-item">
+               <strong>Iteration</strong>
+            </li>
+         </ul>
+         <p>Additional the data from the csv will also be read in:</p>
+         <ul class="panel-body">
+            <li class="list-group-item">
+               <strong>Time (in ms)</strong>
+            </li>
+            <li class="list-group-item">
+               <strong>Position Absolute (in mm)</strong>
+            </li>
+            <li class="list-group-item">
+               <strong>Energy consumption (in W)</strong>
+            </li>
+            <li class="list-group-item">
+               <strong>Drive</strong>
+            </li>
+            <li class="list-group-item">
+               <strong>Time absolute (in ms)</strong>
+            </li>
+         </ul>
+         <p>In a third step the additional values are calculated:</p>
+         <ul class="panel-body">
+            <li class="list-group-item">
+               Speed (in mm/ms): (Position Absoulte 2 - Position Absoulte 1) / (Time 2 - Time 1)
+            </li>
+            <li class="list-group-item">
+               Acceleration (in mm/ms²): (Speed2 - Speed1) / (time2 - time1)
+            </li>
+         </ul>
+         <p>
+            All of these information are getting stored in the database afterwards. For more Information on the database structure:
+            <strong>Database Schema (Table 1)</strong>
+         </p>
+         <p>Afterwards the iteration values are calculated:</p>
+         <ul class="panel-body">
+            <li class="list-group-item">
+               <strong>Average Speed</strong>
+            </li>
+            <li class="list-group-item">
+               <strong>Average Acceleration</strong>
+            </li>
+         </ul>
+         <p>
+            These measuers in additon to session, carrier, iteration are also stored in the database. For more Information on the database structure:
+            <strong>Database Schema (Table 2)</strong>
+         </p>
+      </div>
+   </div>
+   <!-- Terminating writeCarrierDataToDataBase.py Section -->
+   <div class="panel panel-primary">
+      <div class="panel-heading">
+         4. Terminating writeCarrierDataToDataBase.py
+      </div>
+      <div class="panel-body">
+         <p class ="text-justify">
+            In reality this script should run the whole time. But to save ressources in this project, a simple termination option was implemented.
+            On Startup compressInitialData.py creates Running.txt and deletes it after the data simulation is terminated. This enables to terminate
+            writeCarrierDataToDataBase.py. As soon as compressInitialData.py is terminated, Running.txt is deleted and as soon as writeCarrierDataToDataBase.py
+            doesn't find Running.txt anymore it terminates.
+         </p>
+      </div>
+   </div>
+   <!-- Logging Section -->
+   <div class="panel panel-primary">
+      <div class="panel-heading">
+         5. Logging
+      </div>
+      <div class="panel-body">
+         <p class ="text-justify">
+            Both scripts compressInitialData.py and writeCarrierDataToDataBase.py are writing simultaneously logs into the file "DataProcessing.log".
+            This file should later be read in by the frontend to visualize the progress of the scripts.
+         </p>
+      </div>
+   </div>
 </div>
