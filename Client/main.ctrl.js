@@ -1081,16 +1081,14 @@ the session, iterations and carriers he wans to see. */
 
     //create an array depending on the amount of carriers. The items of the array will be used to initialize the checkboxes.
     $scope.carriers = [];
-    //updateCarrierArrayAndDrawGraph();
+    updateCarrierArrayAndDrawGraph(true);
 
     // create the dropdown menu for iterations. the array gets filled with the iteration numbers available in the database.
     $scope.iterations = [];
-    for (var i = 1; i <= lastIteration;i++) {
-	    $scope.iterations.push(i);
-    }
+    updateIterations();
 
     //set the first iterations to default.
-    $scope.selectedIteration = $scope.iterations[0];
+    $scope.selectedIteration = 1;
 
     // make percentage service available in html-view
     // not very nice, try to refactor if possible
@@ -1245,24 +1243,38 @@ the session, iterations and carriers he wans to see. */
 		    }
 		    $scope.carriers.push({id:idCounter, selected:currentSelected, color:percentageService.getColorOfCarrier(percentageData[idCounter])});
 		}
+		console.log($scope.carriers);
 		$scope.createFlexibilityChart();
 	    });
     }
 
+    function updateIterations() {
+	$http.get('django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=lastIteration').then(
+	    function(result) {
+		var lastIteration = result.data;
+		console.log(lastIteration);
+		$scope.iterations = [];
+		for (var iteration = 1; iteration <= lastIteration; iteration++) {
+		    $scope.iterations.push(iteration);
+		}
+	    });
+    }
+    
     $scope.reload = function() {
 	sessionService.setCurrentSession($scope.currentSession);
 	$scope.currentFileName = sessionService.getDataFileNameById($scope.currentSession);
 	updateCarrierArrayAndDrawGraph(false);
+	updateIterations();
     }
 
-    // this function ic called, when the user enters the graph page for the first time.
+    // this function is called, when the user enters the graph page for the first time.
     // It will draw the graph and sets the selected carriers to a default value.
     $scope.init = function() {
-	updateCarrierArrayAndDrawGraph(true);
+	//updateCarrierArrayAndDrawGraph(true);
         // if (carrierService.isEmpty()) {
 	//    carrierService.selectAll();
 	// }
-        $scope.reload;
+        //$scope.reload();
     }
 
     $scope.$on("$destroy", function() {

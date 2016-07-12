@@ -59,10 +59,10 @@
                         <!-- Iteration Cell -->
                         <td>
                             <div class = "iterationSelection">
-                                <select class="form-control" ng-model="selectedIteration">
-                                    <option ng-repeat="iteration in iterations" ng-value="iteration">
+                                <select class = "form-control" ng-model="selectedIteration" ng-options="iteration for iteration in iterations">
+                                 <!--   <option ng-repeat="iteration in iterations" ng-value="iteration">
                                         {{iteration}}
-                                    </option>
+                                    </option>-->
                                 </select>
                             </div>
                         </td>
