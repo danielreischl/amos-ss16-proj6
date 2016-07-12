@@ -117,16 +117,23 @@
       </div>
       <div>
          <p class ="text-left">
-            The data is compressed directly after mapping it to the carriers. After a carrier has "left" the last drive, the 2d data array consisting of carrierData[carrier][dimension][TS] gets compressed. The compression follows these steps:
+            The data is compressed directly after mapping it to the carriers.
+            After a carrier has "left" the last drive, the 2d data array consisting of carrierData[carrier][dimension][TS] gets compressed.
+            The compression follows these steps:
          </p>
          <p class ="text-left">
-            1. The first step is to roll up the data to the first TS where the position and energy consumption is not equal to zero. This ensures that the first TS of the array is the TS where the carrier started its run through the conveyor belt.
+            1. The first step is to roll up the data to the first TS where the position and energy consumption is not equal to zero.
+            This ensures that the first TS of the array is the TS where the carrier started its run through the conveyor belt.
          </p>
          <p class ="text-left">
-            2. In this step the last 200 TS get deleted from the carrierData array get deleted, as the energy consumption spikes up (to 150% - 300% of the average) in the last 0,2 seconds of the iteration, when the carrier accelerates to quickly leave the conveyor belt. This timeframe is deleted in order to reduce bias when identifying carrier contamination.
+            2. In this step the last 200 TS get deleted from the carrierData array get deleted, as the energy consumption spikes up (to 150% - 300% of the average) in the last 0,2 seconds of the iteration, when the carrier accelerates to quickly leave the conveyor belt.
+            This time frame is deleted in order to reduce bias when identifying carrier contamination.
          </p>
          <p class ="text-left">
-            3. The 3rd step is the main compression process. This function iterates through all TS of the carrierData[carrier][dimension][TS] array (i). The compression has the goal to get the data to a consistent form with all (relative) TS as a multiple of the KEEP_EVERY_X_ROW compression constant K. Before the compression the data looks like this:
+            3. The 3rd step is the main compression process.
+            This function iterates through all TS of the carrierData[carrier][dimension][TS] array (i).
+            The compression has the goal to get the data to a consistent form with all (relative) TS as a multiple of the KEEP_EVERY_X_ROW compression constant K.
+            Before the compression the data looks like this:
          </p>
          <p class ="text-left">
             Before the compression the obtained data may look like this:
