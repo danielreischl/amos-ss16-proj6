@@ -230,7 +230,7 @@ angular.module('app')
 	            showRangeSelector: true,
 	            /*labelDiv looks for an element with the given id and puts the legend into this element.
 	            Therefore the legend will not bis displayed inside the graph */
-	            labelsDiv: document.getElementById("compareGraphLegend")
+	            labelsDiv: document.getElementById("compareGraphLegend"),
 	            axes: {
 	                x: {
 	                    /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
@@ -503,7 +503,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 	                                                                                      legend: "always",
 	                                                                                      /*labelDiv looks for an element with the given id and puts the legend into this element.
 	                                                                                       Therefore the legend will not bis displayed inside the graph */
-	                                                                                      labelsDiv: document.getElementById("compareAverageEnergyConsumptionGraphLegend")
+	                                                                                      labelsDiv: document.getElementById("compareAverageEnergyConsumptionGraphLegend"),
 	                                                                                      axes: {
                                                                                             x: {
                                                                                                 /* formatting the x axis label in the legend. Now it will display not only the value but also a text */
