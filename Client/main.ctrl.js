@@ -194,6 +194,12 @@ angular.module('app')
     // Creates the dygraph from a data source and applies options to them
     $scope.createCompareGraph = function() {
 
+    // Get the last iteration database and save it
+    var xmlHttp2 = new XMLHttpRequest();
+    xmlHttp2.open( "GET", 'django/dataInterface/values.request?session='+$scope.currentSession+'&carrier=1&iteration=1&value=lastIteration', false );
+    xmlHttp2.send(null);
+    var amountOfIterations = xmlHttp2.responseText;
+
 	sessionService.setCurrentSession($scope.currentSession);
 
 	//ensure that the variable is empty, before saving the new request path into it
