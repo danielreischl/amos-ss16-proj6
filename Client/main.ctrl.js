@@ -137,8 +137,7 @@ angular.module('app')
      //Function that reads in the sessiondata json-file
     var sessionDataPromise = sessionService.getSessionData();
     sessionDataPromise.then(function(response){$scope.sessiondata = response.data});
-    console.log("Simulation page says: " + JSON.stringify($scope.sessiondata));
-
+    
     // if a iteration is Set, the iteration shouldn't be overwritten on initial call of controler
     if (iterationService.getIterations().length == 0){
         // default value for the selected Iterations
@@ -147,8 +146,7 @@ angular.module('app')
     }
 
     var sessionDataPromise = sessionService.getSessionData();
-    sessionDataPromise.then(function(response){$scope.sessions = response.data; console.log("Been here.");});
-    console.log("main.ctrl.js says: " + JSON.stringify($scope.sessions));
+    sessionDataPromise.then(function(response){$scope.sessions = response.data;});
 
     // the session requested from the database.
     $scope.currentSession = sessionService.getCurrentSession();
@@ -385,8 +383,7 @@ which kind of data he wants to see. The default value is average energy consumpt
      //Function that reads in the sessiondata json-file
     var sessionDataPromise = sessionService.getSessionData();
     sessionDataPromise.then(function(response){$scope.sessiondata = response.data});
-    console.log("Simulation page says: " + JSON.stringify($scope.sessiondata));
-
+    
 
     // the session requested from the database.
     $scope.currentSession = sessionService.getCurrentSession();
@@ -674,7 +671,6 @@ which kind of data he wants to see. The default value is average energy consumpt
     /* create the circle page upon page load. */
     $scope.circleGraphMain = function(carrierPercentageData) {
 
-        console.log(carrierPercentageData);
         var amountOfCarriers = Object.keys(carrierPercentageData).length;
 
         /* ID of first Carrier */
@@ -687,8 +683,7 @@ which kind of data he wants to see. The default value is average energy consumpt
         function createCarrierHTML() {
 
             /* for every carrier in the database, create a new code fragment to be injected into the html file. Each fragment is the base for a circle */
-	    console.log("createCarrierHTML");
-            while (amountOfCarriers > 0) {
+	    while (amountOfCarriers > 0) {
                 var circleId = "carrier " + idCounter;
                 var fragmenthtml = '<canvas class="circleDashboard" id="'+circleId+'" ng-click="selectCarrier($event)"></canvas>';
                 var temp = $compile(fragmenthtml)($scope);
@@ -804,9 +799,7 @@ which kind of data he wants to see. The default value is average energy consumpt
             // This while loop will fill the carrierArray with carrier names for the chart label
 	    var amountOfCarriers = Object.keys(carrierPercentageData).length;
 	    var carrierArray = Object.keys(carrierPercentageData);
-	    console.log(carrierPercentageData);
-	    console.log(carrierArray);
-            //while (amountOfCarriers > 0) {
+	    //while (amountOfCarriers > 0) {
             //    carrierArray.push("carrier " + idCounter)
             //    idCounter = idCounter+1;
             //    amountOfCarriers = amountOfCarriers -1;
@@ -817,8 +810,7 @@ which kind of data he wants to see. The default value is average energy consumpt
                 the carrier. E.g. green is up to 102,5% , yellow is up 102,5 to 105% and everything above is red
             */
             for(var carrier = 1; carrier <= amountOfCarriers; carrier++) {
-		console.log(carrier);
-                if(carrierPercentageData[carrier] > 1.05) {
+		if(carrierPercentageData[carrier] > 1.05) {
                     carrierColorArray.push('rgba(229, 28, 52, 1)')
                     carrierPercentageDataRounded.push((carrierPercentageData[carrier]*100).toFixed())
                 } else if(carrierPercentageData[carrier] <= 1.025 ) {
@@ -829,9 +821,7 @@ which kind of data he wants to see. The default value is average energy consumpt
                     carrierPercentageDataRounded.push((carrierPercentageData[carrier]*100).toFixed())
                 }
             }
-	    console.log(carrierColorArray);
-	    console.log(carrierPercentageDataRounded);
-
+	    
             /*  get the element where the bar chart should be displayed and
                 create the chart with different parameters.
             */
@@ -891,13 +881,11 @@ which kind of data he wants to see. The default value is average energy consumpt
 
     // sets the current File Name
     $http.get("django/dataInterface/rawData.json?table=sessiondata").then(function (response){
-    console.log ("Getting Json File")
-    $scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;
+        $scope.currentFileName = response.data[sessionService.getCurrentSession()-1].fields.fileName;
     });
 
     // sets Values and redirects to continuesGraph
     $scope.setValues = function(carrier, iteration){
-        console.log("SetValues started.");
         // Sets Carrier to selected Carrier
         carrierService.emptyCarrierArray();
         carrierService.addCarrier(carrier);
@@ -925,7 +913,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.dataFileNames = getArrayOfDataFiles();
 
     // Standard Values
-    $scope.amountOfCarriers = 15;
+    $scope.amountOfCarriers = 18;
     $scope.waitForCompression = 0;
     $scope.waitForFirstDataLoad = 30;
     $scope.waitForDataReload = 30;
@@ -934,8 +922,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     //Function that reads in the sessiondata json-file
     var sessionDataPromise = sessionService.getSessionData();
     sessionDataPromise.then(function(response){$scope.sessiondata = response.data});
-    console.log("Simulation page says: " + JSON.stringify($scope.sessiondata));
-
+    
     //Starts the simulation by calling the website link
     $scope.startSimulation = function() {
             var urlString = 'django/dataInterface/simulation.start?wtSimulation=' + $scope.waitForCompression + '&wtFirstDataload=' + $scope.waitForFirstDataLoad + '&wtDataReload=' + $scope.waitForDataReload + '&amountOfCarriers=' + $scope.amountOfCarriers + '&fileName=InitialData/' + $scope.selectedDataFile  + '&keepEveryXRows=' + $scope.keepEveryXRows
@@ -1037,8 +1024,7 @@ the session, iterations and carriers he wans to see. */
     //Function that reads in the sessiondata json-file
     var sessionDataPromise = sessionService.getSessionData();
     sessionDataPromise.then(function(response){$scope.sessiondata = response.data});
-    console.log("Simulation page says: " + JSON.stringify($scope.sessiondata));
-
+    
     // the session requested from the database.
     $scope.currentSession = sessionService.getCurrentSession();
 

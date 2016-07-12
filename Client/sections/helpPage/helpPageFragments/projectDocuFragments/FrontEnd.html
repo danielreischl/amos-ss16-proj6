@@ -26,7 +26,345 @@
     <div class ="page-header">
         <h1>Front End</h1>
         <p>
-            In here, the Front End Graphs are documented.
+            In here, the Pages of the front-end graphs are described
         </p>
+    </div>
+    <!-- Index -->
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            1. Dummy
+        </div>
+        <div class="panel-body">
+            <P>
+                The following chapters are described:
+            </P>
+
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('front_general')">Front End in General</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('front_landing')">Landing Page</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('front_circle')">Circle View</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('front_bar')">Bar Chart View</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('front_continuous')">Continuous Consumption Graph</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('front_consumption')">Average Consumption Graph</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('front_flexibility')">Flexibility Graph</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('front_spike')">Energy Spike Table</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('front_simulation')">Simulation Page</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('front_help')">Help Page</a>
+                </li>
+            </ul>
+            <!-- Front End in General -->
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="front_general">
+                    Front End in General
+                </div>
+                <div class="panel-body">
+                    <h3>File Structure and important Files</h3>
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Folder/File Name</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Folder "Client"</td>
+                                <td class ="text-left">All client related files can be found inside this folder. The structure inside this folder is further separated into Assets, Sections and JavaScript files</td>
+                            </tr>
+                            <tr>
+                                <td>Folder "Assets"</td>
+                                <td class ="text-left">Inside this folder are all CSS files, changing the style of the html elements, as well as resource folder, containing images and icons, used in th web app</td>
+                            </tr>
+                            <tr>
+                                <td>Folder "Sections"</td>
+                                <td class ="text-left">
+                                    The sections folder included all html fragments, which are inserted into the main index.html file to enable a "one page feeling"
+                                    The section folder is further separated into different view folders, where the actual html data fragments can be found.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>File "app.js"</td>
+                                <td class ="text-left">Main Angular JS module, which lists also needed dependencies for the client web application</td>
+                            </tr>
+                            <tr>
+                                <td>File "app.routes.js"</td>
+                                <td class ="text-left">This file consists of the routing system of the web app. It routes the user to different html fragments, depending on the request.</td>
+                            </tr>
+                            <tr>
+                                <td>File "app.service.js"</td>
+                                <td class ="text-left">This file is responsible for offering controllers access to a variety of "services". These services are operating globally. Controllers are sharing these services.</td>
+                            </tr>
+                            <tr>
+                                <td>File "index.html"</td>
+                                <td class ="text-left">The main HTML page, which defines the main elements of the website. It also defines all libraries and files, needed for the web application</td>
+                            </tr>
+                            <tr>
+                                <td>File "main.ctrl.js"</td>
+                                <td class ="text-left">This file consists of all controllers, necessary for the front end. The front end logic is written inside this JS file.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h3>Layout</h3>
+                    <p>
+                        The front End was built, based on the AngularJS Framework. Additionally, the design is a combination of AngularJS material and Bootstrap.
+                    </p>
+                </div>
+            </div>
+            <!-- Landing Page -->
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="front_landing">
+                     Landing Page
+                </div>
+                <div class="panel-body">
+                    <p>
+                        The landing page consists of 2 buttons, which directs users either to the bar chart view or the circle view.
+                    </p>
+                </div>
+            </div>
+            <!-- Circle View -->
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="front_circle">
+                     Circle View
+                </div>
+                <div class="panel-body">
+                    <p>
+                        The circle view takes data from the back-end and draws, depending on the amount of carriers, circles on the page. This is done with HTML5 Canvas.
+                    </p>
+                    <p>
+                        Furthermore, it:
+                    </p>
+                    <ul class="list-group">
+                        <li class="list-group-item text-left">
+                            allows users to select circles.
+                        </li>
+                        <li class="list-group-item text-left">
+                            allows users to compare selected carriers, in different graphs.
+                        </li>
+                        <li class="list-group-item text-left">
+                           allows users to refresh the page and displays the last refresh date.
+                        </li>
+                        <li class="list-group-item text-left">
+                           displays the current data used.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Bar Chart View -->
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="front_bar">
+                     Bar Chart View
+                </div>
+                <div class="panel-body">
+                    <p>
+                        The bar chart view takes data from the back-end and plots, depending on the amount of carriers,a bar chart on the page. This is done with the library Chart.js.
+                    </p>
+                    <p>
+                        Furthermore, it:
+                    </p>
+                    <ul class="list-group">
+                        <li class="list-group-item text-left">
+                            allows users to switch in different graphs.
+                        </li>
+                        <li class="list-group-item text-left">
+                           allows users to refresh the page and displays the last refresh date.
+                        </li>
+                        <li class="list-group-item text-left">
+                           displays the current data used.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Continuous Consumption Graph -->
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="front_continuous">
+                     Continuous Consumption Graph
+                </div>
+                <div class="panel-body">
+                    <p>
+                        The Continuous Consumption Graph takes data from the back-end and plots, depending on the amount of carriers,a line chart on the page. This is done with the library Dygraph.
+                        The y-Axis of the graph is by default <strong>energy</strong>, while the x-Axis is always <strong>time</strong>.
+                    </p>
+                    <p>
+                        Furthermore, it:
+                    </p>
+                    <ul class="list-group">
+                        <li class="list-group-item text-left">
+                            allows users to select different carriers to be compared.
+                        </li>
+                        <li class="list-group-item text-left">
+                            allows users to select different iterations to be compared.
+                        </li>
+                        <li class="list-group-item text-left">
+                            allows users to select a different dimension to be displayed.
+                        </li>
+                        <li class="list-group-item text-left">
+                            allows users to select different Files to be displayed.
+                        </li>
+                        <li class="list-group-item text-left">
+                           allows users to refresh the page and displays the last refresh date.
+                        </li>
+                        <li class="list-group-item text-left">
+                           allows users to switch to different graphs, while keeping the options(as far as it makes sense).
+                        </li>
+                        <li class="list-group-item text-left">
+                           displays the current options used by the graph for plotting.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Average Consumption Graph -->
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="front_consumption">
+                     Average Consumption Graph
+                </div>
+                <div class="panel-body">
+                    <p>
+                        The Average Consumption Graph takes data from the back-end and plots, depending on the amount of carriers,a line chart on the page. This is done with the library Dygraph.
+                        The y-Axis of the graph is by default <strong>energy</strong>, while the x-Axis is always <strong>iteration</strong>.
+                    </p>
+                    <p>
+                        Furthermore, it:
+                    </p>
+                    <ul class="list-group">
+                        <li class="list-group-item text-left">
+                            allows users to select different carriers to be compared.
+                        </li>
+                        <li class="list-group-item text-left">
+                            allows users to select different iterations to be compared.
+                        </li>
+                        <li class="list-group-item text-left">
+                            allows users to select a different dimension to be displayed.
+                        </li>
+                        <li class="list-group-item text-left">
+                            allows users to select different Files to be displayed.
+                        </li>
+                        <li class="list-group-item text-left">
+                           allows users to refresh the page and displays the last refresh date.
+                        </li>
+                        <li class="list-group-item text-left">
+                           allows users to switch to different graphs, while keeping the options(as far as it makes sense).
+                        </li>
+                        <li class="list-group-item text-left">
+                           displays the current options used by the graph for plotting.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Flexibility Graph -->
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="front_flexibility">
+                     Flexibility Graph
+                </div>
+                <div class="panel-body">
+                    <p>
+                        The Flexibility Graph takes data from the back-end and plots, depending on the amount of carriers,a line chart on the page. This is done with the library Dygraph.
+                        The y-Axis of the graph is always <strong>speed</strong>, while the x-Axis is always <strong>absolute time</strong>.
+                    </p>
+                    <p>
+                        Furthermore, it:
+                    </p>
+                    <ul class="list-group">
+                        <li class="list-group-item text-left">
+                            allows users to select different carriers to be compared.
+                        </li>
+                        <li class="list-group-item text-left">
+                            allows users to select different iterations to be compared.
+                        </li>
+                        <li class="list-group-item text-left">
+                            allows users to select different Files to be displayed.
+                        </li>
+                        <li class="list-group-item text-left">
+                           allows users to refresh the page and displays the last refresh date.
+                        </li>
+                        <li class="list-group-item text-left">
+                           allows users to switch to different graphs, while keeping the options(as far as it makes sense).
+                        </li>
+                        <li class="list-group-item text-left">
+                           displays the current options used by the graph for plotting.
+                        </li>
+                        <li class="list-group-item text-left">
+                           displays flexibility between multiple carriers in the form of a flexibility KPI.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--  Energy Spike Table -->
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="front_spike">
+                    Energy Spike Table
+                </div>
+                <div class="panel-body">
+                    <p>
+                        The Energy Spike Table shows all carriers with their respective Iteration of a selected file in a table.
+                        The first row shows the carrier and iteration combination that has the highest energy spike in the file.
+                    </p>
+                    <p>
+                        Furthermore, it:
+                    </p>
+                    <ul class="list-group">
+                        <li class="list-group-item text-left">
+                           allows users to refresh the page and displays the last refresh date.
+                        </li>
+                        <li class="list-group-item text-left">
+                           allows users to investigate the data set by switching to the continuous energy graph.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Simulation Page -->
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="front_simulation">
+                     Simulation Page
+                </div>
+                <div class="panel-body">
+                    <p>
+                        The Simulation Page allows users to upload new data files into the web application and start a new simulation,
+                        by selecting a file to be used by all graphs. The forms are built with Bootstrap.
+                    </p>
+                    <p>
+                        Furthermore, it:
+                    </p>
+                    <ul class="list-group">
+                        <li class="list-group-item text-left">
+                           allows users to start a new simulation, based on different parameters.
+                        </li>
+                        <li class="list-group-item text-left">
+                           allows users to reset the system.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Help Page -->
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="front_help">
+                     Help Page
+                </div>
+                <div class="panel-body">
+                    <p>
+                        The Help Page is built with Bootstrap-UI Tabs structure. The tabs consist of Glossary, Manual and Project Documentation.
+                        The Content of the tab was also designed with Bootstrap and AngularJS functionality.
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
