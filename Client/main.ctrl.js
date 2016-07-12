@@ -576,6 +576,16 @@ which kind of data he wants to see. The default value is average energy consumpt
         $scope.circleGraph();
     }
 
+    // Sests $scope.running true or false depending on if a simulation is running
+    $http.get("django/dataInterface/simulation.running").then(function (response){
+        if (response.data == "True"){
+            $scope.running = true;
+        }else{
+            $scope.running = false;
+        }
+    });
+
+
     // Initializes time stamp
     $scope.ts = new Date();
     /* This function will highlight the carrier and save the id of the carrier inside the comparison array in app.service.js*/
@@ -757,6 +767,16 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 .controller('barGraphController',function($scope, $timeout, $http, carrierService, percentageService, sessionService) {
 
+    // sests $scope.running true or false depending on if a simulation is running
+    $http.get("django/dataInterface/simulation.running").then(function (response){
+        if (response.data == "True"){
+            $scope.running = true;
+        }else{
+            $scope.running = false;
+        }
+    });
+
+
     $scope.ts = new Date();
 
     $scope.refresh = function() {
@@ -859,6 +879,15 @@ which kind of data he wants to see. The default value is average energy consumpt
 // Controller that contains all function for the spikeContamination page
 .controller('spikeContaminationController', function($scope, $http, sessionService, carrierService, iterationService, $window) {
 
+    // sests $scope.running true or false depending on if a simulation is running
+    $http.get("django/dataInterface/simulation.running").then(function (response){
+        if (response.data == "True"){
+            $scope.running = true;
+        }else{
+            $scope.running = false;
+        }
+    });
+
     // sets current time for timestamp
      $scope.ts = new Date();
 
@@ -901,6 +930,7 @@ which kind of data he wants to see. The default value is average energy consumpt
 
 .controller('simulationPageController', function($scope, $http, $window, sessionService) {
 
+    // sests $scope.running true or false depending on if a simulation is running
     $http.get("django/dataInterface/simulation.running").then(function (response){
         if (response.data == "True"){
             $scope.running = true;
@@ -913,7 +943,7 @@ which kind of data he wants to see. The default value is average energy consumpt
     $scope.dataFileNames = getArrayOfDataFiles();
 
     // Standard Values
-    $scope.amountOfCarriers = 15;
+    $scope.amountOfCarriers = 18;
     $scope.waitForCompression = 0;
     $scope.waitForFirstDataLoad = 30;
     $scope.waitForDataReload = 30;

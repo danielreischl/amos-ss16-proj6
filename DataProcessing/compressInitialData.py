@@ -278,11 +278,11 @@ def removeLastEnergySpike(carrier):
 
     if curPos > removeLastDataRows:
         for i in range(int(curPos - removeLastDataRows), curPos):
-            carrierData[carrier - 1][0][i] -= 0
-            carrierData[carrier - 1][1][i] -= 0
-            carrierData[carrier - 1][2][i] -= 0
-            carrierData[carrier - 1][3][i] -= 0
-            carrierData[carrier - 1][4][i] -= 0
+            carrierData[carrier - 1][0][i] = 0
+            carrierData[carrier - 1][1][i] = 0
+            carrierData[carrier - 1][2][i] = 0
+            carrierData[carrier - 1][3][i] = 0
+            carrierData[carrier - 1][4][i] = 0
 
         currentPositionAtCarrierData[carrier - 1] -= removeLastDataRows
 
