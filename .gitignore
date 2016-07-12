@@ -4,3 +4,4 @@ DataProcessing/dataProcessing.log
 __pycache__/
 docker/pg_hba.conf
 docker/postgresql.conf
+/.idea/
