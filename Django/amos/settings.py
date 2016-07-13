@@ -157,7 +157,6 @@ STATICFILES_FINDERS = (
 # papa-parse, Chart.js, dygraphs, angular, angular-route, angular-animate, angular-aria, angular-messages
 # angular-material, bootstrap, bootstrap ui, angular-chart.js
 BOWER_INSTALLED_APPS = (
-    'papa-parse',
     'Chart.js',
     'dygraphs',
     'angular',
