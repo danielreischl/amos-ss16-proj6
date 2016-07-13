@@ -95,13 +95,16 @@
     <!-- Request CSV File Section -->
     <div class="panel panel-primary">
         <div class="panel-heading" id ="requestCSV">
-            Request CSV Files
+            Request CSV/Json Files
         </div>
         <div class="panel-body">
             <p>The Frontend (Client) can retrieve csv-files from django and the database by an API:</p>
             <ul class="list-group">
                 <li class="list-group-item">
                     <a href="" ng-click="scrollTo('rawData')">Raw Data</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="" ng-click="scrollTo('spikeData')">Spike Contamination</a>
                 </li>
                 <li class="list-group-item">
                     <a href="" ng-click="scrollTo('avgEnChart')">Average Energy Consumption Chart Data</a>
@@ -120,8 +123,10 @@
                     Raw Data:
                 </div>
                 <div class="panel-body">
-                    <p>Raw data can be extracted with the follwoing url:</p>
+                    <p>Raw data can be extracted with the follwoing url (CSV):</p>
                     <p><code>/django/dataInterface/rawData.csv?table=tablename</code></p>
+                    <p>Raw data can be extracted with the follwoing url (JSON):</p>
+                    <p><code>/django/dataInterface/rawData.json?table=tablename</code></p>
                     <p>tablename:</p>
                     <ul class="list-group">
                         <li class="list-group-item text-left">
@@ -130,8 +135,22 @@
                         <li class="list-group-item text-left">
                             <strong>timestamp:</strong> Extracts the table timestampdata
                         </li>
+                        <li class="list-group-item text-left">
+                            <strong>sessiondata:</strong> Extracts the table sessiondata
+                        </li>
                     </ul>
                     <p>To see which values are extracted, have a look at the <strong>Database Schema</strong></p>
+                </div>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="spikeData">
+                    SpkeContamination
+                </div>
+                <div class="panel-body">
+                    <p>The data relevant for the spike Contamination page can be requested by calling the following url: (Json):</p>
+                    <p><code>/django/dataInterface/spikeContamination.json?session=session</code></p>
+                    <p>session: Number of Sesion requested</p>
                 </div>
             </div>
 
@@ -379,6 +398,16 @@
                         <strong>DataProcessing</strong>: Extracts the dataProcessing log file
                     </li>
                 </ul>
+            </div>
+        </div>
+
+        <div class="panel panel-info">
+            <div class="panel-heading" id ="resetSystem">
+                Reset System
+            </div>
+            <div class="panel-body">
+                <p>By calling the following url, the system is reseted:</p>
+                <p><code>/django/dataInterface/simulation.reset</code> </p>
             </div>
         </div>
     </div>
