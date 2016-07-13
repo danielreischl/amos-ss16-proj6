@@ -307,7 +307,7 @@
          <p>In a third step the additional values are calculated:</p>
          <ul class="panel-body">
             <li class="list-group-item">
-               Speed (in mm/ms): (Position Absoulte 2 - Position Absoulte 1) / (Time 2 - Time 1)
+               Speed (in mm/ms): (Position Absolute 2 - Position Absolute 1) / (Time 2 - Time 1)
             </li>
             <li class="list-group-item">
                Acceleration (in mm/ms²): (Speed2 - Speed1) / (time2 - time1)
@@ -327,7 +327,7 @@
             </li>
          </ul>
          <p>
-            These measuers in additon to session, carrier, iteration are also stored in the database. For more Information on the database structure:
+            These measurers in addition to session, carrier, iteration are also stored in the database. For more Information on the database structure:
             <strong>Database Schema (Table 2)</strong>
          </p>
       </div>
@@ -339,7 +339,7 @@
       </div>
       <div class="panel-body">
          <p class ="text-justify">
-            In reality this script should run the whole time. But to save ressources in this project, a simple termination option was implemented.
+            In reality this script should run the whole time. But to save resources in this project, a simple termination option was implemented.
             On Startup compressInitialData.py creates Running.txt and deletes it after the data simulation is terminated. This enables to terminate
             writeCarrierDataToDataBase.py. As soon as compressInitialData.py is terminated, Running.txt is deleted and as soon as writeCarrierDataToDataBase.py
             doesn't find Running.txt anymore it terminates.
