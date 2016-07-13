@@ -167,6 +167,5 @@ BOWER_INSTALLED_APPS = (
     'angular-material#master',
     'bootstrap',
     'http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.3.3.js',
-    'angular-chart.js'
 
 )
