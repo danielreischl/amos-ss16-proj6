@@ -379,7 +379,7 @@
             </div>
             <div class="panel-body">
                 <p>By calling the following url, the data processing scripts are started and another csv file is loaded:</p>
-                <p><code>/django/dataInterface/simulation.start?amountOfCarriers=X&amp;</code> </p>
+                <p><code>/django/dataInterface/simulation.start?amountOfCarriers=X&amp;keepEveryXRow=X&amp;wtFirstDataLoad=X&&amp;wtDataReload=X&amp;filename=fileName</code> </p>
             </div>
         </div>
 
@@ -408,6 +408,16 @@
             <div class="panel-body">
                 <p>By calling the following url, the system is reseted:</p>
                 <p><code>/django/dataInterface/simulation.reset</code> </p>
+            </div>
+        </div>
+
+         <div class="panel panel-info">
+            <div class="panel-heading" id ="requestFiles">
+                Request files that are available for the Simulation
+            </div>
+            <div class="panel-body">
+                <p>By calling the following url, a comma seperated string will be returned:</p>
+                <p><code>/django/dataInterface/simulation.files</code> </p>
             </div>
         </div>
     </div>
