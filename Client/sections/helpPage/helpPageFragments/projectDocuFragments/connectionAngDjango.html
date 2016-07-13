@@ -258,6 +258,21 @@
                 </div>
             </div>
 
+	    <!-- Percentage data in JSON - Format-->
+            <div class="panel panel-info">
+                <div class="panel-heading" id ="percentageJSON">
+                    Percentage data in JSON - Format
+                </div>
+                <div class="panel-body">
+                    <p>To get the percentage data for the carriers which is used on the different graph pages the following url has to be used:</p>
+                    <p><code>django/dataInterface/percentages.json?session=X&type=Y</code></p>
+                    <p>X = Requested Session</p>
+		    <p>Y = Requested Type: creeping or continuous</p>
+                    <p>The output JSON-File looks like this:</p>
+		    <p> { "1": 0.98, "2":0.34, "3": 0.56 } </p>
+                </div>
+            </div>
+
             <!-- Absolute Time Data Section -->
             <div class="panel panel-info">
                 <div class="panel-heading" id ="absTimeData">
