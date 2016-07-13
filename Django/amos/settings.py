@@ -154,10 +154,9 @@ STATICFILES_FINDERS = (
 )
 
 # Apps that should be installed by Bower
-# jquery, papa-parse, Chart.js, dygraphs, angular, angular-route, angular-animate, angular-aria, angular-messages
-# angular-material, bootstrap
+# papa-parse, Chart.js, dygraphs, angular, angular-route, angular-animate, angular-aria, angular-messages
+# angular-material, bootstrap, bootstrap ui, angular-chart.js
 BOWER_INSTALLED_APPS = (
-    #'jquery',
     'papa-parse',
     'Chart.js',
     'dygraphs',
@@ -169,5 +168,6 @@ BOWER_INSTALLED_APPS = (
     'angular-material#master',
     'bootstrap',
     'http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.3.3.js',
+    'angular-chart.js'
 
 )
